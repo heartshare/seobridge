@@ -11,6 +11,6 @@ files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(
 const app = new Vue({
     el: '#app',
     components: {
-        LoginView: require('./components/views/login/LoginView.vue').default,
+        DashboardView: require('./components/views/dashboard/Index.vue').default,
     }
 })

@@ -9,7 +9,8 @@
     font-style: normal;
 }
 
-@import 'layout.sass';
+@import 'static.layout.sass';
+@import 'dashboard.layout.sass';
 
 
 
@@ -23,25 +24,36 @@
     --elevation-1: drop-shadow(0 1px 1px #00000037);
     --elevation-4: drop-shadow(0 4px 6px #00000020);
 
-    --text-font: 'Roboto';
+    --text-font: 'Roboto', sans-serif;
+    --heading-font: sofia-pro, sans-serif;
     --text-size: 15px;
     --button-size: 14px;
     --bg: #ffffff;
     --bg-dark: #f4f4f4;
     --primary: #4834D4;
     --primary-shade: #4834D418;
-    --primary-shine: #4834D460;
+    --primary-shine: #4834D440;
     --heading-gray: #2F3542;
     --text-gray: #666F79;
     --text-gray-shade: #666F7910;
     --secondary: #34E7E4;
-    --secondary-shade: #34E7E410;
+    --secondary-shade: #34E7E430;
     --success: #2ecc71;
     --success-shade: #2ecc7115;
     --warning: #ffc400;
     --warning-shade: #ffc40020;
     --error: #ff4757;
     --error-shade: #ff475710;
+}
+
+.clearfix {
+    overflow: auto;
+}
+
+.clearfix::after {
+    content: '';
+    clear: both;
+    display: table;
 }
 
 *
@@ -56,7 +68,7 @@
     outline: none;
 }
 
-div, a
+div:not(.font-size):not(.limiter)
 {
     font-size: 0;
 }
@@ -64,6 +76,75 @@ div, a
 i, b
 {
     display: inline;
+}
+
+p,
+.block
+{
+    display: block;
+}
+
+p
+{
+    margin: 15px 0;
+}
+
+ol, ul
+{
+    margin: 0;
+}
+
+h1, h2, h3, h4, h5, h6
+{
+    display: block;
+    line-height: 150%;
+    color: var(--heading-gray);
+    font-family: var(--heading-font);
+}
+
+h1
+{
+    color: var(--primary);
+    font-size: 45px;
+}
+
+h2
+{
+    font-size: 35px;
+}
+
+h3
+{
+    font-size: 30px;
+}
+
+h4
+{
+    font-size: 25px;
+}
+
+h5
+{
+    font-size: 20px;
+}
+
+h6
+{
+    font-size: var(--text-size);
+}
+
+a
+{
+    color: var(--primary);
+    text-decoration: none;
+}
+
+a:hover
+{
+    color: var(--primary);
+    text-decoration: var(--secondary) underline 3px;
+    text-decoration-skip: none;
+    text-decoration-skip-ink: none;
 }
 
 title, head, script, style
@@ -77,9 +158,10 @@ html, body
     height: 100%;
     padding: 0;
     margin: 0;
-    font-family: 'Roboto';
+    font-family: var(--text-font);
     background: var(--bg);
     color: var(--text-gray);
+    line-height: 150%;
     text-align: center;
     scroll-behavior: smooth;
 }

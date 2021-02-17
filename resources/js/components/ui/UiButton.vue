@@ -1,13 +1,13 @@
 <template>
-    <button tabindex="0" class="ccc-ui-container" :class="classes" @click="$emit('click')">
+    <button tabindex="0" class="ccc-ui-container" :class="classes" @click="href ? goto(href) : $emit('click')">
         <slot></slot>
-        <div class="icon" v-html="icon_"></div>
+        <div class="icon" v-html="icon"></div>
     </button>
 </template>
 
 <script>
     export default {
-        props: ['light', 'error', 'success', 'warning', 'icon', 'icon-left', 'small'],
+        props: ['light', 'error', 'success', 'warning', 'icon', 'icon-left', 'small', 'href'],
 
         data() {
             return {
@@ -45,11 +45,11 @@
                 {
                     this.classes.push('no-icon')
                 }
-                else if (this.icon && /(&#[0-9]{6};)/g.test(this.icon))
-                {
-                    this.icon_ = this.icon
-                }
-            }
+            },
+
+            goto(href) {
+                window.location = href
+            },
         }
     }
 </script>

@@ -160,7 +160,7 @@
             border: none
             background: none
             border-radius: 3px
-            font-family: rubik
+            font-family: var(--text-font)
             font-size: 16px
             color: var(--heading-gray)
 </style>

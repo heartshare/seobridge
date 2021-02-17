@@ -6,83 +6,311 @@
   font-weight: normal;
   font-style: normal;
 }
-#app {
+#app.static {
   padding-top: 60px;
 }
-#app #navbar {
+#app.static #navbar {
   position: fixed;
   top: 0;
   left: 0;
   height: 60px;
-  background: var(--bg);
   color: var(--text-gray);
   font-size: var(--text-size);
+  background: var(--bg);
   width: 100%;
-  filter: var(--elevation-4);
   z-index: 1000;
+  transition: filter 200ms;
+  will-change: filter;
 }
-#app #navbar .limiter {
+#app.static #navbar.scrolled {
+  filter: var(--elevation-4);
+}
+#app.static #navbar .limiter {
   display: flex;
 }
-#app #navbar .limiter #logo {
+#app.static #navbar .limiter #logo {
   height: 46px;
-  width: 200px;
+  width: 240px;
   margin: 7px 0;
 }
-#app #navbar .limiter #logo img {
+#app.static #navbar .limiter #logo img {
   height: 100%;
 }
-#app #navbar .limiter .static-nav-container,
-#app #navbar .limiter .authentication-nav-container {
+#app.static #navbar .limiter .center-nav-container,
+#app.static #navbar .limiter .side-nav-container {
   align-self: center;
   padding: 0;
+  justify-content: center;
+  align-items: center;
+  display: flex;
   text-transform: uppercase;
 }
-#app #navbar .limiter .static-nav-container li,
-#app #navbar .limiter .authentication-nav-container li {
+#app.static #navbar .limiter .center-nav-container li,
+#app.static #navbar .limiter .side-nav-container li {
   height: 100%;
+  display: contents;
 }
-#app #navbar .limiter .static-nav-container li a,
-#app #navbar .limiter .authentication-nav-container li a {
+#app.static #navbar .limiter .center-nav-container li a,
+#app.static #navbar .limiter .side-nav-container li a {
   font-size: var(--button-size);
   text-decoration: none;
-  height: 60px;
-  line-height: 60px;
+  height: 40px;
+  line-height: 40px;
   font-weight: 500;
   letter-spacing: 1px;
+  border-radius: 5px;
   color: var(--text-gray);
   padding: 0 20px;
+  position: relative;
+  transition: color 100ms;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
-#app #navbar .limiter .static-nav-container li a:hover,
-#app #navbar .limiter .authentication-nav-container li a:hover {
+#app.static #navbar .limiter .center-nav-container li a.underline::after,
+#app.static #navbar .limiter .side-nav-container li a.underline::after {
+  content: "";
+  height: 3px;
+  width: calc(100% - 40px);
+  position: absolute;
+  left: 20px;
+  bottom: 5px;
+  background: var(--secondary);
+  border-radius: 10px;
+  transform: scaleX(0);
+  transition: transform 100ms, color 100ms;
+  will-change: transform;
+}
+#app.static #navbar .limiter .center-nav-container li a:hover::after,
+#app.static #navbar .limiter .side-nav-container li a:hover::after {
+  transform: scaleX(1);
+  background: var(--secondary);
+}
+#app.static #navbar .limiter .center-nav-container li a:hover,
+#app.static #navbar .limiter .side-nav-container li a:hover {
   color: var(--primary);
-  background: var(--primary-shade);
 }
-#app #navbar .limiter .static-nav-container {
+#app.static #navbar .limiter .center-nav-container li a.active,
+#app.static #navbar .limiter .side-nav-container li a.active {
+  color: var(--primary);
+}
+#app.static #navbar .limiter .center-nav-container li a.active::after,
+#app.static #navbar .limiter .side-nav-container li a.active::after {
+  transform: scaleX(1);
+  background: var(--secondary);
+}
+#app.static #navbar .limiter .center-nav-container {
   flex: 1;
-  text-align: center;
 }
-#app #navbar .limiter .authentication-nav-container {
-  width: 200px;
-  text-align: right;
-  display: flex;
+#app.static #navbar .limiter .side-nav-container {
+  width: 240px;
+  justify-content: flex-end;
   gap: 15px;
 }
-#app #navbar .limiter .authentication-nav-container li a {
+#app.static #navbar .limiter .side-nav-container form {
+  display: none;
+}
+#app.static #navbar .limiter .side-nav-container li a {
   height: 34px;
   line-height: 34px;
-  border-radius: 5px;
 }
-#app #navbar .limiter .authentication-nav-container li a.solid {
+#app.static #navbar .limiter .side-nav-container li a.solid {
   background: var(--primary);
   color: white;
 }
-#app #navbar .limiter .authentication-nav-container li a.light {
+#app.static #navbar .limiter .side-nav-container li a.light {
   background: var(--primary-shade);
   color: var(--primary);
 }
-#app main {
+#app.static header {
   display: block;
+}
+#app.static header img {
+  width: 100%;
+  max-height: 500px;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+#app.static main {
+  display: block;
+}
+#app.static main .centered-dialog {
+  width: 100%;
+  display: block;
+  height: calc(100vh - 120px);
+  background-image: url("/images/static/banner.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+#app.static main .centered-dialog .dialog {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: calc(100% - 40px);
+  max-width: 400px;
+  max-height: calc(100% - 40px);
+  background: white;
+  border-radius: 10px;
+  text-align: left;
+}
+#app.static main .centered-dialog .dialog .headline {
+  text-align: center;
+  display: block;
+}
+#app.static main .centered-dialog .dialog .padding {
+  padding: 0 15px;
+  display: block;
+}
+#app.static main .centered-dialog .dialog .button-box {
+  display: block;
+  background: var(--bg-dark);
+  padding: 15px;
+  border-radius: 0 0 10px 10px;
+}
+#app.static footer {
+  height: 60px;
+  background: var(--primary);
+  display: block;
+}
+#app.static footer .limiter {
+  height: 100%;
+  display: flex;
+  justify-content: flex-end;
+}
+#app.static footer .limiter nav {
+  align-self: center;
+}
+#app.static footer .limiter nav ul {
+  padding: 0;
+  display: flex;
+  gap: 40px;
+}
+#app.static footer .limiter nav ul li a {
+  font-size: var(--text-size);
+  font-family: var(--text-family);
+  line-height: 40px;
+  height: 40px;
+  color: #ffffff90;
+}
+#app.static footer .limiter nav ul li a:hover {
+  color: white;
+}
+
+#app.dashboard {
+  height: 100%;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 280px auto;
+  grid-template-rows: 70px auto;
+  grid-template-areas: "menu header" "menu content";
+}
+#app.dashboard header {
+  grid-area: header;
+  background: var(--bg);
+  filter: drop-shadow(0 1px 2px #00000020);
+}
+#app.dashboard nav {
+  grid-area: menu;
+  text-align: left;
+  position: relative;
+  z-index: 100;
+  color: var(--text-gray);
+  font-size: var(--text-size);
+  background: var(--bg);
+  border-right: var(--border);
+}
+#app.dashboard nav #logo {
+  height: 60px;
+  width: 100%;
+  margin: 10px 0;
+  text-align: center;
+}
+#app.dashboard nav #logo img {
+  height: 100%;
+}
+#app.dashboard nav .logo-divider {
+  width: 100%;
+  height: 20px;
+}
+#app.dashboard nav .button {
+  width: 100%;
+  text-decoration: none;
+  height: 50px;
+  cursor: pointer;
+  display: flex;
+  align-content: center;
+  position: relative;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+#app.dashboard nav .button .icon {
+  font-family: "Material Icons";
+  font-size: 24px;
+  width: 54px;
+  text-align: center;
+  align-self: center;
+}
+#app.dashboard nav .button .text {
+  font-size: var(--button-size);
+  font-weight: 500;
+  letter-spacing: 1px;
+  color: inherit;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  align-self: center;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  flex: 1;
+}
+#app.dashboard nav .button .notifications {
+  height: 16px;
+  min-width: 16px;
+  line-height: 16px;
+  border-radius: 20px;
+  background: var(--error);
+  font-size: 11px;
+  font-weight: 500;
+  padding: 0 6px;
+  color: white;
+  margin: 0 10px;
+  align-self: center;
+  pointer-events: none;
+}
+#app.dashboard nav .button::after {
+  content: "";
+  height: calc(100% - 10px);
+  width: 0px;
+  position: absolute;
+  left: 0;
+  top: 5px;
+  background: var(--primary);
+  border-radius: 0 10px 10px 0;
+  transition: width 100ms;
+  will-change: width;
+}
+#app.dashboard nav .button:hover::after, #app.dashboard nav .button.active::after {
+  width: 4px;
+}
+#app.dashboard nav .button:hover {
+  color: var(--primary);
+}
+#app.dashboard nav .button.active {
+  color: var(--primary);
+  background: var(--primary-shade);
+}
+#app.dashboard main {
+  grid-area: content;
+}
+#app.dashboard main .limiter {
+  max-width: 1000px;
 }
 
 :root {
@@ -91,25 +319,36 @@
   --focused-input-border: 1px solid #666;
   --elevation-1: drop-shadow(0 1px 1px #00000037);
   --elevation-4: drop-shadow(0 4px 6px #00000020);
-  --text-font: "Roboto";
+  --text-font: "Roboto", sans-serif;
+  --heading-font: sofia-pro, sans-serif;
   --text-size: 15px;
   --button-size: 14px;
   --bg: #ffffff;
   --bg-dark: #f4f4f4;
   --primary: #4834D4;
   --primary-shade: #4834D418;
-  --primary-shine: #4834D460;
+  --primary-shine: #4834D440;
   --heading-gray: #2F3542;
   --text-gray: #666F79;
   --text-gray-shade: #666F7910;
   --secondary: #34E7E4;
-  --secondary-shade: #34E7E410;
+  --secondary-shade: #34E7E430;
   --success: #2ecc71;
   --success-shade: #2ecc7115;
   --warning: #ffc400;
   --warning-shade: #ffc40020;
   --error: #ff4757;
   --error-shade: #ff475710;
+}
+
+.clearfix {
+  overflow: auto;
+}
+
+.clearfix::after {
+  content: "";
+  clear: both;
+  display: table;
 }
 
 * {
@@ -122,12 +361,72 @@
   outline: none;
 }
 
-div, a {
+div:not(.font-size):not(.limiter) {
   font-size: 0;
 }
 
 i, b {
   display: inline;
+}
+
+p,
+.block {
+  display: block;
+}
+
+p {
+  margin: 15px 0;
+}
+
+ol, ul {
+  margin: 0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  display: block;
+  line-height: 150%;
+  color: var(--heading-gray);
+  font-family: var(--heading-font);
+}
+
+h1 {
+  color: var(--primary);
+  font-size: 45px;
+}
+
+h2 {
+  font-size: 35px;
+}
+
+h3 {
+  font-size: 30px;
+}
+
+h4 {
+  font-size: 25px;
+}
+
+h5 {
+  font-size: 20px;
+}
+
+h6 {
+  font-size: var(--text-size);
+}
+
+a {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--primary);
+  -webkit-text-decoration: var(--secondary) underline 3px;
+          text-decoration: var(--secondary) underline 3px;
+  -webkit-text-decoration-skip: none;
+          text-decoration-skip: none;
+  -webkit-text-decoration-skip-ink: none;
+          text-decoration-skip-ink: none;
 }
 
 title, head, script, style {
@@ -139,9 +438,10 @@ html, body {
   height: 100%;
   padding: 0;
   margin: 0;
-  font-family: "Roboto";
+  font-family: var(--text-font);
   background: var(--bg);
   color: var(--text-gray);
+  line-height: 150%;
   text-align: center;
   scroll-behavior: smooth;
 }

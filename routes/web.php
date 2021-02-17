@@ -14,10 +14,36 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('home');
-});
+    return view('static.index');
+})->name('home');
+
+Route::get('/blog', function () {
+    return view('static.index');
+})->name('blog');
+
+Route::get('/pricing', function () {
+    return view('static.index');
+})->name('pricing');
+
+Route::get('/privacy-policy', function () {
+    return view('static.index');
+})->name('privacy-policy');
+
+Route::get('/terms-of-service', function () {
+    return view('static.index');
+})->name('terms-of-service');
+
+Route::get('/legal-disclosures', function () {
+    return view('static.index');
+})->name('legal-disclosures');
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/dashboard', [App\Http\Controllers\Dashboard\DashboardController::class, 'index'])->name('dashboard');
 Route::get('/test', [App\Http\Controllers\DebugController::class, 'test']);
+
+
+
+Route::middleware('auth')->group(function () {
+    Route::post('/auth/analyse/url', [App\Http\Controllers\Dashboard\DashboardController::class, 'analyseUrl']);
+});

@@ -5,10 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" href="images/app/favicon.ico" type="image/x-icon">
 
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://use.typekit.net/mpl5hxh.css">
+
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name') }}</title>
+    <title>Dashboard - {{ config('app.name') }}</title>
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
@@ -17,53 +23,42 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
 <body>
-    <div id="app">
-        <nav id="navbar">
-            <div class="limiter">
-                <a id="logo" href="{{ url('/') }}">
-                    <img src="/images/app/logo.svg" alt="SEO Bridge logo">
-                </a>
+    <div class="dashboard" id="app">
+        <header>
 
-                <ul class="static-nav-container">
-                    <li>
-                        <a href="{{url('/about')}}">About</a>
-                    </li>
-                    <li>
-                        <a href="{{url('/pricing')}}">Pricing</a>
-                    </li>
-                </ul>
+        </header>
 
-                <ul class="authentication-nav-container">
-                    @guest
-                        @if (Route::has('login'))
-                            <li>
-                                <a class="light" href="{{ route('login') }}">{{ __('Login') }}</a>
-                            </li>
-                        @endif
-                        
-                        @if (Route::has('register'))
-                            <li>
-                                <a class="solid" href="{{ route('register') }}">{{ __('Register') }}</a>
-                            </li>
-                        @endif
-                    @else
-                        <li class="nav-item dropdown">
-                            <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                {{ Auth::user()->name }}
-                            </a>
+        <nav>
+            <a id="logo" href="{{ url('/') }}">
+                <img src="/images/app/logo.svg" alt="SEO Bridge logo">
+            </a>
 
-                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                    {{ __('Logout') }}
-                                </a>
+            <div class="logo-divider"></div>
 
-                                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                    @csrf
-                                </form>
-                            </div>
-                        </li>
-                    @endguest
-                </ul>
+            <div class="button active">
+                <div class="icon">&#984430;</div>
+                <div class="text">Overview</div>
+            </div>
+
+            <div class="button">
+                <div class="icon">&#983573;</div>
+                <div class="text">Reports</div>
+            </div>
+
+            <div class="button">
+                <div class="icon">&#985161;</div>
+                <div class="text">My Team</div>
+            </div>
+
+            <div class="button">
+                <div class="icon">&#983049;</div>
+                <div class="text">My Profile</div>
+            </div>
+
+            <div class="button">
+                <div class="icon">&#983194;</div>
+                <div class="text">Notifications</div>
+                {{-- <div class="notifications">200</div> --}}
             </div>
         </nav>
 

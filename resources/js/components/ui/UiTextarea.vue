@@ -87,7 +87,7 @@
 
         &.focused
             .border
-                border-color: #666
+                border-color: var(--focused-input-border)
 
         &.focused-or-filled
             .progress-bar
@@ -163,7 +163,7 @@
             border: none
             background: none
             border-radius: 3px
-            font-family: rubik
+            font-family: var(--text-font)
             font-size: 16px
             resize: inherit
 </style>
