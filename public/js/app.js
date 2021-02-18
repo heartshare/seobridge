@@ -4125,19 +4125,52 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
-      url: 'https://freuwort.com/'
+      url: 'https://fireship.io/courses/react-next-firebase/',
+      report: null,
+      loading: false
     };
   },
   methods: {
     analyse: function analyse(url) {
-      axios.post('/auth/analyse/url', {
-        url: url
-      }).then(function (response) {
+      var _this = this;
+
+      this.loading = true;
+      axios.post('https://puppeteer.seobridge.test/analyse?url=' + url).then(function (response) {
         console.log(response.data);
-      })["catch"](function (error) {});
+        _this.loading = false;
+        _this.report = response.data;
+      })["catch"](function (error) {
+        _this.loading = false;
+      });
     }
   }
 });
@@ -4738,7 +4771,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".container .wrapper[data-v-a8f976ee] {\n  position: relative;\n}\n.container .wrapper .url-input[data-v-a8f976ee] {\n  padding-right: 130px;\n}\n.container .wrapper .submit-button[data-v-a8f976ee] {\n  position: absolute;\n  top: 5px;\n  right: 5px;\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, ".container .wrapper[data-v-a8f976ee] {\n  position: relative;\n}\n.container .wrapper .url-input[data-v-a8f976ee] {\n  padding-right: 130px;\n}\n.container .wrapper .submit-button[data-v-a8f976ee] {\n  position: absolute;\n  top: 5px;\n  right: 5px;\n}\n.container .report[data-v-a8f976ee] {\n  font-size: var(--text-size);\n  margin-top: 50px;\n}\n.container .report fieldset[data-v-a8f976ee] {\n  border: var(--border);\n  border-radius: 5px;\n  display: block;\n  width: 100%;\n  overflow: hidden;\n}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -27628,40 +27661,142 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "container block" }, [
-    _c(
-      "p",
-      { staticClass: "wrapper" },
-      [
-        _c("ui-text-input", {
-          staticClass: "url-input",
-          attrs: { label: "URL" },
-          model: {
-            value: _vm.url,
-            callback: function($$v) {
-              _vm.url = $$v
-            },
-            expression: "url"
-          }
-        }),
-        _vm._v(" "),
-        _c(
-          "ui-button",
-          {
-            staticClass: "submit-button",
-            attrs: { icon: "&#983881;" },
-            on: {
-              click: function($event) {
-                return _vm.analyse(_vm.url)
-              }
+  return _c(
+    "div",
+    { staticClass: "container block" },
+    [
+      _c(
+        "p",
+        { staticClass: "wrapper" },
+        [
+          _c("ui-text-input", {
+            staticClass: "url-input",
+            attrs: { label: "URL" },
+            model: {
+              value: _vm.url,
+              callback: function($$v) {
+                _vm.url = $$v
+              },
+              expression: "url"
             }
-          },
-          [_vm._v("Analyse")]
-        )
-      ],
-      1
-    )
-  ])
+          }),
+          _vm._v(" "),
+          _c(
+            "ui-button",
+            {
+              staticClass: "submit-button",
+              attrs: { icon: "&#983881;" },
+              on: {
+                click: function($event) {
+                  return _vm.analyse(_vm.url)
+                }
+              }
+            },
+            [_vm._v("Analyse")]
+          )
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _vm.report
+        ? _c(
+            "div",
+            {
+              directives: [
+                {
+                  name: "show",
+                  rawName: "v-show",
+                  value: !_vm.loading,
+                  expression: "!loading"
+                }
+              ],
+              staticClass: "report block"
+            },
+            [
+              _c("h1", [_vm._v(_vm._s(_vm.report.title))]),
+              _vm._v(" "),
+              _c("p", [
+                _vm._v("\n            Description: "),
+                _c("b", [_vm._v(_vm._s(_vm.report.metaDescription))]),
+                _c("br")
+              ]),
+              _vm._v(" "),
+              _c(
+                "fieldset",
+                {
+                  directives: [
+                    {
+                      name: "show",
+                      rawName: "v-show",
+                      value: _vm.report.links.length > 0,
+                      expression: "report.links.length > 0"
+                    }
+                  ]
+                },
+                [
+                  _c("legend", [_vm._v("Links")]),
+                  _vm._v(" "),
+                  _vm._l(_vm.report.links, function(link, i) {
+                    return _c("p", { key: i }, [
+                      _vm._v("\n                HREF: "),
+                      _c("span", [_vm._v(_vm._s(link.href))]),
+                      _c("br"),
+                      _vm._v(" "),
+                      _c("a", { attrs: { href: link.href } }, [
+                        _vm._v(_vm._s(link.text || "MISSING"))
+                      ])
+                    ])
+                  })
+                ],
+                2
+              ),
+              _vm._v(" "),
+              _c(
+                "fieldset",
+                {
+                  directives: [
+                    {
+                      name: "show",
+                      rawName: "v-show",
+                      value: _vm.report.images.length > 0,
+                      expression: "report.images.length > 0"
+                    }
+                  ]
+                },
+                [
+                  _c("legend", [_vm._v("Images")]),
+                  _vm._v(" "),
+                  _vm._l(_vm.report.images, function(image, i) {
+                    return _c("p", { key: i }, [
+                      _vm._v("\n                SRC: "),
+                      _c("span", [_vm._v(_vm._s(image.src))]),
+                      _c("br"),
+                      _vm._v("\n                Alt-Tag: "),
+                      _c("b", [_vm._v(_vm._s(image.alt || "MISSING"))])
+                    ])
+                  })
+                ],
+                2
+              )
+            ]
+          )
+        : _vm._e(),
+      _vm._v(" "),
+      _c("ui-spinner", {
+        directives: [
+          {
+            name: "show",
+            rawName: "v-show",
+            value: _vm.loading,
+            expression: "loading"
+          }
+        ],
+        staticStyle: { display: "block", margin: "20px auto" },
+        attrs: { color: "var(--primary)", size: 50 }
+      })
+    ],
+    1
+  )
 }
 var staticRenderFns = []
 render._withStripped = true

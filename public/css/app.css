@@ -203,10 +203,11 @@
   width: 100%;
   display: grid;
   grid-template-columns: 280px auto;
-  grid-template-rows: 70px auto;
+  grid-template-rows: 0px auto;
   grid-template-areas: "menu header" "menu content";
 }
 #app.dashboard header {
+  display: none;
   grid-area: header;
   background: var(--bg);
   filter: drop-shadow(0 1px 2px #00000020);
@@ -294,7 +295,6 @@
   background: var(--primary);
   border-radius: 0 10px 10px 0;
   transition: width 100ms;
-  will-change: width;
 }
 #app.dashboard nav .button:hover::after, #app.dashboard nav .button.active::after {
   width: 4px;
@@ -310,7 +310,8 @@
   grid-area: content;
 }
 #app.dashboard main .limiter {
-  max-width: 1000px;
+  max-width: 1200px;
+  padding: 0 15px;
 }
 
 :root {
