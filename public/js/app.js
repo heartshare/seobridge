@@ -4151,11 +4151,37 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
       url: 'https://fireship.io/courses/react-next-firebase/',
-      report: null,
+      reports: [],
       loading: false
     };
   },
@@ -4167,12 +4193,13 @@ __webpack_require__.r(__webpack_exports__);
       axios.post('https://puppeteer.seobridge.test/analyse?url=' + url).then(function (response) {
         console.log(response.data);
         _this.loading = false;
-        _this.report = response.data;
+        _this.reports = response.data;
       })["catch"](function (error) {
         _this.loading = false;
       });
     }
-  }
+  },
+  components: {}
 });
 
 /***/ }),
@@ -4771,7 +4798,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".container .wrapper[data-v-a8f976ee] {\n  position: relative;\n}\n.container .wrapper .url-input[data-v-a8f976ee] {\n  padding-right: 130px;\n}\n.container .wrapper .submit-button[data-v-a8f976ee] {\n  position: absolute;\n  top: 5px;\n  right: 5px;\n}\n.container .report[data-v-a8f976ee] {\n  font-size: var(--text-size);\n  margin-top: 50px;\n}\n.container .report fieldset[data-v-a8f976ee] {\n  border: var(--border);\n  border-radius: 5px;\n  display: block;\n  width: 100%;\n  overflow: hidden;\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, ".container .wrapper[data-v-a8f976ee] {\n  position: relative;\n}\n.container .wrapper .url-input[data-v-a8f976ee] {\n  padding-right: 130px;\n}\n.container .wrapper .submit-button[data-v-a8f976ee] {\n  position: absolute;\n  top: 5px;\n  right: 5px;\n}\n.container .page-card[data-v-a8f976ee] {\n  width: 230px;\n  height: 300px;\n  background: var(--bg);\n  border-radius: 5px;\n  filter: var(--elevation-1);\n  font-size: 0;\n  position: relative;\n}\n.container .page-card .thumbnail[data-v-a8f976ee] {\n  width: 100%;\n  height: 130px;\n  -o-object-fit: cover;\n     object-fit: cover;\n  border-radius: 5px 5px 0 0;\n  background: var(--bg-dark);\n  display: block;\n  filter: saturate(0%);\n}\n.container .page-card .score-container[data-v-a8f976ee] {\n  position: absolute;\n  z-index: 1;\n  top: 10px;\n  right: 10px;\n  height: 46px;\n  width: 46px;\n  border-radius: 50px;\n  background: #00000050;\n  -webkit-backdrop-filter: blur(8px);\n          backdrop-filter: blur(8px);\n  display: grid;\n  place-content: center;\n}\n.container .page-card .score-container .score[data-v-a8f976ee] {\n  color: white;\n  font-size: 14px;\n  font-weight: 700;\n  position: absolute;\n  top: 50%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n}\n.container .page-card .text-container[data-v-a8f976ee] {\n  width: 100%;\n  height: calc(100% - 130px);\n  padding: 0 15px 15px;\n  display: grid;\n  position: relative;\n  z-index: 1;\n  grid-template: 25px 30px auto 30px/1fr;\n  grid-template-areas: \"favicon\" \"title\" \"description\" \"button\";\n}\n.container .page-card .text-container .favicon[data-v-a8f976ee] {\n  height: 40px;\n  width: 40px;\n  border-radius: 40px;\n  background: white;\n  margin-top: -20px;\n  margin-bottom: 5px;\n  padding: 5px;\n  display: block;\n  grid-area: favicon;\n}\n.container .page-card .text-container .title[data-v-a8f976ee] {\n  font-size: 20px;\n  color: var(--heading-gray);\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n  grid-area: title;\n}\n.container .page-card .text-container .description[data-v-a8f976ee] {\n  font-size: 14px;\n  color: var(--text-gray);\n  line-height: 150%;\n  overflow: hidden;\n  margin-bottom: 10px;\n  grid-area: description;\n}\n.container .page-card .text-container .details-button[data-v-a8f976ee] {\n  grid-area: button;\n}\n.container .report[data-v-a8f976ee] {\n  font-size: var(--text-size);\n}\n.container .report fieldset[data-v-a8f976ee] {\n  border: var(--border);\n  border-radius: 5px;\n  display: block;\n  width: 100%;\n  overflow: hidden;\n}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -27698,7 +27725,7 @@ var render = function() {
         1
       ),
       _vm._v(" "),
-      _vm.report
+      _vm.reports.length > 0
         ? _c(
             "div",
             {
@@ -27712,73 +27739,83 @@ var render = function() {
               ],
               staticClass: "report block"
             },
-            [
-              _c("h1", [_vm._v(_vm._s(_vm.report.title))]),
-              _vm._v(" "),
-              _c("p", [
-                _vm._v("\n            Description: "),
-                _c("b", [_vm._v(_vm._s(_vm.report.metaDescription))]),
-                _c("br")
-              ]),
-              _vm._v(" "),
-              _c(
-                "fieldset",
-                {
-                  directives: [
-                    {
-                      name: "show",
-                      rawName: "v-show",
-                      value: _vm.report.links.length > 0,
-                      expression: "report.links.length > 0"
-                    }
-                  ]
-                },
-                [
-                  _c("legend", [_vm._v("Links")]),
-                  _vm._v(" "),
-                  _vm._l(_vm.report.links, function(link, i) {
-                    return _c("p", { key: i }, [
-                      _vm._v("\n                HREF: "),
-                      _c("span", [_vm._v(_vm._s(link.href))]),
-                      _c("br"),
-                      _vm._v(" "),
-                      _c("a", { attrs: { href: link.href } }, [
-                        _vm._v(_vm._s(link.text || "MISSING"))
-                      ])
-                    ])
-                  })
-                ],
-                2
-              ),
-              _vm._v(" "),
-              _c(
-                "fieldset",
-                {
-                  directives: [
-                    {
-                      name: "show",
-                      rawName: "v-show",
-                      value: _vm.report.images.length > 0,
-                      expression: "report.images.length > 0"
-                    }
-                  ]
-                },
-                [
-                  _c("legend", [_vm._v("Images")]),
-                  _vm._v(" "),
-                  _vm._l(_vm.report.images, function(image, i) {
-                    return _c("p", { key: i }, [
-                      _vm._v("\n                SRC: "),
-                      _c("span", [_vm._v(_vm._s(image.src))]),
-                      _c("br"),
-                      _vm._v("\n                Alt-Tag: "),
-                      _c("b", [_vm._v(_vm._s(image.alt || "MISSING"))])
-                    ])
-                  })
-                ],
-                2
-              )
-            ]
+            _vm._l(_vm.reports, function(report, i) {
+              return _c("div", { key: i, staticClass: "page-card" }, [
+                _c("img", {
+                  staticClass: "thumbnail",
+                  attrs: { src: report.preview }
+                }),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticClass: "score-container" },
+                  [
+                    _c("div", { staticClass: "score" }, [_vm._v("100")]),
+                    _vm._v(" "),
+                    _c("ui-progress-ring", {
+                      attrs: {
+                        size: "40",
+                        color: "var(--success)",
+                        progress: 100
+                      }
+                    })
+                  ],
+                  1
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticClass: "text-container" },
+                  [
+                    report.favicon
+                      ? _c("img", {
+                          staticClass: "favicon",
+                          attrs: { src: report.url.origin + report.favicon }
+                        })
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "title", attrs: { title: report.title } },
+                      [_vm._v(_vm._s(report.title))]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      {
+                        staticClass: "description",
+                        attrs: { title: report.metaDescription }
+                      },
+                      [
+                        _vm._v(
+                          _vm._s(
+                            report.metaDescription
+                              ? report.metaDescription
+                              : "MISSING"
+                          )
+                        )
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "ui-button",
+                      {
+                        staticClass: "details-button",
+                        attrs: {
+                          icon: "none",
+                          border: "",
+                          light: "",
+                          small: ""
+                        }
+                      },
+                      [_vm._v("View Details")]
+                    )
+                  ],
+                  1
+                )
+              ])
+            }),
+            0
           )
         : _vm._e(),
       _vm._v(" "),

@@ -41,14 +41,44 @@ app.all('/analyse', async (req, res) => {
         return res.send('URL_MISSING')
     }
 
-    let url = req.query.url
-
-
+    const url = new URL(req.query.url)
 
     console.log(`${_y}${requestId}${reset} Starting scan for${reset}: ${_b}${url}${reset}`)
     
+    let pages = []
+    
+    let page = await scanUrl(url)
+    pages.push(page)
+    
+    for (const path of page.internalLinks.slice(0,4))
+    {
+
+        const subUrl = new URL(url.origin)
+
+        subUrl.pathname = path
+
+        console.log(`Scanning sub-url${reset}: ${_b}${subUrl.href}${reset}`)
+        let page = await scanUrl(subUrl)
+        pages.push(page)
+    }
+    
+    console.log(`${_y}${requestId}${reset} ${_g}Finished scan for${reset}: ${_b}${url}${reset}`)
+    
+    res.setHeader('Content-Type', 'application/json')
+    return res.end(JSON.stringify(pages))
+})
+
+const scanUrl = async (url) => {
     const browser = await puppeteer.launch()
     const page = await browser.newPage()
+
+    await page.setViewport({
+        width: 1920,
+        height: 1080,
+    })
+    
+
+
     await page.goto(url)
 
     let metrics = await page.metrics()
@@ -58,6 +88,12 @@ app.all('/analyse', async (req, res) => {
         'href': node.getAttribute('href'),
         'text': node.innerText,
     })))
+
+    let internalLinks = []
+    internalLinks = links.filter(e => {
+        return new URL(e.href, url.origin).origin === url.origin
+    }).map(e => e.href)
+    internalLinks = [...new Set(internalLinks)]
 
     let images = []
     images = await page.$$eval('img', e => e.map(node => ({
@@ -93,21 +129,42 @@ app.all('/analyse', async (req, res) => {
     })))
 
     let srcLinks = []
-    srcLink = await page.$$eval('link', e => e.map(node => ({
+    srcLinks = await page.$$eval('link', e => e.map(node => ({
         'rel': node.getAttribute('rel'),
         'href': node.getAttribute('href'),
         'title': node.getAttribute('title'),
     })))
+
+    let favicon = srcLinks.find(e => e.rel === 'shortcut icon')
+    favicon = favicon ? favicon.href : null
+    
+    let appleTouchIcon = srcLinks.find(e => e.rel === 'apple-touch-icon')
+    appleTouchIcon = appleTouchIcon ? appleTouchIcon.href : null
+
+    let preview = 'data:image/png;base64,'+await page.screenshot({ encoding: "base64" })
     
     await browser.close()
 
+    return {
+        url: {
+            origin: url.origin,
+            href: url.href,
+        },
+        preview,
+        favicon,
+        appleTouchIcon,
+        links,
+        internalLinks,
+        metrics,
+        images,
+        title,
+        metaDescription,
+        meta,
+        srcLinks,
+    }
+}
 
-    
-    console.log(`${_y}${requestId}${reset} ${_g}Finished scan for${reset}: ${_b}${url}${reset}`)
-    
-    res.setHeader('Content-Type', 'application/json')
-    return res.end(JSON.stringify({links, metrics, images, title, metaDescription, meta, srcLinks}))
-})
+
 
 app.listen(999)
 
