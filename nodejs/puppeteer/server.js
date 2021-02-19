@@ -45,32 +45,18 @@ app.all('/analyse', async (req, res) => {
 
     console.log(`${_y}${requestId}${reset} Starting scan for${reset}: ${_b}${url}${reset}`)
     
-    let pages = []
-    
     let page = await scanUrl(url)
-    pages.push(page)
-    
-    for (const path of page.internalLinks.slice(0,4))
-    {
-
-        const subUrl = new URL(url.origin)
-
-        subUrl.pathname = path
-
-        console.log(`Scanning sub-url${reset}: ${_b}${subUrl.href}${reset}`)
-        let page = await scanUrl(subUrl)
-        pages.push(page)
-    }
     
     console.log(`${_y}${requestId}${reset} ${_g}Finished scan for${reset}: ${_b}${url}${reset}`)
     
     res.setHeader('Content-Type', 'application/json')
-    return res.end(JSON.stringify(pages))
+    return res.end(JSON.stringify(page))
 })
 
 const scanUrl = async (url) => {
     const browser = await puppeteer.launch()
     const page = await browser.newPage()
+    const sourceChecker = await browser.newPage()
 
     await page.setViewport({
         width: 1920,
@@ -135,8 +121,37 @@ const scanUrl = async (url) => {
         'title': node.getAttribute('title'),
     })))
 
+    
+
     let favicon = srcLinks.find(e => e.rel === 'shortcut icon')
-    favicon = favicon ? favicon.href : null
+
+    faviconUrl = favicon ? new URL(favicon.href, url.href) : null
+
+    if (!faviconUrl)
+    {
+        try
+        {
+            probeUrl = new URL('/favicon.ico', url.href)
+            await sourceChecker.goto(probeUrl.href, {waitUntil: 'load', timeout: 0});
+            faviconUrl = probeUrl.href
+        }
+        catch(e)
+        {}
+    }
+
+    if (!faviconUrl)
+    {
+        try
+        {
+            probeUrl = new URL('/favicon.png', url.href)
+            await sourceChecker.goto(probeUrl.href, {waitUntil: 'load', timeout: 0});
+            faviconUrl = probeUrl.href
+        }
+        catch(e)
+        {}
+    }
+
+
     
     let appleTouchIcon = srcLinks.find(e => e.rel === 'apple-touch-icon')
     appleTouchIcon = appleTouchIcon ? appleTouchIcon.href : null
@@ -151,7 +166,7 @@ const scanUrl = async (url) => {
             href: url.href,
         },
         preview,
-        favicon,
+        favicon: faviconUrl,
         appleTouchIcon,
         links,
         internalLinks,

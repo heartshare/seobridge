@@ -2,16 +2,18 @@
     <button tabindex="0" class="ccc-ui-container" :class="classes" @click="href ? goto(href) : $emit('click')">
         <slot></slot>
         <div class="icon" v-html="icon"></div>
+        <div class="border" v-if="hasBorder"></div>
     </button>
 </template>
 
 <script>
     export default {
-        props: ['light', 'error', 'success', 'warning', 'icon', 'icon-left', 'small', 'href'],
+        props: ['light', 'error', 'success', 'warning', 'icon', 'icon-left', 'small', 'href', 'border'],
 
         data() {
             return {
                 classes: [],
+                hasBorder: false,
                 icon_: '&#983124;',
             }
         },
@@ -35,6 +37,8 @@
                 this.classes = []
                 if (typeof this.iconLeft !== 'undefined') this.classes.push('icon-left')
                 if (typeof this.small !== 'undefined') this.classes.push('small')
+
+                if (typeof this.border !== 'undefined') this.hasBorder = true
 
                 if (typeof this.light !== 'undefined') this.classes.push('light')
                 if (typeof this.error !== 'undefined') this.classes.push('error')
@@ -116,13 +120,22 @@
             background: var(--error)
             color: white
 
+            .border
+                border-color: var(--error)
+
         &.success
             background: var(--success)
             color: white
 
+            .border
+                border-color: var(--success)
+
         &.warning
             background: var(--warning)
             color: white
+
+            .border
+                border-color: var(--warning)
 
         &.light
             background: var(--primary-shade)
@@ -169,4 +182,14 @@
             pointer-events: none
             vertical-align: top
             font-family: 'Material Icons'
+
+        .border
+            height: 100%
+            width: 100%
+            position: absolute
+            top: 0
+            left: 0
+            border-radius: 5px
+            border: 1px solid var(--primary)
+            pointer-events: none
 </style>

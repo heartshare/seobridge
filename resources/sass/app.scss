@@ -10,7 +10,6 @@
 }
 
 @import 'static.layout.sass';
-@import 'dashboard.layout.sass';
 
 
 
@@ -169,7 +168,7 @@ html, body
 #app
 {
     width: 100%;
-    height: auto;
+    height: 100%;
     display: block;
 }
 

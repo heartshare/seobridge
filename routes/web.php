@@ -39,7 +39,10 @@ Route::get('/legal-disclosures', function () {
 
 Auth::routes();
 
-Route::get('/dashboard', [App\Http\Controllers\Dashboard\DashboardController::class, 'index'])->name('dashboard');
+Route::get('/dashboard', function() {
+    return redirect('/dashboard/overview');
+})->name('dashboard');
+Route::get('/dashboard/{page}', [App\Http\Controllers\Dashboard\DashboardController::class, 'index']);
 Route::get('/test', [App\Http\Controllers\DebugController::class, 'test']);
 
 

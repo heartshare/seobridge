@@ -1,6 +1,60 @@
 <template>
-    <div class="limiter">
-        <quick-check-module></quick-check-module>
+    <div id="wrapper" :class="{'navbar-open': $store.getters.navbar === 'open'}">
+        <header>
+            
+        </header>
+
+        <nav>
+            <a id="logo" href="/">
+                <img src="/images/app/logo.svg" alt="SEO Bridge logo">
+            </a>
+
+            <div class="logo-divider"></div>
+
+            <a href="/dashboard/overview" class="button" :class="{'active': $store.getters.page === 'overview'}" @click.prevent="$store.dispatch('setPage', 'overview')">
+                <div class="icon">&#984432;</div>
+                <div class="text">Overview</div>
+            </a>
+
+            <a href="/dashboard/reports" class="button" :class="{'active': $store.getters.page === 'reports'}" @click.prevent="$store.dispatch('setPage', 'reports')">
+                <div class="icon">&#988493;</div>
+                <div class="text">Reports</div>
+            </a>
+
+            <a href="/dashboard/team" class="button" :class="{'active': $store.getters.page === 'team'}" @click.prevent="$store.dispatch('setPage', 'team')">
+                <div class="icon">&#985740;</div>
+                <div class="text">My Team</div>
+            </a>
+
+            <a href="/dashboard/notifications" class="button" :class="{'active': $store.getters.page === 'notifications'}" @click.prevent="$store.dispatch('setPage', 'notifications')">
+                <div class="icon">&#986458;</div>
+                <div class="text">Notifications</div>
+                <!-- <div class="notifications">200</div> -->
+            </a>
+
+            <div class="bottom">
+                <a href="/dashboard/settings" class="button" :class="{'active': $store.getters.page === 'settings'}" @click.prevent="$store.dispatch('setPage', 'settings')">
+                    <div class="icon">&#984211;</div>
+                    <div class="text">Settings</div>
+                </a>
+
+                <a href="/dashboard/profile" class="button" :class="{'active': $store.getters.page === 'profile'}" @click.prevent="$store.dispatch('setPage', 'profile')">
+                    <div class="icon">&#983049;</div>
+                    <div class="text">My Profile</div>
+                </a>
+            </div>
+        </nav>
+
+        <main>
+            <transition class="transition-group" :name="'opacity-slide-'+$store.getters.pageTransitionDirection" mode="out-in">
+                <overview-page class="page" key="overview-page" v-if="$store.getters.page === 'overview'"></overview-page>
+                <reports-page class="page" key="reports-page" v-if="$store.getters.page === 'reports'"></reports-page>
+                <team-page class="page" key="team-page" v-if="$store.getters.page === 'team'"></team-page>
+                <notifications-page class="page" key="notifications-page" v-if="$store.getters.page === 'notifications'"></notifications-page>
+                <settings-page class="page" key="settings-page" v-if="$store.getters.page === 'settings'"></settings-page>
+                <profile-page class="page" key="profile-page" v-if="$store.getters.page === 'profile'"></profile-page>
+            </transition>
+        </main>
     </div>
 </template>
 
@@ -8,6 +62,185 @@
     export default {
         components: {
             QuickCheckModule: require('./components/QuickCheckModule.vue').default,
+            OverviewPage: require('./pages/Overview.vue').default,
+            ReportsPage: require('./pages/Reports.vue').default,
+            TeamPage: require('./pages/Team.vue').default,
+            NotificationsPage: require('./pages/Notifications.vue').default,
+            SettingsPage: require('./pages/Settings.vue').default,
+            ProfilePage: require('./pages/Profile.vue').default,
         },
     }
 </script>
+
+<style lang="sass" scoped>
+    #wrapper
+        height: 100%
+        width: 100%
+
+        header
+            display: none
+            background: var(--bg)
+            filter: drop-shadow(0 1px 2px #00000020)
+
+        nav
+            text-align: left
+            position: fixed
+            left: 0
+            top: 0
+            width: 280px
+            height: 100%
+            z-index: 100
+            color: var(--text-gray)
+            font-size: var(--text-size)
+            background: var(--bg)
+            border-right: var(--border)
+
+            #logo
+                height: 60px
+                width: 100%
+                margin: 10px 0
+                text-align: center
+
+                img
+                    height: 100%
+
+            .logo-divider
+                width: 100%
+                height: 20px
+                display: block
+
+            .bottom
+                position: absolute
+                bottom: 0
+                left: 0
+                width: 100%
+
+            .button
+                width: 100%
+                text-decoration: none
+                height: 50px
+                cursor: pointer
+                color: var(--text-gray)
+                display: flex
+                align-content: center
+                position: relative
+                user-select: none
+
+                .icon
+                    font-family: 'Material Icons'
+                    font-size: 24px
+                    width: 60px
+                    text-align: center
+                    align-self: center
+                    z-index: 1
+                    position: relative
+
+                .text
+                    font-size: var(--button-size)
+                    font-weight: 500
+                    letter-spacing: 1px
+                    color: inherit
+                    white-space: nowrap
+                    overflow: hidden
+                    text-overflow: ellipsis
+                    text-transform: uppercase
+                    align-self: center
+                    user-select: none
+                    flex: 1
+                    z-index: 1
+                    position: relative
+
+                .notifications
+                    height: 16px
+                    min-width: 16px
+                    line-height: 16px
+                    border-radius: 20px
+                    background: var(--error)
+                    font-size: 11px
+                    font-weight: 500
+                    padding: 0 6px
+                    color: white
+                    margin: 0 10px
+                    align-self: center
+                    pointer-events: none
+                    z-index: 1
+                    position: relative
+
+                &::before
+                    content: ''
+                    height: 100%
+                    width: 100%
+                    position: absolute
+                    left: 0
+                    top: 0
+                    background: var(--primary-shade)
+                    transition: clip-path 200ms
+                    clip-path: circle(0 at -10% 50%)
+
+                &::after
+                    content: ''
+                    height: calc(100% - 10px)
+                    width: 0px
+                    position: absolute
+                    left: 0
+                    top: 5px
+                    background: var(--primary)
+                    border-radius: 0 10px 10px 0
+                    transition: width 100ms
+
+                &:hover::after,
+                &.active::after
+                    width: 4px
+
+                &.active::before
+                    clip-path: circle(180% at -10% 50%)
+
+                &:hover,
+                &.active
+                    color: var(--primary)
+
+        &:not(.navbar-open)
+            grid-template-columns: 60px auto
+
+            nav
+                #logo
+                    height: 60px
+                    margin: 0 0 10px
+
+                    img
+                        width: 100%
+                        padding: 5px
+
+                .logo-divider
+                    height: 0
+
+                .button
+                    .text,
+                    .notifications
+                        display: none
+
+
+        main
+            display: block
+            margin-left: 280px
+
+            .limiter
+                max-width: 1240px !important
+                padding: 0 15px !important
+
+            .transition-group
+                width: 100%
+
+            .page
+                transition: all 100ms
+
+                &.opacity-slide-down-enter,
+                &.opacity-slide-up-leave-to
+                    opacity: 0
+                    transform: translateY(-20px)
+
+                &.opacity-slide-down-leave-to,
+                &.opacity-slide-up-enter
+                    opacity: 0
+                    transform: translateY(20px)
+</style>

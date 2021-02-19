@@ -1,8 +1,8 @@
 <template>
-    <div class="container block">
+    <div class="ccc-container block">
         <p class="wrapper">
             <ui-text-input class="url-input" label="URL" v-model="url"></ui-text-input>
-            <ui-button class="submit-button" icon="&#983881;" @click="analyse(url)">Analyse</ui-button>
+            <ui-button class="submit-button" icon="&#983881;" @click="initiateScan(url)">Analyse</ui-button>
         </p>
 
         <div class="report block" v-if="reports.length > 0" v-show="!loading">
@@ -13,46 +13,12 @@
                     <ui-progress-ring size="40" color="var(--success)" :progress="100"></ui-progress-ring>
                 </div>
                 <div class="text-container">
-                    <img class="favicon" v-if="report.favicon" :src="report.url.origin+report.favicon">
+                    <img class="favicon" v-if="report.favicon" :src="report.favicon">
                     <div class="title" :title="report.title">{{report.title}}</div>
                     <div class="description" :title="report.metaDescription">{{report.metaDescription ? report.metaDescription : 'MISSING'}}</div>
-                    <ui-button class="details-button" icon="none" border light small>View Details</ui-button>
+                    <ui-button class="details-button" icon="none" border light small @click="$emit('details', report)">View Details</ui-button>
                 </div>
             </div>
-            <!-- <h1>{{report.title}}</h1>
-            <p>
-                <a :href="report.url.href" target="_blank">{{report.url.href}}</a><br>
-                Description: <b>{{report.metaDescription}}</b><br>
-                Favicon: <b>{{report.url.origin+report.favicon}}</b><br>
-                <img :src="report.url.origin+report.favicon" width="30">
-                <img :src="report.preview" width="200">
-            </p>
-
-            <fieldset v-show="report.srcLinks.length > 0">
-                <legend>SRC Links</legend>
-                <p v-for="(image, i) in report.srcLinks" :key="i">
-                    REL: <span>{{image.rel}}</span><br>
-                    HREF: <span>{{image.href}}</span><br>
-                    Title: <span>{{image.title}}</span><br>
-                </p>
-            </fieldset>
-
-            <fieldset v-show="report.links.length > 0">
-                <legend>Links</legend>
-                <p v-for="(link, i) in report.links" :key="i">
-                    HREF: <span>{{link.href}}</span><br>
-                    <a :href="link.href">{{link.text || 'MISSING'}}</a>
-                </p>
-            </fieldset>
-
-            <fieldset v-show="report.images.length > 0">
-                <legend>Images</legend>
-                <p v-for="(image, i) in report.images" :key="i">
-                    SRC: <span>{{image.src}}</span><br>
-                    Alt-Tag: <b>{{image.alt || 'MISSING'}}</b>
-                </p>
-            </fieldset> -->
-
         </div>
 
         <ui-spinner style="display: block; margin: 20px auto" v-show="loading" color="var(--primary)" :size="50"></ui-spinner>
@@ -63,25 +29,40 @@
     export default {
         data() {
             return {
-                url: 'https://fireship.io/courses/react-next-firebase/',
+                url: 'https://fireship.io/',
                 reports: [],
                 loading: false
             }
         },
 
         methods: {
-            analyse(url) {
-                this.loading = true
-
+            scan(url) {
                 axios.post('https://puppeteer.seobridge.test/analyse?url='+url)
                 .then(response => {
-                    console.log(response.data)
+                    // console.log(response.data)
                     this.loading = false
-                    this.reports = response.data
+                    this.reports.push(response.data)
                 })
                 .catch(error => {
                     this.loading = false
                 })
+            },
+
+            initiateScan(url) {
+                this.loading = true
+                this.reports = []
+                this.scan(url)
+
+                return
+
+                setTimeout(() => {
+                    let url = new URL(this.reports[0].url.origin)
+                    for (const link of this.reports[0].internalLinks)
+                    {
+                        url.pathname = link
+                        this.scan(url.href)
+                    }
+                }, 6000);
             },
         },
 
@@ -90,7 +71,7 @@
 </script>
 
 <style lang="sass" scoped>
-    .container
+    .ccc-container
         .wrapper
             position: relative
 
@@ -119,6 +100,11 @@
                 background: var(--bg-dark)
                 display: block
                 filter: saturate(0%)
+                transition: filter 100ms
+
+            &:hover
+                .thumbnail
+                    filter: saturate(100%)
 
             .score-container
                 position: absolute
@@ -184,11 +170,8 @@
 
         .report
             font-size: var(--text-size)
-
-            fieldset
-                border: var(--border)
-                border-radius: 5px
-                display: block
-                width: 100%
-                overflow: hidden
+            display: flex
+            gap: 15px 15px
+            justify-content: flex-start
+            flex-wrap: wrap
 </style>
