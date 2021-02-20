@@ -4340,6 +4340,26 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
@@ -29239,8 +29259,33 @@ var render = function() {
       _vm._v(" "),
       _vm.details
         ? _c("div", { staticClass: "details" }, [
-            _c("fieldset", [
+            _c("fieldset", { staticClass: "half" }, [
               _c("legend", [_vm._v("Appearence")]),
+              _vm._v(" "),
+              _c("h3", [_vm._v(_vm._s(_vm.details.title))]),
+              _vm._v(" "),
+              _c("img", { attrs: { src: _vm.details.favicon, width: "30" } }),
+              _c("br"),
+              _vm._v("\n            Description: "),
+              _c("b", [_vm._v(_vm._s(_vm.details.metaDescription))]),
+              _c("br"),
+              _vm._v("\n            Favicon: "),
+              _c("b", [_vm._v(_vm._s(_vm.details.favicon))]),
+              _c("br"),
+              _vm._v(" "),
+              _c("img", { attrs: { src: _vm.details.preview, width: "300" } }),
+              _c("br"),
+              _vm._v(" "),
+              _c(
+                "a",
+                { attrs: { href: _vm.details.url.href, target: "_blank" } },
+                [_vm._v(_vm._s(_vm.details.url.href))]
+              ),
+              _c("br")
+            ]),
+            _vm._v(" "),
+            _c("fieldset", { staticClass: "half" }, [
+              _c("legend", [_vm._v("Open Graph Appearence")]),
               _vm._v(" "),
               _c("h2", [_vm._v(_vm._s(_vm.details.title))]),
               _vm._v(" "),
@@ -29363,6 +29408,52 @@ var render = function() {
                     _c("br"),
                     _vm._v("\n                Charset: "),
                     _c("span", [_vm._v(_vm._s(meta.charset))]),
+                    _c("br")
+                  ])
+                })
+              ],
+              2
+            ),
+            _c("br"),
+            _vm._v(" "),
+            _c(
+              "fieldset",
+              {
+                directives: [
+                  {
+                    name: "show",
+                    rawName: "v-show",
+                    value: _vm.details.images.length > 0,
+                    expression: "details.images.length > 0"
+                  }
+                ]
+              },
+              [
+                _c("legend", [_vm._v("Images")]),
+                _vm._v(" "),
+                _vm._l(_vm.details.images, function(image, i) {
+                  return _c("p", { key: i }, [
+                    _c("img", { attrs: { src: image.href, width: "200" } }),
+                    _c("br"),
+                    _vm._v("\n                src: "),
+                    _c("span", [_vm._v(_vm._s(image.src))]),
+                    _c("br"),
+                    _vm._v("\n                size: "),
+                    _c("span", [
+                      _vm._v(_vm._s(image.width) + " x " + _vm._s(image.height))
+                    ]),
+                    _c("br"),
+                    _vm._v("\n                visible size: "),
+                    _c("span", [
+                      _vm._v(
+                        _vm._s(image.visibleWidth) +
+                          " x " +
+                          _vm._s(image.visibleHeight)
+                      )
+                    ]),
+                    _c("br"),
+                    _vm._v("\n                alt: "),
+                    _c("span", [_vm._v(_vm._s(image.alt))]),
                     _c("br")
                   ])
                 })

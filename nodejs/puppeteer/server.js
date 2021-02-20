@@ -84,12 +84,15 @@ const scanUrl = async (url) => {
     let images = []
     images = await page.$$eval('img', e => e.map(node => ({
         'src': node.getAttribute('src'),
+        'href': null,
         'alt': node.getAttribute('alt') || null,
         'width': node.naturalWidth,
         'height': node.naturalHeight,
         'visibleWidth': node.offsetWidth,
-        'visibleHight': node.offsetHeight,
+        'visibleHeight': node.offsetHeight,
     })))
+
+    images = images.map(e => ({...e, href: new URL(e.src, url.origin).href}))
 
     let title
     try {
@@ -121,7 +124,7 @@ const scanUrl = async (url) => {
         'title': node.getAttribute('title'),
     })))
 
-    
+
 
     let favicon = srcLinks.find(e => e.rel === 'shortcut icon')
 

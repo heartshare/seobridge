@@ -37,7 +37,7 @@ Route::get('/legal-disclosures', function () {
     return view('static.index');
 })->name('legal-disclosures');
 
-Auth::routes();
+\Auth::routes();
 
 Route::get('/dashboard', function() {
     return redirect('/dashboard/overview');

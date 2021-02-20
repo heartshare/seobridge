@@ -4,8 +4,18 @@
 
         <div class="details" v-if="details">
 
-            <fieldset>
+            <fieldset class="half">
                 <legend>Appearence</legend>
+                <h3>{{details.title}}</h3>
+                <img :src="details.favicon" width="30"><br>
+                Description: <b>{{details.metaDescription}}</b><br>
+                Favicon: <b>{{details.favicon}}</b><br>
+                <img :src="details.preview" width="300"><br>
+                <a :href="details.url.href" target="_blank">{{details.url.href}}</a><br>
+            </fieldset>
+
+            <fieldset class="half">
+                <legend>Open Graph Appearence</legend>
                 <h2>{{details.title}}</h2>
                 <img :src="details.favicon" width="30"><br>
                 Description: <b>{{details.metaDescription}}</b><br>
@@ -39,6 +49,16 @@
                     Name: <span>{{meta.name}}</span><br>
                     Property: <span>{{meta.property}}</span><br>
                     Charset: <span>{{meta.charset}}</span><br>
+                </p>
+            </fieldset><br>
+            <fieldset v-show="details.images.length > 0">
+                <legend>Images</legend>
+                <p v-for="(image, i) in details.images" :key="i">
+                    <img :src="image.href" width="200"><br>
+                    src: <span>{{image.src}}</span><br>
+                    size: <span>{{image.width}} x {{image.height}}</span><br>
+                    visible size: <span>{{image.visibleWidth}} x {{image.visibleHeight}}</span><br>
+                    alt: <span>{{image.alt}}</span><br>
                 </p>
             </fieldset><br>
 
