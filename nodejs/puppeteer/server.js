@@ -2,6 +2,7 @@ const puppeteer = require('puppeteer')
 const express = require('express')
 const {v4: uuid} = require('uuid')
 const cors = require('cors')
+const fetch = require('node-fetch')
 
 const app = express()
 
@@ -63,17 +64,17 @@ const scanUrl = async (url) => {
         height: 1080,
     })
     
-
-
     await page.goto(url)
 
     let metrics = await page.metrics()
     
     let links = []
-    links = await page.$$eval('a', e => e.map(node => ({
-        'href': node.getAttribute('href'),
-        'text': node.innerText,
-    })))
+    links = await page.$$eval('a', e => e.map(node => {
+        return {
+            'href': node.getAttribute('href'),
+            'text': node.innerText,
+        }
+    }))
 
     let internalLinks = []
     internalLinks = links.filter(e => {
@@ -97,25 +98,66 @@ const scanUrl = async (url) => {
     let title
     try {
         title = await page.$eval('title', node => node.textContent)
-    } catch (error) {
+    }
+    catch (error) {
         title = null
     }
 
-    let metaDescription
-    try {
-        metaDescription = await page.$eval('meta[name="description"]', node => node.getAttribute('content'))
-    } catch (error) {
-        metaDescription = null
-    }
-
-    let meta = []
-    meta = await page.$$eval('meta', e => e.map(node => ({
+    let metaTags = []
+    metaTags = await page.$$eval('meta', e => e.map(node => ({
         'name': node.getAttribute('name'),
         'property': node.getAttribute('property'),
         'content': node.getAttribute('content'),
         'charset': node.getAttribute('charset'),
         'httpEquiv': node.getAttribute('http-equiv'),
     })))
+
+
+
+    let openGraph = {}
+    let twitterCard = {}
+    let themeColor = null
+    let viewport = null
+    let description = null
+    let generator = null
+    let keywords = []
+
+    for (const metaTag of metaTags)
+    {
+        if (metaTag.name === 'viewport')
+        {
+            viewport = metaTag.content
+        }
+        else if (metaTag.name === 'theme-color')
+        {
+            themeColor = metaTag.content
+        }
+        else if (metaTag.name === 'generator')
+        {
+            generator = metaTag.content
+        }
+        else if (metaTag.name === 'description')
+        {
+            description = metaTag.content
+        }
+        else if (metaTag.name === 'keywords')
+        {
+            keywords = metaTag.content.split(',')
+        }
+        else if (['twitter:card', 'twitter:site', 'twitter:title', 'twitter:description', 'twitter:image'].includes(metaTag.name))
+        {
+            twitterCard[metaTag.name] = metaTag.content
+        }
+        else if (['og:title', 'og:type', 'og:url', 'og:image', 'og:description'].includes(metaTag.property))
+        {
+            openGraph[metaTag.property] = metaTag.content
+        }
+    }
+
+    openGraph.hasOpenGraph = Object.keys(openGraph).length > 0 ? true : false
+    twitterCard.hasTwitterCard = Object.keys(twitterCard).length > 0 ? true : false
+
+
 
     let srcLinks = []
     srcLinks = await page.$$eval('link', e => e.map(node => ({
@@ -124,34 +166,31 @@ const scanUrl = async (url) => {
         'title': node.getAttribute('title'),
     })))
 
+    let headings = []
+    headings = await page.$$eval('h1, h2, h3, h4, h5, h6', e => e.map(node => ({
+        'tag': node.tagName,
+        'text': node.innerText,
+    })))
+
 
 
     let favicon = srcLinks.find(e => e.rel === 'shortcut icon')
 
-    faviconUrl = favicon ? new URL(favicon.href, url.href) : null
+    favicon = favicon ? new URL(favicon.href, url.href).href : null
 
-    if (!faviconUrl)
+    
+    if (!favicon)
     {
-        try
-        {
-            probeUrl = new URL('/favicon.ico', url.href)
-            await sourceChecker.goto(probeUrl.href, {waitUntil: 'load', timeout: 0});
-            faviconUrl = probeUrl.href
-        }
-        catch(e)
-        {}
-    }
+        let ProbeUrls = [
+            new URL('/favicon.ico', url.origin).href,
+            new URL('/favicon.png', url.origin).href,
+        ]
 
-    if (!faviconUrl)
-    {
-        try
+        for (const probeUrl of ProbeUrls)
         {
-            probeUrl = new URL('/favicon.png', url.href)
-            await sourceChecker.goto(probeUrl.href, {waitUntil: 'load', timeout: 0});
-            faviconUrl = probeUrl.href
+            let probe = await fetch(probeUrl)
+            if (probe.status >= 200 && probe.status <= 299) favicon = probeUrl
         }
-        catch(e)
-        {}
     }
 
 
@@ -160,25 +199,56 @@ const scanUrl = async (url) => {
     appleTouchIcon = appleTouchIcon ? appleTouchIcon.href : null
 
     let preview = 'data:image/png;base64,'+await page.screenshot({ encoding: "base64" })
+
+    let score = {
+        totalPageScore: 0,
+
+        hasTitle: title ? true : false,
+        hasDescription: description ? true : false,
+        hasFavicon: favicon ? true : false,
+        hasViewport: viewport ? true : false,
+    }
+
+    if (score.hasTitle) score.totalPageScore += 25
+    if (score.hasDescription) score.totalPageScore += 25
+    if (score.hasFavicon) score.totalPageScore += 25
+    if (score.hasViewport) score.totalPageScore += 25
+
+
+
+    let metaData = {
+        openGraph,
+        twitterCard,
+        viewport,
+        description,
+        generator,
+        themeColor,
+        keywords,
+        title,
+        favicon,
+    }
+
+
     
     await browser.close()
 
     return {
         url: {
             origin: url.origin,
+            host: url.host,
             href: url.href,
         },
         preview,
-        favicon: faviconUrl,
         appleTouchIcon,
         links,
         internalLinks,
         metrics,
         images,
-        title,
-        metaDescription,
-        meta,
+        meta: metaTags,
         srcLinks,
+        headings,
+        score,
+        metaData,
     }
 }
 

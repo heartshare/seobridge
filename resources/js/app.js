@@ -14,6 +14,10 @@ window.Vue.use(window.Vuex)
 const files = require.context('./components/ui/', true, /\.vue$/i)
 files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
+// Vue ApexCharts
+window.VueApexCharts = require('vue-apexcharts')
+Vue.component('apexchart', VueApexCharts)
+
 
 
 const store = new Vuex.Store(require('./store/index'))

@@ -9,13 +9,13 @@
             <div class="page-card" v-for="(report, i) in reports" :key="i">
                 <img class="thumbnail" :src="report.preview">
                 <div class="score-container">
-                    <div class="score">100</div>
-                    <ui-progress-ring size="40" color="var(--success)" :progress="100"></ui-progress-ring>
+                    <div class="score">{{report.score.totalPageScore}}</div>
+                    <ui-progress-ring size="40" back-color="#ffffff30" :color="scoreColor(report.score.totalPageScore)" :progress="report.score.totalPageScore"></ui-progress-ring>
                 </div>
                 <div class="text-container">
-                    <img class="favicon" v-if="report.favicon" :src="report.favicon">
-                    <div class="title" :title="report.title">{{report.title}}</div>
-                    <div class="description" :title="report.metaDescription">{{report.metaDescription ? report.metaDescription : 'MISSING'}}</div>
+                    <img class="favicon" v-if="report.metaData.favicon" :src="report.metaData.favicon">
+                    <div class="title" :title="report.metaData.title">{{report.metaData.title}}</div>
+                    <div class="description" :title="report.metaData.description">{{report.score.hasDescription ? report.metaData.description : 'MISSING'}}</div>
                     <ui-button class="details-button" icon="none" border light small @click="$emit('details', report)">View Details</ui-button>
                 </div>
             </div>
@@ -64,6 +64,26 @@
                     }
                 }, 6000);
             },
+
+            scoreColor(score = 0)
+            {
+                if (score >= 80)
+                {
+                    return 'var(--success)'
+                }
+                else if (score >= 50)
+                {
+                    return 'var(--warning)'
+                }
+                else if (score >= 20)
+                {
+                    return '#ff7f50'
+                }
+                else
+                {
+                    return 'var(--error)'
+                }
+            }
         },
 
         components: {},
