@@ -367,7 +367,7 @@
                     padding: 7.5px
 
                 .metric-card
-                    // border: var(--border)
+                    border: 2px solid var(--bg-dark)
                     background: linear-gradient(90deg, var(--bg-dark) 0%, var(--bg) 70%)
                     border-radius: 5px
                     display: inline-grid
