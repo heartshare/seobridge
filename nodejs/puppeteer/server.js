@@ -57,7 +57,6 @@ app.all('/analyse', async (req, res) => {
 const scanUrl = async (url) => {
     const browser = await puppeteer.launch()
     const page = await browser.newPage()
-    const sourceChecker = await browser.newPage()
 
     await page.setViewport({
         width: 1920,
@@ -67,6 +66,8 @@ const scanUrl = async (url) => {
     await page.goto(url)
 
     let metrics = await page.metrics()
+    let errors = []
+    let warnings = []
     
     let links = []
     links = await page.$$eval('a', e => e.map(node => {
@@ -93,7 +94,15 @@ const scanUrl = async (url) => {
         'visibleHeight': node.offsetHeight,
     })))
 
-    images = images.map(e => ({...e, href: new URL(e.src, url.origin).href}))
+    for (let img of images)
+    {
+        img.href = new URL(img.src, url.origin).href
+
+        if (!img.alt)
+        {
+            errors.push({type: 'IMG_MISSING_ALT', desc: 'An image is missing an "alt"-attribute.', weight: 1,})
+        }
+    }
 
     let title
     try {
@@ -144,13 +153,24 @@ const scanUrl = async (url) => {
         {
             keywords = metaTag.content.split(',')
         }
-        else if (['twitter:card', 'twitter:site', 'twitter:title', 'twitter:description', 'twitter:image'].includes(metaTag.name))
+        else if (metaTag.name && metaTag.name.startsWith('twitter:'))
         {
             twitterCard[metaTag.name] = metaTag.content
         }
-        else if (['og:title', 'og:type', 'og:url', 'og:image', 'og:description'].includes(metaTag.property))
+        else if (metaTag.property && metaTag.property.startsWith('og:'))
         {
             openGraph[metaTag.property] = metaTag.content
+
+            if (metaTag.property == 'og:url')
+            {
+                let ogUrl = new URL(metaTag.content)
+                openGraph[metaTag.property] = {
+                    url: metaTag.content,
+                    host: ogUrl.host,
+                    origin: ogUrl.origin,
+                    path: ogUrl.path,
+                }
+            }
         }
     }
 
@@ -207,6 +227,9 @@ const scanUrl = async (url) => {
         hasDescription: description ? true : false,
         hasFavicon: favicon ? true : false,
         hasViewport: viewport ? true : false,
+
+        errors,
+        warnings,
     }
 
     if (score.hasTitle) score.totalPageScore += 25

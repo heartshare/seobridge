@@ -9,118 +9,127 @@
             </div>
 
             <div class="detail-row">
-                <div class="card span-4 page-info-card">
-                    <div class="images">
-                        <img :src="details.preview" class="preview">
-                        <img :src="details.metaData.favicon" class="favicon">
+                <div class="card span-3">
+                    <h4 class="info"><div class="icon">&#984376;</div>Page Score</h4>
+                    <apexchart style="display: inherit;" type="radialBar" height="250" :options="chartOptions" :series="[details.score.totalPageScore] || [0]"></apexchart>
+                </div>
+
+                <div class="card span-3">
+                    <h4 class="info"><div class="icon">&#983341;</div>Checklist</h4>
+
+                    <div class="metric-card-wrapper">
+                        <div class="metric-card" v-show="details.score.hasFavicon">
+                            <div class="icon" style="color: var(--success)">&#983340;</div>
+                            <div class="value">Favicon</div>
+                        </div>
+                        <div class="metric-card" v-show="details.score.hasTitle">
+                            <div class="icon" style="color: var(--success)">&#983340;</div>
+                            <div class="value">Page Title</div>
+                        </div>
+                        <div class="metric-card" v-show="details.score.hasDescription">
+                            <div class="icon" style="color: var(--success)">&#983340;</div>
+                            <div class="value">Page Description</div>
+                        </div>
+                        <div class="metric-card" v-show="details.score.hasViewport">
+                            <div class="icon" style="color: var(--success)">&#983340;</div>
+                            <div class="value">Mobile Support</div>
+                        </div>
+                    </div>
+                    <div class="metric-card-wrapper">
+                        <div class="metric-card" v-show="!details.score.hasFavicon">
+                            <div class="icon" style="color: var(--error)">&#983382;</div>
+                            <div class="value">No Favicon</div>
+                        </div>
+                        <div class="metric-card" v-show="!details.score.hasTitle">
+                            <div class="icon" style="color: var(--error)">&#983382;</div>
+                            <div class="value">No Page Title</div>
+                        </div>
+                        <div class="metric-card" v-show="!details.score.hasDescription">
+                            <div class="icon" style="color: var(--error)">&#983382;</div>
+                            <div class="value">No Page Description</div>
+                        </div>
+                        <div class="metric-card" v-show="!details.score.hasViewport">
+                            <div class="icon" style="color: var(--error)">&#983382;</div>
+                            <div class="value">No Mobile Support</div>
+                        </div>
                     </div>
                 </div>
-                <div class="card span-8 page-info-card">
-                    <!-- <div class="images">
-                        <img :src="details.preview" class="preview">
-                        <img :src="details.metaData.favicon" class="favicon">
-                    </div> -->
-                    <div class="content">
-                        <h4>{{details.metaData.title}}</h4>
 
-                        <div class="metric-card-wrapper">
-                            <div class="metric-card" v-if="details.metaData.description">
-                                <div class="icon" style="color: #12CBC4">&#985975;</div>
-                                <div class="label">Description</div>
-                                <div class="value">{{details.metaData.description}}</div>
-                            </div>
+                <div class="card span-6">
+                    <h4 class="info"><div class="icon">&#984261;</div>Metrics</h4>
 
-                            <div class="metric-card half" v-if="details.metaData.generator">
-                                <div class="icon" style="color: #1e90ff">&#987021;</div>
-                                <div class="label">CMS / Generator</div>
-                                <div class="value">{{details.metaData.generator}}</div>
-                            </div>
+                    <div class="metric-card-wrapper">
+                        <div class="metric-card half">
+                            <div class="icon">&#983706;</div>
+                            <div class="label">Rendertime</div>
+                            <div class="value">{{details.metrics.TaskDuration.toFixed(4)}}s</div>
+                        </div>
 
-                            <div class="metric-card half" v-if="details.metaData.themeColor">
-                                <div class="icon" style="color: #3742fa">&#984024;</div>
-                                <div class="label">Theme Color</div>
-                                <div class="value">{{details.metaData.themeColor}}</div>
-                            </div>
-
-                            <div class="metric-card" v-if="details.metaData.keywords.length > 0">
-                                <div class="icon" style="color: #747d8c">&#983819;</div>
-                                <div class="label">Keywords</div>
-                                <div class="value">{{details.metaData.keywords.join(', ') }}</div>
-                            </div>
+                        <div class="metric-card half">
+                            <div class="icon">&#983838;</div>
+                            <div class="label">Script Rendertime</div>
+                            <div class="value">{{details.metrics.ScriptDuration.toFixed(4)}}s</div>
                         </div>
                     </div>
                 </div>
             </div>
 
             <div class="detail-row">
+                <div class="card span-12 page-info-card">
+                    <h4><img v-show="details.score.hasFavicon" :src="details.metaData.favicon" class="favicon">{{details.metaData.title}}</h4>
 
-                <div class="card span-4 center">
-                    <apexchart style="display: inherit;" type="radialBar" height="350" :options="chartOptions" :series="[details.score.totalPageScore] || [0]"></apexchart>
-                </div>
-
-                <div class="card span-4">
-                    <h4>Metrics</h4>
-
+                    <!-- <img :src="details.preview" class="preview"> -->
                     <div class="metric-card-wrapper">
-                        <div class="metric-card">
-                            <div class="icon">&#983706;</div>
-                            <div class="label">Rendertime</div>
-                            <div class="value">{{details.metrics.TaskDuration.toFixed(4)}}s</div>
+                        <div class="metric-card" v-if="details.metaData.description">
+                            <div class="icon">&#985975;</div>
+                            <div class="label">Description</div>
+                            <div class="value">{{details.metaData.description}}</div>
                         </div>
 
-                        <div class="metric-card">
-                            <div class="icon" style="color: #FFC312">&#983838;</div>
-                            <div class="label">Script Rendertime</div>
-                            <div class="value">{{details.metrics.ScriptDuration.toFixed(4)}}s</div>
+                        <div class="metric-card" v-if="details.metaData.generator">
+                            <div class="icon">&#984044;</div>
+                            <div class="label">CMS / Generator</div>
+                            <div class="value">{{details.metaData.generator}}</div>
                         </div>
-                    </div>
-                </div>
 
-                <div class="card span-4 primary">
-                    <h4>Checklist</h4>
+                        <div class="metric-card" v-if="details.metaData.themeColor">
+                            <div class="square" :style="'background:' + details.metaData.themeColor"></div>
+                            <div class="label">Theme Color</div>
+                            <div class="value">{{details.metaData.themeColor}}</div>
+                        </div>
 
-                    <div class="checklist-wrapper">
-                        <div class="checklist-item" v-show="details.score.hasFavicon">
-                            <div class="icon">&#983340;</div>
-                            <div class="text">Favicon</div>
-                        </div>
-                        <div class="checklist-item" v-show="details.score.hasTitle">
-                            <div class="icon">&#983340;</div>
-                            <div class="text">Page Title</div>
-                        </div>
-                        <div class="checklist-item" v-show="details.score.hasDescription">
-                            <div class="icon">&#983340;</div>
-                            <div class="text">Page Description</div>
-                        </div>
-                        <div class="checklist-item" v-show="details.score.hasViewport">
-                            <div class="icon">&#983340;</div>
-                            <div class="text">Mobile Support</div>
-                        </div>
-                    </div>
-                    <div class="checklist-wrapper">
-                        <div class="checklist-item" v-show="!details.score.hasFavicon">
-                            <div class="icon">&#983382;</div>
-                            <div class="text">Favicon</div>
-                        </div>
-                        <div class="checklist-item" v-show="!details.score.hasTitle">
-                            <div class="icon">&#983382;</div>
-                            <div class="text">Page Title</div>
-                        </div>
-                        <div class="checklist-item" v-show="!details.score.hasDescription">
-                            <div class="icon">&#983382;</div>
-                            <div class="text">Page Description</div>
-                        </div>
-                        <div class="checklist-item" v-show="!details.score.hasViewport">
-                            <div class="icon">&#983382;</div>
-                            <div class="text">Mobile Support</div>
+                        <div class="metric-card" v-if="details.metaData.keywords.length > 0">
+                            <div class="icon">&#983819;</div>
+                            <div class="label">Keywords</div>
+                            <div class="value">{{details.metaData.keywords.join(', ') }}</div>
                         </div>
                     </div>
                 </div>
             </div>
 
+            <div class="detail-row" v-if="details.score.errors.length > 0">
+                <div class="card span-12">
+                    <h4 class="error"><div class="icon">&#983385;</div>Errors</h4>
+
+                    <div class="metric-card-wrapper">
+                        <div class="metric-card" v-for="(error, i) in details.score.errors" :key="i">
+                            <div class="icon" style="color: var(--error)">&#983789;</div>
+                            <div class="label">Error</div>
+                            <div class="value">{{error.desc}}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="detail-row" v-if="details.score.warnings.length > 0">
+                <div class="card span-12">
+                    <h4 class="warning"><div class="icon">&#983078;</div>Warnings</h4>
+                </div>
+            </div>
+
             <div class="detail-row" v-if="details.metaData.twitterCard.hasTwitterCard || details.metaData.openGraph.hasOpenGraph">
                 <div class="card span-6" v-if="details.metaData.twitterCard.hasTwitterCard">
-                    <h4>Twitter Appearence</h4>
+                    <h4><div class="icon">&#984388;</div>Twitter Appearence</h4>
                     <div class="twitter-summary-card">
                         <img class="image" :src="details.metaData.twitterCard['twitter:image']">
                         <div class="content">
@@ -135,19 +144,22 @@
                 </div>
 
                 <div class="card span-6" v-if="details.metaData.openGraph.hasOpenGraph">
-                    <h4>Open Graph Appearence</h4>
-                    <p>
-                        Titel: <b>{{details.metaData.openGraph['og:title']}}</b><br>
-                        URL: <a :href="details.metaData.openGraph['og:url']" target="_blank">{{details.metaData.openGraph['og:url']}}</a><br>
-                        Description: <b>{{details.metaData.openGraph['og:description']}}</b><br>
-                        <img :src="details.metaData.openGraph['og:image']" width="300"><br>
-                    </p>
+                    <h4><div class="icon">&#987137;</div>Open Graph Appearence</h4>
+
+                    <div class="open-graph-article-card">
+                        <img :src="details.metaData.openGraph['og:image']" class="image">
+                        <div class="content">
+                            <div class="url">{{details.metaData.openGraph['og:url'].host}}</div>
+                            <div class="title">{{details.metaData.openGraph['og:title']}}</div>
+                            <div class="description">{{details.metaData.openGraph['og:description']}}</div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <div class="detail-row">
-                <div class="card span-6">
-                    <h4>Meta Tags</h4>
+                <div class="card span-12">
+                    <h4><div class="icon">&#984313;</div>Meta Tags</h4>
                     <p v-for="(meta, i) in details.meta" :key="i">
                         Content: <span>{{meta.content}}</span><br>
                         Name: <span>{{meta.name}}</span><br>
@@ -155,8 +167,11 @@
                         Charset: <span>{{meta.charset}}</span><br>
                     </p>
                 </div>
-                <div class="card span-6">
-                    <h4>Images</h4>
+            </div>
+
+            <div class="detail-row">
+                <div class="card span-12">
+                    <h4><div class="icon">&#983785;</div>Images</h4>
                     <p v-for="(image, i) in details.images" :key="i">
                         <img :src="image.href" width="200"><br>
                         src: <span>{{image.src}}</span><br>
@@ -195,7 +210,7 @@
                 series: [67],
                 chartOptions: {
                     chart: {
-                        height: 350,
+                        height: 250,
                         type: 'radialBar',
                     },
                     plotOptions: {
@@ -207,9 +222,9 @@
                                 name: {
                                     show: true,
                                     label: 'Page Score',
-                                    fontSize: '30px',
+                                    fontSize: '25px',
                                     fontFamily: 'Roboto',
-                                    fontWeight: 'bold',
+                                    fontWeight: '900',
                                     color: 'var(--heading-gray)',
                                 },
 
@@ -241,6 +256,11 @@
                     },
                 },
             }
+        },
+
+        created() {
+            this.details.score.warnings = []
+            this.details.score.errors = []
         },
 
         methods: {
@@ -280,7 +300,6 @@
                 background: var(--bg)
                 border-radius: 5px
                 font-size: var(--text-size)
-                filter: var(--elevation-2)
                 overflow: auto
 
                 h1, h2, h3, h4, h5, h6
@@ -288,6 +307,43 @@
                     color: var(--primary)
                     width: 100%
                     padding: 7px 15px 0
+
+                h4
+                    color: var(--heading-gray)
+                    font-size: var(--button-size)
+                    letter-spacing: 1px
+                    text-transform: uppercase
+                    position: relative
+                    font-family: var(--text-font)
+                    padding: 7px 15px 7px 10px
+                    border-bottom: 2px solid var(--border-color)
+
+                    &.error
+                        color: var(--error)
+                        border-color: var(--error)
+
+                    &.warning
+                        color: var(--warning)
+                        border-color: var(--warning)
+
+                    &.info
+                        color: var(--primary)
+                        border-color: var(--primary)
+
+                    .icon
+                        font-size: 20px
+                        font-weight: 300
+                        margin-right: 10px
+                        color: inherit
+                        font-family: 'Material Icons'
+                        vertical-align: middle
+                        user-select: none
+
+                    .favicon
+                        height: 20px
+                        width: 20px
+                        margin-right: 10px
+                        vertical-align: middle
 
                 &.center
                     display: grid
@@ -332,28 +388,14 @@
                 &.page-info-card
                     overflow: hidden
 
-                    .images
-                        grid-area: images
+                    .preview
                         width: 100%
                         height: 100%
-                        position: relative
-
-                        .preview
-                            width: 100%
-                            height: 100%
-                            object-fit: contain
-                            filter: saturate(0%)
-
-                        .favicon
-                            height: 50px
-                            width: 50px
-                            border-radius: 100%
-                            position: absolute
-                            top: 10px
-                            left: 10px
-                            background: white
-                            padding: 10px
-                            border: var(--border)
+                        object-fit: contain
+                        filter: saturate(0%)
+                        float: left
+                        border-radius: 5px
+                        width: 200px
 
                     .content
                         font-size: var(--text-size)
@@ -367,7 +409,7 @@
                     padding: 7.5px
 
                 .metric-card
-                    border: 2px solid var(--bg-dark)
+                    // border: 1px solid var(--bg-dark)
                     background: linear-gradient(90deg, var(--bg-dark) 0%, var(--bg) 70%)
                     border-radius: 5px
                     display: inline-grid
@@ -389,6 +431,16 @@
                         justify-self: center
                         user-select: none
 
+                    .square
+                        grid-area: icon
+                        height: 20px
+                        width: 20px
+                        border-radius: 3px
+                        border: var(--border)
+                        background: var(--bg)
+                        align-self: center
+                        justify-self: center
+
                     .label
                         grid-area: label
                         font-size: var(--text-size)
@@ -402,6 +454,7 @@
                         grid-area: value
                         font-size: var(--text-size)
                         color: var(--heading-gray)
+                        line-height: 130%
                         align-self: top
                         font-weight: 600
 
@@ -420,14 +473,14 @@
 
                     .icon
                         font-size: 20px
-                        color: #ffffffaa
+                        color: var(--text-gray)
                         font-family: 'Material Icons'
                         text-align: center
 
                     .text
                         font-size: var(--button-size)
                         font-weight: 600
-                        color: white
+                        color: var(--heading-gray)
                         flex: 1
                         text-transform: uppercase
                         letter-spacing: 1px
@@ -482,6 +535,48 @@
                             .text
                                 font-size: var(--text-size)
                                 color: var(--text-gray)
+
+                .open-graph-article-card
+                    display: grid
+                    margin: 15px
+                    border-radius: 7px
+                    grid-template: auto 1fr / 1fr
+                    grid-template-areas: "image" "content"
+                    align-items: center
+                    border: var(--border)
+                    overflow: hidden
+
+                    .image
+                        grid-area: image
+                        width: 100%
+                        height: 100%
+                        object-fit: cover
+                        border-bottom: var(--border)
+
+                    .content
+                        grid-area: content
+                        padding: 8px 10px
+                        display: block
+
+                        .url
+                            display: block
+                            align-items: center
+                            font-size: var(--text-size)
+                            color: var(--text-gray)
+                            text-transform: uppercase
+                            margin-bottom: 3px
+
+                        .title
+                            display: block
+                            font-size: var(--text-size)
+                            color: var(--heading-gray)
+                            margin-bottom: 3px
+
+                        .description
+                            display: block
+                            font-size: var(--text-size)
+                            color: var(--text-gray)
+                            line-height: 130%
 
             fieldset
                 font-size: var(--text-size)

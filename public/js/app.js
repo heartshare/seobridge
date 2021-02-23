@@ -4503,6 +4503,21 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
@@ -5328,7 +5343,7 @@ __webpack_require__.r(__webpack_exports__);
       series: [67],
       chartOptions: {
         chart: {
-          height: 350,
+          height: 250,
           type: 'radialBar'
         },
         plotOptions: {
@@ -5340,9 +5355,9 @@ __webpack_require__.r(__webpack_exports__);
               name: {
                 show: true,
                 label: 'Page Score',
-                fontSize: '30px',
+                fontSize: '25px',
                 fontFamily: 'Roboto',
-                fontWeight: 'bold',
+                fontWeight: '900',
                 color: 'var(--heading-gray)'
               },
               value: {
@@ -5371,6 +5386,10 @@ __webpack_require__.r(__webpack_exports__);
         }
       }
     };
+  },
+  created: function created() {
+    this.details.score.warnings = [];
+    this.details.score.errors = [];
   },
   methods: {
     openDetails: function openDetails(details) {
@@ -6173,7 +6192,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".page-container[data-v-b59c8186] {\n  width: 100%;\n}\n.page-container .details[data-v-b59c8186] {\n  width: 100%;\n  display: flex;\n  flex-direction: column;\n  gap: 30px;\n}\n.page-container .details .nav-row[data-v-b59c8186] {\n  height: 40px;\n  margin-top: 30px;\n}\n.page-container .details .detail-row[data-v-b59c8186] {\n  display: grid;\n  grid-template-columns: repeat(12, 1fr);\n  grid-template-rows: 1fr;\n  gap: 30px;\n}\n.page-container .details .card[data-v-b59c8186] {\n  background: var(--bg);\n  border-radius: 5px;\n  font-size: var(--text-size);\n  filter: var(--elevation-2);\n  overflow: auto;\n}\n.page-container .details .card h1[data-v-b59c8186], .page-container .details .card h2[data-v-b59c8186], .page-container .details .card h3[data-v-b59c8186], .page-container .details .card h4[data-v-b59c8186], .page-container .details .card h5[data-v-b59c8186], .page-container .details .card h6[data-v-b59c8186] {\n  margin: 0;\n  color: var(--primary);\n  width: 100%;\n  padding: 7px 15px 0;\n}\n.page-container .details .card.center[data-v-b59c8186] {\n  display: grid;\n  place-content: center;\n}\n.page-container .details .card.primary[data-v-b59c8186] {\n  background: var(--primary);\n  color: #ffffffdd;\n}\n.page-container .details .card.primary h1[data-v-b59c8186], .page-container .details .card.primary h2[data-v-b59c8186], .page-container .details .card.primary h3[data-v-b59c8186], .page-container .details .card.primary h4[data-v-b59c8186], .page-container .details .card.primary h5[data-v-b59c8186], .page-container .details .card.primary h6[data-v-b59c8186] {\n  color: white;\n  border-bottom: var(--border);\n  border-color: #ffffff40;\n}\n.page-container .details .card.span-2[data-v-b59c8186] {\n  grid-column: span 2;\n}\n.page-container .details .card.span-3[data-v-b59c8186] {\n  grid-column: span 3;\n}\n.page-container .details .card.span-4[data-v-b59c8186] {\n  grid-column: span 4;\n}\n.page-container .details .card.span-5[data-v-b59c8186] {\n  grid-column: span 5;\n}\n.page-container .details .card.span-6[data-v-b59c8186] {\n  grid-column: span 6;\n}\n.page-container .details .card.span-7[data-v-b59c8186] {\n  grid-column: span 7;\n}\n.page-container .details .card.span-8[data-v-b59c8186] {\n  grid-column: span 8;\n}\n.page-container .details .card.span-9[data-v-b59c8186] {\n  grid-column: span 9;\n}\n.page-container .details .card.span-12[data-v-b59c8186] {\n  grid-column: span 12;\n}\n.page-container .details .card.page-info-card[data-v-b59c8186] {\n  overflow: hidden;\n}\n.page-container .details .card.page-info-card .images[data-v-b59c8186] {\n  grid-area: images;\n  width: 100%;\n  height: 100%;\n  position: relative;\n}\n.page-container .details .card.page-info-card .images .preview[data-v-b59c8186] {\n  width: 100%;\n  height: 100%;\n  -o-object-fit: contain;\n     object-fit: contain;\n  filter: saturate(0%);\n}\n.page-container .details .card.page-info-card .images .favicon[data-v-b59c8186] {\n  height: 50px;\n  width: 50px;\n  border-radius: 100%;\n  position: absolute;\n  top: 10px;\n  left: 10px;\n  background: white;\n  padding: 10px;\n  border: var(--border);\n}\n.page-container .details .card.page-info-card .content[data-v-b59c8186] {\n  font-size: var(--text-size);\n  color: var(--text-gray);\n}\n.page-container .details .card p[data-v-b59c8186] {\n  padding: 0 15px;\n}\n.page-container .details .card .metric-card-wrapper[data-v-b59c8186] {\n  width: 100%;\n  padding: 7.5px;\n}\n.page-container .details .card .metric-card[data-v-b59c8186] {\n  border: 2px solid var(--bg-dark);\n  background: linear-gradient(90deg, var(--bg-dark) 0%, var(--bg) 70%);\n  border-radius: 5px;\n  display: inline-grid;\n  width: calc(100% - 15px);\n  margin: 7.5px;\n  padding: 5px 0;\n  grid-template: auto 1fr/50px 1fr;\n  grid-template-areas: \"icon label\" \"icon value\";\n}\n.page-container .details .card .metric-card.half[data-v-b59c8186] {\n  width: calc(50% - 15px);\n}\n.page-container .details .card .metric-card .icon[data-v-b59c8186] {\n  grid-area: icon;\n  font-size: 25px;\n  color: var(--primary);\n  font-family: \"Material Icons\";\n  align-self: center;\n  justify-self: center;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n}\n.page-container .details .card .metric-card .label[data-v-b59c8186] {\n  grid-area: label;\n  font-size: var(--text-size);\n  color: var(--text-gray);\n  align-self: end;\n  height: 18px;\n  line-height: 18px;\n  margin-top: 3px;\n}\n.page-container .details .card .metric-card .value[data-v-b59c8186] {\n  grid-area: value;\n  font-size: var(--text-size);\n  color: var(--heading-gray);\n  align-self: top;\n  font-weight: 600;\n}\n.page-container .details .card .checklist-wrapper[data-v-b59c8186] {\n  width: 100%;\n  padding: 10px 0;\n}\n.page-container .details .card .checklist-item[data-v-b59c8186] {\n  width: 100%;\n  display: flex;\n  height: 36px;\n  padding: 0 15px;\n  gap: 15px;\n  align-items: center;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n}\n.page-container .details .card .checklist-item .icon[data-v-b59c8186] {\n  font-size: 20px;\n  color: #ffffffaa;\n  font-family: \"Material Icons\";\n  text-align: center;\n}\n.page-container .details .card .checklist-item .text[data-v-b59c8186] {\n  font-size: var(--button-size);\n  font-weight: 600;\n  color: white;\n  flex: 1;\n  text-transform: uppercase;\n  letter-spacing: 1px;\n}\n.page-container .details .card .twitter-summary-card[data-v-b59c8186] {\n  display: grid;\n  margin: 15px;\n  border-radius: 12px;\n  grid-template: 125px/125px auto;\n  grid-template-areas: \"image content\";\n  align-items: center;\n  border: var(--border);\n  overflow: hidden;\n}\n.page-container .details .card .twitter-summary-card .image[data-v-b59c8186] {\n  grid-area: image;\n  width: 100%;\n  height: 100%;\n  -o-object-fit: cover;\n     object-fit: cover;\n  border-right: var(--border);\n}\n.page-container .details .card .twitter-summary-card .content[data-v-b59c8186] {\n  grid-area: content;\n  padding: 8px 10px;\n  display: block;\n}\n.page-container .details .card .twitter-summary-card .content .title[data-v-b59c8186] {\n  display: block;\n  font-size: var(--text-size);\n  color: var(--heading-gray);\n  margin-bottom: 3px;\n}\n.page-container .details .card .twitter-summary-card .content .description[data-v-b59c8186] {\n  display: block;\n  font-size: var(--text-size);\n  color: var(--text-gray);\n  line-height: 130%;\n  margin-bottom: 3px;\n}\n.page-container .details .card .twitter-summary-card .content .url[data-v-b59c8186] {\n  display: flex;\n  align-items: center;\n}\n.page-container .details .card .twitter-summary-card .content .url .icon[data-v-b59c8186] {\n  font-size: 16px;\n  width: 22px;\n  color: var(--text-gray);\n  font-family: \"Material Icons\";\n  text-align: left;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n}\n.page-container .details .card .twitter-summary-card .content .url .text[data-v-b59c8186] {\n  font-size: var(--text-size);\n  color: var(--text-gray);\n}\n.page-container .details fieldset[data-v-b59c8186] {\n  font-size: var(--text-size);\n  border: var(--border);\n  border-radius: 5px;\n  display: inline-block;\n  width: 100%;\n  margin: 0;\n  vertical-align: top;\n  overflow: hidden;\n}\n.page-container .details fieldset.half[data-v-b59c8186] {\n  width: 50%;\n}\n.page-container .details fieldset p[data-v-b59c8186] {\n  margin: 0;\n  margin-bottom: 15px;\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, ".page-container[data-v-b59c8186] {\n  width: 100%;\n}\n.page-container .details[data-v-b59c8186] {\n  width: 100%;\n  display: flex;\n  flex-direction: column;\n  gap: 30px;\n}\n.page-container .details .nav-row[data-v-b59c8186] {\n  height: 40px;\n  margin-top: 30px;\n}\n.page-container .details .detail-row[data-v-b59c8186] {\n  display: grid;\n  grid-template-columns: repeat(12, 1fr);\n  grid-template-rows: 1fr;\n  gap: 30px;\n}\n.page-container .details .card[data-v-b59c8186] {\n  background: var(--bg);\n  border-radius: 5px;\n  font-size: var(--text-size);\n  overflow: auto;\n}\n.page-container .details .card h1[data-v-b59c8186], .page-container .details .card h2[data-v-b59c8186], .page-container .details .card h3[data-v-b59c8186], .page-container .details .card h4[data-v-b59c8186], .page-container .details .card h5[data-v-b59c8186], .page-container .details .card h6[data-v-b59c8186] {\n  margin: 0;\n  color: var(--primary);\n  width: 100%;\n  padding: 7px 15px 0;\n}\n.page-container .details .card h4[data-v-b59c8186] {\n  color: var(--heading-gray);\n  font-size: var(--button-size);\n  letter-spacing: 1px;\n  text-transform: uppercase;\n  position: relative;\n  font-family: var(--text-font);\n  padding: 7px 15px 7px 10px;\n  border-bottom: 2px solid var(--border-color);\n}\n.page-container .details .card h4.error[data-v-b59c8186] {\n  color: var(--error);\n  border-color: var(--error);\n}\n.page-container .details .card h4.warning[data-v-b59c8186] {\n  color: var(--warning);\n  border-color: var(--warning);\n}\n.page-container .details .card h4.info[data-v-b59c8186] {\n  color: var(--primary);\n  border-color: var(--primary);\n}\n.page-container .details .card h4 .icon[data-v-b59c8186] {\n  font-size: 20px;\n  font-weight: 300;\n  margin-right: 10px;\n  color: inherit;\n  font-family: \"Material Icons\";\n  vertical-align: middle;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n}\n.page-container .details .card h4 .favicon[data-v-b59c8186] {\n  height: 20px;\n  width: 20px;\n  margin-right: 10px;\n  vertical-align: middle;\n}\n.page-container .details .card.center[data-v-b59c8186] {\n  display: grid;\n  place-content: center;\n}\n.page-container .details .card.primary[data-v-b59c8186] {\n  background: var(--primary);\n  color: #ffffffdd;\n}\n.page-container .details .card.primary h1[data-v-b59c8186], .page-container .details .card.primary h2[data-v-b59c8186], .page-container .details .card.primary h3[data-v-b59c8186], .page-container .details .card.primary h4[data-v-b59c8186], .page-container .details .card.primary h5[data-v-b59c8186], .page-container .details .card.primary h6[data-v-b59c8186] {\n  color: white;\n  border-bottom: var(--border);\n  border-color: #ffffff40;\n}\n.page-container .details .card.span-2[data-v-b59c8186] {\n  grid-column: span 2;\n}\n.page-container .details .card.span-3[data-v-b59c8186] {\n  grid-column: span 3;\n}\n.page-container .details .card.span-4[data-v-b59c8186] {\n  grid-column: span 4;\n}\n.page-container .details .card.span-5[data-v-b59c8186] {\n  grid-column: span 5;\n}\n.page-container .details .card.span-6[data-v-b59c8186] {\n  grid-column: span 6;\n}\n.page-container .details .card.span-7[data-v-b59c8186] {\n  grid-column: span 7;\n}\n.page-container .details .card.span-8[data-v-b59c8186] {\n  grid-column: span 8;\n}\n.page-container .details .card.span-9[data-v-b59c8186] {\n  grid-column: span 9;\n}\n.page-container .details .card.span-12[data-v-b59c8186] {\n  grid-column: span 12;\n}\n.page-container .details .card.page-info-card[data-v-b59c8186] {\n  overflow: hidden;\n}\n.page-container .details .card.page-info-card .preview[data-v-b59c8186] {\n  width: 100%;\n  height: 100%;\n  -o-object-fit: contain;\n     object-fit: contain;\n  filter: saturate(0%);\n  float: left;\n  border-radius: 5px;\n  width: 200px;\n}\n.page-container .details .card.page-info-card .content[data-v-b59c8186] {\n  font-size: var(--text-size);\n  color: var(--text-gray);\n}\n.page-container .details .card p[data-v-b59c8186] {\n  padding: 0 15px;\n}\n.page-container .details .card .metric-card-wrapper[data-v-b59c8186] {\n  width: 100%;\n  padding: 7.5px;\n}\n.page-container .details .card .metric-card[data-v-b59c8186] {\n  background: linear-gradient(90deg, var(--bg-dark) 0%, var(--bg) 70%);\n  border-radius: 5px;\n  display: inline-grid;\n  width: calc(100% - 15px);\n  margin: 7.5px;\n  padding: 5px 0;\n  grid-template: auto 1fr/50px 1fr;\n  grid-template-areas: \"icon label\" \"icon value\";\n}\n.page-container .details .card .metric-card.half[data-v-b59c8186] {\n  width: calc(50% - 15px);\n}\n.page-container .details .card .metric-card .icon[data-v-b59c8186] {\n  grid-area: icon;\n  font-size: 25px;\n  color: var(--primary);\n  font-family: \"Material Icons\";\n  align-self: center;\n  justify-self: center;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n}\n.page-container .details .card .metric-card .square[data-v-b59c8186] {\n  grid-area: icon;\n  height: 20px;\n  width: 20px;\n  border-radius: 3px;\n  border: var(--border);\n  background: var(--bg);\n  align-self: center;\n  justify-self: center;\n}\n.page-container .details .card .metric-card .label[data-v-b59c8186] {\n  grid-area: label;\n  font-size: var(--text-size);\n  color: var(--text-gray);\n  align-self: end;\n  height: 18px;\n  line-height: 18px;\n  margin-top: 3px;\n}\n.page-container .details .card .metric-card .value[data-v-b59c8186] {\n  grid-area: value;\n  font-size: var(--text-size);\n  color: var(--heading-gray);\n  line-height: 130%;\n  align-self: top;\n  font-weight: 600;\n}\n.page-container .details .card .checklist-wrapper[data-v-b59c8186] {\n  width: 100%;\n  padding: 10px 0;\n}\n.page-container .details .card .checklist-item[data-v-b59c8186] {\n  width: 100%;\n  display: flex;\n  height: 36px;\n  padding: 0 15px;\n  gap: 15px;\n  align-items: center;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n}\n.page-container .details .card .checklist-item .icon[data-v-b59c8186] {\n  font-size: 20px;\n  color: var(--text-gray);\n  font-family: \"Material Icons\";\n  text-align: center;\n}\n.page-container .details .card .checklist-item .text[data-v-b59c8186] {\n  font-size: var(--button-size);\n  font-weight: 600;\n  color: var(--heading-gray);\n  flex: 1;\n  text-transform: uppercase;\n  letter-spacing: 1px;\n}\n.page-container .details .card .twitter-summary-card[data-v-b59c8186] {\n  display: grid;\n  margin: 15px;\n  border-radius: 12px;\n  grid-template: 125px/125px auto;\n  grid-template-areas: \"image content\";\n  align-items: center;\n  border: var(--border);\n  overflow: hidden;\n}\n.page-container .details .card .twitter-summary-card .image[data-v-b59c8186] {\n  grid-area: image;\n  width: 100%;\n  height: 100%;\n  -o-object-fit: cover;\n     object-fit: cover;\n  border-right: var(--border);\n}\n.page-container .details .card .twitter-summary-card .content[data-v-b59c8186] {\n  grid-area: content;\n  padding: 8px 10px;\n  display: block;\n}\n.page-container .details .card .twitter-summary-card .content .title[data-v-b59c8186] {\n  display: block;\n  font-size: var(--text-size);\n  color: var(--heading-gray);\n  margin-bottom: 3px;\n}\n.page-container .details .card .twitter-summary-card .content .description[data-v-b59c8186] {\n  display: block;\n  font-size: var(--text-size);\n  color: var(--text-gray);\n  line-height: 130%;\n  margin-bottom: 3px;\n}\n.page-container .details .card .twitter-summary-card .content .url[data-v-b59c8186] {\n  display: flex;\n  align-items: center;\n}\n.page-container .details .card .twitter-summary-card .content .url .icon[data-v-b59c8186] {\n  font-size: 16px;\n  width: 22px;\n  color: var(--text-gray);\n  font-family: \"Material Icons\";\n  text-align: left;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n}\n.page-container .details .card .twitter-summary-card .content .url .text[data-v-b59c8186] {\n  font-size: var(--text-size);\n  color: var(--text-gray);\n}\n.page-container .details .card .open-graph-article-card[data-v-b59c8186] {\n  display: grid;\n  margin: 15px;\n  border-radius: 7px;\n  grid-template: auto 1fr/1fr;\n  grid-template-areas: \"image\" \"content\";\n  align-items: center;\n  border: var(--border);\n  overflow: hidden;\n}\n.page-container .details .card .open-graph-article-card .image[data-v-b59c8186] {\n  grid-area: image;\n  width: 100%;\n  height: 100%;\n  -o-object-fit: cover;\n     object-fit: cover;\n  border-bottom: var(--border);\n}\n.page-container .details .card .open-graph-article-card .content[data-v-b59c8186] {\n  grid-area: content;\n  padding: 8px 10px;\n  display: block;\n}\n.page-container .details .card .open-graph-article-card .content .url[data-v-b59c8186] {\n  display: block;\n  align-items: center;\n  font-size: var(--text-size);\n  color: var(--text-gray);\n  text-transform: uppercase;\n  margin-bottom: 3px;\n}\n.page-container .details .card .open-graph-article-card .content .title[data-v-b59c8186] {\n  display: block;\n  font-size: var(--text-size);\n  color: var(--heading-gray);\n  margin-bottom: 3px;\n}\n.page-container .details .card .open-graph-article-card .content .description[data-v-b59c8186] {\n  display: block;\n  font-size: var(--text-size);\n  color: var(--text-gray);\n  line-height: 130%;\n}\n.page-container .details fieldset[data-v-b59c8186] {\n  font-size: var(--text-size);\n  border: var(--border);\n  border-radius: 5px;\n  display: inline-block;\n  width: 100%;\n  margin: 0;\n  vertical-align: top;\n  overflow: hidden;\n}\n.page-container .details fieldset.half[data-v-b59c8186] {\n  width: 50%;\n}\n.page-container .details fieldset p[data-v-b59c8186] {\n  margin: 0;\n  margin-bottom: 15px;\n}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -30571,125 +30590,20 @@ var render = function() {
             ),
             _vm._v(" "),
             _c("div", { staticClass: "detail-row" }, [
-              _c("div", { staticClass: "card span-4 page-info-card" }, [
-                _c("div", { staticClass: "images" }, [
-                  _c("img", {
-                    staticClass: "preview",
-                    attrs: { src: _vm.details.preview }
-                  }),
-                  _vm._v(" "),
-                  _c("img", {
-                    staticClass: "favicon",
-                    attrs: { src: _vm.details.metaData.favicon }
-                  })
-                ])
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "card span-8 page-info-card" }, [
-                _c("div", { staticClass: "content" }, [
-                  _c("h4", [_vm._v(_vm._s(_vm.details.metaData.title))]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "metric-card-wrapper" }, [
-                    _vm.details.metaData.description
-                      ? _c("div", { staticClass: "metric-card" }, [
-                          _c(
-                            "div",
-                            {
-                              staticClass: "icon",
-                              staticStyle: { color: "#12CBC4" }
-                            },
-                            [_vm._v("󰭷")]
-                          ),
-                          _vm._v(" "),
-                          _c("div", { staticClass: "label" }, [
-                            _vm._v("Description")
-                          ]),
-                          _vm._v(" "),
-                          _c("div", { staticClass: "value" }, [
-                            _vm._v(_vm._s(_vm.details.metaData.description))
-                          ])
-                        ])
-                      : _vm._e(),
-                    _vm._v(" "),
-                    _vm.details.metaData.generator
-                      ? _c("div", { staticClass: "metric-card half" }, [
-                          _c(
-                            "div",
-                            {
-                              staticClass: "icon",
-                              staticStyle: { color: "#1e90ff" }
-                            },
-                            [_vm._v("󰾍")]
-                          ),
-                          _vm._v(" "),
-                          _c("div", { staticClass: "label" }, [
-                            _vm._v("CMS / Generator")
-                          ]),
-                          _vm._v(" "),
-                          _c("div", { staticClass: "value" }, [
-                            _vm._v(_vm._s(_vm.details.metaData.generator))
-                          ])
-                        ])
-                      : _vm._e(),
-                    _vm._v(" "),
-                    _vm.details.metaData.themeColor
-                      ? _c("div", { staticClass: "metric-card half" }, [
-                          _c(
-                            "div",
-                            {
-                              staticClass: "icon",
-                              staticStyle: { color: "#3742fa" }
-                            },
-                            [_vm._v("󰏘")]
-                          ),
-                          _vm._v(" "),
-                          _c("div", { staticClass: "label" }, [
-                            _vm._v("Theme Color")
-                          ]),
-                          _vm._v(" "),
-                          _c("div", { staticClass: "value" }, [
-                            _vm._v(_vm._s(_vm.details.metaData.themeColor))
-                          ])
-                        ])
-                      : _vm._e(),
-                    _vm._v(" "),
-                    _vm.details.metaData.keywords.length > 0
-                      ? _c("div", { staticClass: "metric-card" }, [
-                          _c(
-                            "div",
-                            {
-                              staticClass: "icon",
-                              staticStyle: { color: "#747d8c" }
-                            },
-                            [_vm._v("󰌋")]
-                          ),
-                          _vm._v(" "),
-                          _c("div", { staticClass: "label" }, [
-                            _vm._v("Keywords")
-                          ]),
-                          _vm._v(" "),
-                          _c("div", { staticClass: "value" }, [
-                            _vm._v(
-                              _vm._s(_vm.details.metaData.keywords.join(", "))
-                            )
-                          ])
-                        ])
-                      : _vm._e()
-                  ])
-                ])
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "detail-row" }, [
               _c(
                 "div",
-                { staticClass: "card span-4 center" },
+                { staticClass: "card span-3" },
                 [
+                  _c("h4", { staticClass: "info" }, [
+                    _c("div", { staticClass: "icon" }, [_vm._v("󰔸")]),
+                    _vm._v("Page Score")
+                  ]),
+                  _vm._v(" "),
                   _c("apexchart", {
                     staticStyle: { display: "inherit" },
                     attrs: {
                       type: "radialBar",
-                      height: "350",
+                      height: "250",
                       options: _vm.chartOptions,
                       series: [_vm.details.score.totalPageScore] || 0
                     }
@@ -30698,51 +30612,13 @@ var render = function() {
                 1
               ),
               _vm._v(" "),
-              _c("div", { staticClass: "card span-4" }, [
-                _c("h4", [_vm._v("Metrics")]),
+              _c("div", { staticClass: "card span-3" }, [
+                _c("h4", { staticClass: "info" }, [
+                  _c("div", { staticClass: "icon" }, [_vm._v("󰄭")]),
+                  _vm._v("Checklist")
+                ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "metric-card-wrapper" }, [
-                  _c("div", { staticClass: "metric-card" }, [
-                    _c("div", { staticClass: "icon" }, [_vm._v("󰊚")]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "label" }, [_vm._v("Rendertime")]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "value" }, [
-                      _vm._v(
-                        _vm._s(_vm.details.metrics.TaskDuration.toFixed(4)) +
-                          "s"
-                      )
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "metric-card" }, [
-                    _c(
-                      "div",
-                      {
-                        staticClass: "icon",
-                        staticStyle: { color: "#FFC312" }
-                      },
-                      [_vm._v("󰌞")]
-                    ),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "label" }, [
-                      _vm._v("Script Rendertime")
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "value" }, [
-                      _vm._v(
-                        _vm._s(_vm.details.metrics.ScriptDuration.toFixed(4)) +
-                          "s"
-                      )
-                    ])
-                  ])
-                ])
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "card span-4 primary" }, [
-                _c("h4", [_vm._v("Checklist")]),
-                _vm._v(" "),
-                _c("div", { staticClass: "checklist-wrapper" }, [
                   _c(
                     "div",
                     {
@@ -30754,12 +30630,19 @@ var render = function() {
                           expression: "details.score.hasFavicon"
                         }
                       ],
-                      staticClass: "checklist-item"
+                      staticClass: "metric-card"
                     },
                     [
-                      _c("div", { staticClass: "icon" }, [_vm._v("󰄬")]),
+                      _c(
+                        "div",
+                        {
+                          staticClass: "icon",
+                          staticStyle: { color: "var(--success)" }
+                        },
+                        [_vm._v("󰄬")]
+                      ),
                       _vm._v(" "),
-                      _c("div", { staticClass: "text" }, [_vm._v("Favicon")])
+                      _c("div", { staticClass: "value" }, [_vm._v("Favicon")])
                     ]
                   ),
                   _vm._v(" "),
@@ -30774,12 +30657,21 @@ var render = function() {
                           expression: "details.score.hasTitle"
                         }
                       ],
-                      staticClass: "checklist-item"
+                      staticClass: "metric-card"
                     },
                     [
-                      _c("div", { staticClass: "icon" }, [_vm._v("󰄬")]),
+                      _c(
+                        "div",
+                        {
+                          staticClass: "icon",
+                          staticStyle: { color: "var(--success)" }
+                        },
+                        [_vm._v("󰄬")]
+                      ),
                       _vm._v(" "),
-                      _c("div", { staticClass: "text" }, [_vm._v("Page Title")])
+                      _c("div", { staticClass: "value" }, [
+                        _vm._v("Page Title")
+                      ])
                     ]
                   ),
                   _vm._v(" "),
@@ -30794,12 +30686,19 @@ var render = function() {
                           expression: "details.score.hasDescription"
                         }
                       ],
-                      staticClass: "checklist-item"
+                      staticClass: "metric-card"
                     },
                     [
-                      _c("div", { staticClass: "icon" }, [_vm._v("󰄬")]),
+                      _c(
+                        "div",
+                        {
+                          staticClass: "icon",
+                          staticStyle: { color: "var(--success)" }
+                        },
+                        [_vm._v("󰄬")]
+                      ),
                       _vm._v(" "),
-                      _c("div", { staticClass: "text" }, [
+                      _c("div", { staticClass: "value" }, [
                         _vm._v("Page Description")
                       ])
                     ]
@@ -30816,19 +30715,26 @@ var render = function() {
                           expression: "details.score.hasViewport"
                         }
                       ],
-                      staticClass: "checklist-item"
+                      staticClass: "metric-card"
                     },
                     [
-                      _c("div", { staticClass: "icon" }, [_vm._v("󰄬")]),
+                      _c(
+                        "div",
+                        {
+                          staticClass: "icon",
+                          staticStyle: { color: "var(--success)" }
+                        },
+                        [_vm._v("󰄬")]
+                      ),
                       _vm._v(" "),
-                      _c("div", { staticClass: "text" }, [
+                      _c("div", { staticClass: "value" }, [
                         _vm._v("Mobile Support")
                       ])
                     ]
                   )
                 ]),
                 _vm._v(" "),
-                _c("div", { staticClass: "checklist-wrapper" }, [
+                _c("div", { staticClass: "metric-card-wrapper" }, [
                   _c(
                     "div",
                     {
@@ -30840,12 +30746,21 @@ var render = function() {
                           expression: "!details.score.hasFavicon"
                         }
                       ],
-                      staticClass: "checklist-item"
+                      staticClass: "metric-card"
                     },
                     [
-                      _c("div", { staticClass: "icon" }, [_vm._v("󰅖")]),
+                      _c(
+                        "div",
+                        {
+                          staticClass: "icon",
+                          staticStyle: { color: "var(--error)" }
+                        },
+                        [_vm._v("󰅖")]
+                      ),
                       _vm._v(" "),
-                      _c("div", { staticClass: "text" }, [_vm._v("Favicon")])
+                      _c("div", { staticClass: "value" }, [
+                        _vm._v("No Favicon")
+                      ])
                     ]
                   ),
                   _vm._v(" "),
@@ -30860,12 +30775,21 @@ var render = function() {
                           expression: "!details.score.hasTitle"
                         }
                       ],
-                      staticClass: "checklist-item"
+                      staticClass: "metric-card"
                     },
                     [
-                      _c("div", { staticClass: "icon" }, [_vm._v("󰅖")]),
+                      _c(
+                        "div",
+                        {
+                          staticClass: "icon",
+                          staticStyle: { color: "var(--error)" }
+                        },
+                        [_vm._v("󰅖")]
+                      ),
                       _vm._v(" "),
-                      _c("div", { staticClass: "text" }, [_vm._v("Page Title")])
+                      _c("div", { staticClass: "value" }, [
+                        _vm._v("No Page Title")
+                      ])
                     ]
                   ),
                   _vm._v(" "),
@@ -30880,13 +30804,20 @@ var render = function() {
                           expression: "!details.score.hasDescription"
                         }
                       ],
-                      staticClass: "checklist-item"
+                      staticClass: "metric-card"
                     },
                     [
-                      _c("div", { staticClass: "icon" }, [_vm._v("󰅖")]),
+                      _c(
+                        "div",
+                        {
+                          staticClass: "icon",
+                          staticStyle: { color: "var(--error)" }
+                        },
+                        [_vm._v("󰅖")]
+                      ),
                       _vm._v(" "),
-                      _c("div", { staticClass: "text" }, [
-                        _vm._v("Page Description")
+                      _c("div", { staticClass: "value" }, [
+                        _vm._v("No Page Description")
                       ])
                     ]
                   ),
@@ -30902,26 +30833,208 @@ var render = function() {
                           expression: "!details.score.hasViewport"
                         }
                       ],
-                      staticClass: "checklist-item"
+                      staticClass: "metric-card"
                     },
                     [
-                      _c("div", { staticClass: "icon" }, [_vm._v("󰅖")]),
+                      _c(
+                        "div",
+                        {
+                          staticClass: "icon",
+                          staticStyle: { color: "var(--error)" }
+                        },
+                        [_vm._v("󰅖")]
+                      ),
                       _vm._v(" "),
-                      _c("div", { staticClass: "text" }, [
-                        _vm._v("Mobile Support")
+                      _c("div", { staticClass: "value" }, [
+                        _vm._v("No Mobile Support")
                       ])
                     ]
                   )
                 ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "card span-6" }, [
+                _c("h4", { staticClass: "info" }, [
+                  _c("div", { staticClass: "icon" }, [_vm._v("󰓅")]),
+                  _vm._v("Metrics")
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "metric-card-wrapper" }, [
+                  _c("div", { staticClass: "metric-card half" }, [
+                    _c("div", { staticClass: "icon" }, [_vm._v("󰊚")]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "label" }, [_vm._v("Rendertime")]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "value" }, [
+                      _vm._v(
+                        _vm._s(_vm.details.metrics.TaskDuration.toFixed(4)) +
+                          "s"
+                      )
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "metric-card half" }, [
+                    _c("div", { staticClass: "icon" }, [_vm._v("󰌞")]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "label" }, [
+                      _vm._v("Script Rendertime")
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "value" }, [
+                      _vm._v(
+                        _vm._s(_vm.details.metrics.ScriptDuration.toFixed(4)) +
+                          "s"
+                      )
+                    ])
+                  ])
+                ])
               ])
             ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "detail-row" }, [
+              _c("div", { staticClass: "card span-12 page-info-card" }, [
+                _c("h4", [
+                  _c("img", {
+                    directives: [
+                      {
+                        name: "show",
+                        rawName: "v-show",
+                        value: _vm.details.score.hasFavicon,
+                        expression: "details.score.hasFavicon"
+                      }
+                    ],
+                    staticClass: "favicon",
+                    attrs: { src: _vm.details.metaData.favicon }
+                  }),
+                  _vm._v(_vm._s(_vm.details.metaData.title))
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "metric-card-wrapper" }, [
+                  _vm.details.metaData.description
+                    ? _c("div", { staticClass: "metric-card" }, [
+                        _c("div", { staticClass: "icon" }, [_vm._v("󰭷")]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "label" }, [
+                          _vm._v("Description")
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "value" }, [
+                          _vm._v(_vm._s(_vm.details.metaData.description))
+                        ])
+                      ])
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _vm.details.metaData.generator
+                    ? _c("div", { staticClass: "metric-card" }, [
+                        _c("div", { staticClass: "icon" }, [_vm._v("󰏬")]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "label" }, [
+                          _vm._v("CMS / Generator")
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "value" }, [
+                          _vm._v(_vm._s(_vm.details.metaData.generator))
+                        ])
+                      ])
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _vm.details.metaData.themeColor
+                    ? _c("div", { staticClass: "metric-card" }, [
+                        _c("div", {
+                          staticClass: "square",
+                          style: "background:" + _vm.details.metaData.themeColor
+                        }),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "label" }, [
+                          _vm._v("Theme Color")
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "value" }, [
+                          _vm._v(_vm._s(_vm.details.metaData.themeColor))
+                        ])
+                      ])
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _vm.details.metaData.keywords.length > 0
+                    ? _c("div", { staticClass: "metric-card" }, [
+                        _c("div", { staticClass: "icon" }, [_vm._v("󰌋")]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "label" }, [
+                          _vm._v("Keywords")
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "value" }, [
+                          _vm._v(
+                            _vm._s(_vm.details.metaData.keywords.join(", "))
+                          )
+                        ])
+                      ])
+                    : _vm._e()
+                ])
+              ])
+            ]),
+            _vm._v(" "),
+            _vm.details.score.errors.length > 0
+              ? _c("div", { staticClass: "detail-row" }, [
+                  _c("div", { staticClass: "card span-12" }, [
+                    _c("h4", { staticClass: "error" }, [
+                      _c("div", { staticClass: "icon" }, [_vm._v("󰅙")]),
+                      _vm._v("Errors")
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "metric-card-wrapper" },
+                      _vm._l(_vm.details.score.errors, function(error, i) {
+                        return _c(
+                          "div",
+                          { key: i, staticClass: "metric-card" },
+                          [
+                            _c(
+                              "div",
+                              {
+                                staticClass: "icon",
+                                staticStyle: { color: "var(--error)" }
+                              },
+                              [_vm._v("󰋭")]
+                            ),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "label" }, [
+                              _vm._v("Error")
+                            ]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "value" }, [
+                              _vm._v(_vm._s(error.desc))
+                            ])
+                          ]
+                        )
+                      }),
+                      0
+                    )
+                  ])
+                ])
+              : _vm._e(),
+            _vm._v(" "),
+            _vm.details.score.warnings.length > 0
+              ? _c("div", { staticClass: "detail-row" }, [
+                  _c("div", { staticClass: "card span-12" }, [
+                    _c("h4", { staticClass: "warning" }, [
+                      _c("div", { staticClass: "icon" }, [_vm._v("󰀦")]),
+                      _vm._v("Warnings")
+                    ])
+                  ])
+                ])
+              : _vm._e(),
             _vm._v(" "),
             _vm.details.metaData.twitterCard.hasTwitterCard ||
             _vm.details.metaData.openGraph.hasOpenGraph
               ? _c("div", { staticClass: "detail-row" }, [
                   _vm.details.metaData.twitterCard.hasTwitterCard
                     ? _c("div", { staticClass: "card span-6" }, [
-                        _c("h4", [_vm._v("Twitter Appearence")]),
+                        _c("h4", [
+                          _c("div", { staticClass: "icon" }, [_vm._v("󰕄")]),
+                          _vm._v("Twitter Appearence")
+                        ]),
                         _vm._v(" "),
                         _c("div", { staticClass: "twitter-summary-card" }, [
                           _c("img", {
@@ -30969,49 +31082,46 @@ var render = function() {
                   _vm._v(" "),
                   _vm.details.metaData.openGraph.hasOpenGraph
                     ? _c("div", { staticClass: "card span-6" }, [
-                        _c("h4", [_vm._v("Open Graph Appearence")]),
+                        _c("h4", [
+                          _c("div", { staticClass: "icon" }, [_vm._v("󱀁")]),
+                          _vm._v("Open Graph Appearence")
+                        ]),
                         _vm._v(" "),
-                        _c("p", [
-                          _vm._v("\n                    Titel: "),
-                          _c("b", [
-                            _vm._v(
-                              _vm._s(_vm.details.metaData.openGraph["og:title"])
-                            )
-                          ]),
-                          _c("br"),
-                          _vm._v("\n                    URL: "),
-                          _c(
-                            "a",
-                            {
-                              attrs: {
-                                href: _vm.details.metaData.openGraph["og:url"],
-                                target: "_blank"
-                              }
-                            },
-                            [
-                              _vm._v(
-                                _vm._s(_vm.details.metaData.openGraph["og:url"])
-                              )
-                            ]
-                          ),
-                          _c("br"),
-                          _vm._v("\n                    Description: "),
-                          _c("b", [
-                            _vm._v(
-                              _vm._s(
-                                _vm.details.metaData.openGraph["og:description"]
-                              )
-                            )
-                          ]),
-                          _c("br"),
-                          _vm._v(" "),
+                        _c("div", { staticClass: "open-graph-article-card" }, [
                           _c("img", {
+                            staticClass: "image",
                             attrs: {
-                              src: _vm.details.metaData.openGraph["og:image"],
-                              width: "300"
+                              src: _vm.details.metaData.openGraph["og:image"]
                             }
                           }),
-                          _c("br")
+                          _vm._v(" "),
+                          _c("div", { staticClass: "content" }, [
+                            _c("div", { staticClass: "url" }, [
+                              _vm._v(
+                                _vm._s(
+                                  _vm.details.metaData.openGraph["og:url"].host
+                                )
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "title" }, [
+                              _vm._v(
+                                _vm._s(
+                                  _vm.details.metaData.openGraph["og:title"]
+                                )
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "description" }, [
+                              _vm._v(
+                                _vm._s(
+                                  _vm.details.metaData.openGraph[
+                                    "og:description"
+                                  ]
+                                )
+                              )
+                            ])
+                          ])
                         ])
                       ])
                     : _vm._e()
@@ -31021,9 +31131,12 @@ var render = function() {
             _c("div", { staticClass: "detail-row" }, [
               _c(
                 "div",
-                { staticClass: "card span-6" },
+                { staticClass: "card span-12" },
                 [
-                  _c("h4", [_vm._v("Meta Tags")]),
+                  _c("h4", [
+                    _c("div", { staticClass: "icon" }, [_vm._v("󰓹")]),
+                    _vm._v("Meta Tags")
+                  ]),
                   _vm._v(" "),
                   _vm._l(_vm.details.meta, function(meta, i) {
                     return _c("p", { key: i }, [
@@ -31043,13 +31156,18 @@ var render = function() {
                   })
                 ],
                 2
-              ),
-              _vm._v(" "),
+              )
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "detail-row" }, [
               _c(
                 "div",
-                { staticClass: "card span-6" },
+                { staticClass: "card span-12" },
                 [
-                  _c("h4", [_vm._v("Images")]),
+                  _c("h4", [
+                    _c("div", { staticClass: "icon" }, [_vm._v("󰋩")]),
+                    _vm._v("Images")
+                  ]),
                   _vm._v(" "),
                   _vm._l(_vm.details.images, function(image, i) {
                     return _c("p", { key: i }, [
