@@ -4518,828 +4518,52 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
-      details: {
-        "url": {
-          "origin": "https://fireship.io",
-          "host": "fireship.io",
-          "href": "https://fireship.io/"
-        },
-        "preview": null,
-        "appleTouchIcon": "/img/favicon.png",
-        "links": [{
-          "href": "/pro",
-          "text": "PRO"
-        }, {
-          "href": "/dashboard",
-          "text": "\n          \n\n      "
-        }, {
-          "href": "/lessons",
-          "text": ""
-        }, {
-          "href": "/courses",
-          "text": ""
-        }, {
-          "href": "/snippets",
-          "text": ""
-        }, {
-          "href": "/tags",
-          "text": ""
-        }, {
-          "href": "/mission",
-          "text": ""
-        }, {
-          "href": "/contributors",
-          "text": ""
-        }, {
-          "href": "/about",
-          "text": ""
-        }, {
-          "href": "/login",
-          "text": ""
-        }, {
-          "href": "https://fireship.page.link/slack",
-          "text": ""
-        }, {
-          "href": "/tags/angular",
-          "text": ""
-        }, {
-          "href": "/tags/flutter",
-          "text": ""
-        }, {
-          "href": "/tags/firebase",
-          "text": ""
-        }, {
-          "href": "/tags/stripe",
-          "text": ""
-        }, {
-          "href": "/terms",
-          "text": ""
-        }, {
-          "href": "/privacy-policy",
-          "text": ""
-        }, {
-          "href": "/style-guide",
-          "text": ""
-        }, {
-          "href": "/",
-          "text": "v0.23.7"
-        }, {
-          "href": "/lessons",
-          "text": "video lessons"
-        }, {
-          "href": "/courses",
-          "text": "courses"
-        }, {
-          "href": "/snippets",
-          "text": "quick snippets"
-        }, {
-          "href": "/tags",
-          "text": "tags"
-        }, {
-          "href": "/dashboard",
-          "text": "\n            \n            \n            dashboard\n        "
-        }, {
-          "href": "/lessons",
-          "text": "EXPLORE"
-        }, {
-          "href": "https://itunes.apple.com/us/app/fireship/id1462592372?mt=8",
-          "text": ""
-        }, {
-          "href": "https://play.google.com/store/apps/details?id=io.fireship.quizapp&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1",
-          "text": ""
-        }, {
-          "href": "/courses/react-next-firebase",
-          "text": "React Firebase Full Course\nBuild a fullstack server-rendered webapp with React, Next.js, and Firebase\nSTART"
-        }, {
-          "href": "/courses/stripe-js",
-          "text": "Stripe Payments Master Course\nBuild a fullstack payment solution with Node.js and React.\nSTART"
-        }, {
-          "href": "/courses/flutter-firebase",
-          "text": "Flutter Firebase App from Scratch\nBuild a complex production-ready app from scratch with Flutter and Firebase"
-        }, {
-          "href": "/courses/angular",
-          "text": "Angular 9 Firebase Project Course\nBuild a high-performance progressive web application (PWA) with Angular & Firebase"
-        }, {
-          "href": "/courses/firestore-data-modeling",
-          "text": "Firestore Data Modeling Course\nLearn how to model data and optimize queries with Cloud Firestore."
-        }, {
-          "href": "/courses/cloud-functions",
-          "text": "Cloud Functions Master Course\nMaster the fundamentals of serverless with Firebase Cloud Functions by building seven different microservices from scratch."
-        }, {
-          "href": "/lessons/firebase-quickstart",
-          "text": "Firebase - The Basics\nLearn the fundamental concepts needed to start building serious apps with Firebase."
-        }, {
-          "href": "/courses",
-          "text": "ALL PRO COURSES"
-        }, {
-          "href": "https://www.youtube.com/channel/UCsBjURrPoezykLs9EqgamOA",
-          "text": "WATCH"
-        }, {
-          "href": "https://www.youtube.com/channel/UCsBjURrPoezykLs9EqgamOA",
-          "text": ""
-        }, {
-          "href": "https://fireship.page.link/slack",
-          "text": "💬 Slack Chat\n\nJoin our Slack channel with over 3K users for project support, news, and just having fun."
-        }, {
-          "href": "https://github.com/fireship-io",
-          "text": "👨‍💻 Open Source Code\n\nAlmost every lesson is supported by a GitHub repo. Even this very website is open source."
-        }, {
-          "href": "https://github.com/fireship-io",
-          "text": "🍰 Cake\n\nThere will be cake! Access additional free stuff like books, stickers, cheat sheets, swag, and more."
-        }, {
-          "href": "/lessons/custom-usernames-firebase/",
-          "text": ""
-        }, {
-          "href": "/lessons/custom-usernames-firebase/",
-          "text": "Custom Usernames in Firebase"
-        }, {
-          "href": "/tags/pro",
-          "text": "#pro"
-        }, {
-          "href": "/tags/firebase",
-          "text": "#firebase"
-        }, {
-          "href": "/tags/firestore",
-          "text": "#firestore"
-        }, {
-          "href": "/tags/authentication",
-          "text": "#authentication"
-        }, {
-          "href": "/lessons/custom-usernames-firebase/",
-          "text": "Custom Usernames in Firebase"
-        }, {
-          "href": "/tags/pro",
-          "text": "#pro"
-        }, {
-          "href": "/tags/firebase",
-          "text": "#firebase"
-        }, {
-          "href": "/tags/firestore",
-          "text": "#firestore"
-        }, {
-          "href": "/tags/authentication",
-          "text": "#authentication"
-        }, {
-          "href": "/lessons/host-website-raspberry-pi/",
-          "text": "Host a Website on Raspberry Pi"
-        }, {
-          "href": "/tags/rpi",
-          "text": "#rpi"
-        }, {
-          "href": "/tags/nginx",
-          "text": "#nginx"
-        }, {
-          "href": "/lessons/pwa-top-features/",
-          "text": "Seven Awesome PWA Features"
-        }, {
-          "href": "/tags/javascript",
-          "text": "#javascript"
-        }, {
-          "href": "/tags/pwa",
-          "text": "#pwa"
-        }, {
-          "href": "/snippets/nextjs-ssr-data-fetching-with-firebase/",
-          "text": "Hydrate Next.js Props to Realtime Firestore Data"
-        }, {
-          "href": "/tags/react",
-          "text": "#react"
-        }, {
-          "href": "/tags/ssr",
-          "text": "#ssr"
-        }, {
-          "href": "/tags/nextjs",
-          "text": "#nextjs"
-        }, {
-          "href": "/tags/firestore",
-          "text": "#firestore"
-        }, {
-          "href": "/lessons/wasm-video-to-gif/",
-          "text": "Video to GIF with WASM"
-        }, {
-          "href": "/tags/wasm",
-          "text": "#wasm"
-        }, {
-          "href": "/tags/react",
-          "text": "#react"
-        }, {
-          "href": "/tags/javascript",
-          "text": "#javascript"
-        }, {
-          "href": "/lessons/fauna-db-quickstart/",
-          "text": "FaunaDB Basics"
-        }, {
-          "href": "/tags/fauna",
-          "text": "#fauna"
-        }, {
-          "href": "/tags/javascript",
-          "text": "#javascript"
-        }, {
-          "href": "/about",
-          "text": ""
-        }, {
-          "href": "https://github.com/fireship-io/fireship.io/tree/master/hugo/content/_index.md",
-          "text": "Fix it on GitHub"
-        }, {
-          "href": "https://developers.google.com/community/experts/directory/profile/profile-jeff_delaney",
-          "text": "Jeff Delaney "
-        }, {
-          "href": "https://www.youtube.com/channel/UCsBjURrPoezykLs9EqgamOA",
-          "text": ""
-        }, {
-          "href": "https://twitter.com/fireship_dev",
-          "text": ""
-        }, {
-          "href": "https://github.com/fireship-io",
-          "text": ""
-        }, {
-          "href": "https://fireship.page.link/slack",
-          "text": ""
-        }, {
-          "href": "https://itunes.apple.com/us/app/fireship/id1462592372?mt=8",
-          "text": ""
-        }, {
-          "href": "https://play.google.com/store/apps/details?id=io.fireship.quizapp&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1",
-          "text": ""
-        }, {
-          "href": "/terms",
-          "text": "Terms of Service"
-        }, {
-          "href": "/privacy-policy",
-          "text": "Privacy Policy"
-        }, {
-          "href": "https://srv.carbonads.net/ads/click/x/GTND42JJCKAI5KJUCVY4YKQNC6BD4KQ7CTSICZ3JCYYIVK37CTYIC53KC6BI5K3UF67I6K7JCASDLK7MC67DV2Q7HEYIKKQWCTYICKJECTNCYBZ52K?segment=placement:fireshipio;",
-          "text": ""
-        }, {
-          "href": "https://srv.carbonads.net/ads/click/x/GTND42JJCKAI5KJUCVY4YKQNC6BD4KQ7CTSICZ3JCYYIVK37CTYIC53KC6BI5K3UF67I6K7JCASDLK7MC67DV2Q7HEYIKKQWCTYICKJECTNCYBZ52K?segment=placement:fireshipio;",
-          "text": "Entwickeln Sie KI-Apps mit wenigen Zeilen Code."
-        }, {
-          "href": "http://carbonads.net/?utm_source=fireshipio&utm_medium=ad_via_link&utm_campaign=in_unit&utm_term=carbon",
-          "text": "ADS VIA CARBON"
-        }],
-        "internalLinks": ["/pro", "/dashboard", "/lessons", "/courses", "/snippets", "/tags", "/mission", "/contributors", "/about", "/login", "/tags/angular", "/tags/flutter", "/tags/firebase", "/tags/stripe", "/terms", "/privacy-policy", "/style-guide", "/", "/courses/react-next-firebase", "/courses/stripe-js", "/courses/flutter-firebase", "/courses/angular", "/courses/firestore-data-modeling", "/courses/cloud-functions", "/lessons/firebase-quickstart", "/lessons/custom-usernames-firebase/", "/tags/pro", "/tags/firestore", "/tags/authentication", "/lessons/host-website-raspberry-pi/", "/tags/rpi", "/tags/nginx", "/lessons/pwa-top-features/", "/tags/javascript", "/tags/pwa", "/snippets/nextjs-ssr-data-fetching-with-firebase/", "/tags/react", "/tags/ssr", "/tags/nextjs", "/lessons/wasm-video-to-gif/", "/tags/wasm", "/lessons/fauna-db-quickstart/", "/tags/fauna"],
-        "metrics": {
-          "Timestamp": 21789.093577,
-          "Documents": 17,
-          "Frames": 8,
-          "JSEventListeners": 406,
-          "Nodes": 2073,
-          "LayoutCount": 28,
-          "RecalcStyleCount": 44,
-          "LayoutDuration": 0.139358,
-          "RecalcStyleDuration": 0.036729,
-          "ScriptDuration": 0.421778,
-          "TaskDuration": 0.919511,
-          "JSHeapUsedSize": 12601828,
-          "JSHeapTotalSize": 20897792
-        },
-        "images": [{
-          "src": "/img/google-login.svg",
-          "href": "https://fireship.io/img/google-login.svg",
-          "alt": "google login",
-          "width": 150,
-          "height": 150,
-          "visibleWidth": 0,
-          "visibleHeight": 0
-        }, {
-          "src": "/img/google-login.svg",
-          "href": "https://fireship.io/img/google-login.svg",
-          "alt": "google login",
-          "width": 150,
-          "height": 150,
-          "visibleWidth": 30,
-          "visibleHeight": 30
-        }, {
-          "src": "/img/app-store-badge.svg",
-          "href": "https://fireship.io/img/app-store-badge.svg",
-          "alt": "Get it on the Apple App Store",
-          "width": 120,
-          "height": 40,
-          "visibleWidth": 170,
-          "visibleHeight": 57
-        }, {
-          "src": "https://play.google.com/intl/en/badges/images/generic/en_badge_web_generic.png",
-          "href": "https://play.google.com/intl/en/badges/images/generic/en_badge_web_generic.png",
-          "alt": "Get it on Google Play",
-          "width": 646,
-          "height": 250,
-          "visibleWidth": 210,
-          "visibleHeight": 81
-        }, {
-          "src": "/courses/react-next-firebase/img/featured.jpg",
-          "href": "https://fireship.io/courses/react-next-firebase/img/featured.jpg",
-          "alt": null,
-          "width": 1920,
-          "height": 1080,
-          "visibleWidth": 680,
-          "visibleHeight": 383
-        }, {
-          "src": "/courses/stripe-js/img/featured.jpg",
-          "href": "https://fireship.io/courses/stripe-js/img/featured.jpg",
-          "alt": null,
-          "width": 1280,
-          "height": 720,
-          "visibleWidth": 680,
-          "visibleHeight": 383
-        }, {
-          "src": "/courses/flutter-firebase/img/featured.jpg",
-          "href": "https://fireship.io/courses/flutter-firebase/img/featured.jpg",
-          "alt": null,
-          "width": 1080,
-          "height": 608,
-          "visibleWidth": 680,
-          "visibleHeight": 383
-        }, {
-          "src": "/courses/angular/img/featured.jpg",
-          "href": "https://fireship.io/courses/angular/img/featured.jpg",
-          "alt": null,
-          "width": 1920,
-          "height": 1080,
-          "visibleWidth": 680,
-          "visibleHeight": 383
-        }, {
-          "src": "/courses/firestore-data-modeling/img/featured.jpg",
-          "href": "https://fireship.io/courses/firestore-data-modeling/img/featured.jpg",
-          "alt": null,
-          "width": 720,
-          "height": 405,
-          "visibleWidth": 680,
-          "visibleHeight": 383
-        }, {
-          "src": "/courses/cloud-functions/img/featured.jpg",
-          "href": "https://fireship.io/courses/cloud-functions/img/featured.jpg",
-          "alt": null,
-          "width": 1920,
-          "height": 1080,
-          "visibleWidth": 680,
-          "visibleHeight": 383
-        }, {
-          "src": "/lessons/firebase-quickstart/img/featured.jpg",
-          "href": "https://fireship.io/lessons/firebase-quickstart/img/featured.jpg",
-          "alt": null,
-          "width": 720,
-          "height": 405,
-          "visibleWidth": 680,
-          "visibleHeight": 383
-        }, {
-          "src": "/img/testimonial.png",
-          "href": "https://fireship.io/img/testimonial.png",
-          "alt": "Testimonials for Fireship.io code tutorials",
-          "width": 1000,
-          "height": 396,
-          "visibleWidth": 1000,
-          "visibleHeight": 396
-        }, {
-          "src": "img/pages/yt.jpg",
-          "href": "https://fireship.io/img/pages/yt.jpg",
-          "alt": "old film gif for video episodes on Fireship.io",
-          "width": 800,
-          "height": 445,
-          "visibleWidth": 800,
-          "visibleHeight": 445
-        }, {
-          "src": "/lessons/custom-usernames-firebase//img/featured.webp",
-          "href": "https://fireship.io/lessons/custom-usernames-firebase//img/featured.webp",
-          "alt": null,
-          "width": 1000,
-          "height": 563,
-          "visibleWidth": 650,
-          "visibleHeight": 366
-        }, {
-          "src": "/img/pages/jeffdelaney-gde-2020.webp",
-          "href": "https://fireship.io/img/pages/jeffdelaney-gde-2020.webp",
-          "alt": "Jeff Delaney Google Developer Expert",
-          "width": 500,
-          "height": 500,
-          "visibleWidth": 300,
-          "visibleHeight": 300
-        }, {
-          "src": "/img/app-store-badge.svg",
-          "href": "https://fireship.io/img/app-store-badge.svg",
-          "alt": "Get it on the Apple App Store",
-          "width": 120,
-          "height": 40,
-          "visibleWidth": 170,
-          "visibleHeight": 57
-        }, {
-          "src": "https://play.google.com/intl/en/badges/images/generic/en_badge_web_generic.png",
-          "href": "https://play.google.com/intl/en/badges/images/generic/en_badge_web_generic.png",
-          "alt": "Get it on Google Play",
-          "width": 646,
-          "height": 250,
-          "visibleWidth": 210,
-          "visibleHeight": 81
-        }, {
-          "src": "/img/google-login.svg",
-          "href": "https://fireship.io/img/google-login.svg",
-          "alt": "google login",
-          "width": 150,
-          "height": 150,
-          "visibleWidth": 24,
-          "visibleHeight": 24
-        }, {
-          "src": "/img/apple-login.svg",
-          "href": "https://fireship.io/img/apple-login.svg",
-          "alt": "apple login",
-          "width": 1000,
-          "height": 1187,
-          "visibleWidth": 24,
-          "visibleHeight": 28
-        }, {
-          "src": "https://cdn4.buysellads.net/uu/1/82155/1608737998-AZR_NAT-FreeAcct-Prosp-AI-NA-3_USA_1200x627_NAT_AZR-Direct_EN_Trial_Standard_SBAN_SINU_Device_Offer.png",
-          "href": "https://cdn4.buysellads.net/uu/1/82155/1608737998-AZR_NAT-FreeAcct-Prosp-AI-NA-3_USA_1200x627_NAT_AZR-Direct_EN_Trial_Standard_SBAN_SINU_Device_Offer.png",
-          "alt": "ads via Carbon",
-          "width": 260,
-          "height": 200,
-          "visibleWidth": 130,
-          "visibleHeight": 100
-        }, {
-          "src": "https://ad.doubleclick.net/ddm/trackimp/N572608.452584BUYSELLADS.COM/B25163184.290532778;dc_trk_aid=483875582;dc_trk_cid=142952668;ord=161401449;dc_lat=;dc_rdid=;tag_for_child_directed_treatment=;tfua=;gdpr=$;gdpr_consent=$?",
-          "href": "https://ad.doubleclick.net/ddm/trackimp/N572608.452584BUYSELLADS.COM/B25163184.290532778;dc_trk_aid=483875582;dc_trk_cid=142952668;ord=161401449;dc_lat=;dc_rdid=;tag_for_child_directed_treatment=;tfua=;gdpr=$;gdpr_consent=$?",
-          "alt": "ads via Carbon",
-          "width": 1,
-          "height": 1,
-          "visibleWidth": 0,
-          "visibleHeight": 0
-        }, {
-          "src": "https://pixel.adsafeprotected.com/rfw/st/552031/51166066/skeleton.gif?gdpr=$&gdpr_consent=$&gdpr_pd=$&network=BUYSELLADS",
-          "href": "https://pixel.adsafeprotected.com/rfw/st/552031/51166066/skeleton.gif?gdpr=$&gdpr_consent=$&gdpr_pd=$&network=BUYSELLADS",
-          "alt": "ads via Carbon",
-          "width": 1,
-          "height": 1,
-          "visibleWidth": 0,
-          "visibleHeight": 0
-        }],
-        "meta": [{
-          "name": "generator",
-          "property": null,
-          "content": "Hugo 0.74.2",
-          "charset": null,
-          "httpEquiv": null
-        }, {
-          "name": null,
-          "property": null,
-          "content": null,
-          "charset": "utf-8",
-          "httpEquiv": null
-        }, {
-          "name": null,
-          "property": null,
-          "content": "IE=edge,chrome=1",
-          "charset": null,
-          "httpEquiv": "X-UA-Compatible"
-        }, {
-          "name": "HandheldFriendly",
-          "property": null,
-          "content": "True",
-          "charset": null,
-          "httpEquiv": null
-        }, {
-          "name": "MobileOptimized",
-          "property": null,
-          "content": "320",
-          "charset": null,
-          "httpEquiv": null
-        }, {
-          "name": "viewport",
-          "property": null,
-          "content": "width=device-width,minimum-scale=1",
-          "charset": null,
-          "httpEquiv": null
-        }, {
-          "name": "description",
-          "property": null,
-          "content": "Training and Consulting for App Developers | Full Courses, Video Lessons, Chat, and More",
-          "charset": null,
-          "httpEquiv": null
-        }, {
-          "name": "image",
-          "property": null,
-          "content": "https://fireship.io/img/covers/default.png",
-          "charset": null,
-          "httpEquiv": null
-        }, {
-          "name": null,
-          "property": "og:title",
-          "content": "Fireship.io",
-          "charset": null,
-          "httpEquiv": null
-        }, {
-          "name": null,
-          "property": "og:type",
-          "content": "article",
-          "charset": null,
-          "httpEquiv": null
-        }, {
-          "name": null,
-          "property": "og:url",
-          "content": "https://fireship.io/",
-          "charset": null,
-          "httpEquiv": null
-        }, {
-          "name": null,
-          "property": "og:image",
-          "content": "https://fireship.io/img/covers/default.png",
-          "charset": null,
-          "httpEquiv": null
-        }, {
-          "name": null,
-          "property": "og:description",
-          "content": "Training and Consulting for App Developers | Full Courses, Video Lessons, Chat, and More",
-          "charset": null,
-          "httpEquiv": null
-        }, {
-          "name": "twitter:card",
-          "property": null,
-          "content": "summary",
-          "charset": null,
-          "httpEquiv": null
-        }, {
-          "name": "twitter:site",
-          "property": null,
-          "content": "@fireship_dev",
-          "charset": null,
-          "httpEquiv": null
-        }, {
-          "name": "twitter:title",
-          "property": null,
-          "content": "Fireship.io",
-          "charset": null,
-          "httpEquiv": null
-        }, {
-          "name": "twitter:description",
-          "property": null,
-          "content": "Training and Consulting for App Developers | Full Courses, Video Lessons, Chat, and More",
-          "charset": null,
-          "httpEquiv": null
-        }, {
-          "name": "twitter:image",
-          "property": null,
-          "content": "https://fireship.io/img/covers/default.png",
-          "charset": null,
-          "httpEquiv": null
-        }, {
-          "name": "theme-color",
-          "property": null,
-          "content": "#454e56",
-          "charset": null,
-          "httpEquiv": null
-        }],
-        "srcLinks": [{
-          "rel": "prefetch",
-          "href": "/components/wc.1612814468946.js",
-          "title": null
-        }, {
-          "rel": "stylesheet",
-          "href": "https://use.typekit.net/rcr1opg.css",
-          "title": null
-        }, {
-          "rel": "stylesheet",
-          "href": "/design/css/app.a09486ce40f5c7e7bb47.css",
-          "title": null
-        }, {
-          "rel": "canonical",
-          "href": "https://fireship.io/",
-          "title": null
-        }, {
-          "rel": "shortcut icon",
-          "href": "/img/favicon.png",
-          "title": null
-        }, {
-          "rel": "apple-touch-icon",
-          "href": "/img/favicon.png",
-          "title": null
-        }, {
-          "rel": "manifest",
-          "href": "/manifest.json",
-          "title": null
-        }, {
-          "rel": "prefetch",
-          "href": "https://fireship.io/pro",
-          "title": null
-        }, {
-          "rel": "prefetch",
-          "href": "https://fireship.io/lessons",
-          "title": null
-        }, {
-          "rel": "prefetch",
-          "href": "https://fireship.io/courses",
-          "title": null
-        }, {
-          "rel": "prefetch",
-          "href": "https://fireship.io/snippets",
-          "title": null
-        }, {
-          "rel": "prefetch",
-          "href": "https://fireship.io/tags",
-          "title": null
-        }, {
-          "rel": "prefetch",
-          "href": "https://fireship.io/mission",
-          "title": null
-        }, {
-          "rel": "prefetch",
-          "href": "https://fireship.io/contributors",
-          "title": null
-        }, {
-          "rel": "prefetch",
-          "href": "https://fireship.io/about",
-          "title": null
-        }, {
-          "rel": "prefetch",
-          "href": "https://fireship.io/login",
-          "title": null
-        }, {
-          "rel": "prefetch",
-          "href": "https://fireship.io/tags/angular",
-          "title": null
-        }, {
-          "rel": "prefetch",
-          "href": "https://fireship.io/tags/flutter",
-          "title": null
-        }, {
-          "rel": "prefetch",
-          "href": "https://fireship.io/tags/firebase",
-          "title": null
-        }, {
-          "rel": "prefetch",
-          "href": "https://fireship.io/tags/stripe",
-          "title": null
-        }, {
-          "rel": "prefetch",
-          "href": "https://fireship.io/terms",
-          "title": null
-        }, {
-          "rel": "prefetch",
-          "href": "https://fireship.io/privacy-policy",
-          "title": null
-        }, {
-          "rel": "prefetch",
-          "href": "https://fireship.io/style-guide",
-          "title": null
-        }, {
-          "rel": "prefetch",
-          "href": "https://fireship.io/",
-          "title": null
-        }, {
-          "rel": "prefetch",
-          "href": "https://fireship.io/courses/react-next-firebase",
-          "title": null
-        }, {
-          "rel": "prefetch",
-          "href": "https://fireship.io/courses/stripe-js",
-          "title": null
-        }],
-        "headings": [{
-          "tag": "H3",
-          "text": ""
-        }, {
-          "tag": "H3",
-          "text": ""
-        }, {
-          "tag": "H3",
-          "text": ""
-        }, {
-          "tag": "H1",
-          "text": "Build and ship 🔥 your app ⚡ faster"
-        }, {
-          "tag": "H2",
-          "text": "New Courses"
-        }, {
-          "tag": "H4",
-          "text": "BRAND NEW COURSES AND UPDATES EVERY MONTH"
-        }, {
-          "tag": "H3",
-          "text": "React Firebase Full Course"
-        }, {
-          "tag": "H3",
-          "text": "Stripe Payments Master Course"
-        }, {
-          "tag": "H2",
-          "text": "Learn by Doing"
-        }, {
-          "tag": "H4",
-          "text": "FAST, EFFICIENT, PROJECT-BASED VIDEO COURSES"
-        }, {
-          "tag": "H3",
-          "text": "Flutter Firebase App from Scratch"
-        }, {
-          "tag": "H3",
-          "text": "Angular 9 Firebase Project Course"
-        }, {
-          "tag": "H2",
-          "text": "Modern Fullstack"
-        }, {
-          "tag": "H4",
-          "text": "DEVELOP FASTER WITH SCALABLE CLOUD INFRASTRUCTURE"
-        }, {
-          "tag": "H3",
-          "text": "Firestore Data Modeling Course"
-        }, {
-          "tag": "H3",
-          "text": "Cloud Functions Master Course"
-        }, {
-          "tag": "H2",
-          "text": "New to Firebase?"
-        }, {
-          "tag": "H4",
-          "text": "LEARN THE BASICS IN 25 MINUTES 👇"
-        }, {
-          "tag": "H3",
-          "text": "Firebase - The Basics"
-        }, {
-          "tag": "H2",
-          "text": "Trusted by Developers"
-        }, {
-          "tag": "H4",
-          "text": "\"I HAVE A JOB THANKS TO YOU\""
-        }, {
-          "tag": "H2",
-          "text": " Weekly Video Episodes"
-        }, {
-          "tag": "H2",
-          "text": "Not your Average Code Tutorials"
-        }, {
-          "tag": "H4",
-          "text": "ALL LESSONS ARE BACKED BY EXPERT SUPPORT"
-        }, {
-          "tag": "H2",
-          "text": "💬 Slack Chat"
-        }, {
-          "tag": "H2",
-          "text": "👨‍💻 Open Source Code"
-        }, {
-          "tag": "H2",
-          "text": "🍰 Cake"
-        }, {
-          "tag": "H2",
-          "text": "Watch the Latest Lessons"
-        }, {
-          "tag": "H4",
-          "text": "NEW VIDEO CONTENT EVERY FEW DAYS"
-        }, {
-          "tag": "H3",
-          "text": "Custom Usernames in Firebase"
-        }, {
-          "tag": "H3",
-          "text": "Custom Usernames in Firebase"
-        }, {
-          "tag": "H3",
-          "text": "Host a Website on Raspberry Pi"
-        }, {
-          "tag": "H3",
-          "text": "Seven Awesome PWA Features"
-        }, {
-          "tag": "H3",
-          "text": "Hydrate Next.js Props to Realtime Firestore Data"
-        }, {
-          "tag": "H3",
-          "text": "Video to GIF with WASM"
-        }, {
-          "tag": "H3",
-          "text": "FaunaDB Basics"
-        }, {
-          "tag": "H2",
-          "text": " Your Host"
-        }, {
-          "tag": "H3",
-          "text": "Create Account with Email"
-        }],
-        "score": {
-          "totalPageScore": 100,
-          "hasTitle": true,
-          "hasDescription": true,
-          "hasFavicon": true,
-          "hasViewport": true
-        },
-        "metaData": {
-          "openGraph": {
-            "og:title": "Fireship.io",
-            "og:type": "article",
-            "og:url": "https://fireship.io/",
-            "og:image": "https://fireship.io/img/covers/default.png",
-            "og:description": "Training and Consulting for App Developers | Full Courses, Video Lessons, Chat, and More",
-            "hasOpenGraph": true
-          },
-          "twitterCard": {
-            "twitter:card": "summary",
-            "twitter:site": "@fireship_dev",
-            "twitter:title": "Fireship.io",
-            "twitter:description": "Training and Consulting for App Developers | Full Courses, Video Lessons, Chat, and More",
-            "twitter:image": "https://fireship.io/img/covers/default.png",
-            "hasTwitterCard": true
-          },
-          "viewport": "width=device-width,minimum-scale=1",
-          "description": "Training and Consulting for App Developers | Full Courses, Video Lessons, Chat, and More",
-          "generator": "Hugo 0.74.2",
-          "themeColor": "#454e56",
-          "keywords": [],
-          "title": "Fireship.io",
-          "favicon": "https://fireship.io/img/favicon.png"
-        }
-      },
+      details: null,
       series: [67],
       chartOptions: {
         chart: {
@@ -5374,7 +4598,7 @@ __webpack_require__.r(__webpack_exports__);
         },
         colors: [function (_ref) {
           var value = _ref.value;
-          if (value > 80) return 'var(--success)';else if (value > 50) return 'var(--warning)';else if (value > 20) return '#ff7f50';else return 'var(--error)';
+          if (value >= 80) return 'var(--success)';else if (value >= 50) return 'var(--warning)';else if (value >= 20) return '#ff7f50';else return 'var(--error)';
         }],
         labels: ['Page Score'],
         states: {
@@ -5387,10 +4611,7 @@ __webpack_require__.r(__webpack_exports__);
       }
     };
   },
-  created: function created() {
-    this.details.score.warnings = [];
-    this.details.score.errors = [];
-  },
+  created: function created() {},
   methods: {
     openDetails: function openDetails(details) {
       console.log(details);
@@ -6192,7 +5413,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".page-container[data-v-b59c8186] {\n  width: 100%;\n}\n.page-container .details[data-v-b59c8186] {\n  width: 100%;\n  display: flex;\n  flex-direction: column;\n  gap: 30px;\n}\n.page-container .details .nav-row[data-v-b59c8186] {\n  height: 40px;\n  margin-top: 30px;\n}\n.page-container .details .detail-row[data-v-b59c8186] {\n  display: grid;\n  grid-template-columns: repeat(12, 1fr);\n  grid-template-rows: 1fr;\n  gap: 30px;\n}\n.page-container .details .card[data-v-b59c8186] {\n  background: var(--bg);\n  border-radius: 5px;\n  font-size: var(--text-size);\n  overflow: auto;\n}\n.page-container .details .card h1[data-v-b59c8186], .page-container .details .card h2[data-v-b59c8186], .page-container .details .card h3[data-v-b59c8186], .page-container .details .card h4[data-v-b59c8186], .page-container .details .card h5[data-v-b59c8186], .page-container .details .card h6[data-v-b59c8186] {\n  margin: 0;\n  color: var(--primary);\n  width: 100%;\n  padding: 7px 15px 0;\n}\n.page-container .details .card h4[data-v-b59c8186] {\n  color: var(--heading-gray);\n  font-size: var(--button-size);\n  letter-spacing: 1px;\n  text-transform: uppercase;\n  position: relative;\n  font-family: var(--text-font);\n  padding: 7px 15px 7px 10px;\n  border-bottom: 2px solid var(--border-color);\n}\n.page-container .details .card h4.error[data-v-b59c8186] {\n  color: var(--error);\n  border-color: var(--error);\n}\n.page-container .details .card h4.warning[data-v-b59c8186] {\n  color: var(--warning);\n  border-color: var(--warning);\n}\n.page-container .details .card h4.info[data-v-b59c8186] {\n  color: var(--primary);\n  border-color: var(--primary);\n}\n.page-container .details .card h4 .icon[data-v-b59c8186] {\n  font-size: 20px;\n  font-weight: 300;\n  margin-right: 10px;\n  color: inherit;\n  font-family: \"Material Icons\";\n  vertical-align: middle;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n}\n.page-container .details .card h4 .favicon[data-v-b59c8186] {\n  height: 20px;\n  width: 20px;\n  margin-right: 10px;\n  vertical-align: middle;\n}\n.page-container .details .card.center[data-v-b59c8186] {\n  display: grid;\n  place-content: center;\n}\n.page-container .details .card.primary[data-v-b59c8186] {\n  background: var(--primary);\n  color: #ffffffdd;\n}\n.page-container .details .card.primary h1[data-v-b59c8186], .page-container .details .card.primary h2[data-v-b59c8186], .page-container .details .card.primary h3[data-v-b59c8186], .page-container .details .card.primary h4[data-v-b59c8186], .page-container .details .card.primary h5[data-v-b59c8186], .page-container .details .card.primary h6[data-v-b59c8186] {\n  color: white;\n  border-bottom: var(--border);\n  border-color: #ffffff40;\n}\n.page-container .details .card.span-2[data-v-b59c8186] {\n  grid-column: span 2;\n}\n.page-container .details .card.span-3[data-v-b59c8186] {\n  grid-column: span 3;\n}\n.page-container .details .card.span-4[data-v-b59c8186] {\n  grid-column: span 4;\n}\n.page-container .details .card.span-5[data-v-b59c8186] {\n  grid-column: span 5;\n}\n.page-container .details .card.span-6[data-v-b59c8186] {\n  grid-column: span 6;\n}\n.page-container .details .card.span-7[data-v-b59c8186] {\n  grid-column: span 7;\n}\n.page-container .details .card.span-8[data-v-b59c8186] {\n  grid-column: span 8;\n}\n.page-container .details .card.span-9[data-v-b59c8186] {\n  grid-column: span 9;\n}\n.page-container .details .card.span-12[data-v-b59c8186] {\n  grid-column: span 12;\n}\n.page-container .details .card.page-info-card[data-v-b59c8186] {\n  overflow: hidden;\n}\n.page-container .details .card.page-info-card .preview[data-v-b59c8186] {\n  width: 100%;\n  height: 100%;\n  -o-object-fit: contain;\n     object-fit: contain;\n  filter: saturate(0%);\n  float: left;\n  border-radius: 5px;\n  width: 200px;\n}\n.page-container .details .card.page-info-card .content[data-v-b59c8186] {\n  font-size: var(--text-size);\n  color: var(--text-gray);\n}\n.page-container .details .card p[data-v-b59c8186] {\n  padding: 0 15px;\n}\n.page-container .details .card .metric-card-wrapper[data-v-b59c8186] {\n  width: 100%;\n  padding: 7.5px;\n}\n.page-container .details .card .metric-card[data-v-b59c8186] {\n  background: linear-gradient(90deg, var(--bg-dark) 0%, var(--bg) 70%);\n  border-radius: 5px;\n  display: inline-grid;\n  width: calc(100% - 15px);\n  margin: 7.5px;\n  padding: 5px 0;\n  grid-template: auto 1fr/50px 1fr;\n  grid-template-areas: \"icon label\" \"icon value\";\n}\n.page-container .details .card .metric-card.half[data-v-b59c8186] {\n  width: calc(50% - 15px);\n}\n.page-container .details .card .metric-card .icon[data-v-b59c8186] {\n  grid-area: icon;\n  font-size: 25px;\n  color: var(--primary);\n  font-family: \"Material Icons\";\n  align-self: center;\n  justify-self: center;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n}\n.page-container .details .card .metric-card .square[data-v-b59c8186] {\n  grid-area: icon;\n  height: 20px;\n  width: 20px;\n  border-radius: 3px;\n  border: var(--border);\n  background: var(--bg);\n  align-self: center;\n  justify-self: center;\n}\n.page-container .details .card .metric-card .label[data-v-b59c8186] {\n  grid-area: label;\n  font-size: var(--text-size);\n  color: var(--text-gray);\n  align-self: end;\n  height: 18px;\n  line-height: 18px;\n  margin-top: 3px;\n}\n.page-container .details .card .metric-card .value[data-v-b59c8186] {\n  grid-area: value;\n  font-size: var(--text-size);\n  color: var(--heading-gray);\n  line-height: 130%;\n  align-self: top;\n  font-weight: 600;\n}\n.page-container .details .card .checklist-wrapper[data-v-b59c8186] {\n  width: 100%;\n  padding: 10px 0;\n}\n.page-container .details .card .checklist-item[data-v-b59c8186] {\n  width: 100%;\n  display: flex;\n  height: 36px;\n  padding: 0 15px;\n  gap: 15px;\n  align-items: center;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n}\n.page-container .details .card .checklist-item .icon[data-v-b59c8186] {\n  font-size: 20px;\n  color: var(--text-gray);\n  font-family: \"Material Icons\";\n  text-align: center;\n}\n.page-container .details .card .checklist-item .text[data-v-b59c8186] {\n  font-size: var(--button-size);\n  font-weight: 600;\n  color: var(--heading-gray);\n  flex: 1;\n  text-transform: uppercase;\n  letter-spacing: 1px;\n}\n.page-container .details .card .twitter-summary-card[data-v-b59c8186] {\n  display: grid;\n  margin: 15px;\n  border-radius: 12px;\n  grid-template: 125px/125px auto;\n  grid-template-areas: \"image content\";\n  align-items: center;\n  border: var(--border);\n  overflow: hidden;\n}\n.page-container .details .card .twitter-summary-card .image[data-v-b59c8186] {\n  grid-area: image;\n  width: 100%;\n  height: 100%;\n  -o-object-fit: cover;\n     object-fit: cover;\n  border-right: var(--border);\n}\n.page-container .details .card .twitter-summary-card .content[data-v-b59c8186] {\n  grid-area: content;\n  padding: 8px 10px;\n  display: block;\n}\n.page-container .details .card .twitter-summary-card .content .title[data-v-b59c8186] {\n  display: block;\n  font-size: var(--text-size);\n  color: var(--heading-gray);\n  margin-bottom: 3px;\n}\n.page-container .details .card .twitter-summary-card .content .description[data-v-b59c8186] {\n  display: block;\n  font-size: var(--text-size);\n  color: var(--text-gray);\n  line-height: 130%;\n  margin-bottom: 3px;\n}\n.page-container .details .card .twitter-summary-card .content .url[data-v-b59c8186] {\n  display: flex;\n  align-items: center;\n}\n.page-container .details .card .twitter-summary-card .content .url .icon[data-v-b59c8186] {\n  font-size: 16px;\n  width: 22px;\n  color: var(--text-gray);\n  font-family: \"Material Icons\";\n  text-align: left;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n}\n.page-container .details .card .twitter-summary-card .content .url .text[data-v-b59c8186] {\n  font-size: var(--text-size);\n  color: var(--text-gray);\n}\n.page-container .details .card .open-graph-article-card[data-v-b59c8186] {\n  display: grid;\n  margin: 15px;\n  border-radius: 7px;\n  grid-template: auto 1fr/1fr;\n  grid-template-areas: \"image\" \"content\";\n  align-items: center;\n  border: var(--border);\n  overflow: hidden;\n}\n.page-container .details .card .open-graph-article-card .image[data-v-b59c8186] {\n  grid-area: image;\n  width: 100%;\n  height: 100%;\n  -o-object-fit: cover;\n     object-fit: cover;\n  border-bottom: var(--border);\n}\n.page-container .details .card .open-graph-article-card .content[data-v-b59c8186] {\n  grid-area: content;\n  padding: 8px 10px;\n  display: block;\n}\n.page-container .details .card .open-graph-article-card .content .url[data-v-b59c8186] {\n  display: block;\n  align-items: center;\n  font-size: var(--text-size);\n  color: var(--text-gray);\n  text-transform: uppercase;\n  margin-bottom: 3px;\n}\n.page-container .details .card .open-graph-article-card .content .title[data-v-b59c8186] {\n  display: block;\n  font-size: var(--text-size);\n  color: var(--heading-gray);\n  margin-bottom: 3px;\n}\n.page-container .details .card .open-graph-article-card .content .description[data-v-b59c8186] {\n  display: block;\n  font-size: var(--text-size);\n  color: var(--text-gray);\n  line-height: 130%;\n}\n.page-container .details fieldset[data-v-b59c8186] {\n  font-size: var(--text-size);\n  border: var(--border);\n  border-radius: 5px;\n  display: inline-block;\n  width: 100%;\n  margin: 0;\n  vertical-align: top;\n  overflow: hidden;\n}\n.page-container .details fieldset.half[data-v-b59c8186] {\n  width: 50%;\n}\n.page-container .details fieldset p[data-v-b59c8186] {\n  margin: 0;\n  margin-bottom: 15px;\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, ".page-container[data-v-b59c8186] {\n  width: 100%;\n}\n.page-container .details[data-v-b59c8186] {\n  width: 100%;\n  display: flex;\n  flex-direction: column;\n  gap: 30px;\n}\n.page-container .details .nav-row[data-v-b59c8186] {\n  height: 40px;\n  margin-top: 30px;\n}\n.page-container .details .detail-row[data-v-b59c8186] {\n  display: grid;\n  grid-template-columns: repeat(12, 1fr);\n  grid-template-rows: 1fr;\n  gap: 30px;\n}\n.page-container .details .card[data-v-b59c8186] {\n  background: var(--bg);\n  border-radius: 5px;\n  font-size: var(--text-size);\n  overflow: hidden;\n}\n.page-container .details .card h1[data-v-b59c8186], .page-container .details .card h2[data-v-b59c8186], .page-container .details .card h3[data-v-b59c8186], .page-container .details .card h4[data-v-b59c8186], .page-container .details .card h5[data-v-b59c8186], .page-container .details .card h6[data-v-b59c8186] {\n  margin: 0;\n  color: var(--primary);\n  width: 100%;\n  padding: 7px 15px 0;\n}\n.page-container .details .card h4[data-v-b59c8186] {\n  color: var(--heading-gray);\n  font-size: var(--button-size);\n  letter-spacing: 1px;\n  text-transform: uppercase;\n  position: relative;\n  font-family: var(--text-font);\n  padding: 7px 15px 7px 10px;\n  border-bottom: 2px solid var(--border-color);\n}\n.page-container .details .card h4.error[data-v-b59c8186] {\n  color: var(--error);\n  border-color: var(--error);\n}\n.page-container .details .card h4.warning[data-v-b59c8186] {\n  color: var(--warning);\n  border-color: var(--warning);\n}\n.page-container .details .card h4.info[data-v-b59c8186] {\n  color: var(--primary);\n  border-color: var(--primary);\n}\n.page-container .details .card h4 .icon[data-v-b59c8186] {\n  font-size: 20px;\n  font-weight: 300;\n  margin-right: 10px;\n  color: inherit;\n  font-family: \"Material Icons\";\n  vertical-align: middle;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n}\n.page-container .details .card h4 .favicon[data-v-b59c8186] {\n  height: 20px;\n  width: 20px;\n  margin-right: 10px;\n  vertical-align: middle;\n}\n.page-container .details .card.center[data-v-b59c8186] {\n  display: grid;\n  place-content: center;\n}\n.page-container .details .card.primary[data-v-b59c8186] {\n  background: var(--primary);\n  color: #ffffffdd;\n}\n.page-container .details .card.primary h1[data-v-b59c8186], .page-container .details .card.primary h2[data-v-b59c8186], .page-container .details .card.primary h3[data-v-b59c8186], .page-container .details .card.primary h4[data-v-b59c8186], .page-container .details .card.primary h5[data-v-b59c8186], .page-container .details .card.primary h6[data-v-b59c8186] {\n  color: white;\n  border-bottom: var(--border);\n  border-color: #ffffff40;\n}\n.page-container .details .card.span-2[data-v-b59c8186] {\n  grid-column: span 2;\n}\n.page-container .details .card.span-3[data-v-b59c8186] {\n  grid-column: span 3;\n}\n.page-container .details .card.span-4[data-v-b59c8186] {\n  grid-column: span 4;\n}\n.page-container .details .card.span-5[data-v-b59c8186] {\n  grid-column: span 5;\n}\n.page-container .details .card.span-6[data-v-b59c8186] {\n  grid-column: span 6;\n}\n.page-container .details .card.span-7[data-v-b59c8186] {\n  grid-column: span 7;\n}\n.page-container .details .card.span-8[data-v-b59c8186] {\n  grid-column: span 8;\n}\n.page-container .details .card.span-9[data-v-b59c8186] {\n  grid-column: span 9;\n}\n.page-container .details .card.span-12[data-v-b59c8186] {\n  grid-column: span 12;\n}\n.page-container .details .card.page-info-card[data-v-b59c8186] {\n  overflow: hidden;\n}\n.page-container .details .card.page-info-card .preview[data-v-b59c8186] {\n  width: 100%;\n  height: 100%;\n  -o-object-fit: contain;\n     object-fit: contain;\n  filter: saturate(0%);\n  float: left;\n  border-radius: 5px;\n  width: 200px;\n}\n.page-container .details .card.page-info-card .content[data-v-b59c8186] {\n  font-size: var(--text-size);\n  color: var(--text-gray);\n}\n.page-container .details .card p[data-v-b59c8186] {\n  padding: 0 15px;\n}\n.page-container .details .card .metric-card-wrapper[data-v-b59c8186] {\n  width: 100%;\n  padding: 7.5px;\n}\n.page-container .details .card .metric-card[data-v-b59c8186] {\n  background: linear-gradient(90deg, var(--bg-dark) 0%, var(--bg) 70%);\n  border-radius: 5px;\n  display: inline-grid;\n  width: calc(100% - 15px);\n  margin: 7.5px;\n  padding: 5px 0;\n  grid-template: auto 1fr/50px 1fr;\n  grid-template-areas: \"icon label\" \"icon value\";\n}\n.page-container .details .card .metric-card.half[data-v-b59c8186] {\n  width: calc(50% - 15px);\n}\n.page-container .details .card .metric-card .icon[data-v-b59c8186] {\n  grid-area: icon;\n  font-size: 25px;\n  color: var(--primary);\n  font-family: \"Material Icons\";\n  align-self: center;\n  justify-self: center;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n}\n.page-container .details .card .metric-card .square[data-v-b59c8186] {\n  grid-area: icon;\n  height: 20px;\n  width: 20px;\n  border-radius: 3px;\n  border: var(--border);\n  background: var(--bg);\n  align-self: center;\n  justify-self: center;\n}\n.page-container .details .card .metric-card .label[data-v-b59c8186] {\n  grid-area: label;\n  font-size: var(--text-size);\n  color: var(--text-gray);\n  align-self: center;\n  height: 18px;\n  line-height: 18px;\n  margin-top: 3px;\n}\n.page-container .details .card .metric-card .value[data-v-b59c8186] {\n  grid-area: value;\n  font-size: var(--text-size);\n  color: var(--heading-gray);\n  line-height: 130%;\n  align-self: center;\n  font-weight: 600;\n}\n.page-container .details .card .checklist-wrapper[data-v-b59c8186] {\n  width: 100%;\n  padding: 10px 0;\n}\n.page-container .details .card .checklist-item[data-v-b59c8186] {\n  width: 100%;\n  display: flex;\n  height: 36px;\n  padding: 0 15px;\n  gap: 15px;\n  align-items: center;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n}\n.page-container .details .card .checklist-item .icon[data-v-b59c8186] {\n  font-size: 20px;\n  color: var(--text-gray);\n  font-family: \"Material Icons\";\n  text-align: center;\n}\n.page-container .details .card .checklist-item .text[data-v-b59c8186] {\n  font-size: var(--button-size);\n  font-weight: 600;\n  color: var(--heading-gray);\n  flex: 1;\n  text-transform: uppercase;\n  letter-spacing: 1px;\n}\n.page-container .details .card .twitter-summary-card[data-v-b59c8186] {\n  display: grid;\n  margin: 15px;\n  border-radius: 12px;\n  grid-template: 125px/125px auto;\n  grid-template-areas: \"image content\";\n  align-items: center;\n  border: var(--border);\n  overflow: hidden;\n}\n.page-container .details .card .twitter-summary-card .image[data-v-b59c8186] {\n  grid-area: image;\n  width: 100%;\n  height: 100%;\n  -o-object-fit: cover;\n     object-fit: cover;\n  border-right: var(--border);\n}\n.page-container .details .card .twitter-summary-card .content[data-v-b59c8186] {\n  grid-area: content;\n  padding: 8px 10px;\n  display: block;\n}\n.page-container .details .card .twitter-summary-card .content .title[data-v-b59c8186] {\n  display: block;\n  font-size: var(--text-size);\n  color: var(--heading-gray);\n  margin-bottom: 3px;\n}\n.page-container .details .card .twitter-summary-card .content .description[data-v-b59c8186] {\n  display: block;\n  font-size: var(--text-size);\n  color: var(--text-gray);\n  line-height: 130%;\n  margin-bottom: 3px;\n}\n.page-container .details .card .twitter-summary-card .content .url[data-v-b59c8186] {\n  display: flex;\n  align-items: center;\n}\n.page-container .details .card .twitter-summary-card .content .url .icon[data-v-b59c8186] {\n  font-size: 16px;\n  width: 22px;\n  color: var(--text-gray);\n  font-family: \"Material Icons\";\n  text-align: left;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n}\n.page-container .details .card .twitter-summary-card .content .url .text[data-v-b59c8186] {\n  font-size: var(--text-size);\n  color: var(--text-gray);\n}\n.page-container .details .card .open-graph-article-card[data-v-b59c8186] {\n  display: grid;\n  margin: 15px;\n  border-radius: 7px;\n  grid-template: auto 1fr/1fr;\n  grid-template-areas: \"image\" \"content\";\n  align-items: center;\n  border: var(--border);\n  overflow: hidden;\n}\n.page-container .details .card .open-graph-article-card .image[data-v-b59c8186] {\n  grid-area: image;\n  width: 100%;\n  height: 100%;\n  -o-object-fit: cover;\n     object-fit: cover;\n  border-bottom: var(--border);\n}\n.page-container .details .card .open-graph-article-card .content[data-v-b59c8186] {\n  grid-area: content;\n  padding: 8px 10px;\n  display: block;\n}\n.page-container .details .card .open-graph-article-card .content .url[data-v-b59c8186] {\n  display: block;\n  align-items: center;\n  font-size: var(--text-size);\n  color: var(--text-gray);\n  text-transform: uppercase;\n  margin-bottom: 3px;\n}\n.page-container .details .card .open-graph-article-card .content .title[data-v-b59c8186] {\n  display: block;\n  font-size: var(--text-size);\n  color: var(--heading-gray);\n  margin-bottom: 3px;\n}\n.page-container .details .card .open-graph-article-card .content .description[data-v-b59c8186] {\n  display: block;\n  font-size: var(--text-size);\n  color: var(--text-gray);\n  line-height: 130%;\n}\n.page-container .details .card .image-card[data-v-b59c8186] {\n  display: grid;\n  margin: 15px;\n  border-radius: 5px;\n  grid-template: 125px/125px auto;\n  grid-template-areas: \"image content\";\n  align-items: center;\n  border: var(--border);\n  overflow: hidden;\n}\n.page-container .details .card .image-card .image[data-v-b59c8186] {\n  grid-area: image;\n  width: 100%;\n  height: 100%;\n  -o-object-fit: contain;\n     object-fit: contain;\n  border-right: var(--border);\n  background: var(--bg-dark);\n  padding: 5px;\n}\n.page-container .details .card .image-card .content[data-v-b59c8186] {\n  grid-area: content;\n  padding: 8px 10px;\n  display: block;\n}\n.page-container .details .card .image-card .content .title[data-v-b59c8186] {\n  display: block;\n  font-size: var(--text-size);\n  color: var(--heading-gray);\n  margin-bottom: 3px;\n}\n.page-container .details .card .image-card .content .description[data-v-b59c8186] {\n  display: block;\n  font-size: var(--text-size);\n  color: var(--text-gray);\n  line-height: 130%;\n  margin-bottom: 3px;\n}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -30555,7 +29776,7 @@ var render = function() {
     "div",
     { staticClass: "page-container limiter" },
     [
-      !_vm.details
+      _vm.details === null
         ? _c("quick-check-module", {
             on: {
               details: function($event) {
@@ -30731,6 +29952,35 @@ var render = function() {
                         _vm._v("Mobile Support")
                       ])
                     ]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    {
+                      directives: [
+                        {
+                          name: "show",
+                          rawName: "v-show",
+                          value: _vm.details.score.errorPage.hasCustom404Page,
+                          expression: "details.score.errorPage.hasCustom404Page"
+                        }
+                      ],
+                      staticClass: "metric-card"
+                    },
+                    [
+                      _c(
+                        "div",
+                        {
+                          staticClass: "icon",
+                          staticStyle: { color: "var(--success)" }
+                        },
+                        [_vm._v("󰄬")]
+                      ),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "value" }, [
+                        _vm._v("Custom 404 Page")
+                      ])
+                    ]
                   )
                 ]),
                 _vm._v(" "),
@@ -30849,6 +30099,36 @@ var render = function() {
                         _vm._v("No Mobile Support")
                       ])
                     ]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    {
+                      directives: [
+                        {
+                          name: "show",
+                          rawName: "v-show",
+                          value: !_vm.details.score.errorPage.hasCustom404Page,
+                          expression:
+                            "!details.score.errorPage.hasCustom404Page"
+                        }
+                      ],
+                      staticClass: "metric-card"
+                    },
+                    [
+                      _c(
+                        "div",
+                        {
+                          staticClass: "icon",
+                          staticStyle: { color: "var(--error)" }
+                        },
+                        [_vm._v("󰅖")]
+                      ),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "value" }, [
+                        _vm._v("No Custom 404 Page")
+                      ])
+                    ]
                   )
                 ])
               ]),
@@ -30861,6 +30141,16 @@ var render = function() {
                 _vm._v(" "),
                 _c("div", { staticClass: "metric-card-wrapper" }, [
                   _c("div", { staticClass: "metric-card half" }, [
+                    _c("div", { staticClass: "icon" }, [_vm._v("󰌝")]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "label" }, [_vm._v("HTML Nodes")]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "value" }, [
+                      _vm._v(_vm._s(_vm.details.metrics.Nodes))
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "metric-card half" }, [
                     _c("div", { staticClass: "icon" }, [_vm._v("󰊚")]),
                     _vm._v(" "),
                     _c("div", { staticClass: "label" }, [_vm._v("Rendertime")]),
@@ -30868,6 +30158,21 @@ var render = function() {
                     _c("div", { staticClass: "value" }, [
                       _vm._v(
                         _vm._s(_vm.details.metrics.TaskDuration.toFixed(4)) +
+                          "s"
+                      )
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "metric-card half" }, [
+                    _c("div", { staticClass: "icon" }, [_vm._v("󰕮")]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "label" }, [
+                      _vm._v("Layout Rendertime")
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "value" }, [
+                      _vm._v(
+                        _vm._s(_vm.details.metrics.LayoutDuration.toFixed(4)) +
                           "s"
                       )
                     ])
@@ -30885,6 +30190,30 @@ var render = function() {
                         _vm._s(_vm.details.metrics.ScriptDuration.toFixed(4)) +
                           "s"
                       )
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "metric-card half" }, [
+                    _c("div", { staticClass: "icon" }, [_vm._v("󰈇")]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "label" }, [
+                      _vm._v("Outbound-Links")
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "value" }, [
+                      _vm._v(_vm._s(_vm.details.outboundLinks.length))
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "metric-card half" }, [
+                    _c("div", { staticClass: "icon" }, [_vm._v("󰌹")]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "label" }, [
+                      _vm._v("Internal-Links")
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "value" }, [
+                      _vm._v(_vm._s(_vm.details.internalLinks.length))
                     ])
                   ])
                 ])
@@ -30926,14 +30255,32 @@ var render = function() {
                   _vm._v(" "),
                   _vm.details.metaData.generator
                     ? _c("div", { staticClass: "metric-card" }, [
-                        _c("div", { staticClass: "icon" }, [_vm._v("󰏬")]),
+                        _c("div", { staticClass: "icon" }, [_vm._v("󱕷")]),
                         _vm._v(" "),
                         _c("div", { staticClass: "label" }, [
                           _vm._v("CMS / Generator")
                         ]),
                         _vm._v(" "),
                         _c("div", { staticClass: "value" }, [
-                          _vm._v(_vm._s(_vm.details.metaData.generator))
+                          _c(
+                            "span",
+                            {
+                              directives: [
+                                {
+                                  name: "show",
+                                  rawName: "v-show",
+                                  value: _vm.details.metaData.cms,
+                                  expression: "details.metaData.cms"
+                                }
+                              ]
+                            },
+                            [_vm._v(_vm._s(_vm.details.metaData.cms) + " —")]
+                          ),
+                          _vm._v(
+                            "\n                            " +
+                              _vm._s(_vm.details.metaData.generator) +
+                              "\n                        "
+                          )
                         ])
                       ])
                     : _vm._e(),
@@ -30974,7 +30321,7 @@ var render = function() {
               ])
             ]),
             _vm._v(" "),
-            _vm.details.score.errors.length > 0
+            _vm.details.score.errorData.errors.length > 0
               ? _c("div", { staticClass: "detail-row" }, [
                   _c("div", { staticClass: "card span-12" }, [
                     _c("h4", { staticClass: "error" }, [
@@ -30985,7 +30332,10 @@ var render = function() {
                     _c(
                       "div",
                       { staticClass: "metric-card-wrapper" },
-                      _vm._l(_vm.details.score.errors, function(error, i) {
+                      _vm._l(_vm.details.score.errorData.errors, function(
+                        error,
+                        i
+                      ) {
                         return _c(
                           "div",
                           { key: i, staticClass: "metric-card" },
@@ -31015,13 +30365,46 @@ var render = function() {
                 ])
               : _vm._e(),
             _vm._v(" "),
-            _vm.details.score.warnings.length > 0
+            _vm.details.score.warningData.warnings.length > 0
               ? _c("div", { staticClass: "detail-row" }, [
                   _c("div", { staticClass: "card span-12" }, [
                     _c("h4", { staticClass: "warning" }, [
                       _c("div", { staticClass: "icon" }, [_vm._v("󰀦")]),
                       _vm._v("Warnings")
-                    ])
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "metric-card-wrapper" },
+                      _vm._l(_vm.details.score.warningData.warnings, function(
+                        warning,
+                        i
+                      ) {
+                        return _c(
+                          "div",
+                          { key: i, staticClass: "metric-card" },
+                          [
+                            _c(
+                              "div",
+                              {
+                                staticClass: "icon",
+                                staticStyle: { color: "var(--warning)" }
+                              },
+                              [_vm._v("󰉫")]
+                            ),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "label" }, [
+                              _vm._v("Warning")
+                            ]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "value" }, [
+                              _vm._v(_vm._s(warning.desc))
+                            ])
+                          ]
+                        )
+                      }),
+                      0
+                    )
                   ])
                 ])
               : _vm._e(),
@@ -31129,34 +30512,40 @@ var render = function() {
               : _vm._e(),
             _vm._v(" "),
             _c("div", { staticClass: "detail-row" }, [
-              _c(
-                "div",
-                { staticClass: "card span-12" },
-                [
-                  _c("h4", [
-                    _c("div", { staticClass: "icon" }, [_vm._v("󰓹")]),
-                    _vm._v("Meta Tags")
-                  ]),
-                  _vm._v(" "),
+              _c("div", { staticClass: "card span-12" }, [
+                _c("h4", [
+                  _c("div", { staticClass: "icon" }, [_vm._v("󰓹")]),
+                  _vm._v("Meta Tags")
+                ]),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticClass: "metric-card-wrapper" },
                   _vm._l(_vm.details.meta, function(meta, i) {
-                    return _c("p", { key: i }, [
-                      _vm._v("\n                    Content: "),
-                      _c("span", [_vm._v(_vm._s(meta.content))]),
-                      _c("br"),
-                      _vm._v("\n                    Name: "),
-                      _c("span", [_vm._v(_vm._s(meta.name))]),
-                      _c("br"),
-                      _vm._v("\n                    Property: "),
-                      _c("span", [_vm._v(_vm._s(meta.property))]),
-                      _c("br"),
-                      _vm._v("\n                    Charset: "),
-                      _c("span", [_vm._v(_vm._s(meta.charset))]),
-                      _c("br")
+                    return _c("div", { key: i, staticClass: "metric-card" }, [
+                      _c(
+                        "div",
+                        {
+                          staticClass: "icon",
+                          staticStyle: { color: "var(--text-gray)" }
+                        },
+                        [_vm._v("󰓹")]
+                      ),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "label" }, [
+                        _vm._v(_vm._s(meta.name || meta.property || "Charset"))
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "value" }, [
+                        _vm._v(
+                          _vm._s(meta.content || meta.charset || meta.httpEquiv)
+                        )
+                      ])
                     ])
-                  })
-                ],
-                2
-              )
+                  }),
+                  0
+                )
+              ])
             ]),
             _vm._v(" "),
             _c("div", { staticClass: "detail-row" }, [
@@ -31170,31 +30559,43 @@ var render = function() {
                   ]),
                   _vm._v(" "),
                   _vm._l(_vm.details.images, function(image, i) {
-                    return _c("p", { key: i }, [
-                      _c("img", { attrs: { src: image.href, width: "200" } }),
-                      _c("br"),
-                      _vm._v("\n                    src: "),
-                      _c("span", [_vm._v(_vm._s(image.src))]),
-                      _c("br"),
-                      _vm._v("\n                    size: "),
-                      _c("span", [
-                        _vm._v(
-                          _vm._s(image.width) + " x " + _vm._s(image.height)
-                        )
-                      ]),
-                      _c("br"),
-                      _vm._v("\n                    visible size: "),
-                      _c("span", [
-                        _vm._v(
-                          _vm._s(image.visibleWidth) +
-                            " x " +
-                            _vm._s(image.visibleHeight)
-                        )
-                      ]),
-                      _c("br"),
-                      _vm._v("\n                    alt: "),
-                      _c("span", [_vm._v(_vm._s(image.alt))]),
-                      _c("br")
+                    return _c("div", { key: i, staticClass: "image-card" }, [
+                      _c("img", {
+                        staticClass: "image",
+                        attrs: { src: image.href }
+                      }),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "content" }, [
+                        image.alt
+                          ? _c("b", { staticClass: "title" }, [
+                              _vm._v(_vm._s(image.alt))
+                            ])
+                          : _c("i", { staticClass: "title" }, [
+                              _vm._v('No "alt"-attribute')
+                            ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "description" }, [
+                          _vm._v(
+                            "\n                            Natural-Size: "
+                          ),
+                          _c("span", [
+                            _vm._v(
+                              _vm._s(image.width) + " x " + _vm._s(image.height)
+                            )
+                          ]),
+                          _c("br"),
+                          _vm._v(
+                            "\n                            Visible-Size: "
+                          ),
+                          _c("span", [
+                            _vm._v(
+                              _vm._s(image.visibleWidth) +
+                                " x " +
+                                _vm._s(image.visibleHeight)
+                            )
+                          ])
+                        ])
+                      ])
                     ])
                   })
                 ],

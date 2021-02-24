@@ -66,8 +66,19 @@ const scanUrl = async (url) => {
     await page.goto(url)
 
     let metrics = await page.metrics()
-    let errors = []
-    let warnings = []
+    let errorData = {
+        errors: [],
+        count: {
+            total: 0,
+            imgMissingAlt: 0,
+        }
+    }
+    let warningData = {
+        warnings: [],
+        count: {
+            total: 0,
+        }
+    }
     
     let links = []
     links = await page.$$eval('a', e => e.map(node => {
@@ -78,10 +89,21 @@ const scanUrl = async (url) => {
     }))
 
     let internalLinks = []
-    internalLinks = links.filter(e => {
-        return new URL(e.href, url.origin).origin === url.origin
-    }).map(e => e.href)
+    let outboundLinks = []
+
+    for (const link of links)
+    {
+        if (new URL(link.href, url.origin).origin === url.origin)
+        {
+            internalLinks.push(link.href)
+        }
+        else
+        {
+            outboundLinks.push(link.href)
+        }
+    }
     internalLinks = [...new Set(internalLinks)]
+    outboundLinks = [...new Set(outboundLinks)]
 
     let images = []
     images = await page.$$eval('img', e => e.map(node => ({
@@ -100,7 +122,8 @@ const scanUrl = async (url) => {
 
         if (!img.alt)
         {
-            errors.push({type: 'IMG_MISSING_ALT', desc: 'An image is missing an "alt"-attribute.', weight: 1,})
+            errorData.errors.push({type: 'IMG_MISSING_ALT', desc: 'An image is missing an "alt"-attribute.', weight: 1,})
+            errorData.count.imgMissingAlt += 1
         }
     }
 
@@ -114,7 +137,7 @@ const scanUrl = async (url) => {
 
     let metaTags = []
     metaTags = await page.$$eval('meta', e => e.map(node => ({
-        'name': node.getAttribute('name'),
+        'name': node.getAttribute('name') ,
         'property': node.getAttribute('property'),
         'content': node.getAttribute('content'),
         'charset': node.getAttribute('charset'),
@@ -129,42 +152,56 @@ const scanUrl = async (url) => {
     let viewport = null
     let description = null
     let generator = null
+    let cms = null
     let keywords = []
 
     for (const metaTag of metaTags)
     {
-        if (metaTag.name === 'viewport')
-        {
-            viewport = metaTag.content
-        }
-        else if (metaTag.name === 'theme-color')
-        {
-            themeColor = metaTag.content
-        }
-        else if (metaTag.name === 'generator')
-        {
-            generator = metaTag.content
-        }
-        else if (metaTag.name === 'description')
-        {
-            description = metaTag.content
-        }
-        else if (metaTag.name === 'keywords')
-        {
-            keywords = metaTag.content.split(',')
-        }
-        else if (metaTag.name && metaTag.name.startsWith('twitter:'))
-        {
-            twitterCard[metaTag.name] = metaTag.content
-        }
-        else if (metaTag.property && metaTag.property.startsWith('og:'))
-        {
-            openGraph[metaTag.property] = metaTag.content
 
-            if (metaTag.property == 'og:url')
+        let prop = metaTag.name || metaTag.property
+
+        // console.log(metaTag.name, metaTag.property, prop)
+
+        if (!prop) continue
+
+        if (!prop.startsWith('twitter:') && !prop.startsWith('og:'))
+        {
+            switch (prop.toLowerCase()) {
+                case 'viewport':
+                    viewport = metaTag.content
+                    break;
+                case 'theme-color':
+                    themeColor = metaTag.content
+                    break;
+                case 'generator':
+                    generator = metaTag.content
+
+                    let gen = generator.toUpperCase()
+                    if      (gen.startsWith('JOOMLA!')) cms = 'JOOMLA'
+                    else if (gen.startsWith('TYPO3'))   cms = 'TYPO3'
+                    else if (gen.startsWith('DRUPAL'))  cms = 'DRUPAL'
+                    else if (gen.startsWith('HUGO'))    cms = 'HUGO'
+                    break;
+                case 'description':
+                    description = metaTag.content
+                    break;
+                case 'keywords':
+                    keywords = metaTag.content.split(',')
+                    break;
+            }
+        }
+        else if (prop.startsWith('twitter:'))
+        {
+            twitterCard[prop] = metaTag.content
+        }
+        else if (prop.startsWith('og:'))
+        {
+            openGraph[prop] = metaTag.content
+
+            if (prop === 'og:url')
             {
                 let ogUrl = new URL(metaTag.content)
-                openGraph[metaTag.property] = {
+                openGraph[prop] = {
                     url: metaTag.content,
                     host: ogUrl.host,
                     origin: ogUrl.origin,
@@ -191,6 +228,17 @@ const scanUrl = async (url) => {
         'tag': node.tagName,
         'text': node.innerText,
     })))
+
+    h1Count = headings.filter(e => e.tag === 'H1').length
+
+    if (h1Count > 1)
+    {
+        warningData.warnings.push({type: 'TOO_MANY_H1', desc: `Semantic HTML should only contain one H1 tag. This page contains ${h1Count}.`, weight: 1,})
+    }
+    else if (h1Count == 0)
+    {
+        warningData.warnings.push({type: 'NO_H1', desc: `Semantic HTML should contain one H1 tag. This page contains ${h1Count}.`, weight: 1,})
+    }
 
 
 
@@ -220,6 +268,40 @@ const scanUrl = async (url) => {
 
     let preview = 'data:image/png;base64,'+await page.screenshot({ encoding: "base64" })
 
+
+
+    let errorPage = {
+        title: null,
+        probeUrl: null,
+        hasCustom404Page: false,
+    }
+
+    let probeErrorPageUrls = [
+        url.origin + '/' + uuid() + Math.floor(Math.random() * 100000),
+        url.origin + '/index.php/' + uuid() + Math.floor(Math.random() * 100000),
+    ]
+
+    for (const probeErrorPageUrl of probeErrorPageUrls)
+    {
+        let response = await page.goto(probeErrorPageUrl)
+
+        if (response.status() == 404)
+        {
+            try {
+                errorPage.title = await page.$eval('title', node => node.textContent)
+            }
+            catch (error) {}
+        
+            // TODO: create better detection
+            if (errorPage.title !== '404 Not Found')
+            {
+                errorPage.hasCustom404Page = true
+            }
+        }
+    }
+
+
+
     let score = {
         totalPageScore: 0,
 
@@ -228,14 +310,16 @@ const scanUrl = async (url) => {
         hasFavicon: favicon ? true : false,
         hasViewport: viewport ? true : false,
 
-        errors,
-        warnings,
+        errorData,
+        errorPage,
+        warningData,
     }
 
-    if (score.hasTitle) score.totalPageScore += 25
-    if (score.hasDescription) score.totalPageScore += 25
-    if (score.hasFavicon) score.totalPageScore += 25
-    if (score.hasViewport) score.totalPageScore += 25
+    if (score.hasTitle) score.totalPageScore += 20
+    if (score.hasDescription) score.totalPageScore += 20
+    if (score.hasFavicon) score.totalPageScore += 20
+    if (score.hasViewport) score.totalPageScore += 20
+    if (score.errorPage.hasCustom404Page) score.totalPageScore += 20
 
 
 
@@ -245,6 +329,7 @@ const scanUrl = async (url) => {
         viewport,
         description,
         generator,
+        cms,
         themeColor,
         keywords,
         title,
@@ -265,6 +350,7 @@ const scanUrl = async (url) => {
         appleTouchIcon,
         links,
         internalLinks,
+        outboundLinks,
         metrics,
         images,
         meta: metaTags,
