@@ -2,37 +2,27 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
-class User extends Authenticatable
+class TeamMember extends Model
 {
-    use HasFactory, Notifiable;
+    use HasFactory;
 
     public $incrementing = false;
 
     protected $fillable = [
-        'firstname',
-        'lastname',
-        'username',
-        'email',
-        'password',
-        'metadata',
+        'user_id',
+        'team_id',
         'roles',
-        'email_verified_at',
-    ];
-
-    protected $hidden = [
-        'password',
-        'remember_token',
+        'invite_email',
+        'metadata',
+        'invited_at',
     ];
 
     protected $casts = [
-        'email_verified_at' => 'datetime',
-        'deleted_at' => 'datetime',
+        'invited_at' => 'datetime',
         'metadata' => 'array',
         'roles' => 'array',
     ];
@@ -53,6 +43,6 @@ class User extends Authenticatable
 
     public static function generateUuid()
     {
-        return 'user_'.Str::uuid();
+        return 'member_'.Str::uuid();
     }
 }
