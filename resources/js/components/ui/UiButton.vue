@@ -1,7 +1,7 @@
 <template>
     <button tabindex="0" class="ccc-ui-container" :class="classes" @click="href ? goto(href) : $emit('click')">
         <slot></slot>
-        <div class="icon" v-html="icon"></div>
+        <div class="icon" v-html="icon_"></div>
         <div class="border" v-if="hasBorder"></div>
     </button>
 </template>
@@ -48,6 +48,10 @@
                 if (this.icon == 'none')
                 {
                     this.classes.push('no-icon')
+                }
+                else
+                {
+                    if (this.icon) this.icon_ = this.icon
                 }
             },
 

@@ -42,4 +42,11 @@ class Team extends Model
     {
         return 'team_'.Str::uuid();
     }
+
+
+
+    public function members()
+    {
+        return $this->hasMany(TeamMember::class, 'team_id', 'id');
+    }
 }

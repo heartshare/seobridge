@@ -10,7 +10,7 @@
             <div class="item" v-for="(item, i) in options_" :key="i" @click="select(item.value)" :class="{'selected': value_.value == item.value}">{{item.label}}</div>
         </div>
         
-        <div class="dropdown-toggle">&#61760;</div>
+        <div class="dropdown-toggle">&#983360;</div>
     </div>
 </template>
 
@@ -210,37 +210,39 @@
             border: none
             background: none
             border-radius: 3px
-            font-family: rubik
+            font-family: var(--text-font)
             font-size: 16px
             pointer-events: none
             color: var(--heading-gray)
 
         .dropdown
             position: absolute
-            top: calc(var(--height) + 10px)
+            top: 10px
             left: 0
             width: 100%
             max-height: 400px
             overflow: hidden
             overflow-y: auto
             background: var(--bg)
-            border: var(--input-border)
             border-radius: 5px
             padding: 10px 0
-            transition: all 100ms
-            transform: scaleY(0) translateY(-10px)
+            transition: all 200ms
+            filter: var(--elevation-2)
+            transform: scaleY(0)
             transform-origin: top center
+            will-change: transform
             text-align: left
+            z-index: 1000
 
             &.open
-                transform: scaleY(1) translateY(0px)
+                transform: scaleY(1)
 
             .item
                 width: 100%
-                font-size: 14px
+                font-size: var(--text-size)
                 color: var(--heading-gray)
-                padding: 10px 15px 7px
-                line-height: 22px
+                padding: 8px 15px
+                line-height: 30px
                 cursor: pointer
                 user-select: none
 

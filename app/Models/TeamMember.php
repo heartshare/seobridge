@@ -16,13 +16,10 @@ class TeamMember extends Model
         'user_id',
         'team_id',
         'roles',
-        'invite_email',
         'metadata',
-        'invited_at',
     ];
 
     protected $casts = [
-        'invited_at' => 'datetime',
         'metadata' => 'array',
         'roles' => 'array',
     ];

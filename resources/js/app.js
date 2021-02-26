@@ -5,7 +5,7 @@ window._ = require('lodash')
 window.axios = require('axios')
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest'
 
-// Vue + Vuex
+// Vue + Vuex 
 window.Vue = require('vue').default
 window.Vuex = require('vuex').default
 window.Vue.use(window.Vuex)
@@ -17,6 +17,9 @@ files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(
 // Vue ApexCharts
 window.VueApexCharts = require('vue-apexcharts')
 Vue.component('apexchart', VueApexCharts)
+
+window.VTooltip = require('v-tooltip')
+Vue.use(VTooltip)
 
 
 
@@ -31,6 +34,7 @@ const app = new Vue({
     },
     mounted() {
         this.$store.dispatch('setPage', this.$refs.initialPage.value)
+        this.$store.dispatch('initialFetch')
         window.addEventListener('popstate', this.userNavigate)
     },
     methods: {

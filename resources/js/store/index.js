@@ -4,13 +4,16 @@ module.exports = {
         validPages: [
             'overview',
             'reports',
-            'team',
+            'teams',
             'notifications',
             'settings',
             'profile',
         ],
         pageTransitionDirection: 'down',
         navbar: 'open',
+        user: {},
+        teams: [],
+        notifications: [],
     },
 
     getters: {
@@ -25,17 +28,65 @@ module.exports = {
         navbar(state) {
             return state.navbar
         },
+
+        user(state) {
+            return state.user
+        },
+
+        teams(state) {
+            return state.teams
+        },
+
+        notifications(state) {
+            return state.notifications
+        },
     },
 
     actions: {
-        setPage(context, data) {
-            context.commit('page', data)
+        setPage(store, data) {
+            store.commit('page', data)
             history.pushState(data, data, '/dashboard/'+data)
         },
 
-        setNavbar(context, data) {
-            context.commit('navbar', data)
+        setNavbar(store, data) {
+            store.commit('navbar', data)
         },
+
+        fetchUser(store) {
+            axios.post('/auth/user/get-user')
+            .then(response => {
+                store.commit('user', response.data)
+            })
+            .catch(error => {
+                console.log(error.response)
+            })
+        },
+
+        fetchAllTeams(store) {
+            axios.post('/auth/team/get-all-teams')
+            .then(response => {
+                store.commit('teams', response.data)
+            })
+            .catch(error => {
+                console.log(error.response)
+            })
+        },
+
+        fetchAllNotifications(store) {
+            axios.post('/auth/notifications/get-all-notifications')
+            .then(response => {
+                store.commit('notifications', response.data)
+            })
+            .catch(error => {
+                console.log(error.response)
+            })
+        },
+
+        initialFetch(store) {
+            store.dispatch('fetchUser')
+            store.dispatch('fetchAllTeams')
+            store.dispatch('fetchAllNotifications')
+        }
     },
 
     mutations: {
@@ -47,8 +98,45 @@ module.exports = {
             state.pageTransitionDirection = (prevIndex !== -1 && newIndex !== -1 && newIndex > prevIndex) ? 'up' : 'down'
         },
 
+
+
         navbar(state, data) {
             state.navbar = data
+        },
+
+
+
+        user(state, data) {
+            state.user = data
+        },
+
+        userFirstname(state, data) {
+            state.user.firstname = data
+        },
+
+        userLastname(state, data) {
+            state.user.firstname = data
+        },
+
+
+
+        teams(state, data) {
+            state.teams = data
+        },
+
+        setTeam(state, data) {
+            let index = state.teams.findIndex(e => e.id === data.id)
+
+            if (index >= 0)
+            {
+                Vue.set(state.teams, index, data)
+            }
+        },
+
+
+
+        notifications(state, data) {
+            state.notifications = data
         },
     },
 }

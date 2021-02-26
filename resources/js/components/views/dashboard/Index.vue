@@ -21,7 +21,7 @@
                 <div class="text">Reports</div>
             </a>
 
-            <a href="/dashboard/team" class="button" :class="{'active': $store.getters.page === 'team'}" @click.prevent="$store.dispatch('setPage', 'team')">
+            <a href="/dashboard/teams" class="button" :class="{'active': $store.getters.page === 'teams'}" @click.prevent="$store.dispatch('setPage', 'teams')">
                 <div class="icon">&#985740;</div>
                 <div class="text">My Team</div>
             </a>
@@ -49,7 +49,7 @@
             <transition class="transition-group" :name="'opacity-slide-'+$store.getters.pageTransitionDirection" mode="out-in">
                 <overview-page class="page" key="overview-page" v-if="$store.getters.page === 'overview'"></overview-page>
                 <reports-page class="page" key="reports-page" v-if="$store.getters.page === 'reports'"></reports-page>
-                <team-page class="page" key="team-page" v-if="$store.getters.page === 'team'"></team-page>
+                <teams-page class="page" key="teams-page" v-if="$store.getters.page === 'teams'"></teams-page>
                 <notifications-page class="page" key="notifications-page" v-if="$store.getters.page === 'notifications'"></notifications-page>
                 <settings-page class="page" key="settings-page" v-if="$store.getters.page === 'settings'"></settings-page>
                 <profile-page class="page" key="profile-page" v-if="$store.getters.page === 'profile'"></profile-page>
@@ -64,7 +64,7 @@
             QuickCheckModule: require('./components/QuickCheckModule.vue').default,
             OverviewPage: require('./pages/Overview.vue').default,
             ReportsPage: require('./pages/Reports.vue').default,
-            TeamPage: require('./pages/Team.vue').default,
+            TeamsPage: require('./pages/Teams.vue').default,
             NotificationsPage: require('./pages/Notifications.vue').default,
             SettingsPage: require('./pages/Settings.vue').default,
             ProfilePage: require('./pages/Profile.vue').default,
