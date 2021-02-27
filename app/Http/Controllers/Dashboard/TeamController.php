@@ -42,4 +42,24 @@ class TeamController extends Controller
 
         return $team;
     }
+
+
+
+    public function deleteTeam(Request $request)
+    {
+        $request->validate([
+            'id' => ['exists:teams,id'],
+        ]);
+
+        $team = Team::find($request->id);
+
+        if ($team->owner_id !== Auth::id())
+        {
+            return response('UNAUTHORIZED', 403);
+        }
+
+        $team->delete();
+
+        return response($request->id, 200);
+    }
 }

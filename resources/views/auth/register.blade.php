@@ -22,18 +22,18 @@
                 @csrf
         
                 <p>
-                    <ui-text-input label="{{ __('Username') }}" class="@error('username') invalid @enderror" name="username" autocomplete="username" value="{{ old('username') }}"></ui-text-input>
+                    <ui-text-input ac="username" label="{{ __('Username') }}" class="@error('username') invalid @enderror" name="username" autocomplete="username" value="{{ old('username') }}"></ui-text-input>
                 </p>
                 <p>
-                    <ui-email-input label="{{ __('Email') }}" class="@error('email') invalid @enderror" name="email" autocomplete="email" value="{{ old('email') }}"></ui-email-input>
+                    <ui-email-input ac="email" label="{{ __('Email') }}" class="@error('email') invalid @enderror" name="email" autocomplete="email" value="{{ old('email') }}"></ui-email-input>
                 </p>
                 <p>
-                    <ui-password-input label="{{ __('Password') }}" class="@error('password') invalid @enderror" name="password" autocomplete="new-password"></ui-password-input>
+                    <ui-password-input ac="new-password" rating label="{{ __('Password') }}" class="@error('password') invalid @enderror" name="password" autocomplete="new-password"></ui-password-input>
                 </p>
             </div>
         
             <div class="button-box clearfix">
-                <ui-button style="float: right" icon="none">{{ __('Register') }}</ui-button>
+                <ui-button style="float: right">{{ __('Register') }}</ui-button>
             </div>
         </form>
     </div>

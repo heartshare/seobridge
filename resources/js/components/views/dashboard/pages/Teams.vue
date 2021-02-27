@@ -1,6 +1,6 @@
 <template>
     <div class="page-container limiter">
-        <h1 v-tooltip.bottom-end="{content: '<b>TEST TOOLTIP</b><br>Dies ist ein ToolTip'}">My Teams</h1>
+        <h1>My Teams</h1>
         <fieldset v-for="team in teams" :key="team.id">
             <legend>{{team.name}}</legend>
             <p>
@@ -8,8 +8,8 @@
                 Description: <b>{{team.description || '---'}}</b>
             </p>
             <p v-for="member in team.members" :key="team.id+'_'+member.id">{{member.id}}</p>
-            <ui-button icon="&#984043;" light @click="openTeamEditor(team)">Edit Team</ui-button>
-            <ui-icon-button error>&#985721;</ui-icon-button>
+            <ui-button icon="&#984043;" text border @click="openTeamEditor(team)">Edit Team</ui-button>
+            <ui-icon-button error @click="openTeamDeletionDialog(team)">&#985721;</ui-icon-button>
         </fieldset>
 
         <p>
@@ -20,9 +20,26 @@
             <ui-text-input label="Team name" v-model="teamEdit.name"></ui-text-input>
             <ui-select-input label="Team category" v-model="teamEdit.category" :options="teamCategories"></ui-select-input>
             <ui-textarea label="Team description" :max="1000" show-max v-model="teamEdit.description"></ui-textarea>
-            <ui-button icon="&#983382;" light icon-left @click="resetTeamEditor()">close</ui-button>
+            <ui-button icon="&#983382;" text border icon-left @click="resetTeamEditor()">close</ui-button>
             <ui-button icon="&#983443;" @click="saveTeam()">Save</ui-button>
         </p>
+
+        <ui-option-dialog ref="teamDeletionDialog" @close="resetTeamDeletion()">
+            <template v-slot:heading>
+                Delete {{teamDelete.name}}
+            </template>
+
+            <span>
+                Do you want to permanently delete your team: <b>{{teamDelete.name}}</b>?
+            </span>
+
+            <template v-slot:button-1>
+                <ui-button text border icon-left icon="&#983382;" @click="resetTeamDeletion()">Cancel</ui-button>
+            </template>
+            <template v-slot:button-2>
+                <ui-button error icon="&#985721;" @click="deleteTeam()">Delete Now</ui-button>
+            </template>
+        </ui-option-dialog>
     </div>
 </template>
 
@@ -43,6 +60,12 @@
                     category: '',
                     loading: true,
                 },
+
+                teamDelete: {
+                    name: '',
+                    id: null,
+                    loading: false,
+                }
             }
         },
 
@@ -93,6 +116,40 @@
                     this.teamEdit.loading = false
                 })
             },
+
+
+
+            openTeamDeletionDialog(team) {
+                this.teamDelete = {
+                    id: team.id,
+                    name: team.name,
+                }
+                this.$refs.teamDeletionDialog.open()
+            },
+
+            resetTeamDeletion() {
+                this.teamDelete.id = null
+                this.teamDelete.name = ''
+                this.$refs.teamDeletionDialog.close()
+            },
+
+            deleteTeam(team = this.teamDelete) {
+                this.teamDelete.loading = true
+                
+                axios.post('/auth/team/delete-team', {
+                    id: team.id,
+                    name: team.name,
+                })
+                .then(response => {
+                    this.$store.commit('deleteTeam', response.data)
+                    this.teamDelete.loading = false
+                    this.resetTeamDeletion()
+                })
+                .catch(error => {
+                    console.log(error.response)
+                    this.teamDelete.loading = false
+                })
+            }
         },
     }
 </script>

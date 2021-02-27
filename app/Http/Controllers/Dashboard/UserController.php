@@ -12,7 +12,7 @@ class UserController extends Controller
 {
     public function getUser(Request $request)
     {
-        return User::find(Auth::id());
+        return User::where('id', Auth::id())->with('profile_image')->first();
     }
 
 
@@ -20,8 +20,8 @@ class UserController extends Controller
     public function changeName(Request $request)
     {
         $request->validate([
-            'firstname' => ['present', 'string', 'max:100'],
-            'lastname' => ['present', 'string', 'max:100'],
+            'firstname' => ['present', 'max:100'],
+            'lastname' => ['present', 'max:100'],
         ]);
 
         $user = User::find(Auth::id());
@@ -57,6 +57,29 @@ class UserController extends Controller
 
         $user->password = Hash::make($request->newPassword);
         $user->save();
+
+        return response('OK');
+    }
+
+
+
+    public function closeAccount(Request $request)
+    {
+        $request->validate([
+            'password' => ['required', 'string', 'min:8'],
+        ]);
+
+        $user = User::find(Auth::id());
+
+        $login['email'] = $user->email;
+        $login['password'] = $request->password;
+
+        if( !Auth::attempt($login) )
+        {
+            return response('UNAUTHORIZED', 403);
+        }
+
+        $user->delete();
 
         return response('OK');
     }

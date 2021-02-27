@@ -2,10 +2,11 @@
     <div class="page-container limiter">
         <quick-check-module @details="openDetails($event)" v-if="details === null"></quick-check-module>
 
+
         <div class="details" v-else>
 
             <div class="nav-row">
-                <ui-button icon="&#983117;" icon-left border light @click="details = null">Back</ui-button>
+                <ui-button icon="&#983117;" icon-left border text @click="details = null">Back</ui-button>
             </div>
 
             <div class="detail-row">
@@ -21,44 +22,96 @@
                         <div class="metric-card" v-show="details.score.hasFavicon">
                             <div class="icon" style="color: var(--success)">&#983340;</div>
                             <div class="value">Favicon</div>
+                            <ui-tooltip-button class="info">
+                                <b>The Favicon</b><br>
+                                The favicon is the small icon next to the page title in the tab above the page. It isn't displayed on the page itself. 
+                            </ui-tooltip-button>
                         </div>
                         <div class="metric-card" v-show="details.score.hasTitle">
                             <div class="icon" style="color: var(--success)">&#983340;</div>
                             <div class="value">Page Title</div>
+                            <ui-tooltip-button class="info">
+                                <b>The Page Title</b><br>
+                                The title-tag is a meta-tag in the page's head section. It is displayed in search results and in the tab above the page. Former of which
+                                makes it very relevant for your page's SEO ranking. 
+                            </ui-tooltip-button>
                         </div>
                         <div class="metric-card" v-show="details.score.hasDescription">
                             <div class="icon" style="color: var(--success)">&#983340;</div>
                             <div class="value">Page Description</div>
+                            <ui-tooltip-button class="info">
+                                <b>The Page Description</b><br>
+                                The page description is a meta-tag in the page's head section. Search engines display it below your page title and may use it to 
+                                rank your page and extract relevant information of what your page is about.
+                            </ui-tooltip-button>
                         </div>
                         <div class="metric-card" v-show="details.score.hasViewport">
                             <div class="icon" style="color: var(--success)">&#983340;</div>
                             <div class="value">Mobile Support</div>
+                            <ui-tooltip-button class="info">
+                                <b>Mobile Support (WIP)</b><br>
+                                A modern web-page is being visited by desktop and mobile users alike. It is therefore strongly recommended to offer a mobile friendly
+                                version of your page.<br><br>
+                                This detection is still work in progress.
+                            </ui-tooltip-button>
                         </div>
                         <div class="metric-card" v-show="details.score.errorPage.hasCustom404Page">
                             <div class="icon" style="color: var(--success)">&#983340;</div>
                             <div class="value">Custom 404 Page</div>
+                            <ui-tooltip-button class="info">
+                                <b>Custom 404 Pages (WIP)</b><br>
+                                When the user visits a non-existing page by default he is shown a standard error page. This my lead the user to believe the whole website
+                                is offline. To mitigate this issue it is recommened to build a custom error page to bring the user back to a functional page.<br><br>
+                                This detection is still work in progress.
+                            </ui-tooltip-button>
                         </div>
                     </div>
                     <div class="metric-card-wrapper">
                         <div class="metric-card" v-show="!details.score.hasFavicon">
                             <div class="icon" style="color: var(--error)">&#983382;</div>
                             <div class="value">No Favicon</div>
+                            <ui-tooltip-button class="info">
+                                <b>The Favicon</b><br>
+                                The favicon is the small icon next to the page title in the tab above the page. It isn't displayed on the page itself. 
+                            </ui-tooltip-button>
                         </div>
                         <div class="metric-card" v-show="!details.score.hasTitle">
                             <div class="icon" style="color: var(--error)">&#983382;</div>
                             <div class="value">No Page Title</div>
+                            <ui-tooltip-button class="info">
+                                <b>The Page Title</b><br>
+                                The title-tag is a meta-tag in the page's head section. It is displayed in search results and in the tab above the page. Former of which
+                                makes it very relevant for your page's SEO ranking. 
+                            </ui-tooltip-button>
                         </div>
                         <div class="metric-card" v-show="!details.score.hasDescription">
                             <div class="icon" style="color: var(--error)">&#983382;</div>
                             <div class="value">No Page Description</div>
+                            <ui-tooltip-button class="info">
+                                <b>The Page Description</b><br>
+                                The page description is a meta-tag in the page's head section. Search engines display it below your page title and may use it to 
+                                rank your page and extract relevant information of what your page is about.
+                            </ui-tooltip-button>
                         </div>
                         <div class="metric-card" v-show="!details.score.hasViewport">
                             <div class="icon" style="color: var(--error)">&#983382;</div>
                             <div class="value">No Mobile Support</div>
+                            <ui-tooltip-button class="info">
+                                <b>Mobile Support (WIP)</b><br>
+                                A modern web-page is being visited by desktop and mobile users alike. It is therefore strongly recommended to offer a mobile friendly
+                                version of your page.<br><br>
+                                This detection is still work in progress.
+                            </ui-tooltip-button>
                         </div>
                         <div class="metric-card" v-show="!details.score.errorPage.hasCustom404Page">
                             <div class="icon" style="color: var(--error)">&#983382;</div>
                             <div class="value">No Custom 404 Page</div>
+                            <ui-tooltip-button class="info">
+                                <b>Custom 404 Pages (WIP)</b><br>
+                                When the user visits a non-existing page by default he is shown a standard error page. This my lead the user to believe the whole website
+                                is offline. To mitigate this issue it is recommened to build a custom error page to bring the user back to a functional page.<br><br>
+                                This detection is still work in progress.
+                            </ui-tooltip-button>
                         </div>
                     </div>
                 </div>
@@ -95,6 +148,11 @@
                             <div class="icon">&#983559;</div>
                             <div class="label">Outbound-Links</div>
                             <div class="value">{{details.outboundLinks.length}}</div>
+                            <ui-tooltip-button class="info">
+                                <b>Outbound Links</b><br>
+                                Outbound links are hyperlinks going to external websites. Search engines use them to better understand what your page is about.
+                                Your page should only link to websites related to your content.
+                            </ui-tooltip-button>
                         </div>
 
                         <div class="metric-card half">
@@ -453,8 +511,8 @@
                     width: calc(100% - 15px)
                     margin: 7.5px
                     padding: 5px 0
-                    grid-template: auto 1fr / 50px 1fr
-                    grid-template-areas: "icon label" "icon value"
+                    grid-template: auto 1fr / 50px 1fr auto
+                    grid-template-areas: "icon label info" "icon value info"
 
                     &.half
                         width: calc(50% - 15px)
@@ -494,6 +552,12 @@
                         line-height: 130%
                         align-self: center
                         font-weight: 600
+
+                    .info
+                        grid-area: info
+                        align-self: center
+                        justify-self: center
+                        user-select: none
 
                 .checklist-wrapper
                     width: 100%

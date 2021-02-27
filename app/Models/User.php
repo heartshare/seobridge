@@ -4,13 +4,14 @@ namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, SoftDeletes;
 
     public $incrementing = false;
 
@@ -54,5 +55,12 @@ class User extends Authenticatable
     public static function generateUuid()
     {
         return 'user_'.Str::uuid();
+    }
+
+
+
+    public function profile_image()
+    {
+        return $this->hasOne(UserImage::class, 'user_id', 'id');
     }
 }

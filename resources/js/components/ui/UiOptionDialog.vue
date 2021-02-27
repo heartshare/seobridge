@@ -1,102 +1,55 @@
 <template>
-    <div class="container" v-show="isOpen">
-        <div class="background" @click="close()"></div>
-        <div class="feedback-container">
-            <div class="headline" v-if="headline">{{headline}}</div>
-            <div class="text" v-if="desc">{{desc}}</div>
+    <transition name="fly-in" :duration="200">
+        <div class="container" v-show="isOpen">
+            <div class="background" @click="close(true)"></div>
+            <div class="main-container">
+                <div class="content-container">
+                    <div class="headline" v-if="$slots.heading">
+                        <slot name="heading"></slot>
+                    </div>
 
-            <div class="inputs" :class="{'first': i === 0}" v-for="(input, i) in inputs_" :key="i">
-                <ui-password-input v-if="input.type === 'password' && input.rating" rating :label="input.label" v-model="input.value"></ui-password-input>
-                <ui-password-input v-if="input.type === 'password' && !input.rating" :label="input.label" v-model="input.value"></ui-password-input>
-                <ui-text-input v-if="input.type === 'text'" :label="input.label" v-model="input.value"></ui-text-input>
+                    <div class="text" v-if="$slots.default">
+                        <slot></slot>
+                    </div>
+
+                    <form @submit.stop.prevent>
+                        <div class="inputs" v-if="$slots.inputs">
+                            <slot name="inputs"></slot>
+                        </div>
+                    </form>
+                </div>
+                
+                <div class="button-container">
+                    <span class="left">
+                        <slot name="button-1"></slot>
+                    </span>
+                    <span class="right">
+                        <slot name="button-2"></slot>
+                    </span>
+                </div>
             </div>
-            
-            <div class="button-container">
-                <ui-button class="right-button" v-if="option1 && type === 'info' " :icon="option1.icon" @click="triggerOption1()">{{option1.label}}</ui-button>
-                <ui-button class="right-button" v-if="option1 && type === 'delete' " error :icon="option1.icon" @click="triggerOption1()">{{option1.label}}</ui-button>
-                <ui-button class="left-button" light :icon="option2.icon" icon-left @click="triggerOption2()">{{option2.label}}</ui-button>
-            </div>
+
+            <ui-toast class="overlay-toasts bottom left" ref="overlayToasts"></ui-toast>
         </div>
-
-        <ui-toast class="overlay-toasts bottom left" ref="overlayToasts"></ui-toast>
-    </div>
+    </transition>
 </template>
 
 <script>
     export default {
-        props: {
-            headline: String,
-            desc: String,
-            type: {
-                type: String,
-                default: 'info',
-            },
-            inputs: Array,
-            option1: Object,
-            option2: Object,
-        },
-
         data() {
             return {
                 isOpen: false,
-                inputs_: [],
             }
         },
 
         methods: {
             open() {
                 this.isOpen = true
-
-                if (this.inputs && this.inputs.length)
-                {
-                    this.inputs_ = []
-
-                    for (const input of this.inputs)
-                    {
-                        if (!input.hasOwnProperty('key'))
-                        {
-                            continue
-                        }
-
-                        if (!input.hasOwnProperty('value'))
-                        {
-                            input.value = null
-                        }
-                        
-                        this.inputs_.push(JSON.parse(JSON.stringify(input)))
-                    }
-                }
             },
 
-            close() {
-                this.reset()
+            close(shouldEmit = false) {
                 this.isOpen = false
-                this.$emit('close')
-            },
-
-            reset() {
-                this.inputs_ = []
-            },
-
-            getValues() {
-                let ret = {}
-
-                for (const input of this.inputs_)
-                {
-                    ret[input.key] = input.value
-                }
-
-                return JSON.parse(JSON.stringify(ret))
-            },
-
-            triggerOption1() {
-                this.$emit('option1', this.getValues())
-                this.close()
-            },
-
-            triggerOption2() {
-                this.$emit('option2', this.getValues())
-                this.close()
+                if (shouldEmit) this.$emit('close')
             },
         }
     }
@@ -111,16 +64,25 @@
         height: 100%
         z-index: 300
 
+        &.fly-in-enter,
+        &.fly-in-leave-to
+            .main-container
+                transform: translate(-50%, -50%) scale(0)
+                opacity: 0
+
+            .background
+                opacity: 0
+
         .background
             position: fixed
             top: 0
             left: 0
             width: 100%
             height: 100%
-            background: #00000040
-            backdrop-filter: blur(20px)
+            background: #00000060
+            transition: all 200ms
 
-        .feedback-container
+        .main-container
             position: absolute
             top: 50%
             left: 50%
@@ -128,45 +90,50 @@
             max-height: calc(100vh - 60px)
             width: calc(100% - 60px)
             max-width: 500px
-            background: white
+            background: var(--bg)
             border-radius: 7px
-            padding: 20px 20px 90px
             text-align: left
             overflow: hidden
+            transition: all 200ms
+            filter: var(--elevation-4)
+            will-change: transform, opacity
+            display: flex
+            flex-direction: column
 
-            .text
-                font-size: 16px
-                color: var(--secondary)
-                user-select: none
-                line-height: 150%
-                margin-bottom: 10px
+            .content-container
+                flex: 1
+                display: flex
+                flex-direction: column
+                gap: 10px
+                padding: 15px
 
-            .headline
-                font-size: 20px
-                font-family: sofia-pro
-                color: black
-                user-select: none
-                line-height: 150%
-                margin-bottom: 10px
+                .text
+                    font-size: var(--text-size)
+                    color: var(--text-gray)
+                    user-select: none
+                    line-height: 150%
 
-            .inputs
-                width: 100%
-                margin-bottom: 10px
+                .headline
+                    font-size: 20px
+                    font-family: var(--heading-font)
+                    color: var(--heading-gray)
+                    user-select: none
+                    line-height: 150%
+                    padding-bottom: 4px
 
-                &.first
-                    margin-top: 10px
+                .inputs
+                    width: 100%
+                    display: flex
+                    flex-direction: column
+                    gap: 15px
 
             .button-container
-                background: #f4f4f4
-                padding: 20px
+                background: var(--bg-dark)
+                padding: 15px
                 width: 100%
-                height: 80px
-                position: absolute
-                bottom: 0
-                left: 0
                 text-align: right
 
-                .left-button
+                .left
                     float: left
 
         .overlay-toasts

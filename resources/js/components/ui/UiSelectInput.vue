@@ -217,7 +217,7 @@
 
         .dropdown
             position: absolute
-            top: 10px
+            top: 0
             left: 0
             width: 100%
             max-height: 400px
@@ -226,16 +226,16 @@
             background: var(--bg)
             border-radius: 5px
             padding: 10px 0
-            transition: all 200ms
+            transition: all 300ms
             filter: var(--elevation-2)
-            transform: scaleY(0)
-            transform-origin: top center
-            will-change: transform
+            opacity: 0
+            pointer-events: none
             text-align: left
             z-index: 1000
 
             &.open
-                transform: scaleY(1)
+                opacity: 1
+                pointer-events: all
 
             .item
                 width: 100%

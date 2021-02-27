@@ -58,11 +58,13 @@ Route::middleware('auth')->prefix('auth')->group(function() {
         Route::post('/get-user', [App\Http\Controllers\Dashboard\UserController::class, 'getUser']);
         Route::post('/change-password', [App\Http\Controllers\Dashboard\UserController::class, 'changePassword']);
         Route::post('/change-name', [App\Http\Controllers\Dashboard\UserController::class, 'changeName']);
+        Route::post('/close-account', [App\Http\Controllers\Dashboard\UserController::class, 'closeAccount']);
     });
 
     Route::prefix('team')->group(function() {
         Route::post('/get-all-teams', [App\Http\Controllers\Dashboard\TeamController::class, 'getAllTeams']);
         Route::post('/update-or-create-team', [App\Http\Controllers\Dashboard\TeamController::class, 'updateOrCreateTeam']);
+        Route::post('/delete-team', [App\Http\Controllers\Dashboard\TeamController::class, 'deleteTeam']);
     });
 
     Route::prefix('notifications')->group(function() {

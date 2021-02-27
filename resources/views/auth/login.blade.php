@@ -39,10 +39,10 @@
         
             <div class="button-box clearfix">
                 @if (Route::has('password.request'))
-                    <ui-button light href="{{ route('password.request') }}" icon="none">{{ __('Forgot Your Password?') }}</ui-button>
+                    <ui-button text href="{{ route('password.request') }}">{{ __('Forgot Your Password?') }}</ui-button>
                 @endif
                 
-                <ui-button style="float: right" icon="none">{{ __('Login') }}</ui-button>
+                <ui-button style="float: right">{{ __('Login') }}</ui-button>
             </div>
         </form>
     </div>

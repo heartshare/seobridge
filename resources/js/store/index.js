@@ -52,6 +52,10 @@ module.exports = {
             store.commit('navbar', data)
         },
 
+        logout(store, callback) {
+            axios.post('/logout').then(() => { callback() }).catch(error => {})
+        },
+
         fetchUser(store) {
             axios.post('/auth/user/get-user')
             .then(response => {
@@ -130,6 +134,19 @@ module.exports = {
             if (index >= 0)
             {
                 Vue.set(state.teams, index, data)
+            }
+            else
+            {
+                state.teams.push(data)
+            }
+        },
+
+        deleteTeam(state, data) {
+            let index = state.teams.findIndex(e => e.id === data)
+
+            if (index >= 0)
+            {
+                state.teams.splice(index, 1)
             }
         },
 

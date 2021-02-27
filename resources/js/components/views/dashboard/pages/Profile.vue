@@ -2,17 +2,13 @@
     <div class="page-container limiter">
         <h1>My Profile</h1>
 
-        <p>
-            <ui-text-input label="Firstname" v-model="nameChange.firstname"></ui-text-input>
-            <ui-text-input label="Lastname" v-model="nameChange.lastname"></ui-text-input>
-            <ui-button @click="changeName()">Change Name</ui-button>
-        </p>
-
-        <p>
-            <ui-password-input label="Current Password" v-model="passwordChange.current"></ui-password-input>
-            <ui-password-input label="New Password" v-model="passwordChange.new"></ui-password-input>
-            <ui-button @click="changePassword()">Change Password</ui-button>
-        </p>
+        <form @submit.stop.prevent>
+            <p>
+                <ui-text-input label="Firstname" ac="firstname" v-model="nameChange.firstname"></ui-text-input>
+                <ui-text-input label="Lastname" ac="lastname" v-model="nameChange.lastname"></ui-text-input>
+                <ui-button @click="changeName()" :loading="nameChange.loading">Change Name</ui-button>
+            </p>
+        </form>
     </div>
 </template>
 
@@ -25,12 +21,6 @@
                     lastname: '',
                     loading: false,
                 },
-
-                passwordChange: {
-                    current: '',
-                    new: '',
-                    loading: false,
-                }
             }
         },
 
@@ -61,28 +51,12 @@
                 .then(response => {
                     this.$store.commit('userFirstname', response.data.firstname)
                     this.$store.commit('userLastname', response.data.lastname)
-                    this.nameChange.loading = false
+
+                    setTimeout(() => { this.nameChange.loading = false }, 500)
                 })
                 .catch(error => {
                     console.log(error.response)
                     this.nameChange.loading = false
-                })
-            },
-
-            changePassword() {
-                this.passwordChange.loading = true
-
-                axios.post('/auth/user/change-password', {
-                    password: this.passwordChange.current,
-                    newPassword: this.passwordChange.new,
-                })
-                .then(response => {
-                    console.log(response.data)
-                    this.passwordChange.loading = false
-                })
-                .catch(error => {
-                    console.log(error.response)
-                    this.passwordChange.loading = false
                 })
             },
         }

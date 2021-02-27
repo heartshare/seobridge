@@ -2,7 +2,7 @@
     <div class="ccc-container block">
         <p class="wrapper">
             <ui-text-input class="url-input" label="URL" v-model="url"></ui-text-input>
-            <ui-button class="submit-button" icon="&#983881;" @click="initiateScan(url)">Analyse</ui-button>
+            <ui-button class="submit-button" :loading="loading" icon="&#983881;" @click="initiateScan(url)">Analyse</ui-button>
         </p>
 
         <div class="report block" v-if="reports.length > 0" v-show="!loading">
@@ -16,12 +16,10 @@
                     <img class="favicon" v-if="report.metaData.favicon" :src="report.metaData.favicon">
                     <div class="title" :title="report.metaData.title">{{report.metaData.title}}</div>
                     <div class="description" :title="report.metaData.description">{{report.score.hasDescription ? report.metaData.description : 'MISSING'}}</div>
-                    <ui-button class="details-button" icon="none" border light small @click="$emit('details', report)">View Details</ui-button>
+                    <ui-button class="details-button" border text small @click="$emit('details', report)">View Details</ui-button>
                 </div>
             </div>
         </div>
-
-        <ui-spinner style="display: block; margin: 20px auto" v-show="loading" color="var(--primary)" :size="50"></ui-spinner>
     </div>
 </template>
 

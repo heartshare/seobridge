@@ -205,6 +205,9 @@
             .progress
                 height: 100%
                 transition: all 300ms
+                position: absolute
+                top: 0
+                left: 0
 
                 &.score-0
                     width: 5%
