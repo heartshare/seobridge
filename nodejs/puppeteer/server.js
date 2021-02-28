@@ -1,10 +1,12 @@
 const puppeteer = require('puppeteer')
 const express = require('express')
 const {v4: uuid} = require('uuid')
-const cors = require('cors')
 const fetch = require('node-fetch')
 
 const app = express()
+
+app.use(express.urlencoded({extended: true}))
+app.use(express.json())
 
 
 
@@ -20,21 +22,10 @@ const reset = "\x1b[0m"
 
 
 
-app.use(cors())
-
-app.all('/analyse', async (req, res) => {
+app.post('/analyse', async (req, res) => {
     const requestId = uuid()
-    var ip = req.headers['x-forwarded-for'];
-
-    if (ip !== '127.0.0.1')
-    {
-        console.log(`${_y}${requestId}${reset} Unauthorized request from: ${_r}${ip}${reset}`)
-
-        res.status(403)
-        return res.send('UNAUTHORIZED')
-    }
     
-    if (!req.query.url)
+    if (!req.body.url)
     {
         console.log(`${_y}${requestId}${reset} Invalid request with no url parameter.`)
         
@@ -42,7 +33,7 @@ app.all('/analyse', async (req, res) => {
         return res.send('URL_MISSING')
     }
 
-    const url = new URL(req.query.url)
+    const url = new URL(req.body.url)
 
     console.log(`${_y}${requestId}${reset} Starting scan for${reset}: ${_b}${url}${reset}`)
     
@@ -363,6 +354,6 @@ const scanUrl = async (url) => {
 
 
 
-app.listen(999)
+app.listen(999, '127.0.0.1')
 
 console.log(`Express running on: ${_g}127.0.0.1:999`+reset)

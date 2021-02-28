@@ -1,22 +1,25 @@
 <template>
     <div class="ccc-container block">
+        <p>
+            <ui-select-input label="Viewport" :options="[{'1080p':'1920 x 1080'}, {'720p':'1280 x 720'}]"></ui-select-input>
+        </p>
         <p class="wrapper">
             <ui-text-input class="url-input" label="URL" v-model="url"></ui-text-input>
-            <ui-button class="submit-button" :loading="loading" icon="&#983881;" @click="initiateScan(url)">Analyse</ui-button>
+            <ui-button class="submit-button" :loading="loading" icon="&#983881;" @click="$store.dispatch('createReport', url)">Analyse</ui-button>
         </p>
 
-        <div class="report block" v-if="reports.length > 0" v-show="!loading">
+        <div class="report block" v-if="reports.length > 0">
             <div class="page-card" v-for="(report, i) in reports" :key="i">
-                <img class="thumbnail" :src="report.preview">
+                <img class="thumbnail" :src="report.data.preview">
                 <div class="score-container">
-                    <div class="score">{{report.score.totalPageScore}}</div>
-                    <ui-progress-ring size="40" back-color="#ffffff30" :color="scoreColor(report.score.totalPageScore)" :progress="report.score.totalPageScore"></ui-progress-ring>
+                    <div class="score">{{report.data.score.totalPageScore}}</div>
+                    <ui-progress-ring size="40" back-color="#ffffff30" :color="scoreColor(report.data.score.totalPageScore)" :progress="report.data.score.totalPageScore"></ui-progress-ring>
                 </div>
                 <div class="text-container">
-                    <img class="favicon" v-if="report.metaData.favicon" :src="report.metaData.favicon">
-                    <div class="title" :title="report.metaData.title">{{report.metaData.title}}</div>
-                    <div class="description" :title="report.metaData.description">{{report.score.hasDescription ? report.metaData.description : 'MISSING'}}</div>
-                    <ui-button class="details-button" border text small @click="$emit('details', report)">View Details</ui-button>
+                    <img class="favicon" v-if="report.data.metaData.favicon" :src="report.data.metaData.favicon">
+                    <div class="title" :title="report.data.metaData.title">{{report.data.metaData.title}}</div>
+                    <div class="description" :title="report.data.metaData.description">{{report.data.score.hasDescription ? report.data.metaData.description : 'MISSING'}}</div>
+                    <ui-button class="details-button" border text small @click="$emit('details', report.data)">View Details</ui-button>
                 </div>
             </div>
         </div>
@@ -28,41 +31,20 @@
         data() {
             return {
                 url: 'https://fireship.io/',
-                reports: [],
-                loading: false
+            }
+        },
+
+        computed: {
+            reports() {
+                return this.$store.getters.reports
+            },
+
+            loading() {
+                return this.$store.getters.reportScanning
             }
         },
 
         methods: {
-            scan(url) {
-                axios.post('https://puppeteer.seobridge.test/analyse?url='+url)
-                .then(response => {
-                    // console.log(response.data)
-                    this.loading = false
-                    this.reports.push(response.data)
-                })
-                .catch(error => {
-                    this.loading = false
-                })
-            },
-
-            initiateScan(url) {
-                this.loading = true
-                this.reports = []
-                this.scan(url)
-
-                return
-
-                setTimeout(() => {
-                    let url = new URL(this.reports[0].url.origin)
-                    for (const link of this.reports[0].internalLinks)
-                    {
-                        url.pathname = link
-                        this.scan(url.href)
-                    }
-                }, 6000);
-            },
-
             scoreColor(score = 0)
             {
                 if (score >= 80)

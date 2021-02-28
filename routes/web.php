@@ -50,8 +50,9 @@ Route::get('/dashboard/{page}', [App\Http\Controllers\Dashboard\DashboardControl
 
 Route::middleware('auth')->prefix('auth')->group(function() {
 
-    Route::prefix('analyse')->group(function() {
-        Route::post('/url', [App\Http\Controllers\Dashboard\DashboardController::class, 'analyseUrl']);
+    Route::prefix('reports')->group(function() {
+        Route::post('/get-all-reports', [App\Http\Controllers\Dashboard\ReportController::class, 'getAllReports']);
+        Route::post('/url', [App\Http\Controllers\Dashboard\ReportController::class, 'analyseUrl']);
     });
 
     Route::prefix('user')->group(function() {

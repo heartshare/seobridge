@@ -13,6 +13,8 @@ module.exports = {
         navbar: 'open',
         user: {},
         teams: [],
+        reports: [],
+        reportScanning: false,
         notifications: [],
     },
 
@@ -37,6 +39,14 @@ module.exports = {
             return state.teams
         },
 
+        reports(state) {
+            return state.reports
+        },
+
+        reportScanning(state) {
+            return state.reportScanning
+        },
+
         notifications(state) {
             return state.notifications
         },
@@ -55,6 +65,25 @@ module.exports = {
         logout(store, callback) {
             axios.post('/logout').then(() => { callback() }).catch(error => {})
         },
+
+
+
+        createReport(store, data) {
+            store.commit('reportScanning', true)
+
+            axios.post('/auth/reports/url', {url: data})
+            .then(response => {
+                // console.log(response.data)
+                store.commit('reportScanning', false)
+                store.commit('addReport', response.data)
+            })
+            .catch(error => {
+                console.log(error.response)
+                store.commit('reportScanning', false)
+            })
+        },
+
+
 
         fetchUser(store) {
             axios.post('/auth/user/get-user')
@@ -76,6 +105,16 @@ module.exports = {
             })
         },
 
+        fetchAllReports(store) {
+            axios.post('/auth/reports/get-all-reports')
+            .then(response => {
+                store.commit('reports', response.data)
+            })
+            .catch(error => {
+                console.log(error.response)
+            })
+        },
+
         fetchAllNotifications(store) {
             axios.post('/auth/notifications/get-all-notifications')
             .then(response => {
@@ -89,8 +128,9 @@ module.exports = {
         initialFetch(store) {
             store.dispatch('fetchUser')
             store.dispatch('fetchAllTeams')
+            store.dispatch('fetchAllReports')
             store.dispatch('fetchAllNotifications')
-        }
+        },
     },
 
     mutations: {
@@ -148,6 +188,20 @@ module.exports = {
             {
                 state.teams.splice(index, 1)
             }
+        },
+
+
+
+        reports(state, data) {
+            state.reports = data
+        },
+
+        addReport(state, data) {
+            state.reports.unshift(data)
+        },
+
+        reportScanning(state, data) {
+            state.reportScanning = data
         },
 
 

@@ -6,7 +6,7 @@
             <legend>Account settings</legend>
 
             <ui-button icon="&#984421;" :loading="passwordChange.loading" @click="openPasswordChangeDialog()">Change Password</ui-button><br><br>
-            <ui-button icon="&#983394;" text border>Request Data</ui-button>
+            <ui-button icon="&#983394;" text border>Request Data (WIP)</ui-button>
         </fieldset><br>
 
         <fieldset>

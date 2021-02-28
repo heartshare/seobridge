@@ -63,4 +63,9 @@ class User extends Authenticatable
     {
         return $this->hasOne(UserImage::class, 'user_id', 'id');
     }
+
+    public function reports()
+    {
+        return $this->hasMany(UserReport::class, 'user_id', 'id');
+    }
 }
