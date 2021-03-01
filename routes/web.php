@@ -71,4 +71,10 @@ Route::middleware('auth')->prefix('auth')->group(function() {
     Route::prefix('notifications')->group(function() {
         Route::post('/get-all-notifications', [App\Http\Controllers\Dashboard\NotificationController::class, 'getAllNotifications']);
     });
+
+    Route::prefix('subscriptions')->group(function() {
+        Route::get('/billing-portal', [App\Http\Controllers\Dashboard\SubscriptionController::class, 'redirectToBillingPortal']);
+        Route::post('/get-setup-intent', [App\Http\Controllers\Dashboard\SubscriptionController::class, 'getSetupIntent']);
+        Route::post('/create-test-subscription', [App\Http\Controllers\Dashboard\SubscriptionController::class, 'testSub']);
+    });
 });

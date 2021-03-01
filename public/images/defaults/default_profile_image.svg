@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="500" height="500" viewBox="0 0 500 500">
+  <defs>
+    <clipPath id="clip-default_profile_image">
+      <rect width="500" height="500"/>
+    </clipPath>
+  </defs>
+  <g id="default_profile_image" clip-path="url(#clip-default_profile_image)">
+    <rect width="500" height="500" fill="#4834d4"/>
+    <g id="Gruppe_5" data-name="Gruppe 5" transform="translate(108.151 179.464)">
+      <path id="Pfad_2" data-name="Pfad 2" d="M2366.8,313.166l52.49-52.49,52.49,52.49" transform="translate(-2366.797 -260.676)" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="25"/>
+      <path id="Pfad_3" data-name="Pfad 3" d="M2366.8,313.166l52.49-.49,52.49.49" transform="translate(-2188.379 -260.676)" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="25"/>
+    </g>
+    <path id="Pfad_4" data-name="Pfad 4" d="M0,11.823S23.914,0,50.159,0,104.98,11.823,104.98,11.823" transform="translate(302.262 326.274) rotate(180)" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="25"/>
+  </g>
+</svg>

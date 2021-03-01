@@ -10,6 +10,25 @@
         </fieldset><br>
 
         <fieldset>
+            <legend>Subscriptions</legend>
+            <ui-button icon="&#984694;" text border :loading="setupIntent.loading" @click="getSetupIntent()">Add Credit Card</ui-button>
+            <ui-button href="/auth/subscriptions/billing-portal" icon="&#984012;" text>Billing Portal</ui-button>
+
+            <p>
+                <span>
+                    <ui-text-input label="Card holder name" v-model="setupIntent.cardHolderName"></ui-text-input>
+
+                    <div id="card-element"></div>
+                    
+                    <ui-button @click="addCreditCard()">Add Credit Card</ui-button>
+                </span>
+            </p>
+            <p>
+                <ui-button @click="createSubscription()">Test Subscription</ui-button>
+            </p>
+        </fieldset><br>
+
+        <fieldset>
             <legend>Close Account</legend>
             <ui-button error :loading="accountClose.loading" @click="openAccountCloseDialog()">Close your account</ui-button>
         </fieldset>
@@ -56,6 +75,22 @@
 </template>
 
 <script>
+    const stripe = Stripe('pk_test_51IPwiCDa1TGHitv5NwiZUsCe9Yy28YRgBjzXUVoFSs5eqQnRgUeXoUNO6hEl3CXWWq63E954U8Cw3nt0vSo3Yx8C0089OD4j7Z')
+
+    const elements = stripe.elements()
+    const cardElement = elements.create('card', {
+        style: {
+            base: {
+                fontFamily: 'Roboto, Open Sans, Segoe UI, sans-serif',
+                fontSize: '15px',
+                color: '#2F3542',
+                '::placeholder': {
+                    color: '#666F79',
+                },
+            },
+        },
+    })
+    
     export default {
         data() {
             return {
@@ -68,8 +103,18 @@
                 accountClose: {
                     password: '',
                     loading: false,
-                }
+                },
+
+                setupIntent: {
+                    intent: null,
+                    cardHolderName: '',
+                    loading: false,
+                },
             }
+        },
+
+        mounted() {
+            cardElement.mount('#card-element')
         },
 
         computed: {
@@ -139,6 +184,55 @@
                     this.accountClose.loading = false
                 })
             },
+
+
+
+            getSetupIntent() {
+                this.setupIntent.loading = true
+
+                axios.post('/auth/subscriptions/get-setup-intent')
+                .then(response => {
+                    setTimeout(() => {
+                        this.setupIntent.intent = response.data
+                        this.setupIntent.loading = false
+                    }, 1000)
+                })
+                .catch(error => {
+                    console.log(error.response)
+                    this.setupIntent.loading = false
+                })
+            },
+
+            async addCreditCard() {
+                const { setupIntent, error } = await stripe.confirmCardSetup(this.setupIntent.intent.client_secret, {
+                    payment_method: {
+                        card: cardElement,
+                        billing_details: { name: this.setupIntent.cardHolderName }
+                    }
+                })
+
+                if (error)
+                {
+                    console.log(error.message)
+                }
+                else
+                {
+                    console.log('CARD ADDED!')
+                }
+            },
+
+
+
+            createSubscription() {
+                axios.post('/auth/subscriptions/create-test-subscription')
+                .then(response => {
+                    console.log(response.data)
+                    console.log('YAY! IT WORKED!')
+                })
+                .catch(error => {
+                    console.log(error.response)
+                })
+            },
         }
     }
 </script>
@@ -146,4 +240,10 @@
 <style lang="sass" scoped>
     .page-container
         width: 100%
+
+        #card-element
+            border: var(--border)
+            border-radius: 5px
+            padding: 15px
+            width: 100%
 </style>
