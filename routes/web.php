@@ -66,6 +66,7 @@ Route::middleware('auth')->prefix('auth')->group(function() {
         Route::post('/get-all-teams', [App\Http\Controllers\Dashboard\TeamController::class, 'getAllTeams']);
         Route::post('/update-or-create-team', [App\Http\Controllers\Dashboard\TeamController::class, 'updateOrCreateTeam']);
         Route::post('/delete-team', [App\Http\Controllers\Dashboard\TeamController::class, 'deleteTeam']);
+        Route::post('/create-invite', [App\Http\Controllers\Dashboard\TeamController::class, 'createInvite']);
     });
 
     Route::prefix('notifications')->group(function() {

@@ -133,7 +133,7 @@
 
         height: var(--height)
         width: 100%
-        background: white
+        background: var(--bg)
         border-radius: 5px
         position: relative
 
@@ -186,7 +186,7 @@
             text-align: left
             pointer-events: none
             transition: all 200ms
-            color: #00000099
+            color: var(--text-gray)
             transform-origin: top left
 
         .input
@@ -198,6 +198,7 @@
             border-radius: 3px
             font-family: var(--text-font)
             font-size: 16px
+            color: var(--heading-gray)
 
         .loader
             position: absolute

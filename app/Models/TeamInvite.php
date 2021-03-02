@@ -6,18 +6,17 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
-class Team extends Model
+class TeamInvite extends Model
 {
     use HasFactory;
 
     public $incrementing = false;
 
     protected $fillable = [
-        'owner_id',
-        'name',
-        'description',
-        'address',
-        'category',
+        'team_id',
+        'user_id',
+        'email',
+        'status',
         'metadata',
     ];
 
@@ -26,6 +25,7 @@ class Team extends Model
     ];
 
     protected $attributes = [
+        'status' => 'OK',
         'metadata' => '{}',
     ];
 
@@ -40,18 +40,6 @@ class Team extends Model
 
     public static function generateUuid()
     {
-        return 'team_'.Str::uuid();
-    }
-
-
-
-    public function members()
-    {
-        return $this->hasMany(TeamMember::class, 'team_id', 'id');
-    }
-
-    public function invites()
-    {
-        return $this->hasMany(TeamInvite::class, 'team_id', 'id');
+        return 'invite_'.Str::uuid();
     }
 }

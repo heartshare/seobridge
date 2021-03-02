@@ -1,10 +1,15 @@
 <template>
     <div class="page-container limiter">
-        <quick-check-module @details="openDetails($event)" v-if="details === null"></quick-check-module>
+        <quick-check-module v-if="details === null"></quick-check-module>
 
+        <div class="reports-timeline block" v-if="details === null">
+            <fieldset class="block" v-for="(report, i) in reports" :key="i">
+                <legend>{{new Date(report.created_at).toLocaleString(undefined, {day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'})}} — <b>{{report.host}}</b></legend>
+                <page-card :report="report" @details="openDetails($event)"></page-card>
+            </fieldset>
+        </div>
 
         <div class="details" v-else>
-
             <div class="nav-row">
                 <ui-button icon="&#983117;" icon-left border text @click="details = null">Back</ui-button>
             </div>
@@ -274,29 +279,39 @@
 
             <div class="detail-row">
                 <div class="card span-12">
-                    <h4><div class="icon">&#983785;</div>Images</h4>
+                    <h4><div class="icon">&#983865;</div>Links</h4>
 
-                    <div class="image-card" v-for="(image, i) in details.images" :key="i">
-                        <img class="image" :src="image.href">
-                        <div class="content">
-                            <b class="title" v-if="image.alt">{{image.alt}}</b>
-                            <i class="title" v-else>No "alt"-attribute</i>
-                            <div class="description">
-                                Natural-Size: <span>{{image.width}} x {{image.height}}</span><br>
-                                Visible-Size: <span>{{image.visibleWidth}} x {{image.visibleHeight}}</span>
-                            </div>
+                    <div class="metric-card-wrapper">
+                        <div class="metric-card" v-for="(link, i) in details.links" :key="i">
+                            <div class="icon" v-if="link.href && link.href.startsWith('mailto:')" style="color: var(--text-gray)">&#983536;</div>
+                            <div class="icon" v-else-if="link.href && link.href.startsWith('tel:')" style="color: var(--text-gray)">&#984050;</div>
+                            <div class="icon" v-else style="color: var(--text-gray)">&#983865;</div>
+                            <div class="label" v-if="link.text.trim()">{{link.text}}</div>
+                            <div class="label" v-else><i>No link text</i></div>
+                            <div class="value">{{link.href}}</div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- <fieldset v-show="details.links.length > 0">
-                <legend>Links</legend>
-                <p v-for="(link, i) in details.links" :key="i">
-                    HREF: <span>{{link.href}}</span><br>
-                    <a :href="link.href">{{link.text || 'MISSING'}}</a>
-                </p>
-            </fieldset> -->
+            <div class="detail-row">
+                <div class="card span-12">
+                    <h4><div class="icon">&#983785;</div>Images</h4>
+
+                    <div class="image-card" v-for="(image, i) in details.images" :key="i">
+                        <img class="image" :src="image.href" v-tooltip.bottom-start="image.src">
+                        <div class="content">
+                            <b class="title" v-if="image.alt">{{image.alt}}</b>
+                            <i class="title" v-else>No "alt"-attribute</i>
+                            <div class="description">
+                                Natural-Size: <b>{{image.width}} x {{image.height}}</b><br>
+                                Visible-Size: <b>{{image.visibleWidth}} x {{image.visibleHeight}}</b><br>
+                                <span class="no-text-overflow">Src: <b>{{image.src}}</b></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -357,7 +372,11 @@
             }
         },
 
-        created() {},
+        computed: {
+            reports() {
+                return this.$store.getters.reports
+            },
+        },
 
         methods: {
             openDetails(details) {
@@ -368,6 +387,7 @@
 
         components: {
             QuickCheckModule: require('../components/QuickCheckModule.vue').default,
+            PageCard: require('../components/PageCard.vue').default,
         },
     }
 </script>
@@ -553,6 +573,12 @@
                         align-self: center
                         font-weight: 600
 
+                        &.no-overflow
+                            width: 100%
+                            white-space: nowrap
+                            overflow: hidden
+                            text-overflow: ellipsis
+
                     .info
                         grid-area: info
                         align-self: center
@@ -702,6 +728,8 @@
                         grid-area: content
                         padding: 8px 10px
                         display: block
+                        max-width: 100%
+                        overflow: hidden
 
                         .title
                             display: block
@@ -715,4 +743,12 @@
                             color: var(--text-gray)
                             line-height: 130%
                             margin-bottom: 3px
+                            max-width: 100%
+                            overflow: hidden
+
+                            .no-text-overflow
+                                width: 100%
+                                white-space: nowrap
+                                overflow: hidden
+                                text-overflow: ellipsis
 </style>

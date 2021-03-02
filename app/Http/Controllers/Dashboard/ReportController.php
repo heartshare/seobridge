@@ -13,7 +13,7 @@ class ReportController extends Controller
 {
     public function getAllReports(Request $request)
     {
-        return UserReport::where('user_id', Auth::id())->get();
+        return UserReport::where('user_id', Auth::id())->orderBy('created_at', 'DESC')->get();
     }
     
     public function analyseUrl(Request $request)
