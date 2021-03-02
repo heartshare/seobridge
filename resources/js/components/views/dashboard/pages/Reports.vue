@@ -1,12 +1,18 @@
 <template>
     <div class="page-container limiter">
-        <quick-check-module v-if="details === null"></quick-check-module>
+        <button class="fab" @click="openReportCreateDialog()">&#984085;</button>
 
-        <div class="reports-timeline block" v-if="details === null">
-            <fieldset class="block" v-for="(report, i) in reports" :key="i">
-                <legend>{{new Date(report.created_at).toLocaleString(undefined, {day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'})}} — <b>{{report.host}}</b></legend>
-                <page-card :report="report" @details="openDetails($event)"></page-card>
-            </fieldset>
+        <div class="reports-timeline" v-if="details === null">
+            <div class="job-wrapper" v-for="(report, i) in reports" :key="i">
+                <div class="job-header">
+                    <div class="title">{{report.host}}</div>
+                    <div class="timestamp">{{new Date(report.created_at).toLocaleString(undefined, {day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'})}}</div>
+                    <ui-icon-button class="more-button">&#983513;</ui-icon-button>
+                </div>
+                <div class="job-pages">
+                    <page-card :report="report" @details="openDetails($event)"></page-card>
+                </div>
+            </div>
         </div>
 
         <div class="details" v-else>
@@ -171,9 +177,13 @@
 
             <div class="detail-row">
                 <div class="card span-12 page-info-card">
-                    <h4><img v-show="details.score.hasFavicon" :src="details.metaData.favicon" class="favicon">{{details.metaData.title}}</h4>
+                    <h4>
+                        <object class="favicon" :data="details.metaData.favicon" type="image/png">
+                            <img src="/images/defaults/default_icon.svg" alt="Default Icon Fallback" width="100%" height="100%">
+                        </object>
+                        {{details.metaData.title}}
+                    </h4>
 
-                    <!-- <img :src="details.preview" class="preview"> -->
                     <div class="metric-card-wrapper">
                         <div class="metric-card" v-if="details.metaData.description">
                             <div class="icon">&#985975;</div>
@@ -313,6 +323,25 @@
                 </div>
             </div>
         </div>
+
+        <ui-option-dialog ref="reportCreateDialog" @close="resetReportCreate()">
+            <template v-slot:heading>
+                Create a new website report
+            </template>
+
+            <template v-slot:inputs>
+                <ui-select-input label="Mode" v-model="reportCreate.mode" :options="[{'full':'Full Scan'}, {'single_page':'Single Page'}]"></ui-select-input>
+                <ui-select-input label="Viewport" v-model="reportCreate.viewport" :options="[{'1080p':'1920 x 1080'}, {'720p':'1280 x 720'}]"></ui-select-input>
+                <ui-text-input label="URL" v-model="reportCreate.url"></ui-text-input>
+            </template>
+
+            <template v-slot:button-1>
+                <ui-button text border icon-left icon="&#983382;" @click="resetReportCreate()">Cancel</ui-button>
+            </template>
+            <template v-slot:button-2>
+                <ui-button icon="&#983881;" :loading="reportLoading" @click="$store.dispatch('createReport', reportCreate.url)">Analyse</ui-button>
+            </template>
+        </ui-option-dialog>
     </div>
 </template>
 
@@ -369,6 +398,15 @@
                         },
                     },
                 },
+
+
+
+                reportCreate: {
+                    url: '',
+                    mode: null,
+                    viewport: null,
+                    loading: false,
+                },
             }
         },
 
@@ -376,6 +414,10 @@
             reports() {
                 return this.$store.getters.reports
             },
+
+            reportLoading() {
+                return this.$store.getters.reportScanning
+            }
         },
 
         methods: {
@@ -383,10 +425,22 @@
                 console.log(details)
                 this.details = details
             },
+
+
+
+            openReportCreateDialog() {
+                this.$refs.reportCreateDialog.open()
+            },
+
+            resetReportCreate() {
+                this.reportCreate.url = ''
+                this.reportCreate.mode = null
+                this.reportCreate.viewport = null
+                this.$refs.reportCreateDialog.close()
+            },
         },
 
         components: {
-            QuickCheckModule: require('../components/QuickCheckModule.vue').default,
             PageCard: require('../components/PageCard.vue').default,
         },
     }
@@ -395,6 +449,69 @@
 <style lang="sass" scoped>
     .page-container
         width: 100%
+
+        .fab
+            height: 56px
+            width: 56px
+            font-family: 'Material Icons'
+            color: white
+            background: var(--primary)
+            display: grid
+            place-content: center
+            font-size: 24px
+            position: fixed
+            bottom: 30px
+            right: 30px
+            border-radius: 100%
+            border: none
+            filter: var(--elevation-2)
+            cursor: pointer
+            user-select: none
+            transition: all 200ms
+            z-index: 100
+
+            &:hover
+                filter: var(--elevation-4)
+
+        .reports-timeline
+            display: block
+
+            .job-wrapper
+                width: 100%
+                display: inline-flex
+                flex-direction: column
+                background: white
+                border-radius: 7px
+                filter: var(--elevation-2)
+                margin: 15px 0
+
+                .job-header
+                    display: flex
+                    align-items: center
+                    // border-bottom: var(--border)
+                    border-radius: 7px 7px 0 0
+
+                    .title
+                        flex: 1
+                        font-size: 16px
+                        line-height: 20px
+                        font-weight: 600
+                        text-transform: uppercase
+                        color: var(--heading-gray)
+                        padding: 0 15px
+
+                    .timestamp
+                        line-height: 20px
+                        font-size: var(--text-size)
+                        color: var(--text-gray)
+
+                    .more-button
+                        margin: 5px
+
+                .job-pages
+                    display: flex
+                    gap: 15px
+                    padding: 0 15px 15px
 
         .details
             width: 100%

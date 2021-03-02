@@ -1,15 +1,18 @@
 <template>
     <div class="page-card">
-        <img class="thumbnail" :src="report.data.preview">
-        <div class="score-container">
+        <img class="thumbnail" src="/images/defaults/default_preview.svg">
+        <!-- <img class="thumbnail" :src="report.data.preview"> -->
+        <div class="score-container" v-show="false">
             <div class="score">{{report.data.score.totalPageScore}}</div>
             <ui-progress-ring size="40" back-color="#ffffff30" :color="scoreColor(report.data.score.totalPageScore)" :progress="report.data.score.totalPageScore"></ui-progress-ring>
         </div>
         <div class="text-container">
-            <img class="favicon" v-if="report.data.metaData.favicon" :src="report.data.metaData.favicon">
+            <object class="favicon" :data="report.data.metaData.favicon" type="image/png">
+                <img src="/images/defaults/default_icon.svg" alt="Default Icon Fallback" width="100%" height="100%">
+            </object>
             <div class="title" :title="report.data.metaData.title">{{report.data.metaData.title}}</div>
             <div class="description" :title="report.data.metaData.description">{{report.data.score.hasDescription ? report.data.metaData.description : 'MISSING'}}</div>
-            <ui-button class="details-button" border text small @click="$emit('details', report.data)">View Details</ui-button>
+            <ui-button class="details-button" text @click="$emit('details', report.data)">Details</ui-button>
         </div>
     </div>
 </template>
@@ -46,10 +49,11 @@
 <style lang="sass" scoped>
     .page-card
         width: 230px
-        height: 300px
+        height: 305px
         background: var(--bg)
         border-radius: 5px
-        filter: var(--elevation-1)
+        // filter: var(--elevation-1)
+        border: 1px solid #00000020
         font-size: 0
         position: relative
         vertical-align: top
@@ -61,20 +65,14 @@
             border-radius: 5px 5px 0 0
             background: var(--bg-dark)
             display: block
-            filter: saturate(0%)
-            transition: filter 100ms
-
-        &:hover
-            .thumbnail
-                filter: saturate(100%)
 
         .score-container
             position: absolute
             z-index: 1
-            top: 10px
-            right: 10px
-            height: 46px
-            width: 46px
+            top: 15px
+            left: 15px
+            height: 40px
+            width: 40px
             border-radius: 50px
             background: #00000050
             backdrop-filter: blur(8px)
@@ -97,7 +95,7 @@
             display: grid
             position: relative
             z-index: 1
-            grid-template: 25px 30px auto 30px / 1fr
+            grid-template: 25px 30px auto 35px / 1fr
             grid-template-areas: "favicon" "title" "description" "button"
             
             .favicon
@@ -129,4 +127,5 @@
 
             .details-button
                 grid-area: button
+                justify-self: center
 </style>

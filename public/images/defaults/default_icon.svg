@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="50" height="50" viewBox="0 0 50 50">
+  <defs>
+    <clipPath id="clip-default_icon">
+      <rect width="50" height="50"/>
+    </clipPath>
+  </defs>
+  <g id="default_icon" clip-path="url(#clip-default_icon)">
+    <path id="earth" d="M35.516,34.441a4.228,4.228,0,0,0-4.005-2.93H29.4V25.187A2.108,2.108,0,0,0,27.3,23.08H14.648V18.864h4.216a2.108,2.108,0,0,0,2.108-2.108V12.54h4.216A4.216,4.216,0,0,0,29.4,8.324V7.46a16.826,16.826,0,0,1,6.113,26.982M20.972,39.8A16.783,16.783,0,0,1,6.659,19.306l10.1,10.1v2.108a4.216,4.216,0,0,0,4.216,4.216M23.08,2a21.08,21.08,0,1,0,21.08,21.08A21.08,21.08,0,0,0,23.08,2Z" transform="translate(1.92 1.92)" fill="#666f79"/>
+  </g>
+</svg>

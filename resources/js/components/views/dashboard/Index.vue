@@ -61,7 +61,6 @@
 <script>
     export default {
         components: {
-            QuickCheckModule: require('./components/QuickCheckModule.vue').default,
             OverviewPage: require('./pages/Overview.vue').default,
             ReportsPage: require('./pages/Reports.vue').default,
             TeamsPage: require('./pages/Teams.vue').default,
