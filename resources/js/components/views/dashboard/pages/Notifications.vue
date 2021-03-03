@@ -31,6 +31,44 @@
         </p>
 
         <p>
+            <ui-icon-button>&#985296;</ui-icon-button>
+            <ui-icon-button disabled>&#985296;</ui-icon-button>
+            <ui-icon-button loading>&#985296;</ui-icon-button><br>
+
+            <ui-icon-button info>&#985296;</ui-icon-button>
+            <ui-icon-button info disabled>&#985296;</ui-icon-button>
+            <ui-icon-button info loading>&#985296;</ui-icon-button><br>
+
+            <ui-icon-button error>&#985296;</ui-icon-button>
+            <ui-icon-button error disabled>&#985296;</ui-icon-button>
+            <ui-icon-button error loading>&#985296;</ui-icon-button><br>
+
+            <ui-icon-button border>&#985296;</ui-icon-button>
+            <ui-icon-button border disabled>&#985296;</ui-icon-button>
+            <ui-icon-button border loading>&#985296;</ui-icon-button><br>
+
+            <ui-icon-button border info>&#985296;</ui-icon-button>
+            <ui-icon-button border info disabled>&#985296;</ui-icon-button>
+            <ui-icon-button border info loading>&#985296;</ui-icon-button><br>
+
+            <ui-icon-button border error>&#985296;</ui-icon-button>
+            <ui-icon-button border error disabled>&#985296;</ui-icon-button>
+            <ui-icon-button border error loading>&#985296;</ui-icon-button><br>
+
+            <ui-icon-button solid>&#985296;</ui-icon-button>
+            <ui-icon-button solid disabled>&#985296;</ui-icon-button>
+            <ui-icon-button solid loading>&#985296;</ui-icon-button><br>
+
+            <ui-icon-button solid info>&#985296;</ui-icon-button>
+            <ui-icon-button solid info disabled>&#985296;</ui-icon-button>
+            <ui-icon-button solid info loading>&#985296;</ui-icon-button><br>
+
+            <ui-icon-button solid error>&#985296;</ui-icon-button>
+            <ui-icon-button solid error disabled>&#985296;</ui-icon-button>
+            <ui-icon-button solid error loading>&#985296;</ui-icon-button><br>
+        </p>
+
+        <p>
             <ui-popover-menu>
                 <template v-slot:trigger>
                     <ui-icon-button>&#983513;</ui-icon-button>

@@ -2128,16 +2128,60 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  props: ['solid', 'error', 'success', 'warning', 'type'],
+  props: ['solid', 'info', 'error', 'border', 'loading', 'disabled'],
   data: function data() {
     return {
-      classes: []
+      classes: [],
+      hasBorder: false,
+      disabled_: false,
+      loading_: false
     };
   },
   mounted: function mounted() {
-    if (typeof this.solid !== 'undefined') this.classes.push('solid');
-    if (typeof this.error !== 'undefined' || this.type === 'error') this.classes.push('error');else if (typeof this.success !== 'undefined' || this.type === 'success') this.classes.push('success');else if (typeof this.warning !== 'undefined' || this.type === 'warning') this.classes.push('warning');
+    this.init();
+  },
+  watch: {
+    border: function border() {
+      this.init();
+    },
+    solid: function solid() {
+      this.init();
+    },
+    error: function error() {
+      this.init();
+    },
+    info: function info() {
+      this.init();
+    },
+    loading: function loading() {
+      this.init();
+    },
+    disabled: function disabled() {
+      this.init();
+    }
+  },
+  methods: {
+    init: function init() {
+      this.classes = [];
+      if (this.solid == true || typeof this.solid !== 'undefined' && this.solid === '') this.classes.push('solid');
+      if (this.info == true || typeof this.info !== 'undefined' && this.info === '') this.classes.push('info');else if (this.error == true || typeof this.error !== 'undefined' && this.error === '') this.classes.push('error');
+      this.hasBorder = this.border == true || typeof this.border !== 'undefined' && this.border === '';
+      this.disabled_ = this.disabled == true || typeof this.disabled !== 'undefined' && this.disabled === '';
+      this.loading_ = this.loading == true || typeof this.loading !== 'undefined' && this.loading === '';
+    },
+    click: function click() {
+      if (this.disabled_ || this.loading_) {
+        return;
+      }
+
+      this.$emit('click');
+    }
   }
 });
 
@@ -4371,7 +4415,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".ccc-ui-container[data-v-147851ff] {\n  height: 40px;\n  line-height: 40px;\n  width: 40px;\n  padding: 0;\n  font-size: 20px;\n  text-align: center;\n  font-family: \"Material Icons\";\n  text-transform: uppercase;\n  border-radius: 100%;\n  border: none;\n  cursor: pointer;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n  transition: all 100ms;\n  vertical-align: top;\n  position: relative;\n  color: var(--primary);\n  background: transparent;\n}\n.ccc-ui-container[data-v-147851ff]:focus::after {\n  content: \"\";\n  top: -4px;\n  left: -4px;\n  border: 2px solid var(--primary);\n  width: calc(100% + 4px);\n  height: calc(100% + 4px);\n  position: absolute;\n  border-radius: 100%;\n}\n.ccc-ui-container[data-v-147851ff]:hover {\n  background: var(--primary-shade);\n}\n.ccc-ui-container.error[data-v-147851ff] {\n  color: var(--error);\n}\n.ccc-ui-container.error[data-v-147851ff]::after {\n  border-color: var(--error);\n}\n.ccc-ui-container.error[data-v-147851ff]:hover {\n  background: var(--error-shade);\n}\n.ccc-ui-container.success[data-v-147851ff] {\n  color: var(--success);\n}\n.ccc-ui-container.success[data-v-147851ff]::after {\n  border-color: var(--success);\n}\n.ccc-ui-container.success[data-v-147851ff]:hover {\n  background: var(--success-shade);\n}\n.ccc-ui-container.warning[data-v-147851ff] {\n  color: var(--warning);\n}\n.ccc-ui-container.warning[data-v-147851ff]::after {\n  border-color: var(--warning);\n}\n.ccc-ui-container.warning[data-v-147851ff]:hover {\n  background: var(--warning-shade);\n}\n.ccc-ui-container.solid[data-v-147851ff] {\n  background: var(--primary-shade);\n  color: var(--primary);\n}\n.ccc-ui-container.solid[data-v-147851ff]:hover {\n  background: var(--primary);\n  color: white;\n  box-shadow: 0 5px 7px #00000020;\n}\n.ccc-ui-container.solid.error[data-v-147851ff] {\n  background: var(--error-shade);\n  color: var(--error);\n}\n.ccc-ui-container.solid.error[data-v-147851ff]:hover {\n  background: var(--error);\n}\n.ccc-ui-container.solid.success[data-v-147851ff] {\n  background: var(--success-shade);\n  color: var(--success);\n}\n.ccc-ui-container.solid.success[data-v-147851ff]:hover {\n  background: var(--success);\n}\n.ccc-ui-container.solid.warning[data-v-147851ff] {\n  background: var(--warning-shade);\n  color: var(--warning);\n}\n.ccc-ui-container.solid.warning[data-v-147851ff]:hover {\n  background: var(--warning);\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, ".ccc-ui-container[data-v-147851ff] {\n  height: 40px;\n  line-height: 40px;\n  width: 40px;\n  padding: 0;\n  font-size: 20px;\n  text-align: center;\n  font-family: \"Material Icons\";\n  text-transform: uppercase;\n  border-radius: 100%;\n  border: none;\n  cursor: pointer;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n  transition: all 100ms;\n  vertical-align: top;\n  position: relative;\n  color: var(--heading-gray);\n  background: transparent;\n}\n.ccc-ui-container:hover .bg-overlay[data-v-147851ff] {\n  opacity: 0.1;\n}\n.ccc-ui-container:focus .bg-overlay[data-v-147851ff] {\n  opacity: 0.17;\n}\n.ccc-ui-container.info[data-v-147851ff] {\n  color: var(--primary);\n}\n.ccc-ui-container.info .border[data-v-147851ff] {\n  border-color: var(--primary);\n}\n.ccc-ui-container.error[data-v-147851ff] {\n  color: var(--error);\n}\n.ccc-ui-container.error .border[data-v-147851ff] {\n  border-color: var(--error);\n}\n.ccc-ui-container.solid[data-v-147851ff] {\n  background: var(--heading-gray);\n  color: var(--bg);\n}\n.ccc-ui-container.solid.info[data-v-147851ff] {\n  background: var(--primary);\n  color: white;\n}\n.ccc-ui-container.solid.error[data-v-147851ff] {\n  background: var(--error);\n  color: white;\n}\n.ccc-ui-container.disabled[data-v-147851ff] {\n  color: var(--disabled-color) !important;\n  background: transparent !important;\n  pointer-events: none;\n}\n.ccc-ui-container.disabled.solid[data-v-147851ff] {\n  background: var(--disabled-bg) !important;\n}\n.ccc-ui-container.disabled .border[data-v-147851ff] {\n  border-color: var(--disabled-border-color) !important;\n}\n.ccc-ui-container.loading[data-v-147851ff] {\n  color: var(--disabled-color) !important;\n  background: transparent !important;\n  pointer-events: none;\n}\n.ccc-ui-container.loading.solid[data-v-147851ff] {\n  background: var(--disabled-bg) !important;\n}\n.ccc-ui-container.loading .border[data-v-147851ff] {\n  border-color: var(--disabled-border-color) !important;\n}\n.ccc-ui-container.loading .content[data-v-147851ff] {\n  opacity: 0;\n}\n.ccc-ui-container .border[data-v-147851ff] {\n  height: 100%;\n  width: 100%;\n  position: absolute;\n  top: 0;\n  left: 0;\n  border-radius: 500px;\n  border: 1px solid var(--heading-gray);\n  pointer-events: none;\n}\n.ccc-ui-container .bg-overlay[data-v-147851ff] {\n  height: 100%;\n  width: 100%;\n  position: absolute;\n  top: 0;\n  left: 0;\n  border-radius: 500px;\n  background: currentcolor;\n  opacity: 0;\n  transition: opacity 100ms;\n}\n.ccc-ui-container .spinner[data-v-147851ff] {\n  position: absolute;\n  top: calc(50% - 10px);\n  left: calc(50% - 10px);\n}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -26240,16 +26284,37 @@ var render = function() {
     "button",
     {
       staticClass: "ccc-ui-container",
-      class: _vm.classes,
-      attrs: { tabindex: "0" },
+      class: _vm.classes.concat(
+        [{ disabled: _vm.disabled_ }],
+        [{ loading: _vm.loading_ }]
+      ),
       on: {
         click: function($event) {
-          return _vm.$emit("click")
+          return _vm.click()
         }
       }
     },
-    [_vm._t("default")],
-    2
+    [
+      _c("span", { staticClass: "content" }, [_vm._t("default")], 2),
+      _vm._v(" "),
+      _c("ui-spinner", {
+        directives: [
+          {
+            name: "show",
+            rawName: "v-show",
+            value: _vm.loading_,
+            expression: "loading_"
+          }
+        ],
+        staticClass: "spinner",
+        attrs: { color: "var(--disabled-color)" }
+      }),
+      _vm._v(" "),
+      _vm.hasBorder ? _c("div", { staticClass: "border" }) : _vm._e(),
+      _vm._v(" "),
+      _c("div", { staticClass: "bg-overlay" })
+    ],
+    1
   )
 }
 var staticRenderFns = []

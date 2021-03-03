@@ -16,30 +16,40 @@ class ReportController extends Controller
         return UserReport::where('user_id', Auth::id())->orderBy('created_at', 'DESC')->get();
     }
     
-    public function analyseUrl(Request $request)
+    public function requestSiteAnalysis(Request $request)
     {
         $request->validate([
             'url' => ['required', 'url'],
+            'mode' => ['required', 'in:full,single'],
+            'device' => ['required', 'array'],
         ]);
 
-        $response = Http::post('http://localhost:999/analyse', [
+        $jobId = 'job_'.Str::uuid();
+
+        $response = Http::post('http://localhost:999/request-site-analysis', [
             'url' => $request->url,
+            'mode' => $request->mode,
+            'device' => $request->device,
+            'job_id' => $jobId,
         ]);
 
         $reportJson = $response->json();
-        $reportJson['preview'] = null;
 
-        $report = UserReport::create([
-            'job_id' => 'job_'.Str::uuid(),
-            'user_id' => Auth::id(),
-            'url' => $reportJson['url']['href'],
-            'host' => $reportJson['url']['host'],
-            'device' => ['viewport' => [1920, 1080]],
-            'score' => $reportJson['score']['totalPageScore'],
-            'data' => $reportJson,
-        ]);
+        return $response->status();
+        // return $reportJson;
+        // $reportJson['preview'] = null;
 
-        return $report;
+        // $report = UserReport::create([
+        //     'job_id' => 'job_'.Str::uuid(),
+        //     'user_id' => Auth::id(),
+        //     'url' => $reportJson['url']['href'],
+        //     'host' => $reportJson['url']['host'],
+        //     'device' => ['viewport' => [1920, 1080]],
+        //     'score' => $reportJson['score']['totalPageScore'],
+        //     'data' => $reportJson,
+        // ]);
+
+        // return $report;
     }
 
 

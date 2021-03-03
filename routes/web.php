@@ -52,7 +52,7 @@ Route::middleware('auth')->prefix('auth')->group(function() {
 
     Route::prefix('reports')->group(function() {
         Route::post('/get-all-reports', [App\Http\Controllers\Dashboard\ReportController::class, 'getAllReports']);
-        Route::post('/analyse-url', [App\Http\Controllers\Dashboard\ReportController::class, 'analyseUrl']);
+        Route::post('/request-site-analysis', [App\Http\Controllers\Dashboard\ReportController::class, 'requestSiteAnalysis']);
         Route::post('/delete-report', [App\Http\Controllers\Dashboard\ReportController::class, 'deleteReport']);
     });
 

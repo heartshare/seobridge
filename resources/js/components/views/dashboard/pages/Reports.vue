@@ -356,7 +356,7 @@
             </template>
 
             <template v-slot:inputs>
-                <ui-select-input label="Mode" v-model="reportCreate.mode" :options="[{'full':'Full Scan'}, {'single_page':'Single Page'}]"></ui-select-input>
+                <ui-select-input label="Mode" v-model="reportCreate.mode" :options="[{'full':'Full Scan'}, {'single':'Single Page'}]"></ui-select-input>
                 <ui-select-input label="Viewport" v-model="reportCreate.viewport" :options="[{'1080p':'1920 x 1080'}, {'720p':'1280 x 720'}]"></ui-select-input>
                 <ui-text-input label="URL" v-model="reportCreate.url"></ui-text-input>
             </template>
@@ -365,7 +365,7 @@
                 <ui-button text border icon-left icon="&#983382;" @click="resetReportCreate()">Cancel</ui-button>
             </template>
             <template v-slot:button-2>
-                <ui-button icon="&#983881;" :loading="reportLoading" @click="$store.dispatch('createReport', reportCreate.url)">Analyse</ui-button>
+                <ui-button icon="&#983881;" :loading="reportLoading" @click="requestReport()">Analyse</ui-button>
             </template>
         </ui-option-dialog>
 
@@ -527,6 +527,22 @@
                 this.reportCreate.mode = null
                 this.reportCreate.viewport = null
                 this.$refs.reportCreateDialog.close()
+            },
+
+            requestReport() {
+                axios.post('/auth/reports/request-site-analysis', {
+                    url: this.reportCreate.url,
+                    mode: this.reportCreate.mode,
+                    device: {
+                        viewport: this.reportCreate.viewport
+                    },
+                })
+                .then(response => {
+                    console.log(response.data)
+                })
+                .catch(error => {
+                    console.log(error.response)
+                })
             },
 
 

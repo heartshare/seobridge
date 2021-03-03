@@ -22,6 +22,53 @@ const reset = "\x1b[0m"
 
 
 
+const crawlQueue = []
+
+
+
+app.post('/request-site-analysis', async (req, res) => {
+    const requestId = uuid()
+    
+    if (!req.body.job_id)
+    {
+        console.log(`Invalid request: no job id parameter.`)
+        
+        res.status(422)
+        return res.send('JOB_ID_MISSING')
+    }
+
+    const jobId = req.body.job_id
+
+    if (!req.body.url)
+    {
+        console.log(`${_y}${jobId}${reset} Invalid request: no url parameter.`)
+        
+        res.status(422)
+        return res.send('URL_MISSING')
+    }
+
+    if (!['full', 'single'].includes(req.body.mode))
+    {
+        console.log(`${_y}${jobId}${reset} Invalid request: invalid mode parameter.`)
+        
+        res.status(422)
+        return res.send('INVALID_MODE')
+    }
+
+    crawlQueue.push({
+        jobId,
+        mode: req.body.mode,
+        url: req.body.url,
+    })
+
+    console.log(crawlQueue)
+    
+    res.setHeader('Content-Type', 'text/html')
+    return res.end('OK')
+})
+
+
+
 app.post('/analyse', async (req, res) => {
     const requestId = uuid()
     
@@ -353,7 +400,30 @@ const scanUrl = async (url) => {
 }
 
 
-
 app.listen(999, '127.0.0.1')
 
 console.log(`Express running on: ${_g}127.0.0.1:999`+reset)
+
+// var Crawler = require("simplecrawler")
+
+// var crawler = new Crawler('https://fireship.io')
+
+// crawler.maxDepth = 4
+// crawler.maxConcurrency = 10
+// crawler.interval = 1
+
+// let urls_ = []
+
+// crawler.addDownloadCondition((queueItem, response, callback) => {
+//     callback(null, queueItem.stateData.contentType.startsWith('text/html'))
+// })
+
+// crawler.on("fetchcomplete", function(queueItem) {
+//     urls_.push(queueItem.url)
+// })
+
+// crawler.on("complete", function() {
+//     console.log(urls_)
+// })
+
+// crawler.start()

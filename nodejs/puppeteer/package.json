@@ -13,6 +13,7 @@
     "express": "^4.17.1",
     "node-fetch": "^2.6.1",
     "puppeteer": "^7.1.0",
+    "simplecrawler": "^1.1.9",
     "uuid": "^8.3.2"
   }
 }
