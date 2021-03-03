@@ -2,16 +2,21 @@
     <div class="page-card">
         <img class="thumbnail" src="/images/defaults/default_preview.svg">
         <!-- <img class="thumbnail" :src="report.data.preview"> -->
+
         <div class="score-container" v-show="false">
             <div class="score">{{report.data.score.totalPageScore}}</div>
             <ui-progress-ring size="40" back-color="#ffffff30" :color="scoreColor(report.data.score.totalPageScore)" :progress="report.data.score.totalPageScore"></ui-progress-ring>
         </div>
+
         <div class="text-container">
             <object class="favicon" :data="report.data.metaData.favicon" type="image/png">
                 <img src="/images/defaults/default_icon.svg" alt="Default Icon Fallback" width="100%" height="100%">
             </object>
+
             <div class="title" :title="report.data.metaData.title">{{report.data.metaData.title}}</div>
+
             <div class="description" :title="report.data.metaData.description">{{report.data.score.hasDescription ? report.data.metaData.description : 'MISSING'}}</div>
+            
             <ui-button class="details-button" text @click="$emit('details', report.data)">Details</ui-button>
         </div>
     </div>
@@ -52,11 +57,15 @@
         height: 305px
         background: var(--bg)
         border-radius: 5px
-        // filter: var(--elevation-1)
         border: 1px solid #00000020
         font-size: 0
         position: relative
         vertical-align: top
+
+        .more-button
+            position: absolute
+            top: 0px
+            right: 0px
         
         .thumbnail
             width: 100%

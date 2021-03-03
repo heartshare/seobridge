@@ -1,16 +1,39 @@
 <template>
     <div class="page-container limiter">
-        <button class="fab" @click="openReportCreateDialog()">&#984085;</button>
+        <div class="filter-bar" v-if="details === null">
+            <div class="search-bar-wrapper">
+                <ui-text-input class="input" label="Search for URL" v-model="reportSearch.url"></ui-text-input>
+                <transition name="scale">
+                    <ui-icon-button v-show="reportSearch.url.trim()" class="button" @click="reportSearch.url = ''">&#983382;</ui-icon-button>
+                </transition>
+            </div>
+        </div>
+
+        <button class="fab" v-if="details === null" @click="openReportCreateDialog()">&#984085;</button>
 
         <div class="reports-timeline" v-if="details === null">
-            <div class="job-wrapper" v-for="(report, i) in reports" :key="i">
+            <div class="job-wrapper" v-for="report in searchedReports" :key="report.id">
                 <div class="job-header">
                     <div class="title">{{report.host}}</div>
-                    <div class="timestamp">{{new Date(report.created_at).toLocaleString(undefined, {day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'})}}</div>
-                    <ui-icon-button class="more-button">&#983513;</ui-icon-button>
+                    <div class="timestamp" v-tooltip="formateDate(report.created_at)">{{report.created_at | diffForHumans}}</div>
+                    
+                    <ui-popover-menu>
+                        <template v-slot:trigger>
+                            <ui-icon-button class="more-button">&#983513;</ui-icon-button>
+                        </template>
+
+                        <!-- <ui-menu-item icon="&#984214;">Share report</ui-menu-item> -->
+                        <!-- <ui-menu-item icon="&#983048;">Assign report</ui-menu-item> -->
+                        <ui-menu-item icon="&#983881;" @click="reportSearch.url = report.host">Search for domain</ui-menu-item>
+                        <ui-menu-divider></ui-menu-divider>
+                        <ui-menu-item icon="&#984089;" @click="$store.dispatch('createReport', report.url)">New report from URL</ui-menu-item>
+                        <ui-menu-item icon="&#985721;" @click="openReportDeleteDialog(report)">Delete report</ui-menu-item>
+                    </ui-popover-menu>
                 </div>
+
                 <div class="job-pages">
-                    <page-card :report="report" @details="openDetails($event)"></page-card>
+                    <!-- <page-card :report="report" @details="openDetails($event)"></page-card> -->
+                    <page-row :report="report" @details="openDetails($event)"></page-row>
                 </div>
             </div>
         </div>
@@ -178,9 +201,10 @@
             <div class="detail-row">
                 <div class="card span-12 page-info-card">
                     <h4>
-                        <object class="favicon" :data="details.metaData.favicon" type="image/png">
+                        <object class="favicon" v-if="details.metaData.favicon" :data="details.metaData.favicon" type="image/png">
                             <img src="/images/defaults/default_icon.svg" alt="Default Icon Fallback" width="100%" height="100%">
                         </object>
+                        <img class="favicon" v-else src="/images/defaults/default_icon.svg" alt="Default Icon Fallback" width="100%" height="100%">
                         {{details.metaData.title}}
                     </h4>
 
@@ -324,6 +348,8 @@
             </div>
         </div>
 
+
+
         <ui-option-dialog ref="reportCreateDialog" @close="resetReportCreate()">
             <template v-slot:heading>
                 Create a new website report
@@ -342,10 +368,34 @@
                 <ui-button icon="&#983881;" :loading="reportLoading" @click="$store.dispatch('createReport', reportCreate.url)">Analyse</ui-button>
             </template>
         </ui-option-dialog>
+
+
+
+        <ui-option-dialog ref="reportDeleteDialog" @close="resetReportDelete()">
+            <template v-slot:heading>
+                Delete report?
+            </template>
+
+            <span>
+                Are you sure you want to delete the report about:<br>
+                <b>{{reportDelete.name}}</b> created <b>{{reportDelete.date | diffForHumans}}</b>?
+            </span>
+
+            <template v-slot:button-1>
+                <ui-button text border icon-left icon="&#983382;" @click="resetReportDelete()">Cancel</ui-button>
+            </template>
+            <template v-slot:button-2>
+                <ui-button error :loading="reportDelete.loading" @click="deleteReport()">Yes, Delete now</ui-button>
+            </template>
+        </ui-option-dialog>
     </div>
 </template>
 
 <script>
+    const dayjs = require('dayjs')
+    const relativeTime = require('dayjs/plugin/relativeTime')
+    // require('dayjs/locale/de')
+
     export default {
         data() {
             return {
@@ -401,13 +451,27 @@
 
 
 
+                reportSearch: {
+                    url: '',
+                },
+
                 reportCreate: {
                     url: '',
                     mode: null,
                     viewport: null,
                     loading: false,
                 },
+
+                reportDelete: {
+                    id: null,
+                    name: '',
+                    loading: false,
+                },
             }
+        },
+
+        created() {
+            dayjs.extend(relativeTime)
         },
 
         computed: {
@@ -417,10 +481,36 @@
 
             reportLoading() {
                 return this.$store.getters.reportScanning
+            },
+
+            searchedReports() {
+                return this.reports.filter(e => e.host.trim().toUpperCase().includes(this.reportSearch.url.trim().toUpperCase()))
             }
         },
 
+        filters: {
+            diffForHumans(date) {
+                if (!date)
+                {
+                    return null
+                }
+                
+                return dayjs(date).fromNow()
+            },
+        },
+
         methods: {
+            formateDate(date) {
+                if (!date)
+                {
+                    return null
+                }
+                
+                return new Date(date).toLocaleString(undefined, {year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit'})
+            },
+
+
+
             openDetails(details) {
                 console.log(details)
                 this.details = details
@@ -438,10 +528,44 @@
                 this.reportCreate.viewport = null
                 this.$refs.reportCreateDialog.close()
             },
+
+
+
+            openReportDeleteDialog(report) {
+                this.reportDelete.id = report.id
+                this.reportDelete.name = report.host
+                this.reportDelete.date = report.created_at
+                this.$refs.reportDeleteDialog.open()
+            },
+
+            resetReportDelete() {
+                this.reportDelete.id = null
+                this.reportDelete.name = ''
+                this.reportDelete.date = ''
+                this.$refs.reportDeleteDialog.close()
+            },
+
+            deleteReport() {
+                this.reportDelete.loading = true
+
+                axios.post('/auth/reports/delete-report', {
+                    id: this.reportDelete.id
+                })
+                .then(response => {
+                    this.$store.commit('deleteReport', response.data)
+                    this.reportDelete.loading = false
+                    this.resetReportDelete()
+                })
+                .catch(error => {
+                    this.reportDelete.loading = false
+                    console.log(error.response)
+                })
+            },
         },
 
         components: {
             PageCard: require('../components/PageCard.vue').default,
+            PageRow: require('../components/PageRow.vue').default,
         },
     }
 </script>
@@ -449,6 +573,38 @@
 <style lang="sass" scoped>
     .page-container
         width: 100%
+
+        .filter-bar
+            display: flex
+            padding: 15px
+            background: var(--bg)
+            border-radius: 0 0 15px 15px
+            filter: var(--elevation-2)
+            gap: 15px
+            margin-bottom: 15px
+            align-items: center
+
+            .search-bar-wrapper
+                display: block
+                position: relative
+                flex: 1
+
+                .input
+                    padding-right: 50px
+
+                .button
+                    position: absolute
+                    top: 5px
+                    right: 5px
+                    z-index: 1
+                    transition: all 100ms
+
+                    &.scale-enter,
+                    &.scale-leave-to
+                        transform: scale(0)
+
+            .submit-button
+                white-space: nowrap
 
         .fab
             height: 56px
@@ -488,7 +644,7 @@
                 .job-header
                     display: flex
                     align-items: center
-                    // border-bottom: var(--border)
+                    padding: 5px 0
                     border-radius: 7px 7px 0 0
 
                     .title
@@ -506,7 +662,7 @@
                         color: var(--text-gray)
 
                     .more-button
-                        margin: 5px
+                        margin: 0 5px
 
                 .job-pages
                     display: flex

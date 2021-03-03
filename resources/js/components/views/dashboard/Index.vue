@@ -21,6 +21,11 @@
                 <div class="text">Reports</div>
             </a>
 
+            <!-- <a href="/dashboard/social-media" class="button" :class="{'active': $store.getters.page === 'social-media'}" @click.prevent="$store.dispatch('setPage', 'social-media')">
+                <div class="icon">&#985161;</div>
+                <div class="text">Social Media</div>
+            </a> -->
+
             <a href="/dashboard/teams" class="button" :class="{'active': $store.getters.page === 'teams'}" @click.prevent="$store.dispatch('setPage', 'teams')">
                 <div class="icon">&#985740;</div>
                 <div class="text">My Team</div>

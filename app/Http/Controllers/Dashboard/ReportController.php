@@ -41,4 +41,26 @@ class ReportController extends Controller
 
         return $report;
     }
+
+
+
+    public function deleteReport(Request $request)
+    {
+        $request->validate([
+            'id' => ['required', 'exists:user_reports,id'],
+        ]);
+
+        $report = UserReport::find($request->id);
+        
+        if ($report->user_id !== Auth::id())
+        {
+            return response('UNAUTHORIZED', 403);
+        }
+
+        $id = $report->id;
+
+        $report->delete();
+
+        return $id;
+    }
 }

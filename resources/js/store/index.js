@@ -71,7 +71,7 @@ module.exports = {
         createReport(store, data) {
             store.commit('reportScanning', true)
 
-            axios.post('/auth/reports/url', {url: data})
+            axios.post('/auth/reports/analyse-url', {url: data})
             .then(response => {
                 // console.log(response.data)
                 store.commit('reportScanning', false)
@@ -202,6 +202,15 @@ module.exports = {
 
         reportScanning(state, data) {
             state.reportScanning = data
+        },
+
+        deleteReport(state, data) {
+            let index = state.reports.findIndex(e => e.id === data)
+
+            if (index >= 0)
+            {
+                state.reports.splice(index, 1)
+            }
         },
 
 

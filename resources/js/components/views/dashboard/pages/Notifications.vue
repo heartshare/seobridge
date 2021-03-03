@@ -29,6 +29,18 @@
             <ui-button text error border disabled>Disabled</ui-button>
             <ui-button text error border loading>loading</ui-button><br>
         </p>
+
+        <p>
+            <ui-popover-menu>
+                <template v-slot:trigger>
+                    <ui-icon-button>&#983513;</ui-icon-button>
+                </template>
+
+                <ui-menu-item icon="&#984214;">Share report</ui-menu-item>
+                <ui-menu-item icon="&#983048;">Assign report</ui-menu-item>
+                <ui-menu-item icon="&#985721;">Delete report</ui-menu-item>
+            </ui-popover-menu>
+        </p>
     </div>
 </template>
 
