@@ -69,4 +69,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(UserReport::class, 'user_id', 'id');
     }
+
+    public function report_tasks()
+    {
+        return $this->hasMany(UserReportTask::class, 'user_id', 'id');
+    }
 }

@@ -1,0 +1,7 @@
+exports.red = "\x1b[31m"
+exports.green = "\x1b[32m"
+exports.yellow = "\x1b[33m"
+exports.blue = "\x1b[34m"
+exports.white = "\x1b[37m"
+exports.bright = "\x1b[1m"
+exports.reset = "\x1b[0m"

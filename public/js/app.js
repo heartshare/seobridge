@@ -5036,7 +5036,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 var dayjs = __webpack_require__(/*! dayjs */ "./node_modules/dayjs/dayjs.min.js");
 
 var relativeTime = __webpack_require__(/*! dayjs/plugin/relativeTime */ "./node_modules/dayjs/plugin/relativeTime.js"); // require('dayjs/locale/de')
@@ -5095,9 +5094,12 @@ var relativeTime = __webpack_require__(/*! dayjs/plugin/relativeTime */ "./node_
         url: ''
       },
       reportCreate: {
-        url: '',
-        mode: null,
-        viewport: null,
+        // url: '',
+        url: 'https://freuwort.com',
+        // mode: null,
+        mode: 'full',
+        // viewport: null,
+        viewport: '1080p',
         loading: false
       },
       reportDelete: {
@@ -5111,16 +5113,16 @@ var relativeTime = __webpack_require__(/*! dayjs/plugin/relativeTime */ "./node_
     dayjs.extend(relativeTime);
   },
   computed: {
-    reports: function reports() {
+    groupedReports: function groupedReports() {
       return this.$store.getters.reports;
     },
     reportLoading: function reportLoading() {
       return this.$store.getters.reportScanning;
     },
-    searchedReports: function searchedReports() {
+    searchedGroupedReports: function searchedGroupedReports() {
       var _this = this;
 
-      return this.reports.filter(function (e) {
+      return this.groupedReports.filter(function (e) {
         return e.host.trim().toUpperCase().includes(_this.reportSearch.url.trim().toUpperCase());
       });
     }
@@ -5756,6 +5758,12 @@ var app = new Vue({
   \*************************************/
 /***/ ((module) => {
 
+function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
 module.exports = {
   state: {
     page: null,
@@ -5836,7 +5844,38 @@ module.exports = {
     },
     fetchAllReports: function fetchAllReports(store) {
       axios.post('/auth/reports/get-all-reports').then(function (response) {
-        store.commit('reports', response.data);
+        // Table Of Contents
+        var toc = {};
+        var reports = []; // Groups reports by job_id: O(n)
+
+        var _iterator = _createForOfIteratorHelper(response.data),
+            _step;
+
+        try {
+          for (_iterator.s(); !(_step = _iterator.n()).done;) {
+            var report = _step.value;
+
+            if (toc.hasOwnProperty(report.job_id)) {
+              reports[toc[report.job_id]].pages.push(report);
+            } else {
+              reports.push({
+                host: report.host,
+                url: report.url,
+                created_at: report.created_at,
+                updated_at: report.updated_at,
+                id: report.job_id,
+                pages: [report]
+              });
+              toc[report.job_id] = reports.length - 1;
+            }
+          }
+        } catch (err) {
+          _iterator.e(err);
+        } finally {
+          _iterator.f();
+        }
+
+        store.commit('reports', reports);
       })["catch"](function (error) {
         console.log(error.response);
       });
@@ -6732,7 +6771,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".page-container[data-v-b59c8186] {\n  width: 100%;\n}\n.page-container .filter-bar[data-v-b59c8186] {\n  display: flex;\n  padding: 15px;\n  background: var(--bg);\n  border-radius: 0 0 15px 15px;\n  filter: var(--elevation-2);\n  gap: 15px;\n  margin-bottom: 15px;\n  align-items: center;\n}\n.page-container .filter-bar .search-bar-wrapper[data-v-b59c8186] {\n  display: block;\n  position: relative;\n  flex: 1;\n}\n.page-container .filter-bar .search-bar-wrapper .input[data-v-b59c8186] {\n  padding-right: 50px;\n}\n.page-container .filter-bar .search-bar-wrapper .button[data-v-b59c8186] {\n  position: absolute;\n  top: 5px;\n  right: 5px;\n  z-index: 1;\n  transition: all 100ms;\n}\n.page-container .filter-bar .search-bar-wrapper .button.scale-enter[data-v-b59c8186], .page-container .filter-bar .search-bar-wrapper .button.scale-leave-to[data-v-b59c8186] {\n  transform: scale(0);\n}\n.page-container .filter-bar .submit-button[data-v-b59c8186] {\n  white-space: nowrap;\n}\n.page-container .fab[data-v-b59c8186] {\n  height: 56px;\n  width: 56px;\n  font-family: \"Material Icons\";\n  color: white;\n  background: var(--primary);\n  display: grid;\n  place-content: center;\n  font-size: 24px;\n  position: fixed;\n  bottom: 30px;\n  right: 30px;\n  border-radius: 100%;\n  border: none;\n  filter: var(--elevation-2);\n  cursor: pointer;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n  transition: all 200ms;\n  z-index: 100;\n}\n.page-container .fab[data-v-b59c8186]:hover {\n  filter: var(--elevation-4);\n}\n.page-container .reports-timeline[data-v-b59c8186] {\n  display: block;\n}\n.page-container .reports-timeline .job-wrapper[data-v-b59c8186] {\n  width: 100%;\n  display: inline-flex;\n  flex-direction: column;\n  background: white;\n  border-radius: 7px;\n  filter: var(--elevation-2);\n  margin: 15px 0;\n}\n.page-container .reports-timeline .job-wrapper .job-header[data-v-b59c8186] {\n  display: flex;\n  align-items: center;\n  padding: 5px 0;\n  border-radius: 7px 7px 0 0;\n}\n.page-container .reports-timeline .job-wrapper .job-header .title[data-v-b59c8186] {\n  flex: 1;\n  font-size: 16px;\n  line-height: 20px;\n  font-weight: 600;\n  text-transform: uppercase;\n  color: var(--heading-gray);\n  padding: 0 15px;\n}\n.page-container .reports-timeline .job-wrapper .job-header .timestamp[data-v-b59c8186] {\n  line-height: 20px;\n  font-size: var(--text-size);\n  color: var(--text-gray);\n}\n.page-container .reports-timeline .job-wrapper .job-header .more-button[data-v-b59c8186] {\n  margin: 0 5px;\n}\n.page-container .reports-timeline .job-wrapper .job-pages[data-v-b59c8186] {\n  display: flex;\n  gap: 15px;\n  padding: 0 15px 15px;\n}\n.page-container .details[data-v-b59c8186] {\n  width: 100%;\n  display: flex;\n  flex-direction: column;\n  gap: 30px;\n}\n.page-container .details .nav-row[data-v-b59c8186] {\n  height: 40px;\n  margin-top: 30px;\n}\n.page-container .details .detail-row[data-v-b59c8186] {\n  display: grid;\n  grid-template-columns: repeat(12, 1fr);\n  grid-template-rows: 1fr;\n  gap: 30px;\n}\n.page-container .details .card[data-v-b59c8186] {\n  background: var(--bg);\n  border-radius: 5px;\n  font-size: var(--text-size);\n  overflow: hidden;\n}\n.page-container .details .card h1[data-v-b59c8186], .page-container .details .card h2[data-v-b59c8186], .page-container .details .card h3[data-v-b59c8186], .page-container .details .card h4[data-v-b59c8186], .page-container .details .card h5[data-v-b59c8186], .page-container .details .card h6[data-v-b59c8186] {\n  margin: 0;\n  color: var(--primary);\n  width: 100%;\n  padding: 7px 15px 0;\n}\n.page-container .details .card h4[data-v-b59c8186] {\n  color: var(--heading-gray);\n  font-size: var(--button-size);\n  letter-spacing: 1px;\n  text-transform: uppercase;\n  position: relative;\n  font-family: var(--text-font);\n  padding: 7px 15px 7px 10px;\n  border-bottom: 2px solid var(--border-color);\n}\n.page-container .details .card h4.error[data-v-b59c8186] {\n  color: var(--error);\n  border-color: var(--error);\n}\n.page-container .details .card h4.warning[data-v-b59c8186] {\n  color: var(--warning);\n  border-color: var(--warning);\n}\n.page-container .details .card h4.info[data-v-b59c8186] {\n  color: var(--primary);\n  border-color: var(--primary);\n}\n.page-container .details .card h4 .icon[data-v-b59c8186] {\n  font-size: 20px;\n  font-weight: 300;\n  margin-right: 10px;\n  color: inherit;\n  font-family: \"Material Icons\";\n  vertical-align: middle;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n}\n.page-container .details .card h4 .favicon[data-v-b59c8186] {\n  height: 20px;\n  width: 20px;\n  margin-right: 10px;\n  vertical-align: middle;\n}\n.page-container .details .card.center[data-v-b59c8186] {\n  display: grid;\n  place-content: center;\n}\n.page-container .details .card.primary[data-v-b59c8186] {\n  background: var(--primary);\n  color: #ffffffdd;\n}\n.page-container .details .card.primary h1[data-v-b59c8186], .page-container .details .card.primary h2[data-v-b59c8186], .page-container .details .card.primary h3[data-v-b59c8186], .page-container .details .card.primary h4[data-v-b59c8186], .page-container .details .card.primary h5[data-v-b59c8186], .page-container .details .card.primary h6[data-v-b59c8186] {\n  color: white;\n  border-bottom: var(--border);\n  border-color: #ffffff40;\n}\n.page-container .details .card.span-2[data-v-b59c8186] {\n  grid-column: span 2;\n}\n.page-container .details .card.span-3[data-v-b59c8186] {\n  grid-column: span 3;\n}\n.page-container .details .card.span-4[data-v-b59c8186] {\n  grid-column: span 4;\n}\n.page-container .details .card.span-5[data-v-b59c8186] {\n  grid-column: span 5;\n}\n.page-container .details .card.span-6[data-v-b59c8186] {\n  grid-column: span 6;\n}\n.page-container .details .card.span-7[data-v-b59c8186] {\n  grid-column: span 7;\n}\n.page-container .details .card.span-8[data-v-b59c8186] {\n  grid-column: span 8;\n}\n.page-container .details .card.span-9[data-v-b59c8186] {\n  grid-column: span 9;\n}\n.page-container .details .card.span-12[data-v-b59c8186] {\n  grid-column: span 12;\n}\n.page-container .details .card.page-info-card[data-v-b59c8186] {\n  overflow: hidden;\n}\n.page-container .details .card.page-info-card .preview[data-v-b59c8186] {\n  width: 100%;\n  height: 100%;\n  -o-object-fit: contain;\n     object-fit: contain;\n  filter: saturate(0%);\n  float: left;\n  border-radius: 5px;\n  width: 200px;\n}\n.page-container .details .card.page-info-card .content[data-v-b59c8186] {\n  font-size: var(--text-size);\n  color: var(--text-gray);\n}\n.page-container .details .card p[data-v-b59c8186] {\n  padding: 0 15px;\n}\n.page-container .details .card .metric-card-wrapper[data-v-b59c8186] {\n  width: 100%;\n  padding: 7.5px;\n}\n.page-container .details .card .metric-card[data-v-b59c8186] {\n  background: linear-gradient(90deg, var(--bg-dark) 0%, var(--bg) 70%);\n  border-radius: 5px;\n  display: inline-grid;\n  width: calc(100% - 15px);\n  margin: 7.5px;\n  padding: 5px 0;\n  grid-template: auto 1fr/50px 1fr auto;\n  grid-template-areas: \"icon label info\" \"icon value info\";\n}\n.page-container .details .card .metric-card.half[data-v-b59c8186] {\n  width: calc(50% - 15px);\n}\n.page-container .details .card .metric-card .icon[data-v-b59c8186] {\n  grid-area: icon;\n  font-size: 25px;\n  color: var(--primary);\n  font-family: \"Material Icons\";\n  align-self: center;\n  justify-self: center;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n}\n.page-container .details .card .metric-card .square[data-v-b59c8186] {\n  grid-area: icon;\n  height: 20px;\n  width: 20px;\n  border-radius: 3px;\n  border: var(--border);\n  background: var(--bg);\n  align-self: center;\n  justify-self: center;\n}\n.page-container .details .card .metric-card .label[data-v-b59c8186] {\n  grid-area: label;\n  font-size: var(--text-size);\n  color: var(--text-gray);\n  align-self: center;\n  height: 18px;\n  line-height: 18px;\n  margin-top: 3px;\n}\n.page-container .details .card .metric-card .value[data-v-b59c8186] {\n  grid-area: value;\n  font-size: var(--text-size);\n  color: var(--heading-gray);\n  line-height: 130%;\n  align-self: center;\n  font-weight: 600;\n}\n.page-container .details .card .metric-card .value.no-overflow[data-v-b59c8186] {\n  width: 100%;\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n}\n.page-container .details .card .metric-card .info[data-v-b59c8186] {\n  grid-area: info;\n  align-self: center;\n  justify-self: center;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n}\n.page-container .details .card .checklist-wrapper[data-v-b59c8186] {\n  width: 100%;\n  padding: 10px 0;\n}\n.page-container .details .card .checklist-item[data-v-b59c8186] {\n  width: 100%;\n  display: flex;\n  height: 36px;\n  padding: 0 15px;\n  gap: 15px;\n  align-items: center;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n}\n.page-container .details .card .checklist-item .icon[data-v-b59c8186] {\n  font-size: 20px;\n  color: var(--text-gray);\n  font-family: \"Material Icons\";\n  text-align: center;\n}\n.page-container .details .card .checklist-item .text[data-v-b59c8186] {\n  font-size: var(--button-size);\n  font-weight: 600;\n  color: var(--heading-gray);\n  flex: 1;\n  text-transform: uppercase;\n  letter-spacing: 1px;\n}\n.page-container .details .card .twitter-summary-card[data-v-b59c8186] {\n  display: grid;\n  margin: 15px;\n  border-radius: 12px;\n  grid-template: 125px/125px auto;\n  grid-template-areas: \"image content\";\n  align-items: center;\n  border: var(--border);\n  overflow: hidden;\n}\n.page-container .details .card .twitter-summary-card .image[data-v-b59c8186] {\n  grid-area: image;\n  width: 100%;\n  height: 100%;\n  -o-object-fit: cover;\n     object-fit: cover;\n  border-right: var(--border);\n}\n.page-container .details .card .twitter-summary-card .content[data-v-b59c8186] {\n  grid-area: content;\n  padding: 8px 10px;\n  display: block;\n}\n.page-container .details .card .twitter-summary-card .content .title[data-v-b59c8186] {\n  display: block;\n  font-size: var(--text-size);\n  color: var(--heading-gray);\n  margin-bottom: 3px;\n}\n.page-container .details .card .twitter-summary-card .content .description[data-v-b59c8186] {\n  display: block;\n  font-size: var(--text-size);\n  color: var(--text-gray);\n  line-height: 130%;\n  margin-bottom: 3px;\n}\n.page-container .details .card .twitter-summary-card .content .url[data-v-b59c8186] {\n  display: flex;\n  align-items: center;\n}\n.page-container .details .card .twitter-summary-card .content .url .icon[data-v-b59c8186] {\n  font-size: 16px;\n  width: 22px;\n  color: var(--text-gray);\n  font-family: \"Material Icons\";\n  text-align: left;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n}\n.page-container .details .card .twitter-summary-card .content .url .text[data-v-b59c8186] {\n  font-size: var(--text-size);\n  color: var(--text-gray);\n}\n.page-container .details .card .open-graph-article-card[data-v-b59c8186] {\n  display: grid;\n  margin: 15px;\n  border-radius: 7px;\n  grid-template: auto 1fr/1fr;\n  grid-template-areas: \"image\" \"content\";\n  align-items: center;\n  border: var(--border);\n  overflow: hidden;\n}\n.page-container .details .card .open-graph-article-card .image[data-v-b59c8186] {\n  grid-area: image;\n  width: 100%;\n  height: 100%;\n  -o-object-fit: cover;\n     object-fit: cover;\n  border-bottom: var(--border);\n}\n.page-container .details .card .open-graph-article-card .content[data-v-b59c8186] {\n  grid-area: content;\n  padding: 8px 10px;\n  display: block;\n}\n.page-container .details .card .open-graph-article-card .content .url[data-v-b59c8186] {\n  display: block;\n  align-items: center;\n  font-size: var(--text-size);\n  color: var(--text-gray);\n  text-transform: uppercase;\n  margin-bottom: 3px;\n}\n.page-container .details .card .open-graph-article-card .content .title[data-v-b59c8186] {\n  display: block;\n  font-size: var(--text-size);\n  color: var(--heading-gray);\n  margin-bottom: 3px;\n}\n.page-container .details .card .open-graph-article-card .content .description[data-v-b59c8186] {\n  display: block;\n  font-size: var(--text-size);\n  color: var(--text-gray);\n  line-height: 130%;\n}\n.page-container .details .card .image-card[data-v-b59c8186] {\n  display: grid;\n  margin: 15px;\n  border-radius: 5px;\n  grid-template: 125px/125px auto;\n  grid-template-areas: \"image content\";\n  align-items: center;\n  border: var(--border);\n  overflow: hidden;\n}\n.page-container .details .card .image-card .image[data-v-b59c8186] {\n  grid-area: image;\n  width: 100%;\n  height: 100%;\n  -o-object-fit: contain;\n     object-fit: contain;\n  border-right: var(--border);\n  background: var(--bg-dark);\n  padding: 5px;\n}\n.page-container .details .card .image-card .content[data-v-b59c8186] {\n  grid-area: content;\n  padding: 8px 10px;\n  display: block;\n  max-width: 100%;\n  overflow: hidden;\n}\n.page-container .details .card .image-card .content .title[data-v-b59c8186] {\n  display: block;\n  font-size: var(--text-size);\n  color: var(--heading-gray);\n  margin-bottom: 3px;\n}\n.page-container .details .card .image-card .content .description[data-v-b59c8186] {\n  display: block;\n  font-size: var(--text-size);\n  color: var(--text-gray);\n  line-height: 130%;\n  margin-bottom: 3px;\n  max-width: 100%;\n  overflow: hidden;\n}\n.page-container .details .card .image-card .content .description .no-text-overflow[data-v-b59c8186] {\n  width: 100%;\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, ".page-container[data-v-b59c8186] {\n  width: 100%;\n}\n.page-container .filter-bar[data-v-b59c8186] {\n  display: flex;\n  padding: 15px;\n  background: var(--bg);\n  border-radius: 0 0 15px 15px;\n  filter: var(--elevation-2);\n  gap: 15px;\n  margin-bottom: 15px;\n  align-items: center;\n}\n.page-container .filter-bar .search-bar-wrapper[data-v-b59c8186] {\n  display: block;\n  position: relative;\n  flex: 1;\n}\n.page-container .filter-bar .search-bar-wrapper .input[data-v-b59c8186] {\n  padding-right: 50px;\n}\n.page-container .filter-bar .search-bar-wrapper .button[data-v-b59c8186] {\n  position: absolute;\n  top: 5px;\n  right: 5px;\n  z-index: 1;\n  transition: all 100ms;\n}\n.page-container .filter-bar .search-bar-wrapper .button.scale-enter[data-v-b59c8186], .page-container .filter-bar .search-bar-wrapper .button.scale-leave-to[data-v-b59c8186] {\n  transform: scale(0);\n}\n.page-container .filter-bar .submit-button[data-v-b59c8186] {\n  white-space: nowrap;\n}\n.page-container .fab[data-v-b59c8186] {\n  height: 56px;\n  width: 56px;\n  font-family: \"Material Icons\";\n  color: white;\n  background: var(--primary);\n  display: grid;\n  place-content: center;\n  font-size: 24px;\n  position: fixed;\n  bottom: 30px;\n  right: 30px;\n  border-radius: 100%;\n  border: none;\n  filter: var(--elevation-2);\n  cursor: pointer;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n  transition: all 200ms;\n  z-index: 100;\n}\n.page-container .fab[data-v-b59c8186]:hover {\n  filter: var(--elevation-4);\n}\n.page-container .reports-timeline[data-v-b59c8186] {\n  display: block;\n}\n.page-container .reports-timeline .job-wrapper[data-v-b59c8186] {\n  width: 100%;\n  display: inline-flex;\n  flex-direction: column;\n  background: white;\n  border-radius: 7px;\n  filter: var(--elevation-2);\n  margin: 15px 0;\n}\n.page-container .reports-timeline .job-wrapper .job-header[data-v-b59c8186] {\n  display: flex;\n  align-items: center;\n  padding: 5px 0;\n  border-radius: 7px 7px 0 0;\n}\n.page-container .reports-timeline .job-wrapper .job-header .title[data-v-b59c8186] {\n  flex: 1;\n  font-size: 16px;\n  line-height: 20px;\n  font-weight: 600;\n  text-transform: uppercase;\n  color: var(--heading-gray);\n  padding: 0 15px;\n}\n.page-container .reports-timeline .job-wrapper .job-header .timestamp[data-v-b59c8186] {\n  line-height: 20px;\n  font-size: var(--text-size);\n  color: var(--text-gray);\n}\n.page-container .reports-timeline .job-wrapper .job-header .more-button[data-v-b59c8186] {\n  margin: 0 5px;\n}\n.page-container .reports-timeline .job-wrapper .job-pages[data-v-b59c8186] {\n  display: flex;\n  flex-direction: column;\n  gap: 15px;\n  padding: 0 15px 15px;\n}\n.page-container .details[data-v-b59c8186] {\n  width: 100%;\n  display: flex;\n  flex-direction: column;\n  gap: 30px;\n}\n.page-container .details .nav-row[data-v-b59c8186] {\n  height: 40px;\n  margin-top: 30px;\n}\n.page-container .details .detail-row[data-v-b59c8186] {\n  display: grid;\n  grid-template-columns: repeat(12, 1fr);\n  grid-template-rows: 1fr;\n  gap: 30px;\n}\n.page-container .details .card[data-v-b59c8186] {\n  background: var(--bg);\n  border-radius: 5px;\n  font-size: var(--text-size);\n  overflow: hidden;\n}\n.page-container .details .card h1[data-v-b59c8186], .page-container .details .card h2[data-v-b59c8186], .page-container .details .card h3[data-v-b59c8186], .page-container .details .card h4[data-v-b59c8186], .page-container .details .card h5[data-v-b59c8186], .page-container .details .card h6[data-v-b59c8186] {\n  margin: 0;\n  color: var(--primary);\n  width: 100%;\n  padding: 7px 15px 0;\n}\n.page-container .details .card h4[data-v-b59c8186] {\n  color: var(--heading-gray);\n  font-size: var(--button-size);\n  letter-spacing: 1px;\n  text-transform: uppercase;\n  position: relative;\n  font-family: var(--text-font);\n  padding: 7px 15px 7px 10px;\n  border-bottom: 2px solid var(--border-color);\n}\n.page-container .details .card h4.error[data-v-b59c8186] {\n  color: var(--error);\n  border-color: var(--error);\n}\n.page-container .details .card h4.warning[data-v-b59c8186] {\n  color: var(--warning);\n  border-color: var(--warning);\n}\n.page-container .details .card h4.info[data-v-b59c8186] {\n  color: var(--primary);\n  border-color: var(--primary);\n}\n.page-container .details .card h4 .icon[data-v-b59c8186] {\n  font-size: 20px;\n  font-weight: 300;\n  margin-right: 10px;\n  color: inherit;\n  font-family: \"Material Icons\";\n  vertical-align: middle;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n}\n.page-container .details .card h4 .favicon[data-v-b59c8186] {\n  height: 20px;\n  width: 20px;\n  margin-right: 10px;\n  vertical-align: middle;\n}\n.page-container .details .card.center[data-v-b59c8186] {\n  display: grid;\n  place-content: center;\n}\n.page-container .details .card.primary[data-v-b59c8186] {\n  background: var(--primary);\n  color: #ffffffdd;\n}\n.page-container .details .card.primary h1[data-v-b59c8186], .page-container .details .card.primary h2[data-v-b59c8186], .page-container .details .card.primary h3[data-v-b59c8186], .page-container .details .card.primary h4[data-v-b59c8186], .page-container .details .card.primary h5[data-v-b59c8186], .page-container .details .card.primary h6[data-v-b59c8186] {\n  color: white;\n  border-bottom: var(--border);\n  border-color: #ffffff40;\n}\n.page-container .details .card.span-2[data-v-b59c8186] {\n  grid-column: span 2;\n}\n.page-container .details .card.span-3[data-v-b59c8186] {\n  grid-column: span 3;\n}\n.page-container .details .card.span-4[data-v-b59c8186] {\n  grid-column: span 4;\n}\n.page-container .details .card.span-5[data-v-b59c8186] {\n  grid-column: span 5;\n}\n.page-container .details .card.span-6[data-v-b59c8186] {\n  grid-column: span 6;\n}\n.page-container .details .card.span-7[data-v-b59c8186] {\n  grid-column: span 7;\n}\n.page-container .details .card.span-8[data-v-b59c8186] {\n  grid-column: span 8;\n}\n.page-container .details .card.span-9[data-v-b59c8186] {\n  grid-column: span 9;\n}\n.page-container .details .card.span-12[data-v-b59c8186] {\n  grid-column: span 12;\n}\n.page-container .details .card.page-info-card[data-v-b59c8186] {\n  overflow: hidden;\n}\n.page-container .details .card.page-info-card .preview[data-v-b59c8186] {\n  width: 100%;\n  height: 100%;\n  -o-object-fit: contain;\n     object-fit: contain;\n  filter: saturate(0%);\n  float: left;\n  border-radius: 5px;\n  width: 200px;\n}\n.page-container .details .card.page-info-card .content[data-v-b59c8186] {\n  font-size: var(--text-size);\n  color: var(--text-gray);\n}\n.page-container .details .card p[data-v-b59c8186] {\n  padding: 0 15px;\n}\n.page-container .details .card .metric-card-wrapper[data-v-b59c8186] {\n  width: 100%;\n  padding: 7.5px;\n}\n.page-container .details .card .metric-card[data-v-b59c8186] {\n  background: linear-gradient(90deg, var(--bg-dark) 0%, var(--bg) 70%);\n  border-radius: 5px;\n  display: inline-grid;\n  width: calc(100% - 15px);\n  margin: 7.5px;\n  padding: 5px 0;\n  grid-template: auto 1fr/50px 1fr auto;\n  grid-template-areas: \"icon label info\" \"icon value info\";\n}\n.page-container .details .card .metric-card.half[data-v-b59c8186] {\n  width: calc(50% - 15px);\n}\n.page-container .details .card .metric-card .icon[data-v-b59c8186] {\n  grid-area: icon;\n  font-size: 25px;\n  color: var(--primary);\n  font-family: \"Material Icons\";\n  align-self: center;\n  justify-self: center;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n}\n.page-container .details .card .metric-card .square[data-v-b59c8186] {\n  grid-area: icon;\n  height: 20px;\n  width: 20px;\n  border-radius: 3px;\n  border: var(--border);\n  background: var(--bg);\n  align-self: center;\n  justify-self: center;\n}\n.page-container .details .card .metric-card .label[data-v-b59c8186] {\n  grid-area: label;\n  font-size: var(--text-size);\n  color: var(--text-gray);\n  align-self: center;\n  height: 18px;\n  line-height: 18px;\n  margin-top: 3px;\n}\n.page-container .details .card .metric-card .value[data-v-b59c8186] {\n  grid-area: value;\n  font-size: var(--text-size);\n  color: var(--heading-gray);\n  line-height: 130%;\n  align-self: center;\n  font-weight: 600;\n}\n.page-container .details .card .metric-card .value.no-overflow[data-v-b59c8186] {\n  width: 100%;\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n}\n.page-container .details .card .metric-card .info[data-v-b59c8186] {\n  grid-area: info;\n  align-self: center;\n  justify-self: center;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n}\n.page-container .details .card .checklist-wrapper[data-v-b59c8186] {\n  width: 100%;\n  padding: 10px 0;\n}\n.page-container .details .card .checklist-item[data-v-b59c8186] {\n  width: 100%;\n  display: flex;\n  height: 36px;\n  padding: 0 15px;\n  gap: 15px;\n  align-items: center;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n}\n.page-container .details .card .checklist-item .icon[data-v-b59c8186] {\n  font-size: 20px;\n  color: var(--text-gray);\n  font-family: \"Material Icons\";\n  text-align: center;\n}\n.page-container .details .card .checklist-item .text[data-v-b59c8186] {\n  font-size: var(--button-size);\n  font-weight: 600;\n  color: var(--heading-gray);\n  flex: 1;\n  text-transform: uppercase;\n  letter-spacing: 1px;\n}\n.page-container .details .card .twitter-summary-card[data-v-b59c8186] {\n  display: grid;\n  margin: 15px;\n  border-radius: 12px;\n  grid-template: 125px/125px auto;\n  grid-template-areas: \"image content\";\n  align-items: center;\n  border: var(--border);\n  overflow: hidden;\n}\n.page-container .details .card .twitter-summary-card .image[data-v-b59c8186] {\n  grid-area: image;\n  width: 100%;\n  height: 100%;\n  -o-object-fit: cover;\n     object-fit: cover;\n  border-right: var(--border);\n}\n.page-container .details .card .twitter-summary-card .content[data-v-b59c8186] {\n  grid-area: content;\n  padding: 8px 10px;\n  display: block;\n}\n.page-container .details .card .twitter-summary-card .content .title[data-v-b59c8186] {\n  display: block;\n  font-size: var(--text-size);\n  color: var(--heading-gray);\n  margin-bottom: 3px;\n}\n.page-container .details .card .twitter-summary-card .content .description[data-v-b59c8186] {\n  display: block;\n  font-size: var(--text-size);\n  color: var(--text-gray);\n  line-height: 130%;\n  margin-bottom: 3px;\n}\n.page-container .details .card .twitter-summary-card .content .url[data-v-b59c8186] {\n  display: flex;\n  align-items: center;\n}\n.page-container .details .card .twitter-summary-card .content .url .icon[data-v-b59c8186] {\n  font-size: 16px;\n  width: 22px;\n  color: var(--text-gray);\n  font-family: \"Material Icons\";\n  text-align: left;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n}\n.page-container .details .card .twitter-summary-card .content .url .text[data-v-b59c8186] {\n  font-size: var(--text-size);\n  color: var(--text-gray);\n}\n.page-container .details .card .open-graph-article-card[data-v-b59c8186] {\n  display: grid;\n  margin: 15px;\n  border-radius: 7px;\n  grid-template: auto 1fr/1fr;\n  grid-template-areas: \"image\" \"content\";\n  align-items: center;\n  border: var(--border);\n  overflow: hidden;\n}\n.page-container .details .card .open-graph-article-card .image[data-v-b59c8186] {\n  grid-area: image;\n  width: 100%;\n  height: 100%;\n  -o-object-fit: cover;\n     object-fit: cover;\n  border-bottom: var(--border);\n}\n.page-container .details .card .open-graph-article-card .content[data-v-b59c8186] {\n  grid-area: content;\n  padding: 8px 10px;\n  display: block;\n}\n.page-container .details .card .open-graph-article-card .content .url[data-v-b59c8186] {\n  display: block;\n  align-items: center;\n  font-size: var(--text-size);\n  color: var(--text-gray);\n  text-transform: uppercase;\n  margin-bottom: 3px;\n}\n.page-container .details .card .open-graph-article-card .content .title[data-v-b59c8186] {\n  display: block;\n  font-size: var(--text-size);\n  color: var(--heading-gray);\n  margin-bottom: 3px;\n}\n.page-container .details .card .open-graph-article-card .content .description[data-v-b59c8186] {\n  display: block;\n  font-size: var(--text-size);\n  color: var(--text-gray);\n  line-height: 130%;\n}\n.page-container .details .card .image-card[data-v-b59c8186] {\n  display: grid;\n  margin: 15px;\n  border-radius: 5px;\n  grid-template: 125px/125px auto;\n  grid-template-areas: \"image content\";\n  align-items: center;\n  border: var(--border);\n  overflow: hidden;\n}\n.page-container .details .card .image-card .image[data-v-b59c8186] {\n  grid-area: image;\n  width: 100%;\n  height: 100%;\n  -o-object-fit: contain;\n     object-fit: contain;\n  border-right: var(--border);\n  background: var(--bg-dark);\n  padding: 5px;\n}\n.page-container .details .card .image-card .content[data-v-b59c8186] {\n  grid-area: content;\n  padding: 8px 10px;\n  display: block;\n  max-width: 100%;\n  overflow: hidden;\n}\n.page-container .details .card .image-card .content .title[data-v-b59c8186] {\n  display: block;\n  font-size: var(--text-size);\n  color: var(--heading-gray);\n  margin-bottom: 3px;\n}\n.page-container .details .card .image-card .content .description[data-v-b59c8186] {\n  display: block;\n  font-size: var(--text-size);\n  color: var(--text-gray);\n  line-height: 130%;\n  margin-bottom: 3px;\n  max-width: 100%;\n  overflow: hidden;\n}\n.page-container .details .card .image-card .content .description .no-text-overflow[data-v-b59c8186] {\n  width: 100%;\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -42446,127 +42485,121 @@ var render = function() {
         ? _c(
             "div",
             { staticClass: "reports-timeline" },
-            _vm._l(_vm.searchedReports, function(report) {
-              return _c("div", { key: report.id, staticClass: "job-wrapper" }, [
-                _c(
-                  "div",
-                  { staticClass: "job-header" },
-                  [
-                    _c("div", { staticClass: "title" }, [
-                      _vm._v(_vm._s(report.host))
-                    ]),
-                    _vm._v(" "),
-                    _c(
-                      "div",
-                      {
-                        directives: [
-                          {
-                            name: "tooltip",
-                            rawName: "v-tooltip",
-                            value: _vm.formateDate(report.created_at),
-                            expression: "formateDate(report.created_at)"
-                          }
-                        ],
-                        staticClass: "timestamp"
-                      },
-                      [
-                        _vm._v(
-                          _vm._s(_vm._f("diffForHumans")(report.created_at))
-                        )
-                      ]
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "ui-popover-menu",
-                      {
-                        scopedSlots: _vm._u(
-                          [
+            _vm._l(_vm.searchedGroupedReports, function(reportGroup) {
+              return _c(
+                "div",
+                {
+                  key: "report_group_" + reportGroup.id,
+                  staticClass: "job-wrapper"
+                },
+                [
+                  _c(
+                    "div",
+                    { staticClass: "job-header" },
+                    [
+                      _c("div", { staticClass: "title" }, [
+                        _vm._v(_vm._s(reportGroup.host))
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        {
+                          directives: [
                             {
-                              key: "trigger",
-                              fn: function() {
-                                return [
-                                  _c(
-                                    "ui-icon-button",
-                                    { staticClass: "more-button" },
-                                    [_vm._v("󰇙")]
-                                  )
-                                ]
-                              },
-                              proxy: true
+                              name: "tooltip",
+                              rawName: "v-tooltip",
+                              value: _vm.formateDate(reportGroup.created_at),
+                              expression: "formateDate(reportGroup.created_at)"
                             }
                           ],
-                          null,
-                          true
-                        )
-                      },
-                      [
-                        _vm._v(" "),
-                        _c(
-                          "ui-menu-item",
-                          {
-                            attrs: { icon: "&#983881;" },
-                            on: {
-                              click: function($event) {
-                                _vm.reportSearch.url = report.host
+                          staticClass: "timestamp"
+                        },
+                        [
+                          _vm._v(
+                            _vm._s(
+                              _vm._f("diffForHumans")(reportGroup.created_at)
+                            )
+                          )
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "ui-popover-menu",
+                        {
+                          scopedSlots: _vm._u(
+                            [
+                              {
+                                key: "trigger",
+                                fn: function() {
+                                  return [
+                                    _c(
+                                      "ui-icon-button",
+                                      { staticClass: "more-button" },
+                                      [_vm._v("󰇙")]
+                                    )
+                                  ]
+                                },
+                                proxy: true
                               }
-                            }
-                          },
-                          [_vm._v("Search for domain")]
-                        ),
-                        _vm._v(" "),
-                        _c("ui-menu-divider"),
-                        _vm._v(" "),
-                        _c(
-                          "ui-menu-item",
-                          {
-                            attrs: { icon: "&#984089;" },
-                            on: {
-                              click: function($event) {
-                                return _vm.$store.dispatch(
-                                  "createReport",
-                                  report.url
-                                )
+                            ],
+                            null,
+                            true
+                          )
+                        },
+                        [
+                          _vm._v(" "),
+                          _c(
+                            "ui-menu-item",
+                            {
+                              attrs: { icon: "&#983881;" },
+                              on: {
+                                click: function($event) {
+                                  _vm.reportSearch.url = reportGroup.host
+                                }
                               }
-                            }
-                          },
-                          [_vm._v("New report from URL")]
-                        ),
-                        _vm._v(" "),
-                        _c(
-                          "ui-menu-item",
-                          {
-                            attrs: { icon: "&#985721;" },
-                            on: {
-                              click: function($event) {
-                                return _vm.openReportDeleteDialog(report)
+                            },
+                            [_vm._v("Search for domain")]
+                          ),
+                          _vm._v(" "),
+                          _c("ui-menu-divider"),
+                          _vm._v(" "),
+                          _c(
+                            "ui-menu-item",
+                            {
+                              attrs: { icon: "&#985721;" },
+                              on: {
+                                click: function($event) {
+                                  return _vm.openReportDeleteDialog(reportGroup)
+                                }
                               }
-                            }
-                          },
-                          [_vm._v("Delete report")]
-                        )
-                      ],
-                      1
-                    )
-                  ],
-                  1
-                ),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  { staticClass: "job-pages" },
-                  [
-                    _c("page-row", {
-                      attrs: { report: report },
-                      on: {
-                        details: function($event) {
-                          return _vm.openDetails($event)
+                            },
+                            [_vm._v("Delete report")]
+                          )
+                        ],
+                        1
+                      )
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    { staticClass: "job-pages" },
+                    _vm._l(reportGroup.pages, function(report) {
+                      return _c("page-row", {
+                        key: "report_" + report.id,
+                        attrs: { report: report },
+                        on: {
+                          details: function($event) {
+                            return _vm.openDetails($event)
+                          }
                         }
-                      }
-                    })
-                  ],
-                  1
-                )
-              ])
+                      })
+                    }),
+                    1
+                  )
+                ]
+              )
             }),
             0
           )
@@ -43491,7 +43524,7 @@ var render = function() {
                             [_vm._v("󰌹")]
                           ),
                       _vm._v(" "),
-                      link.text.trim()
+                      link.text && link.text.trim()
                         ? _c("div", { staticClass: "label" }, [
                             _vm._v(_vm._s(link.text))
                           ])

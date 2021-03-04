@@ -108,7 +108,33 @@ module.exports = {
         fetchAllReports(store) {
             axios.post('/auth/reports/get-all-reports')
             .then(response => {
-                store.commit('reports', response.data)
+
+                // Table Of Contents
+                let toc = {}
+                let reports = []
+
+                // Groups reports by job_id: O(n)
+                for (const report of response.data)
+                {
+                    if (toc.hasOwnProperty(report.job_id))
+                    {
+                        reports[toc[report.job_id]].pages.push(report)
+                    }
+                    else
+                    {
+                        reports.push({
+                            host: report.host,
+                            url: report.url,
+                            created_at: report.created_at,
+                            updated_at: report.updated_at,
+                            id: report.job_id,
+                            pages: [report],
+                        })
+                        toc[report.job_id] = reports.length - 1
+                    }
+                }
+
+                store.commit('reports', reports)
             })
             .catch(error => {
                 console.log(error.response)

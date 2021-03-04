@@ -12,10 +12,10 @@
         <button class="fab" v-if="details === null" @click="openReportCreateDialog()">&#984085;</button>
 
         <div class="reports-timeline" v-if="details === null">
-            <div class="job-wrapper" v-for="report in searchedReports" :key="report.id">
+            <div class="job-wrapper" v-for="reportGroup in searchedGroupedReports" :key="'report_group_'+reportGroup.id">
                 <div class="job-header">
-                    <div class="title">{{report.host}}</div>
-                    <div class="timestamp" v-tooltip="formateDate(report.created_at)">{{report.created_at | diffForHumans}}</div>
+                    <div class="title">{{reportGroup.host}}</div>
+                    <div class="timestamp" v-tooltip="formateDate(reportGroup.created_at)">{{reportGroup.created_at | diffForHumans}}</div>
                     
                     <ui-popover-menu>
                         <template v-slot:trigger>
@@ -24,16 +24,15 @@
 
                         <!-- <ui-menu-item icon="&#984214;">Share report</ui-menu-item> -->
                         <!-- <ui-menu-item icon="&#983048;">Assign report</ui-menu-item> -->
-                        <ui-menu-item icon="&#983881;" @click="reportSearch.url = report.host">Search for domain</ui-menu-item>
+                        <ui-menu-item icon="&#983881;" @click="reportSearch.url = reportGroup.host">Search for domain</ui-menu-item>
                         <ui-menu-divider></ui-menu-divider>
-                        <ui-menu-item icon="&#984089;" @click="$store.dispatch('createReport', report.url)">New report from URL</ui-menu-item>
-                        <ui-menu-item icon="&#985721;" @click="openReportDeleteDialog(report)">Delete report</ui-menu-item>
+                        <!-- <ui-menu-item icon="&#984089;" @click="$store.dispatch('createReport', pages[0].url)">New report from URL</ui-menu-item> -->
+                        <ui-menu-item icon="&#985721;" @click="openReportDeleteDialog(reportGroup)">Delete report</ui-menu-item>
                     </ui-popover-menu>
                 </div>
 
                 <div class="job-pages">
-                    <!-- <page-card :report="report" @details="openDetails($event)"></page-card> -->
-                    <page-row :report="report" @details="openDetails($event)"></page-row>
+                    <page-row v-for="report in reportGroup.pages" :key="'report_'+report.id" :report="report" @details="openDetails($event)"></page-row>
                 </div>
             </div>
         </div>
@@ -320,7 +319,7 @@
                             <div class="icon" v-if="link.href && link.href.startsWith('mailto:')" style="color: var(--text-gray)">&#983536;</div>
                             <div class="icon" v-else-if="link.href && link.href.startsWith('tel:')" style="color: var(--text-gray)">&#984050;</div>
                             <div class="icon" v-else style="color: var(--text-gray)">&#983865;</div>
-                            <div class="label" v-if="link.text.trim()">{{link.text}}</div>
+                            <div class="label" v-if="link.text && link.text.trim()">{{link.text}}</div>
                             <div class="label" v-else><i>No link text</i></div>
                             <div class="value">{{link.href}}</div>
                         </div>
@@ -456,9 +455,12 @@
                 },
 
                 reportCreate: {
-                    url: '',
-                    mode: null,
-                    viewport: null,
+                    // url: '',
+                    url: 'https://freuwort.com',
+                    // mode: null,
+                    mode: 'full',
+                    // viewport: null,
+                    viewport: '1080p',
                     loading: false,
                 },
 
@@ -475,7 +477,7 @@
         },
 
         computed: {
-            reports() {
+            groupedReports() {
                 return this.$store.getters.reports
             },
 
@@ -483,8 +485,8 @@
                 return this.$store.getters.reportScanning
             },
 
-            searchedReports() {
-                return this.reports.filter(e => e.host.trim().toUpperCase().includes(this.reportSearch.url.trim().toUpperCase()))
+            searchedGroupedReports() {
+                return this.groupedReports.filter(e => e.host.trim().toUpperCase().includes(this.reportSearch.url.trim().toUpperCase()))
             }
         },
 
@@ -682,6 +684,7 @@
 
                 .job-pages
                     display: flex
+                    flex-direction: column
                     gap: 15px
                     padding: 0 15px 15px
 
