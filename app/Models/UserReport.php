@@ -13,8 +13,7 @@ class UserReport extends Model
     public $incrementing = false;
 
     protected $fillable = [
-        'job_id',
-        'user_id',
+        'report_group_id',
         'url',
         'host',
         'device',

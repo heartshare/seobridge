@@ -15,7 +15,7 @@ class CreateUserReportTasksTable extends Migration
     {
         Schema::create('user_report_tasks', function (Blueprint $table) {
             $table->string('id')->primary();
-            $table->string('user_id')->nullable();
+            $table->string('report_group_id')->nullable();
             $table->string('url')->nullable();
             $table->string('status')->nullable();
             $table->integer('progress')->nullable();
@@ -23,7 +23,7 @@ class CreateUserReportTasksTable extends Migration
             $table->text('metadata');
             $table->timestamps();
 
-            $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('report_group_id')->references('id')->on('user_report_groups')->onUpdate('cascade')->onDelete('cascade');
         });
     }
 

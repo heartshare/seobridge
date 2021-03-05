@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +14,8 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+Broadcast::routes();
 
 Route::get('/', function() {
     return view('static.index');
@@ -51,7 +54,7 @@ Route::get('/dashboard/{page}', [App\Http\Controllers\Dashboard\DashboardControl
 Route::middleware('auth')->prefix('auth')->group(function() {
 
     Route::prefix('reports')->group(function() {
-        Route::post('/get-all-reports', [App\Http\Controllers\Dashboard\ReportController::class, 'getAllReports']);
+        Route::post('/get-all-report-groups', [App\Http\Controllers\Dashboard\ReportController::class, 'getAllReportGroups']);
         Route::post('/request-site-analysis', [App\Http\Controllers\Dashboard\ReportController::class, 'requestSiteAnalysis']);
         Route::post('/delete-report', [App\Http\Controllers\Dashboard\ReportController::class, 'deleteReport']);
     });

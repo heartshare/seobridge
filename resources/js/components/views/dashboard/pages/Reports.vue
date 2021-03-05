@@ -1,8 +1,22 @@
 <template>
     <div class="page-container limiter">
         <div class="filter-bar" v-if="details === null">
+            <ui-select-input class="entity-input" v-model="reportSearch.pageCount" :options="[{'10':10}, {'20':20}, {'50':50}, {'100':100}]"></ui-select-input>
+
+            <div class="spacer"></div>
+
+            <ui-icon-button class="pagination-button" @click="previousPage()" :disabled="reportSearch.pageNumber <= 1">&#983361;</ui-icon-button>
+            <ui-number-input class="page-number-input" v-model="reportSearch.pageNumber"></ui-number-input>
+            <ui-icon-button class="pagination-button" @click="nextPage()" :disabled="reportSearch.pageNumber >= reportSearch.pageMax">&#983362;</ui-icon-button>
+
+            <div class="spacer"></div>
+
+            <ui-icon-button class="sort-button" @click="toggleSort()">
+                {{reportSearch.sort === 'ASC' ? '&#988488;' : '&#988487;'}}
+            </ui-icon-button>
+
             <div class="search-bar-wrapper">
-                <ui-text-input class="input" label="Search for URL" v-model="reportSearch.url"></ui-text-input>
+                <ui-text-input class="input" placeholder="Search" v-model="reportSearch.url"></ui-text-input>
                 <transition name="scale">
                     <ui-icon-button v-show="reportSearch.url.trim()" class="button" @click="reportSearch.url = ''">&#983382;</ui-icon-button>
                 </transition>
@@ -32,7 +46,10 @@
                 </div>
 
                 <div class="job-pages">
-                    <page-row v-for="report in reportGroup.pages" :key="'report_'+report.id" :report="report" @details="openDetails($event)"></page-row>
+                    <page-row v-for="report in reportGroup.reports.slice(0,5)" :key="'report_'+report.id" :report="report" @details="openDetails($event)"></page-row>
+                    <div class="blend" v-if="reportGroup.reports.length > 4">
+                        <ui-button text>Show more</ui-button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -452,6 +469,10 @@
 
                 reportSearch: {
                     url: '',
+                    pageNumber: 1,
+                    pageCount: '20',
+                    pageMax: 5,
+                    sort: 'DESC',
                 },
 
                 reportCreate: {
@@ -478,7 +499,7 @@
 
         computed: {
             groupedReports() {
-                return this.$store.getters.reports
+                return this.$store.getters.reportGroups
             },
 
             reportLoading() {
@@ -509,6 +530,28 @@
                 }
                 
                 return new Date(date).toLocaleString(undefined, {year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit'})
+            },
+
+
+
+            toggleSort() {
+                this.reportSearch.sort = (this.reportSearch.sort === 'ASC') ? 'DESC' : 'ASC'
+            },
+
+            previousPage() {
+                this.reportSearch.pageNumber --
+                this.limitPageNumber()
+            },
+
+            nextPage() {
+                this.reportSearch.pageNumber ++
+                this.limitPageNumber()
+            },
+
+            limitPageNumber()
+            {
+                if (this.reportSearch.pageNumber > this.reportSearch.pageMax) this.reportSearch.pageNumber = this.reportSearch.pageMax
+                else if (this.reportSearch.pageNumber < 1) this.reportSearch.pageNumber = 1
             },
 
 
@@ -570,7 +613,7 @@
                     id: this.reportDelete.id
                 })
                 .then(response => {
-                    this.$store.commit('deleteReport', response.data)
+                    this.$store.commit('deleteReportGroup', response.data)
                     this.reportDelete.loading = false
                     this.resetReportDelete()
                 })
@@ -598,22 +641,46 @@
             background: var(--bg)
             border-radius: 0 0 15px 15px
             filter: var(--elevation-2)
-            gap: 15px
             margin-bottom: 15px
             align-items: center
+            position: relative
+            z-index: 1
+
+            .entity-input
+                width: 80px
+                --height: 40px
+
+            .pagination-button
+                width: 40px
+
+            .page-number-input
+                width: 60px
+                text-align: center
+                margin: 0 10px
+                --height: 40px
+
+            .spacer
+                flex: 1
+                height: 40px
+
+            .sort-button
+                width: 40px
+                margin: 0 15px
 
             .search-bar-wrapper
                 display: block
                 position: relative
                 flex: 1
+                max-width: 300px
 
                 .input
-                    padding-right: 50px
+                    padding-right: 40px
+                    --height: 40px
 
                 .button
                     position: absolute
-                    top: 5px
-                    right: 5px
+                    top: 0
+                    right: 0
                     z-index: 1
                     transition: all 100ms
 
@@ -687,6 +754,19 @@
                     flex-direction: column
                     gap: 15px
                     padding: 0 15px 15px
+                    position: relative
+
+                    .blend
+                        width: 100%
+                        height: 100px
+                        padding-top: 40px
+                        display: grid
+                        place-content: center
+                        position: absolute
+                        bottom: 0
+                        left: 0
+                        background: linear-gradient(0deg, #ffffffff 25%, #ffffff00 100%)
+                        border-radius: 0 0 7px 7px
 
         .details
             width: 100%

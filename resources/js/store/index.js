@@ -14,7 +14,7 @@ module.exports = {
         user: {},
         teams: [],
         reports: [],
-        reportScanning: false,
+        reportGroups: [],
         notifications: [],
     },
 
@@ -43,8 +43,8 @@ module.exports = {
             return state.reports
         },
 
-        reportScanning(state) {
-            return state.reportScanning
+        reportGroups(state) {
+            return state.reportGroups
         },
 
         notifications(state) {
@@ -64,23 +64,6 @@ module.exports = {
 
         logout(store, callback) {
             axios.post('/logout').then(() => { callback() }).catch(error => {})
-        },
-
-
-
-        createReport(store, data) {
-            store.commit('reportScanning', true)
-
-            axios.post('/auth/reports/analyse-url', {url: data})
-            .then(response => {
-                // console.log(response.data)
-                store.commit('reportScanning', false)
-                store.commit('addReport', response.data)
-            })
-            .catch(error => {
-                console.log(error.response)
-                store.commit('reportScanning', false)
-            })
         },
 
 
@@ -105,36 +88,10 @@ module.exports = {
             })
         },
 
-        fetchAllReports(store) {
-            axios.post('/auth/reports/get-all-reports')
+        fetchAllReportGroups(store) {
+            axios.post('/auth/reports/get-all-report-groups')
             .then(response => {
-
-                // Table Of Contents
-                let toc = {}
-                let reports = []
-
-                // Groups reports by job_id: O(n)
-                for (const report of response.data)
-                {
-                    if (toc.hasOwnProperty(report.job_id))
-                    {
-                        reports[toc[report.job_id]].pages.push(report)
-                    }
-                    else
-                    {
-                        reports.push({
-                            host: report.host,
-                            url: report.url,
-                            created_at: report.created_at,
-                            updated_at: report.updated_at,
-                            id: report.job_id,
-                            pages: [report],
-                        })
-                        toc[report.job_id] = reports.length - 1
-                    }
-                }
-
-                store.commit('reports', reports)
+                store.commit('reportGroups', response.data)
             })
             .catch(error => {
                 console.log(error.response)
@@ -154,7 +111,7 @@ module.exports = {
         initialFetch(store) {
             store.dispatch('fetchUser')
             store.dispatch('fetchAllTeams')
-            store.dispatch('fetchAllReports')
+            store.dispatch('fetchAllReportGroups')
             store.dispatch('fetchAllNotifications')
         },
     },
@@ -222,20 +179,27 @@ module.exports = {
             state.reports = data
         },
 
-        addReport(state, data) {
-            state.reports.unshift(data)
-        },
-
-        reportScanning(state, data) {
-            state.reportScanning = data
-        },
-
         deleteReport(state, data) {
             let index = state.reports.findIndex(e => e.id === data)
 
             if (index >= 0)
             {
                 state.reports.splice(index, 1)
+            }
+        },
+
+
+
+        reportGroups(state, data) {
+            state.reportGroups = data
+        },
+
+        deleteReportGroup(state, data) {
+            let index = state.reportGroups.findIndex(e => e.id === data)
+
+            if (index >= 0)
+            {
+                state.reportGroups.splice(index, 1)
             }
         },
 

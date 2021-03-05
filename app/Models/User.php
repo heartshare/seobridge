@@ -65,13 +65,8 @@ class User extends Authenticatable
         return $this->hasOne(UserImage::class, 'user_id', 'id');
     }
 
-    public function reports()
+    public function report_groups()
     {
-        return $this->hasMany(UserReport::class, 'user_id', 'id');
-    }
-
-    public function report_tasks()
-    {
-        return $this->hasMany(UserReportTask::class, 'user_id', 'id');
+        return $this->hasMany(UserReportGroup::class, 'user_id', 'id');
     }
 }

@@ -6,29 +6,33 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
-class UserReportTask extends Model
+class UserReportGroup extends Model
 {
     use HasFactory;
 
     public $incrementing = false;
 
     protected $fillable = [
-        'report_group_id',
+        'user_id',
         'url',
-        'status',
-        'progress',
-        'progress_max',
+        'host',
+        'mode',
+        'device',
+        'score',
+        'data',
         'metadata',
     ];
 
     protected $casts = [
+        'device' => 'array',
+        'data' => 'array',
         'metadata' => 'array',
     ];
 
     protected $attributes = [
+        'device' => '{}',
+        'data' => '{}',
         'metadata' => '{}',
-        'progress' => 0,
-        'progress_max' => 0,
     ];
 
     public static function boot()
@@ -42,6 +46,18 @@ class UserReportTask extends Model
 
     public static function generateUuid()
     {
-        return 'report_task_'.Str::uuid();
+        return 'report_group_'.Str::uuid();
+    }
+
+
+
+    public function reports()
+    {
+        return $this->hasMany(UserReport::class, 'report_group_id', 'id');
+    }
+
+    public function task()
+    {
+        return $this->hasOne(UserReport::class, 'report_group_id', 'id');
     }
 }

@@ -1,3 +1,9 @@
+// Laravel Echo
+window.Echo = require('laravel-echo').default
+
+// Pusher
+window.Pusher = require('pusher-js')
+
 // Lodash
 window._ = require('lodash')
 
@@ -37,24 +43,35 @@ const app = new Vue({
         this.$store.dispatch('initialFetch')
         window.addEventListener('popstate', this.userNavigate)
     },
+    computed: {
+        user() {
+            return this.$store.getters.user
+        },
+    },
+    watch: {
+        user() {
+            if (this.user && this.user.id)
+            {
+                this.subscribeToUserReportTask(this.user.id)
+            }
+        },
+    },
     methods: {
         userNavigate() {
             if (history.state) this.$store.commit('page', history.state)
+        },
+        subscribeToUserReportTask(userId) {
+            Echo.private(`App.Model.UserReportTask.${userId}`).listen('status.update', (e) => {
+                console.log(e)
+            })
         },
     },
     store,
 })
 
-
-
-
-// import Echo from 'laravel-echo';
-
-// window.Pusher = require('pusher-js');
-
-// window.Echo = new Echo({
-//     broadcaster: 'pusher',
-//     key: process.env.MIX_PUSHER_APP_KEY,
-//     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
-//     forceTLS: true
-// });
+window.Echo = new Echo({
+    broadcaster: 'pusher',
+    key: process.env.MIX_PUSHER_APP_KEY,
+    cluster: process.env.MIX_PUSHER_APP_CLUSTER,
+    forceTLS: true
+})

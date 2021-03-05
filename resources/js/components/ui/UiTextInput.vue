@@ -1,6 +1,6 @@
 <template>
     <div class="ccc-ui-container" :class="[{'focused': isFocused}, {'focused-or-filled': isFocusedOrFilled}, {'invalid': isInvalid}, {'has-label': label}, {'spacer': displayMax}]">
-        <input class="input" :autocomplete="ac" :name="name" v-model="value_" type="text" @input="emit()" @focus="isFocused = true; $emit('focus')" @blur="isFocused = false; $emit('blur')" spellcheck="false">
+        <input class="input" :placeholder="placeholder" :autocomplete="ac" :name="name" v-model="value_" type="text" @input="emit()" @focus="isFocused = true; $emit('focus')" @blur="isFocused = false; $emit('blur')" spellcheck="false">
         
         <div class="border" v-if="hasBorder"></div>
 
@@ -20,6 +20,7 @@
             noBorder: {},
             name: String,
             ac: String,
+            placeholder: String,
         },
 
         data() {
@@ -163,4 +164,9 @@
             font-family: var(--text-font)
             font-size: 16px
             color: var(--heading-gray)
+
+            &::placeholder
+                color: var(--text-gray)
+                font-size: 16px
+                font-family: var(--text-font)
 </style>

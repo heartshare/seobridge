@@ -119,9 +119,10 @@
 
         height: var(--height)
         width: 100%
-        background: white
+        background: var(--bg)
         border-radius: 5px
         position: relative
+        text-align: left
 
         &.focused
             .border
@@ -176,7 +177,7 @@
             text-align: left
             pointer-events: none
             transition: all 200ms
-            color: #00000099
+            color: var(--text-gray)
             transform-origin: top left
 
         .step
@@ -208,8 +209,10 @@
             border: none
             background: none
             border-radius: 3px
-            font-family: rubik
+            font-family: var(--text-font)
             font-size: 16px
+            text-align: inherit
+            color: var(--heading-gray)
             -moz-appearance: textfield
 
             &::-webkit-outer-spin-button,

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Dashboard;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\UserReport;
+use App\Models\UserReportGroup;
 use App\Models\UserReportTask;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
@@ -12,9 +13,9 @@ use Illuminate\Support\Str;
 
 class ReportController extends Controller
 {
-    public function getAllReports(Request $request)
+    public function getAllReportGroups(Request $request)
     {
-        return UserReport::where('user_id', Auth::id())->orderBy('created_at', 'DESC')->get();
+        return UserReportGroup::where('user_id', Auth::id())->with('task', 'reports')->orderBy('created_at', 'DESC')->get();
     }
 
 
@@ -27,23 +28,32 @@ class ReportController extends Controller
             'device' => ['required', 'array'],
         ]);
 
-        $task = UserReportTask::create([
+        $reportGroup = UserReportGroup::create([
             'user_id' => Auth::id(),
             'url' => $request->url,
+            'host' => parse_url($request->url, PHP_URL_HOST),
+            'mode' => $request->mode,
+            'device' => $request->device,
+        ]);
+
+        $task = UserReportTask::create([
+            'report_group_id' => $reportGroup->id,
+            'url' => $reportGroup->url,
             'status' => 'request_pending',
         ]);
 
         $response = Http::post('http://localhost:999/request-site-analysis', [
-            'url' => $task->url,
-            'mode' => $request->mode,
-            'device' => $request->device,
-            'job_id' => $task->id,
+            'url' => $reportGroup->url,
+            'mode' => $reportGroup->mode,
+            'device' => $reportGroup->device,
+            'job_id' => $reportGroup->id,
         ]);
 
         $task->status = ($response->status() > 199 && $response->status() < 300) ? 'request_successful' : 'request_denied';
         $task->save();
 
-        return $task;
+        // TODO: send back report group with reports and task
+        return 'OK';
     }
 
     public function statusUpdate(Request $request)
@@ -53,7 +63,7 @@ class ReportController extends Controller
             'jobId' => ['required', 'exists:user_report_tasks,id'],
         ]);
 
-        $task = UserReportTask::find($request->jobId);
+        $task = UserReportGroup::find($request->jobId)->task();
 
         if (isset($request->progress) && is_int($request->progress))
         {
@@ -75,11 +85,10 @@ class ReportController extends Controller
     {
         $reportJson = $request->data;
 
-        $task = UserReportTask::find($request->id);
+        $reportGroup = UserReportGroup::find($request->id);
 
-        $report = UserReport::create([
-            'job_id' => $task->id,
-            'user_id' => $task->user_id,
+        UserReport::create([
+            'report_group_id' => $reportGroup->id,
             'url' => $reportJson['url']['href'],
             'host' => $reportJson['url']['host'],
             'device' => ['viewport' => [1920, 1080]],
@@ -93,19 +102,19 @@ class ReportController extends Controller
     public function deleteReport(Request $request)
     {
         $request->validate([
-            'id' => ['required', 'exists:user_reports,id'],
+            'id' => ['required', 'exists:user_report_groups,id'],
         ]);
 
-        $report = UserReport::find($request->id);
+        $reportGroup = UserReportGroup::find($request->id);
         
-        if ($report->user_id !== Auth::id())
+        if ($reportGroup->user_id !== Auth::id())
         {
             return response('UNAUTHORIZED', 403);
         }
 
-        $id = $report->id;
+        $id = $reportGroup->id;
 
-        $report->delete();
+        $reportGroup->delete();
 
         return $id;
     }

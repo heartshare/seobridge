@@ -1,5 +1,6 @@
 const puppeteer = require('puppeteer')
 const EventEmitter = require('events')
+const fetch = require('node-fetch')
 const {v4: uuid} = require('uuid')
 
 module.exports = class FetchWorker extends EventEmitter
@@ -46,7 +47,7 @@ module.exports = class FetchWorker extends EventEmitter
         const url = new URL(url_)
 
         const page = await this.browser.newPage()
-        await page.setDefaultNavigationTimeout(0)
+        await page.setDefaultNavigationTimeout(90000)
 
         await page.setViewport({
             width: 1920,

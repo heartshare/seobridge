@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateUserReportsTable extends Migration
+class CreateUserReportGroupsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,11 @@ class CreateUserReportsTable extends Migration
      */
     public function up()
     {
-        Schema::create('user_reports', function (Blueprint $table) {
+        Schema::create('user_report_groups', function (Blueprint $table) {
             $table->string('id')->primary();
-            $table->string('report_group_id')->nullable();
+            $table->string('user_id')->nullable();
             $table->string('url')->nullable();
+            $table->string('mode')->nullable();
             $table->string('host')->nullable();
             $table->string('device');
             $table->integer('score')->nullable();
@@ -24,7 +25,7 @@ class CreateUserReportsTable extends Migration
             $table->text('metadata');
             $table->timestamps();
 
-            $table->foreign('report_group_id')->references('id')->on('user_report_groups')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('set null');
         });
     }
 
@@ -35,6 +36,6 @@ class CreateUserReportsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('user_reports');
+        Schema::dropIfExists('user_report_groups');
     }
 }

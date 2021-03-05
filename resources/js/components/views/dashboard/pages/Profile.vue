@@ -1,14 +1,18 @@
 <template>
     <div class="page-container limiter">
-        <h1>My Profile</h1>
 
-        <form @submit.stop.prevent>
-            <p>
-                <ui-text-input label="Firstname" ac="firstname" v-model="nameChange.firstname"></ui-text-input>
-                <ui-text-input label="Lastname" ac="lastname" v-model="nameChange.lastname"></ui-text-input>
-                <ui-button @click="changeName()" :loading="nameChange.loading">Change Name</ui-button>
-            </p>
-        </form>
+        <div class="header">
+            <div class="background-image"></div>
+            <img src="/images/defaults/default_profile_image.svg" class="profile-image">
+        
+            <form @submit.stop.prevent>
+                <p>
+                    <ui-text-input label="Firstname" ac="firstname" v-model="nameChange.firstname"></ui-text-input>
+                    <ui-text-input label="Lastname" ac="lastname" v-model="nameChange.lastname"></ui-text-input>
+                    <ui-button @click="changeName()" :loading="nameChange.loading">Change Name</ui-button>
+                </p>
+            </form>
+        </div>
     </div>
 </template>
 
@@ -66,4 +70,32 @@
 <style lang="sass" scoped>
     .page-container
         width: 100%
+
+        .header
+            width: 100%
+            background: var(--bg)
+            filter: var(--elevation-2)
+            border-radius: 7px
+            margin-top: 15px
+
+            .background-image
+                height: 250px
+                width: 100%
+                background: var(--bg-dark)
+                background-image: url('/images/app/dashboard/pattern.svg')
+                background-size: cover
+                background-position: center
+                background-repeat: no-repeat
+                border-radius: 7px 7px 0 0
+                display: block
+
+            .profile-image
+                height: 140px
+                width: 140px
+                object-fit: cover
+                border-radius: 100%
+                margin: -70px auto 15px
+                display: block
+                padding: 5px
+                background: var(--bg)
 </style>
