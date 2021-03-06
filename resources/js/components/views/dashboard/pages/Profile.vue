@@ -6,11 +6,11 @@
             <img src="/images/defaults/default_profile_image.svg" class="profile-image">
         
             <form @submit.stop.prevent>
-                <p>
-                    <ui-text-input label="Firstname" ac="firstname" v-model="nameChange.firstname"></ui-text-input>
-                    <ui-text-input label="Lastname" ac="lastname" v-model="nameChange.lastname"></ui-text-input>
-                    <ui-button @click="changeName()" :loading="nameChange.loading">Change Name</ui-button>
-                </p>
+                <div class="name-wrapper">
+                    <ui-text-input label="Firstname" ac="firstname" no-border v-model="nameChange.firstname"></ui-text-input>
+                    <ui-text-input label="Lastname" ac="lastname" no-border v-model="nameChange.lastname"></ui-text-input>
+                    <ui-button class="submit-button" @click="changeName()" :disabled="(nameChange.firstname || '') + (nameChange.lastname || '') === nameChange.legacy" :loading="nameChange.loading">Save</ui-button>
+                </div>
             </form>
         </div>
     </div>
@@ -23,6 +23,7 @@
                 nameChange: {
                     firstname: '',
                     lastname: '',
+                    legacy: null,
                     loading: false,
                 },
             }
@@ -37,8 +38,9 @@
         watch: {
             user: {
                 handler() {
-                    this.nameChange.firstname = this.user.firstname
-                    this.nameChange.lastname = this.user.lastname
+                    this.nameChange.firstname = this.user.firstname || ''
+                    this.nameChange.lastname = this.user.lastname || ''
+                    this.nameChange.legacy = this.nameChange.firstname + this.nameChange.lastname
                 },
                 immediate: true,
             }
@@ -55,6 +57,8 @@
                 .then(response => {
                     this.$store.commit('userFirstname', response.data.firstname)
                     this.$store.commit('userLastname', response.data.lastname)
+
+                    this.nameChange.legacy = (response.data.firstname || '') + (response.data.lastname || '')
 
                     setTimeout(() => { this.nameChange.loading = false }, 500)
                 })
@@ -98,4 +102,28 @@
                 display: block
                 padding: 5px
                 background: var(--bg)
+
+            .name-wrapper
+                background: var(--bg)
+                border-radius: 5px
+                position: relative
+                display: flex
+                width: 100%
+                max-width: 500px
+                margin: 0 auto 15px
+                
+                .submit-button
+                    margin: 5px
+
+                &::after
+                    content: ''
+                    height: 100%
+                    width: 100%
+                    position: absolute
+                    top: 0
+                    left: 0
+                    border-radius: 5px
+                    border: var(--input-border)
+                    pointer-events: none
+                    box-sizing: border-box
 </style>

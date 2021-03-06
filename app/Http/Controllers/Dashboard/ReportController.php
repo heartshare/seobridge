@@ -13,9 +13,28 @@ use Illuminate\Support\Str;
 
 class ReportController extends Controller
 {
-    public function getAllReportGroups(Request $request)
+    public function getPaginatedReportGroups(Request $request)
     {
-        return UserReportGroup::where('user_id', Auth::id())->with('task', 'reports')->orderBy('created_at', 'DESC')->get();
+        $request->validate([
+            'page' => ['integer'],
+            'size' => ['integer'],
+            'searchKey' => ['string','nullable'],
+            'order' => ['in:ASC,DESC'],
+        ]);
+
+        $reports = UserReportGroup::where('user_id', Auth::id())
+        ->where('host', 'LIKE', "%{$request->searchKey}%")
+        ->with('task')
+        ->orderBy('created_at', $request->order)
+        ->simplePaginate($request->size);
+
+        // I don't know how performant this is but I can imagine not very much
+        // TODO: find a better way to do this
+        $reports->each(function($report) {
+            $report->reports = UserReport::where('report_group_id', $report->id)->limit(5)->get();
+        });
+
+        return $reports;
     }
 
 

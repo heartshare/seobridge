@@ -31,11 +31,11 @@
                 <div class="text">My Team</div>
             </a>
 
-            <a href="/dashboard/notifications" class="button" :class="{'active': $store.getters.page === 'notifications'}" @click.prevent="$store.dispatch('setPage', 'notifications')">
+            <!-- <a href="/dashboard/notifications" class="button" :class="{'active': $store.getters.page === 'notifications'}" @click.prevent="$store.dispatch('setPage', 'notifications')">
                 <div class="icon">&#986458;</div>
                 <div class="text">Notifications</div>
-                <!-- <div class="notifications">200</div> -->
-            </a>
+                <div class="notifications">200</div>
+            </a> -->
 
             <div class="bottom">
                 <a href="/dashboard/settings" class="button" :class="{'active': $store.getters.page === 'settings'}" @click.prevent="$store.dispatch('setPage', 'settings')">
@@ -55,7 +55,7 @@
                 <overview-page class="page" key="overview-page" v-if="$store.getters.page === 'overview'"></overview-page>
                 <reports-page class="page" key="reports-page" v-if="$store.getters.page === 'reports'"></reports-page>
                 <teams-page class="page" key="teams-page" v-if="$store.getters.page === 'teams'"></teams-page>
-                <notifications-page class="page" key="notifications-page" v-if="$store.getters.page === 'notifications'"></notifications-page>
+                <!-- <notifications-page class="page" key="notifications-page" v-if="$store.getters.page === 'notifications'"></notifications-page> -->
                 <settings-page class="page" key="settings-page" v-if="$store.getters.page === 'settings'"></settings-page>
                 <profile-page class="page" key="profile-page" v-if="$store.getters.page === 'profile'"></profile-page>
             </transition>
@@ -76,10 +76,16 @@
     }
 </script>
 
+<style lang="sass">
+    #wrapper
+        --menu-width: 280px
+</style>
+
 <style lang="sass" scoped>
     #wrapper
         height: 100%
         width: 100%
+        --menu-width: 280px
 
         header
             display: none
@@ -91,7 +97,7 @@
             position: fixed
             left: 0
             top: 0
-            width: 280px
+            width: var(--menu-width)
             height: 100%
             z-index: 100
             color: var(--text-gray)
@@ -226,7 +232,7 @@
 
         main
             display: block
-            margin-left: 280px
+            margin-left: var(--menu-width)
 
             .limiter
                 max-width: 1240px !important

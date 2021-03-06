@@ -169,4 +169,5 @@
                 color: var(--text-gray)
                 font-size: 16px
                 font-family: var(--text-font)
+                user-select: none
 </style>

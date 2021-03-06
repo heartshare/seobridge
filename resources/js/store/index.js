@@ -14,7 +14,7 @@ module.exports = {
         user: {},
         teams: [],
         reports: [],
-        reportGroups: [],
+        paginatedReportGroups: {},
         notifications: [],
     },
 
@@ -43,8 +43,8 @@ module.exports = {
             return state.reports
         },
 
-        reportGroups(state) {
-            return state.reportGroups
+        paginatedReportGroups(state) {
+            return state.paginatedReportGroups
         },
 
         notifications(state) {
@@ -88,10 +88,15 @@ module.exports = {
             })
         },
 
-        fetchAllReportGroups(store) {
-            axios.post('/auth/reports/get-all-report-groups')
+        fetchPaginatedReportGroups(store, data = {}) {
+            axios.post(`/auth/reports/get-paginated-report-groups`, {
+                order: data.order || 'DESC',
+                page: data.page || 1,
+                size: data.size || 20,
+                searchKey: data.searchKey || '',
+            })
             .then(response => {
-                store.commit('reportGroups', response.data)
+                store.commit('paginatedReportGroups', {...response.data, loading: false})
             })
             .catch(error => {
                 console.log(error.response)
@@ -111,7 +116,7 @@ module.exports = {
         initialFetch(store) {
             store.dispatch('fetchUser')
             store.dispatch('fetchAllTeams')
-            store.dispatch('fetchAllReportGroups')
+            store.dispatch('fetchPaginatedReportGroups')
             store.dispatch('fetchAllNotifications')
         },
     },
@@ -190,16 +195,16 @@ module.exports = {
 
 
 
-        reportGroups(state, data) {
-            state.reportGroups = data
+        paginatedReportGroups(state, data) {
+            state.paginatedReportGroups = data
         },
 
         deleteReportGroup(state, data) {
-            let index = state.reportGroups.findIndex(e => e.id === data)
+            let index = state.paginatedReportGroups.data.findIndex(e => e.id === data)
 
             if (index >= 0)
             {
-                state.reportGroups.splice(index, 1)
+                state.paginatedReportGroups.data.splice(index, 1)
             }
         },
 

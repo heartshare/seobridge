@@ -1904,7 +1904,7 @@ __webpack_require__.r(__webpack_exports__);
       loading_: false
     };
   },
-  mounted: function mounted() {
+  created: function created() {
     this.init();
   },
   watch: {
@@ -4594,6 +4594,7 @@ __webpack_require__.r(__webpack_exports__);
       nameChange: {
         firstname: '',
         lastname: '',
+        legacy: null,
         loading: false
       }
     };
@@ -4606,8 +4607,9 @@ __webpack_require__.r(__webpack_exports__);
   watch: {
     user: {
       handler: function handler() {
-        this.nameChange.firstname = this.user.firstname;
-        this.nameChange.lastname = this.user.lastname;
+        this.nameChange.firstname = this.user.firstname || '';
+        this.nameChange.lastname = this.user.lastname || '';
+        this.nameChange.legacy = this.nameChange.firstname + this.nameChange.lastname;
       },
       immediate: true
     }
@@ -4625,6 +4627,7 @@ __webpack_require__.r(__webpack_exports__);
 
         _this.$store.commit('userLastname', response.data.lastname);
 
+        _this.nameChange.legacy = (response.data.firstname || '') + (response.data.lastname || '');
         setTimeout(function () {
           _this.nameChange.loading = false;
         }, 500);
@@ -4649,6 +4652,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => __WEBPACK_DEFAULT_EXPORT__
 /* harmony export */ });
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -5114,18 +5126,14 @@ var relativeTime = __webpack_require__(/*! dayjs/plugin/relativeTime */ "./node_
       },
       reportSearch: {
         url: '',
-        pageNumber: 1,
         pageCount: '20',
-        pageMax: 5,
         sort: 'DESC'
       },
       reportCreate: {
         // url: '',
         url: 'https://freuwort.com',
-        // mode: null,
-        mode: 'full',
-        // viewport: null,
-        viewport: '1080p',
+        mode: null,
+        viewport: null,
         loading: false
       },
       reportDelete: {
@@ -5138,19 +5146,20 @@ var relativeTime = __webpack_require__(/*! dayjs/plugin/relativeTime */ "./node_
   created: function created() {
     dayjs.extend(relativeTime);
   },
+  watch: {
+    'reportSearch.url': debounce(function () {
+      this.refetchPaginatedReportGroups();
+    }, 400),
+    'reportSearch.pageCount': debounce(function () {
+      this.refetchPaginatedReportGroups();
+    }, 200),
+    'reportSearch.sort': function reportSearchSort() {
+      this.refetchPaginatedReportGroups();
+    }
+  },
   computed: {
-    groupedReports: function groupedReports() {
-      return this.$store.getters.reportGroups;
-    },
-    reportLoading: function reportLoading() {
-      return this.$store.getters.reportScanning;
-    },
-    searchedGroupedReports: function searchedGroupedReports() {
-      var _this = this;
-
-      return this.groupedReports.filter(function (e) {
-        return e.host.trim().toUpperCase().includes(_this.reportSearch.url.trim().toUpperCase());
-      });
+    paginatedReportGroups: function paginatedReportGroups() {
+      return this.$store.getters.paginatedReportGroups;
     }
   },
   filters: {
@@ -5179,16 +5188,20 @@ var relativeTime = __webpack_require__(/*! dayjs/plugin/relativeTime */ "./node_
     toggleSort: function toggleSort() {
       this.reportSearch.sort = this.reportSearch.sort === 'ASC' ? 'DESC' : 'ASC';
     },
-    previousPage: function previousPage() {
-      this.reportSearch.pageNumber--;
-      this.limitPageNumber();
+    prevPage: function prevPage() {
+      this.refetchPaginatedReportGroups(-1);
     },
     nextPage: function nextPage() {
-      this.reportSearch.pageNumber++;
-      this.limitPageNumber();
+      this.refetchPaginatedReportGroups(1);
     },
-    limitPageNumber: function limitPageNumber() {
-      if (this.reportSearch.pageNumber > this.reportSearch.pageMax) this.reportSearch.pageNumber = this.reportSearch.pageMax;else if (this.reportSearch.pageNumber < 1) this.reportSearch.pageNumber = 1;
+    refetchPaginatedReportGroups: function refetchPaginatedReportGroups() {
+      var page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
+      this.$store.dispatch('fetchPaginatedReportGroups', {
+        page: this.paginatedReportGroups.current_page + page,
+        order: this.reportSearch.sort,
+        size: this.reportSearch.pageCount,
+        searchKey: this.reportSearch.url
+      });
     },
     openDetails: function openDetails(details) {
       console.log(details);
@@ -5204,14 +5217,18 @@ var relativeTime = __webpack_require__(/*! dayjs/plugin/relativeTime */ "./node_
       this.$refs.reportCreateDialog.close();
     },
     requestReport: function requestReport() {
+      var _this = this;
+
       axios.post('/auth/reports/request-site-analysis', {
         url: this.reportCreate.url,
-        mode: this.reportCreate.mode,
+        // mode: this.reportCreate.mode || 'single',
+        mode: 'single',
         device: {
-          viewport: this.reportCreate.viewport
+          viewport: this.reportCreate.viewport || '1080p'
         }
       }).then(function (response) {
-        console.log(response.data);
+        _this.resetReportCreate(); // console.log(response.data)
+
       })["catch"](function (error) {
         console.log(error.response);
       });
@@ -5749,7 +5766,9 @@ window.Echo = __webpack_require__(/*! laravel-echo */ "./node_modules/laravel-ec
 
 window.Pusher = __webpack_require__(/*! pusher-js */ "./node_modules/pusher-js/dist/web/pusher.js"); // Lodash
 
-window._ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js"); // Axios
+window._ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js"); // Custom helper methods
+
+window.debounce = __webpack_require__(/*! ./helper/debounce */ "./resources/js/helper/debounce.js"); // Axios
 
 window.axios = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest'; // Vue + Vuex 
@@ -5812,11 +5831,48 @@ window.Echo = new Echo({
 
 /***/ }),
 
+/***/ "./resources/js/helper/debounce.js":
+/*!*****************************************!*\
+  !*** ./resources/js/helper/debounce.js ***!
+  \*****************************************/
+/***/ ((module) => {
+
+// Author: David Walsh
+// Page: https://davidwalsh.name
+module.exports = function (func, wait, immediate) {
+  var timeout;
+  return function () {
+    var context = this;
+    var args = arguments;
+
+    var later = function later() {
+      timeout = null;
+      if (!immediate) func.apply(context, args);
+    };
+
+    var callNow = immediate && !timeout;
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+
+    if (callNow) {
+      func.apply(context, args);
+    }
+  };
+};
+
+/***/ }),
+
 /***/ "./resources/js/store/index.js":
 /*!*************************************!*\
   !*** ./resources/js/store/index.js ***!
   \*************************************/
 /***/ ((module) => {
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 module.exports = {
   state: {
@@ -5827,7 +5883,7 @@ module.exports = {
     user: {},
     teams: [],
     reports: [],
-    reportGroups: [],
+    paginatedReportGroups: {},
     notifications: []
   },
   getters: {
@@ -5849,8 +5905,8 @@ module.exports = {
     reports: function reports(state) {
       return state.reports;
     },
-    reportGroups: function reportGroups(state) {
-      return state.reportGroups;
+    paginatedReportGroups: function paginatedReportGroups(state) {
+      return state.paginatedReportGroups;
     },
     notifications: function notifications(state) {
       return state.notifications;
@@ -5883,9 +5939,17 @@ module.exports = {
         console.log(error.response);
       });
     },
-    fetchAllReportGroups: function fetchAllReportGroups(store) {
-      axios.post('/auth/reports/get-all-report-groups').then(function (response) {
-        store.commit('reportGroups', response.data);
+    fetchPaginatedReportGroups: function fetchPaginatedReportGroups(store) {
+      var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+      axios.post("/auth/reports/get-paginated-report-groups", {
+        order: data.order || 'DESC',
+        page: data.page || 1,
+        size: data.size || 20,
+        searchKey: data.searchKey || ''
+      }).then(function (response) {
+        store.commit('paginatedReportGroups', _objectSpread(_objectSpread({}, response.data), {}, {
+          loading: false
+        }));
       })["catch"](function (error) {
         console.log(error.response);
       });
@@ -5900,7 +5964,7 @@ module.exports = {
     initialFetch: function initialFetch(store) {
       store.dispatch('fetchUser');
       store.dispatch('fetchAllTeams');
-      store.dispatch('fetchAllReportGroups');
+      store.dispatch('fetchPaginatedReportGroups');
       store.dispatch('fetchAllNotifications');
     }
   },
@@ -5958,16 +6022,16 @@ module.exports = {
         state.reports.splice(index, 1);
       }
     },
-    reportGroups: function reportGroups(state, data) {
-      state.reportGroups = data;
+    paginatedReportGroups: function paginatedReportGroups(state, data) {
+      state.paginatedReportGroups = data;
     },
     deleteReportGroup: function deleteReportGroup(state, data) {
-      var index = state.reportGroups.findIndex(function (e) {
+      var index = state.paginatedReportGroups.data.findIndex(function (e) {
         return e.id === data;
       });
 
       if (index >= 0) {
-        state.reportGroups.splice(index, 1);
+        state.paginatedReportGroups.data.splice(index, 1);
       }
     },
     notifications: function notifications(state, data) {
@@ -5995,7 +6059,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".ccc-ui-container[data-v-5d5feab4] {\n  height: 40px;\n  line-height: 30px;\n  font-size: 14px;\n  padding: 5px 15px;\n  padding-right: 6px;\n  text-align: center;\n  letter-spacing: 1.5px;\n  font-family: var(--text-font);\n  font-weight: 500;\n  text-transform: uppercase;\n  border-radius: 5px;\n  border: none;\n  cursor: pointer;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n  transition: all 100ms;\n  vertical-align: top;\n  position: relative;\n  background: var(--primary);\n  color: white;\n}\n.ccc-ui-container:hover .bg-overlay[data-v-5d5feab4] {\n  opacity: 0.1;\n}\n.ccc-ui-container:focus .bg-overlay[data-v-5d5feab4] {\n  opacity: 0.17;\n}\n.ccc-ui-container[data-v-5d5feab4]:hover:not(.text) {\n  box-shadow: 0 5px 7px #00000020;\n}\n.ccc-ui-container.no-icon[data-v-5d5feab4] {\n  padding: 5px 15px;\n}\n.ccc-ui-container.no-icon .icon[data-v-5d5feab4] {\n  display: none !important;\n}\n.ccc-ui-container.icon-left[data-v-5d5feab4] {\n  padding: 5px 15px;\n  padding-left: 6px;\n}\n.ccc-ui-container.icon-left[data-v-5d5feab4]::first-letter {\n  margin-left: 5px;\n}\n.ccc-ui-container.icon-left .icon[data-v-5d5feab4] {\n  float: left;\n}\n.ccc-ui-container.small[data-v-5d5feab4] {\n  height: 30px;\n  padding-top: 0;\n  padding-bottom: 0;\n}\n.ccc-ui-container.error[data-v-5d5feab4] {\n  background: var(--error);\n  color: white;\n}\n.ccc-ui-container.error .border[data-v-5d5feab4] {\n  border-color: var(--error);\n}\n.ccc-ui-container.text[data-v-5d5feab4] {\n  background: transparent;\n  color: var(--primary);\n}\n.ccc-ui-container.text.error[data-v-5d5feab4] {\n  color: var(--error);\n}\n.ccc-ui-container.disabled[data-v-5d5feab4] {\n  color: var(--disabled-color) !important;\n  background: var(--disabled-bg) !important;\n  pointer-events: none;\n}\n.ccc-ui-container.disabled.text[data-v-5d5feab4] {\n  background: transparent !important;\n}\n.ccc-ui-container.disabled .border[data-v-5d5feab4] {\n  border-color: var(--disabled-border-color) !important;\n}\n.ccc-ui-container.loading[data-v-5d5feab4] {\n  color: var(--disabled-color) !important;\n  background: var(--disabled-bg) !important;\n  pointer-events: none;\n}\n.ccc-ui-container.loading.text[data-v-5d5feab4] {\n  background: transparent !important;\n}\n.ccc-ui-container.loading .border[data-v-5d5feab4] {\n  border-color: var(--disabled-border-color) !important;\n}\n.ccc-ui-container.loading .content[data-v-5d5feab4] {\n  opacity: 0;\n}\n.ccc-ui-container.loading .icon[data-v-5d5feab4] {\n  opacity: 0;\n}\n.ccc-ui-container .icon[data-v-5d5feab4] {\n  height: 30px;\n  width: 30px;\n  line-height: 30px;\n  text-align: center;\n  color: inherit;\n  font-size: 18px;\n  letter-spacing: 0;\n  font-weight: normal;\n  pointer-events: none;\n  vertical-align: top;\n  font-family: \"Material Icons\";\n}\n.ccc-ui-container .border[data-v-5d5feab4] {\n  height: 100%;\n  width: 100%;\n  position: absolute;\n  top: 0;\n  left: 0;\n  border-radius: 5px;\n  border: 1px solid var(--primary);\n  pointer-events: none;\n}\n.ccc-ui-container .bg-overlay[data-v-5d5feab4] {\n  height: 100%;\n  width: 100%;\n  position: absolute;\n  top: 0;\n  left: 0;\n  border-radius: 5px;\n  background: currentcolor;\n  opacity: 0;\n  transition: opacity 100ms;\n}\n.ccc-ui-container .spinner[data-v-5d5feab4] {\n  position: absolute;\n  top: calc(50% - 10px);\n  left: calc(50% - 10px);\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, ".ccc-ui-container[data-v-5d5feab4] {\n  height: 40px;\n  line-height: 30px;\n  font-size: 14px;\n  padding: 5px 15px;\n  padding-right: 6px;\n  text-align: center;\n  letter-spacing: 1.5px;\n  font-family: var(--text-font);\n  font-weight: 500;\n  text-transform: uppercase;\n  border-radius: 5px;\n  border: none;\n  cursor: pointer;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n  transition: background 100ms, color 100ms;\n  vertical-align: top;\n  position: relative;\n  background: var(--primary);\n  color: white;\n}\n.ccc-ui-container:hover .bg-overlay[data-v-5d5feab4] {\n  opacity: 0.1;\n}\n.ccc-ui-container:focus .bg-overlay[data-v-5d5feab4] {\n  opacity: 0.17;\n}\n.ccc-ui-container[data-v-5d5feab4]:hover:not(.text) {\n  box-shadow: 0 5px 7px #00000020;\n}\n.ccc-ui-container.no-icon[data-v-5d5feab4] {\n  padding: 5px 15px;\n}\n.ccc-ui-container.no-icon .icon[data-v-5d5feab4] {\n  display: none !important;\n}\n.ccc-ui-container.icon-left[data-v-5d5feab4] {\n  padding: 5px 15px;\n  padding-left: 6px;\n}\n.ccc-ui-container.icon-left[data-v-5d5feab4]::first-letter {\n  margin-left: 5px;\n}\n.ccc-ui-container.icon-left .icon[data-v-5d5feab4] {\n  float: left;\n}\n.ccc-ui-container.small[data-v-5d5feab4] {\n  height: 30px;\n  padding-top: 0;\n  padding-bottom: 0;\n}\n.ccc-ui-container.error[data-v-5d5feab4] {\n  background: var(--error);\n  color: white;\n}\n.ccc-ui-container.error .border[data-v-5d5feab4] {\n  border-color: var(--error);\n}\n.ccc-ui-container.text[data-v-5d5feab4] {\n  background: transparent;\n  color: var(--primary);\n}\n.ccc-ui-container.text.error[data-v-5d5feab4] {\n  color: var(--error);\n}\n.ccc-ui-container.disabled[data-v-5d5feab4] {\n  color: var(--disabled-color) !important;\n  background: var(--disabled-bg) !important;\n  pointer-events: none;\n}\n.ccc-ui-container.disabled.text[data-v-5d5feab4] {\n  background: transparent !important;\n}\n.ccc-ui-container.disabled .border[data-v-5d5feab4] {\n  border-color: var(--disabled-border-color) !important;\n}\n.ccc-ui-container.loading[data-v-5d5feab4] {\n  color: var(--disabled-color) !important;\n  background: var(--disabled-bg) !important;\n  pointer-events: none;\n}\n.ccc-ui-container.loading.text[data-v-5d5feab4] {\n  background: transparent !important;\n}\n.ccc-ui-container.loading .border[data-v-5d5feab4] {\n  border-color: var(--disabled-border-color) !important;\n}\n.ccc-ui-container.loading .content[data-v-5d5feab4] {\n  opacity: 0;\n}\n.ccc-ui-container.loading .icon[data-v-5d5feab4] {\n  opacity: 0;\n}\n.ccc-ui-container .icon[data-v-5d5feab4] {\n  height: 30px;\n  width: 30px;\n  line-height: 30px;\n  text-align: center;\n  color: inherit;\n  font-size: 18px;\n  letter-spacing: 0;\n  font-weight: normal;\n  pointer-events: none;\n  vertical-align: top;\n  font-family: \"Material Icons\";\n}\n.ccc-ui-container .border[data-v-5d5feab4] {\n  height: 100%;\n  width: 100%;\n  position: absolute;\n  top: 0;\n  left: 0;\n  border-radius: 5px;\n  border: 1px solid var(--primary);\n  pointer-events: none;\n}\n.ccc-ui-container .bg-overlay[data-v-5d5feab4] {\n  height: 100%;\n  width: 100%;\n  position: absolute;\n  top: 0;\n  left: 0;\n  border-radius: 5px;\n  background: currentcolor;\n  opacity: 0;\n  transition: opacity 100ms;\n}\n.ccc-ui-container .spinner[data-v-5d5feab4] {\n  position: absolute;\n  top: calc(50% - 10px);\n  left: calc(50% - 10px);\n}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -6547,7 +6611,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".ccc-ui-container[data-v-2e8ebb59] {\n  --height: 50px;\n  height: var(--height);\n  width: 100%;\n  background: var(--bg);\n  border-radius: 5px;\n  position: relative;\n}\n.ccc-ui-container.focused .border[data-v-2e8ebb59] {\n  border: var(--focused-input-border);\n}\n.ccc-ui-container.focused-or-filled .progress-bar[data-v-2e8ebb59] {\n  transform: scaleY(1);\n}\n.ccc-ui-container.focused-or-filled .label[data-v-2e8ebb59] {\n  transform: translate(4px, -5px) scale(0.72);\n}\n.ccc-ui-container.has-label .input[data-v-2e8ebb59] {\n  padding-top: 15px !important;\n}\n.ccc-ui-container.spacer[data-v-2e8ebb59] {\n  margin-bottom: 15px;\n}\n.ccc-ui-container.invalid .border[data-v-2e8ebb59] {\n  border-color: var(--error);\n}\n.ccc-ui-container.invalid .chars[data-v-2e8ebb59] {\n  color: var(--error);\n}\n.ccc-ui-container .border[data-v-2e8ebb59] {\n  height: 100%;\n  width: 100%;\n  position: absolute;\n  top: 0;\n  left: 0;\n  border-radius: 5px;\n  border: var(--input-border);\n  pointer-events: none;\n}\n.ccc-ui-container .label[data-v-2e8ebb59] {\n  font-size: 16px;\n  height: var(--height);\n  width: 100%;\n  line-height: calc(var(--height) + 3px);\n  position: absolute;\n  top: 0;\n  left: 0;\n  padding: 0 15px;\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  text-align: left;\n  pointer-events: none;\n  transition: all 200ms;\n  color: var(--text-gray);\n  transform-origin: top left;\n}\n.ccc-ui-container .chars[data-v-2e8ebb59] {\n  font-size: 10px;\n  max-width: 100%;\n  line-height: 16px;\n  position: absolute;\n  right: 11px;\n  bottom: -16px;\n  text-align: right;\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  pointer-events: none;\n  color: var(--text-gray);\n}\n.ccc-ui-container .input[data-v-2e8ebb59] {\n  height: 100%;\n  width: 100%;\n  padding: 0 15px;\n  border: none;\n  background: none;\n  border-radius: 3px;\n  font-family: var(--text-font);\n  font-size: 16px;\n  color: var(--heading-gray);\n}\n.ccc-ui-container .input[data-v-2e8ebb59]::-moz-placeholder {\n  color: var(--text-gray);\n  font-size: 16px;\n  font-family: var(--text-font);\n}\n.ccc-ui-container .input[data-v-2e8ebb59]:-ms-input-placeholder {\n  color: var(--text-gray);\n  font-size: 16px;\n  font-family: var(--text-font);\n}\n.ccc-ui-container .input[data-v-2e8ebb59]::placeholder {\n  color: var(--text-gray);\n  font-size: 16px;\n  font-family: var(--text-font);\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, ".ccc-ui-container[data-v-2e8ebb59] {\n  --height: 50px;\n  height: var(--height);\n  width: 100%;\n  background: var(--bg);\n  border-radius: 5px;\n  position: relative;\n}\n.ccc-ui-container.focused .border[data-v-2e8ebb59] {\n  border: var(--focused-input-border);\n}\n.ccc-ui-container.focused-or-filled .progress-bar[data-v-2e8ebb59] {\n  transform: scaleY(1);\n}\n.ccc-ui-container.focused-or-filled .label[data-v-2e8ebb59] {\n  transform: translate(4px, -5px) scale(0.72);\n}\n.ccc-ui-container.has-label .input[data-v-2e8ebb59] {\n  padding-top: 15px !important;\n}\n.ccc-ui-container.spacer[data-v-2e8ebb59] {\n  margin-bottom: 15px;\n}\n.ccc-ui-container.invalid .border[data-v-2e8ebb59] {\n  border-color: var(--error);\n}\n.ccc-ui-container.invalid .chars[data-v-2e8ebb59] {\n  color: var(--error);\n}\n.ccc-ui-container .border[data-v-2e8ebb59] {\n  height: 100%;\n  width: 100%;\n  position: absolute;\n  top: 0;\n  left: 0;\n  border-radius: 5px;\n  border: var(--input-border);\n  pointer-events: none;\n}\n.ccc-ui-container .label[data-v-2e8ebb59] {\n  font-size: 16px;\n  height: var(--height);\n  width: 100%;\n  line-height: calc(var(--height) + 3px);\n  position: absolute;\n  top: 0;\n  left: 0;\n  padding: 0 15px;\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  text-align: left;\n  pointer-events: none;\n  transition: all 200ms;\n  color: var(--text-gray);\n  transform-origin: top left;\n}\n.ccc-ui-container .chars[data-v-2e8ebb59] {\n  font-size: 10px;\n  max-width: 100%;\n  line-height: 16px;\n  position: absolute;\n  right: 11px;\n  bottom: -16px;\n  text-align: right;\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  pointer-events: none;\n  color: var(--text-gray);\n}\n.ccc-ui-container .input[data-v-2e8ebb59] {\n  height: 100%;\n  width: 100%;\n  padding: 0 15px;\n  border: none;\n  background: none;\n  border-radius: 3px;\n  font-family: var(--text-font);\n  font-size: 16px;\n  color: var(--heading-gray);\n}\n.ccc-ui-container .input[data-v-2e8ebb59]::-moz-placeholder {\n  color: var(--text-gray);\n  font-size: 16px;\n  font-family: var(--text-font);\n  -moz-user-select: none;\n       user-select: none;\n}\n.ccc-ui-container .input[data-v-2e8ebb59]:-ms-input-placeholder {\n  color: var(--text-gray);\n  font-size: 16px;\n  font-family: var(--text-font);\n  -ms-user-select: none;\n      user-select: none;\n}\n.ccc-ui-container .input[data-v-2e8ebb59]::placeholder {\n  color: var(--text-gray);\n  font-size: 16px;\n  font-family: var(--text-font);\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -6626,9 +6690,33 @@ ___CSS_LOADER_EXPORT___.push([module.id, ".ccc-ui-container[data-v-320fe85e] {\n
 
 /***/ }),
 
-/***/ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-15[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-15[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-15[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/views/dashboard/Index.vue?vue&type=style&index=0&id=eb9530ca&lang=sass&scoped=true&":
+/***/ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-15[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-15[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-15[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/views/dashboard/Index.vue?vue&type=style&index=0&lang=sass&":
+/*!*******************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-15[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-15[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-15[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/views/dashboard/Index.vue?vue&type=style&index=0&lang=sass& ***!
+  \*******************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => __WEBPACK_DEFAULT_EXPORT__
+/* harmony export */ });
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+// Imports
+
+var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
+// Module
+___CSS_LOADER_EXPORT___.push([module.id, "#wrapper {\n  --menu-width: 280px;\n}", ""]);
+// Exports
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-15[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-15[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-15[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/views/dashboard/Index.vue?vue&type=style&index=1&id=eb9530ca&lang=sass&scoped=true&":
 /*!*******************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-15[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-15[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-15[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/views/dashboard/Index.vue?vue&type=style&index=0&id=eb9530ca&lang=sass&scoped=true& ***!
+  !*** ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-15[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-15[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-15[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/views/dashboard/Index.vue?vue&type=style&index=1&id=eb9530ca&lang=sass&scoped=true& ***!
   \*******************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
 /***/ ((module, __webpack_exports__, __webpack_require__) => {
 
@@ -6643,7 +6731,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "#wrapper[data-v-eb9530ca] {\n  height: 100%;\n  width: 100%;\n}\n#wrapper header[data-v-eb9530ca] {\n  display: none;\n  background: var(--bg);\n  filter: drop-shadow(0 1px 2px #00000020);\n}\n#wrapper nav[data-v-eb9530ca] {\n  text-align: left;\n  position: fixed;\n  left: 0;\n  top: 0;\n  width: 280px;\n  height: 100%;\n  z-index: 100;\n  color: var(--text-gray);\n  font-size: var(--text-size);\n  background: var(--bg);\n  border-right: var(--border);\n}\n#wrapper nav #logo[data-v-eb9530ca] {\n  height: 60px;\n  width: 100%;\n  margin: 10px 0;\n  text-align: center;\n}\n#wrapper nav #logo img[data-v-eb9530ca] {\n  height: 100%;\n}\n#wrapper nav .logo-divider[data-v-eb9530ca] {\n  width: 100%;\n  height: 20px;\n  display: block;\n}\n#wrapper nav .bottom[data-v-eb9530ca] {\n  position: absolute;\n  bottom: 0;\n  left: 0;\n  width: 100%;\n}\n#wrapper nav .button[data-v-eb9530ca] {\n  width: 100%;\n  text-decoration: none;\n  height: 50px;\n  cursor: pointer;\n  color: var(--text-gray);\n  display: flex;\n  align-content: center;\n  position: relative;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n}\n#wrapper nav .button .icon[data-v-eb9530ca] {\n  font-family: \"Material Icons\";\n  font-size: 24px;\n  width: 60px;\n  text-align: center;\n  align-self: center;\n  z-index: 1;\n  position: relative;\n}\n#wrapper nav .button .text[data-v-eb9530ca] {\n  font-size: var(--button-size);\n  font-weight: 500;\n  letter-spacing: 1px;\n  color: inherit;\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  text-transform: uppercase;\n  align-self: center;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n  flex: 1;\n  z-index: 1;\n  position: relative;\n}\n#wrapper nav .button .notifications[data-v-eb9530ca] {\n  height: 16px;\n  min-width: 16px;\n  line-height: 16px;\n  border-radius: 20px;\n  background: var(--error);\n  font-size: 11px;\n  font-weight: 500;\n  padding: 0 6px;\n  color: white;\n  margin: 0 10px;\n  align-self: center;\n  pointer-events: none;\n  z-index: 1;\n  position: relative;\n}\n#wrapper nav .button[data-v-eb9530ca]::before {\n  content: \"\";\n  height: 100%;\n  width: 100%;\n  position: absolute;\n  left: 0;\n  top: 0;\n  background: var(--primary-shade);\n  transition: -webkit-clip-path 200ms;\n  transition: clip-path 200ms;\n  transition: clip-path 200ms, -webkit-clip-path 200ms;\n  -webkit-clip-path: circle(0 at -10% 50%);\n          clip-path: circle(0 at -10% 50%);\n}\n#wrapper nav .button[data-v-eb9530ca]::after {\n  content: \"\";\n  height: calc(100% - 10px);\n  width: 0px;\n  position: absolute;\n  left: 0;\n  top: 5px;\n  background: var(--primary);\n  border-radius: 0 10px 10px 0;\n  transition: width 100ms;\n}\n#wrapper nav .button[data-v-eb9530ca]:hover::after, #wrapper nav .button.active[data-v-eb9530ca]::after {\n  width: 4px;\n}\n#wrapper nav .button.active[data-v-eb9530ca]::before {\n  -webkit-clip-path: circle(180% at -10% 50%);\n          clip-path: circle(180% at -10% 50%);\n}\n#wrapper nav .button[data-v-eb9530ca]:hover, #wrapper nav .button.active[data-v-eb9530ca] {\n  color: var(--primary);\n}\n#wrapper[data-v-eb9530ca]:not(.navbar-open) {\n  grid-template-columns: 60px auto;\n}\n#wrapper:not(.navbar-open) nav #logo[data-v-eb9530ca] {\n  height: 60px;\n  margin: 0 0 10px;\n}\n#wrapper:not(.navbar-open) nav #logo img[data-v-eb9530ca] {\n  width: 100%;\n  padding: 5px;\n}\n#wrapper:not(.navbar-open) nav .logo-divider[data-v-eb9530ca] {\n  height: 0;\n}\n#wrapper:not(.navbar-open) nav .button .text[data-v-eb9530ca],\n#wrapper:not(.navbar-open) nav .button .notifications[data-v-eb9530ca] {\n  display: none;\n}\n#wrapper main[data-v-eb9530ca] {\n  display: block;\n  margin-left: 280px;\n}\n#wrapper main .limiter[data-v-eb9530ca] {\n  max-width: 1240px !important;\n  padding: 0 15px !important;\n}\n#wrapper main .transition-group[data-v-eb9530ca] {\n  width: 100%;\n}\n#wrapper main .page[data-v-eb9530ca] {\n  transition: all 100ms;\n}\n#wrapper main .page.opacity-slide-down-enter[data-v-eb9530ca], #wrapper main .page.opacity-slide-up-leave-to[data-v-eb9530ca] {\n  opacity: 0;\n  transform: translateY(-20px);\n}\n#wrapper main .page.opacity-slide-down-leave-to[data-v-eb9530ca], #wrapper main .page.opacity-slide-up-enter[data-v-eb9530ca] {\n  opacity: 0;\n  transform: translateY(20px);\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "#wrapper[data-v-eb9530ca] {\n  height: 100%;\n  width: 100%;\n  --menu-width: 280px;\n}\n#wrapper header[data-v-eb9530ca] {\n  display: none;\n  background: var(--bg);\n  filter: drop-shadow(0 1px 2px #00000020);\n}\n#wrapper nav[data-v-eb9530ca] {\n  text-align: left;\n  position: fixed;\n  left: 0;\n  top: 0;\n  width: var(--menu-width);\n  height: 100%;\n  z-index: 100;\n  color: var(--text-gray);\n  font-size: var(--text-size);\n  background: var(--bg);\n  border-right: var(--border);\n}\n#wrapper nav #logo[data-v-eb9530ca] {\n  height: 60px;\n  width: 100%;\n  margin: 10px 0;\n  text-align: center;\n}\n#wrapper nav #logo img[data-v-eb9530ca] {\n  height: 100%;\n}\n#wrapper nav .logo-divider[data-v-eb9530ca] {\n  width: 100%;\n  height: 20px;\n  display: block;\n}\n#wrapper nav .bottom[data-v-eb9530ca] {\n  position: absolute;\n  bottom: 0;\n  left: 0;\n  width: 100%;\n}\n#wrapper nav .button[data-v-eb9530ca] {\n  width: 100%;\n  text-decoration: none;\n  height: 50px;\n  cursor: pointer;\n  color: var(--text-gray);\n  display: flex;\n  align-content: center;\n  position: relative;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n}\n#wrapper nav .button .icon[data-v-eb9530ca] {\n  font-family: \"Material Icons\";\n  font-size: 24px;\n  width: 60px;\n  text-align: center;\n  align-self: center;\n  z-index: 1;\n  position: relative;\n}\n#wrapper nav .button .text[data-v-eb9530ca] {\n  font-size: var(--button-size);\n  font-weight: 500;\n  letter-spacing: 1px;\n  color: inherit;\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  text-transform: uppercase;\n  align-self: center;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n  flex: 1;\n  z-index: 1;\n  position: relative;\n}\n#wrapper nav .button .notifications[data-v-eb9530ca] {\n  height: 16px;\n  min-width: 16px;\n  line-height: 16px;\n  border-radius: 20px;\n  background: var(--error);\n  font-size: 11px;\n  font-weight: 500;\n  padding: 0 6px;\n  color: white;\n  margin: 0 10px;\n  align-self: center;\n  pointer-events: none;\n  z-index: 1;\n  position: relative;\n}\n#wrapper nav .button[data-v-eb9530ca]::before {\n  content: \"\";\n  height: 100%;\n  width: 100%;\n  position: absolute;\n  left: 0;\n  top: 0;\n  background: var(--primary-shade);\n  transition: -webkit-clip-path 200ms;\n  transition: clip-path 200ms;\n  transition: clip-path 200ms, -webkit-clip-path 200ms;\n  -webkit-clip-path: circle(0 at -10% 50%);\n          clip-path: circle(0 at -10% 50%);\n}\n#wrapper nav .button[data-v-eb9530ca]::after {\n  content: \"\";\n  height: calc(100% - 10px);\n  width: 0px;\n  position: absolute;\n  left: 0;\n  top: 5px;\n  background: var(--primary);\n  border-radius: 0 10px 10px 0;\n  transition: width 100ms;\n}\n#wrapper nav .button[data-v-eb9530ca]:hover::after, #wrapper nav .button.active[data-v-eb9530ca]::after {\n  width: 4px;\n}\n#wrapper nav .button.active[data-v-eb9530ca]::before {\n  -webkit-clip-path: circle(180% at -10% 50%);\n          clip-path: circle(180% at -10% 50%);\n}\n#wrapper nav .button[data-v-eb9530ca]:hover, #wrapper nav .button.active[data-v-eb9530ca] {\n  color: var(--primary);\n}\n#wrapper[data-v-eb9530ca]:not(.navbar-open) {\n  grid-template-columns: 60px auto;\n}\n#wrapper:not(.navbar-open) nav #logo[data-v-eb9530ca] {\n  height: 60px;\n  margin: 0 0 10px;\n}\n#wrapper:not(.navbar-open) nav #logo img[data-v-eb9530ca] {\n  width: 100%;\n  padding: 5px;\n}\n#wrapper:not(.navbar-open) nav .logo-divider[data-v-eb9530ca] {\n  height: 0;\n}\n#wrapper:not(.navbar-open) nav .button .text[data-v-eb9530ca],\n#wrapper:not(.navbar-open) nav .button .notifications[data-v-eb9530ca] {\n  display: none;\n}\n#wrapper main[data-v-eb9530ca] {\n  display: block;\n  margin-left: var(--menu-width);\n}\n#wrapper main .limiter[data-v-eb9530ca] {\n  max-width: 1240px !important;\n  padding: 0 15px !important;\n}\n#wrapper main .transition-group[data-v-eb9530ca] {\n  width: 100%;\n}\n#wrapper main .page[data-v-eb9530ca] {\n  transition: all 100ms;\n}\n#wrapper main .page.opacity-slide-down-enter[data-v-eb9530ca], #wrapper main .page.opacity-slide-up-leave-to[data-v-eb9530ca] {\n  opacity: 0;\n  transform: translateY(-20px);\n}\n#wrapper main .page.opacity-slide-down-leave-to[data-v-eb9530ca], #wrapper main .page.opacity-slide-up-enter[data-v-eb9530ca] {\n  opacity: 0;\n  transform: translateY(20px);\n}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -6763,7 +6851,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".page-container[data-v-85201bb2] {\n  width: 100%;\n}\n.page-container .header[data-v-85201bb2] {\n  width: 100%;\n  background: var(--bg);\n  filter: var(--elevation-2);\n  border-radius: 7px;\n  margin-top: 15px;\n}\n.page-container .header .background-image[data-v-85201bb2] {\n  height: 250px;\n  width: 100%;\n  background: var(--bg-dark);\n  background-image: url(\"/images/app/dashboard/pattern.svg\");\n  background-size: cover;\n  background-position: center;\n  background-repeat: no-repeat;\n  border-radius: 7px 7px 0 0;\n  display: block;\n}\n.page-container .header .profile-image[data-v-85201bb2] {\n  height: 140px;\n  width: 140px;\n  -o-object-fit: cover;\n     object-fit: cover;\n  border-radius: 100%;\n  margin: -70px auto 15px;\n  display: block;\n  padding: 5px;\n  background: var(--bg);\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, ".page-container[data-v-85201bb2] {\n  width: 100%;\n}\n.page-container .header[data-v-85201bb2] {\n  width: 100%;\n  background: var(--bg);\n  filter: var(--elevation-2);\n  border-radius: 7px;\n  margin-top: 15px;\n}\n.page-container .header .background-image[data-v-85201bb2] {\n  height: 250px;\n  width: 100%;\n  background: var(--bg-dark);\n  background-image: url(\"/images/app/dashboard/pattern.svg\");\n  background-size: cover;\n  background-position: center;\n  background-repeat: no-repeat;\n  border-radius: 7px 7px 0 0;\n  display: block;\n}\n.page-container .header .profile-image[data-v-85201bb2] {\n  height: 140px;\n  width: 140px;\n  -o-object-fit: cover;\n     object-fit: cover;\n  border-radius: 100%;\n  margin: -70px auto 15px;\n  display: block;\n  padding: 5px;\n  background: var(--bg);\n}\n.page-container .header .name-wrapper[data-v-85201bb2] {\n  background: var(--bg);\n  border-radius: 5px;\n  position: relative;\n  display: flex;\n  width: 100%;\n  max-width: 500px;\n  margin: 0 auto 15px;\n}\n.page-container .header .name-wrapper .submit-button[data-v-85201bb2] {\n  margin: 5px;\n}\n.page-container .header .name-wrapper[data-v-85201bb2]::after {\n  content: \"\";\n  height: 100%;\n  width: 100%;\n  position: absolute;\n  top: 0;\n  left: 0;\n  border-radius: 5px;\n  border: var(--input-border);\n  pointer-events: none;\n  box-sizing: border-box;\n}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -6787,7 +6875,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".page-container[data-v-b59c8186] {\n  width: 100%;\n}\n.page-container .filter-bar[data-v-b59c8186] {\n  display: flex;\n  padding: 15px;\n  background: var(--bg);\n  border-radius: 0 0 15px 15px;\n  filter: var(--elevation-2);\n  margin-bottom: 15px;\n  align-items: center;\n  position: relative;\n  z-index: 1;\n}\n.page-container .filter-bar .entity-input[data-v-b59c8186] {\n  width: 80px;\n  --height: 40px;\n}\n.page-container .filter-bar .pagination-button[data-v-b59c8186] {\n  width: 40px;\n}\n.page-container .filter-bar .page-number-input[data-v-b59c8186] {\n  width: 60px;\n  text-align: center;\n  margin: 0 10px;\n  --height: 40px;\n}\n.page-container .filter-bar .spacer[data-v-b59c8186] {\n  flex: 1;\n  height: 40px;\n}\n.page-container .filter-bar .sort-button[data-v-b59c8186] {\n  width: 40px;\n  margin: 0 15px;\n}\n.page-container .filter-bar .search-bar-wrapper[data-v-b59c8186] {\n  display: block;\n  position: relative;\n  flex: 1;\n  max-width: 300px;\n}\n.page-container .filter-bar .search-bar-wrapper .input[data-v-b59c8186] {\n  padding-right: 40px;\n  --height: 40px;\n}\n.page-container .filter-bar .search-bar-wrapper .button[data-v-b59c8186] {\n  position: absolute;\n  top: 0;\n  right: 0;\n  z-index: 1;\n  transition: all 100ms;\n}\n.page-container .filter-bar .search-bar-wrapper .button.scale-enter[data-v-b59c8186], .page-container .filter-bar .search-bar-wrapper .button.scale-leave-to[data-v-b59c8186] {\n  transform: scale(0);\n}\n.page-container .filter-bar .submit-button[data-v-b59c8186] {\n  white-space: nowrap;\n}\n.page-container .fab[data-v-b59c8186] {\n  height: 56px;\n  width: 56px;\n  font-family: \"Material Icons\";\n  color: white;\n  background: var(--primary);\n  display: grid;\n  place-content: center;\n  font-size: 24px;\n  position: fixed;\n  bottom: 30px;\n  right: 30px;\n  border-radius: 100%;\n  border: none;\n  filter: var(--elevation-2);\n  cursor: pointer;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n  transition: all 200ms;\n  z-index: 100;\n}\n.page-container .fab[data-v-b59c8186]:hover {\n  filter: var(--elevation-4);\n}\n.page-container .reports-timeline[data-v-b59c8186] {\n  display: block;\n}\n.page-container .reports-timeline .job-wrapper[data-v-b59c8186] {\n  width: 100%;\n  display: inline-flex;\n  flex-direction: column;\n  background: white;\n  border-radius: 7px;\n  filter: var(--elevation-2);\n  margin: 15px 0;\n}\n.page-container .reports-timeline .job-wrapper .job-header[data-v-b59c8186] {\n  display: flex;\n  align-items: center;\n  padding: 5px 0;\n  border-radius: 7px 7px 0 0;\n}\n.page-container .reports-timeline .job-wrapper .job-header .title[data-v-b59c8186] {\n  flex: 1;\n  font-size: 16px;\n  line-height: 20px;\n  font-weight: 600;\n  text-transform: uppercase;\n  color: var(--heading-gray);\n  padding: 0 15px;\n}\n.page-container .reports-timeline .job-wrapper .job-header .timestamp[data-v-b59c8186] {\n  line-height: 20px;\n  font-size: var(--text-size);\n  color: var(--text-gray);\n}\n.page-container .reports-timeline .job-wrapper .job-header .more-button[data-v-b59c8186] {\n  margin: 0 5px;\n}\n.page-container .reports-timeline .job-wrapper .job-pages[data-v-b59c8186] {\n  display: flex;\n  flex-direction: column;\n  gap: 15px;\n  padding: 0 15px 15px;\n  position: relative;\n}\n.page-container .reports-timeline .job-wrapper .job-pages .blend[data-v-b59c8186] {\n  width: 100%;\n  height: 100px;\n  padding-top: 40px;\n  display: grid;\n  place-content: center;\n  position: absolute;\n  bottom: 0;\n  left: 0;\n  background: linear-gradient(0deg, #ffffffff 25%, #ffffff00 100%);\n  border-radius: 0 0 7px 7px;\n}\n.page-container .details[data-v-b59c8186] {\n  width: 100%;\n  display: flex;\n  flex-direction: column;\n  gap: 30px;\n}\n.page-container .details .nav-row[data-v-b59c8186] {\n  height: 40px;\n  margin-top: 30px;\n}\n.page-container .details .detail-row[data-v-b59c8186] {\n  display: grid;\n  grid-template-columns: repeat(12, 1fr);\n  grid-template-rows: 1fr;\n  gap: 30px;\n}\n.page-container .details .card[data-v-b59c8186] {\n  background: var(--bg);\n  border-radius: 5px;\n  font-size: var(--text-size);\n  overflow: hidden;\n}\n.page-container .details .card h1[data-v-b59c8186], .page-container .details .card h2[data-v-b59c8186], .page-container .details .card h3[data-v-b59c8186], .page-container .details .card h4[data-v-b59c8186], .page-container .details .card h5[data-v-b59c8186], .page-container .details .card h6[data-v-b59c8186] {\n  margin: 0;\n  color: var(--primary);\n  width: 100%;\n  padding: 7px 15px 0;\n}\n.page-container .details .card h4[data-v-b59c8186] {\n  color: var(--heading-gray);\n  font-size: var(--button-size);\n  letter-spacing: 1px;\n  text-transform: uppercase;\n  position: relative;\n  font-family: var(--text-font);\n  padding: 7px 15px 7px 10px;\n  border-bottom: 2px solid var(--border-color);\n}\n.page-container .details .card h4.error[data-v-b59c8186] {\n  color: var(--error);\n  border-color: var(--error);\n}\n.page-container .details .card h4.warning[data-v-b59c8186] {\n  color: var(--warning);\n  border-color: var(--warning);\n}\n.page-container .details .card h4.info[data-v-b59c8186] {\n  color: var(--primary);\n  border-color: var(--primary);\n}\n.page-container .details .card h4 .icon[data-v-b59c8186] {\n  font-size: 20px;\n  font-weight: 300;\n  margin-right: 10px;\n  color: inherit;\n  font-family: \"Material Icons\";\n  vertical-align: middle;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n}\n.page-container .details .card h4 .favicon[data-v-b59c8186] {\n  height: 20px;\n  width: 20px;\n  margin-right: 10px;\n  vertical-align: middle;\n}\n.page-container .details .card.center[data-v-b59c8186] {\n  display: grid;\n  place-content: center;\n}\n.page-container .details .card.primary[data-v-b59c8186] {\n  background: var(--primary);\n  color: #ffffffdd;\n}\n.page-container .details .card.primary h1[data-v-b59c8186], .page-container .details .card.primary h2[data-v-b59c8186], .page-container .details .card.primary h3[data-v-b59c8186], .page-container .details .card.primary h4[data-v-b59c8186], .page-container .details .card.primary h5[data-v-b59c8186], .page-container .details .card.primary h6[data-v-b59c8186] {\n  color: white;\n  border-bottom: var(--border);\n  border-color: #ffffff40;\n}\n.page-container .details .card.span-2[data-v-b59c8186] {\n  grid-column: span 2;\n}\n.page-container .details .card.span-3[data-v-b59c8186] {\n  grid-column: span 3;\n}\n.page-container .details .card.span-4[data-v-b59c8186] {\n  grid-column: span 4;\n}\n.page-container .details .card.span-5[data-v-b59c8186] {\n  grid-column: span 5;\n}\n.page-container .details .card.span-6[data-v-b59c8186] {\n  grid-column: span 6;\n}\n.page-container .details .card.span-7[data-v-b59c8186] {\n  grid-column: span 7;\n}\n.page-container .details .card.span-8[data-v-b59c8186] {\n  grid-column: span 8;\n}\n.page-container .details .card.span-9[data-v-b59c8186] {\n  grid-column: span 9;\n}\n.page-container .details .card.span-12[data-v-b59c8186] {\n  grid-column: span 12;\n}\n.page-container .details .card.page-info-card[data-v-b59c8186] {\n  overflow: hidden;\n}\n.page-container .details .card.page-info-card .preview[data-v-b59c8186] {\n  width: 100%;\n  height: 100%;\n  -o-object-fit: contain;\n     object-fit: contain;\n  filter: saturate(0%);\n  float: left;\n  border-radius: 5px;\n  width: 200px;\n}\n.page-container .details .card.page-info-card .content[data-v-b59c8186] {\n  font-size: var(--text-size);\n  color: var(--text-gray);\n}\n.page-container .details .card p[data-v-b59c8186] {\n  padding: 0 15px;\n}\n.page-container .details .card .metric-card-wrapper[data-v-b59c8186] {\n  width: 100%;\n  padding: 7.5px;\n}\n.page-container .details .card .metric-card[data-v-b59c8186] {\n  background: linear-gradient(90deg, var(--bg-dark) 0%, var(--bg) 70%);\n  border-radius: 5px;\n  display: inline-grid;\n  width: calc(100% - 15px);\n  margin: 7.5px;\n  padding: 5px 0;\n  grid-template: auto 1fr/50px 1fr auto;\n  grid-template-areas: \"icon label info\" \"icon value info\";\n}\n.page-container .details .card .metric-card.half[data-v-b59c8186] {\n  width: calc(50% - 15px);\n}\n.page-container .details .card .metric-card .icon[data-v-b59c8186] {\n  grid-area: icon;\n  font-size: 25px;\n  color: var(--primary);\n  font-family: \"Material Icons\";\n  align-self: center;\n  justify-self: center;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n}\n.page-container .details .card .metric-card .square[data-v-b59c8186] {\n  grid-area: icon;\n  height: 20px;\n  width: 20px;\n  border-radius: 3px;\n  border: var(--border);\n  background: var(--bg);\n  align-self: center;\n  justify-self: center;\n}\n.page-container .details .card .metric-card .label[data-v-b59c8186] {\n  grid-area: label;\n  font-size: var(--text-size);\n  color: var(--text-gray);\n  align-self: center;\n  height: 18px;\n  line-height: 18px;\n  margin-top: 3px;\n}\n.page-container .details .card .metric-card .value[data-v-b59c8186] {\n  grid-area: value;\n  font-size: var(--text-size);\n  color: var(--heading-gray);\n  line-height: 130%;\n  align-self: center;\n  font-weight: 600;\n}\n.page-container .details .card .metric-card .value.no-overflow[data-v-b59c8186] {\n  width: 100%;\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n}\n.page-container .details .card .metric-card .info[data-v-b59c8186] {\n  grid-area: info;\n  align-self: center;\n  justify-self: center;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n}\n.page-container .details .card .checklist-wrapper[data-v-b59c8186] {\n  width: 100%;\n  padding: 10px 0;\n}\n.page-container .details .card .checklist-item[data-v-b59c8186] {\n  width: 100%;\n  display: flex;\n  height: 36px;\n  padding: 0 15px;\n  gap: 15px;\n  align-items: center;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n}\n.page-container .details .card .checklist-item .icon[data-v-b59c8186] {\n  font-size: 20px;\n  color: var(--text-gray);\n  font-family: \"Material Icons\";\n  text-align: center;\n}\n.page-container .details .card .checklist-item .text[data-v-b59c8186] {\n  font-size: var(--button-size);\n  font-weight: 600;\n  color: var(--heading-gray);\n  flex: 1;\n  text-transform: uppercase;\n  letter-spacing: 1px;\n}\n.page-container .details .card .twitter-summary-card[data-v-b59c8186] {\n  display: grid;\n  margin: 15px;\n  border-radius: 12px;\n  grid-template: 125px/125px auto;\n  grid-template-areas: \"image content\";\n  align-items: center;\n  border: var(--border);\n  overflow: hidden;\n}\n.page-container .details .card .twitter-summary-card .image[data-v-b59c8186] {\n  grid-area: image;\n  width: 100%;\n  height: 100%;\n  -o-object-fit: cover;\n     object-fit: cover;\n  border-right: var(--border);\n}\n.page-container .details .card .twitter-summary-card .content[data-v-b59c8186] {\n  grid-area: content;\n  padding: 8px 10px;\n  display: block;\n}\n.page-container .details .card .twitter-summary-card .content .title[data-v-b59c8186] {\n  display: block;\n  font-size: var(--text-size);\n  color: var(--heading-gray);\n  margin-bottom: 3px;\n}\n.page-container .details .card .twitter-summary-card .content .description[data-v-b59c8186] {\n  display: block;\n  font-size: var(--text-size);\n  color: var(--text-gray);\n  line-height: 130%;\n  margin-bottom: 3px;\n}\n.page-container .details .card .twitter-summary-card .content .url[data-v-b59c8186] {\n  display: flex;\n  align-items: center;\n}\n.page-container .details .card .twitter-summary-card .content .url .icon[data-v-b59c8186] {\n  font-size: 16px;\n  width: 22px;\n  color: var(--text-gray);\n  font-family: \"Material Icons\";\n  text-align: left;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n}\n.page-container .details .card .twitter-summary-card .content .url .text[data-v-b59c8186] {\n  font-size: var(--text-size);\n  color: var(--text-gray);\n}\n.page-container .details .card .open-graph-article-card[data-v-b59c8186] {\n  display: grid;\n  margin: 15px;\n  border-radius: 7px;\n  grid-template: auto 1fr/1fr;\n  grid-template-areas: \"image\" \"content\";\n  align-items: center;\n  border: var(--border);\n  overflow: hidden;\n}\n.page-container .details .card .open-graph-article-card .image[data-v-b59c8186] {\n  grid-area: image;\n  width: 100%;\n  height: 100%;\n  -o-object-fit: cover;\n     object-fit: cover;\n  border-bottom: var(--border);\n}\n.page-container .details .card .open-graph-article-card .content[data-v-b59c8186] {\n  grid-area: content;\n  padding: 8px 10px;\n  display: block;\n}\n.page-container .details .card .open-graph-article-card .content .url[data-v-b59c8186] {\n  display: block;\n  align-items: center;\n  font-size: var(--text-size);\n  color: var(--text-gray);\n  text-transform: uppercase;\n  margin-bottom: 3px;\n}\n.page-container .details .card .open-graph-article-card .content .title[data-v-b59c8186] {\n  display: block;\n  font-size: var(--text-size);\n  color: var(--heading-gray);\n  margin-bottom: 3px;\n}\n.page-container .details .card .open-graph-article-card .content .description[data-v-b59c8186] {\n  display: block;\n  font-size: var(--text-size);\n  color: var(--text-gray);\n  line-height: 130%;\n}\n.page-container .details .card .image-card[data-v-b59c8186] {\n  display: grid;\n  margin: 15px;\n  border-radius: 5px;\n  grid-template: 125px/125px auto;\n  grid-template-areas: \"image content\";\n  align-items: center;\n  border: var(--border);\n  overflow: hidden;\n}\n.page-container .details .card .image-card .image[data-v-b59c8186] {\n  grid-area: image;\n  width: 100%;\n  height: 100%;\n  -o-object-fit: contain;\n     object-fit: contain;\n  border-right: var(--border);\n  background: var(--bg-dark);\n  padding: 5px;\n}\n.page-container .details .card .image-card .content[data-v-b59c8186] {\n  grid-area: content;\n  padding: 8px 10px;\n  display: block;\n  max-width: 100%;\n  overflow: hidden;\n}\n.page-container .details .card .image-card .content .title[data-v-b59c8186] {\n  display: block;\n  font-size: var(--text-size);\n  color: var(--heading-gray);\n  margin-bottom: 3px;\n}\n.page-container .details .card .image-card .content .description[data-v-b59c8186] {\n  display: block;\n  font-size: var(--text-size);\n  color: var(--text-gray);\n  line-height: 130%;\n  margin-bottom: 3px;\n  max-width: 100%;\n  overflow: hidden;\n}\n.page-container .details .card .image-card .content .description .no-text-overflow[data-v-b59c8186] {\n  width: 100%;\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, ".page-container[data-v-b59c8186] {\n  width: 100%;\n  padding-top: 85px;\n}\n.page-container .header-wrapper[data-v-b59c8186] {\n  width: calc(100% - var(--menu-width));\n  position: fixed;\n  top: 0;\n  left: var(--menu-width);\n  z-index: 1;\n}\n.page-container .header-wrapper .limiter[data-v-b59c8186] {\n  filter: var(--elevation-3);\n  background: var(--bg);\n  width: 100%;\n  display: flex !important;\n  padding: 15px;\n  align-items: center;\n  border-radius: 0 0 7px 7px;\n}\n.page-container .header-wrapper .limiter .spacer[data-v-b59c8186] {\n  flex: 1;\n  height: 40px;\n}\n.page-container .header-wrapper .limiter .sort-input[data-v-b59c8186] {\n  width: 150px;\n  --height: 40px;\n}\n.page-container .header-wrapper .limiter .search-bar-wrapper[data-v-b59c8186] {\n  display: block;\n  position: relative;\n  flex: 1;\n  max-width: 300px;\n}\n.page-container .header-wrapper .limiter .search-bar-wrapper .input[data-v-b59c8186] {\n  padding-right: 40px;\n  --height: 40px;\n}\n.page-container .header-wrapper .limiter .search-bar-wrapper .button[data-v-b59c8186] {\n  position: absolute;\n  top: 0;\n  right: 0;\n  z-index: 1;\n  transition: all 100ms;\n}\n.page-container .header-wrapper .limiter .search-bar-wrapper .button.scale-enter[data-v-b59c8186], .page-container .header-wrapper .limiter .search-bar-wrapper .button.scale-leave-to[data-v-b59c8186] {\n  transform: scale(0);\n}\n.page-container .footer-wrapper[data-v-b59c8186] {\n  width: calc(100%);\n}\n.page-container .footer-wrapper .limiter[data-v-b59c8186] {\n  width: 100%;\n  display: flex !important;\n  padding: 15px 0;\n  align-items: center;\n}\n.page-container .footer-wrapper .limiter .entity-input[data-v-b59c8186] {\n  width: 80px;\n  --height: 40px;\n}\n.page-container .footer-wrapper .limiter .spacer[data-v-b59c8186] {\n  flex: 1;\n  height: 40px;\n}\n.page-container .footer-wrapper .limiter .pagination-button[data-v-b59c8186] {\n  width: 40px;\n}\n.page-container .footer-wrapper .limiter .page-number[data-v-b59c8186] {\n  width: 40px;\n  line-height: 20px;\n  height: 20px;\n  font-size: var(--text-size);\n  color: var(--text-gray);\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n  text-align: center;\n}\n.page-container .fab[data-v-b59c8186] {\n  height: 56px;\n  width: 56px;\n  font-family: \"Material Icons\";\n  color: white;\n  background: var(--primary);\n  display: grid;\n  place-content: center;\n  font-size: 24px;\n  position: fixed;\n  bottom: 30px;\n  right: 30px;\n  border-radius: 100%;\n  border: none;\n  filter: var(--elevation-2);\n  cursor: pointer;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n  transition: all 200ms;\n  z-index: 100;\n}\n.page-container .fab[data-v-b59c8186]:hover {\n  filter: var(--elevation-4);\n}\n.page-container .reports-timeline[data-v-b59c8186] {\n  display: block;\n}\n.page-container .reports-timeline .job-wrapper[data-v-b59c8186] {\n  width: 100%;\n  display: inline-flex;\n  flex-direction: column;\n  background: white;\n  border-radius: 7px;\n  filter: var(--elevation-2);\n  margin: 15px 0;\n  transition: all 300ms;\n}\n.page-container .reports-timeline .job-wrapper.slide-enter[data-v-b59c8186] {\n  transform: translateY(-100px);\n  opacity: 0;\n}\n.page-container .reports-timeline .job-wrapper.slide-leave-to[data-v-b59c8186] {\n  transform: scale(0);\n  opacity: 0;\n}\n.page-container .reports-timeline .job-wrapper.slide-leave-active[data-v-b59c8186] {\n  position: absolute;\n}\n.page-container .reports-timeline .job-wrapper .job-header[data-v-b59c8186] {\n  display: flex;\n  align-items: center;\n  padding: 5px 0;\n  border-radius: 7px 7px 0 0;\n}\n.page-container .reports-timeline .job-wrapper .job-header .title[data-v-b59c8186] {\n  flex: 1;\n  font-size: 16px;\n  line-height: 20px;\n  font-weight: 600;\n  text-transform: uppercase;\n  color: var(--heading-gray);\n  padding: 0 15px;\n}\n.page-container .reports-timeline .job-wrapper .job-header .timestamp[data-v-b59c8186] {\n  line-height: 20px;\n  font-size: var(--text-size);\n  color: var(--text-gray);\n}\n.page-container .reports-timeline .job-wrapper .job-header .more-button[data-v-b59c8186] {\n  margin: 0 5px;\n}\n.page-container .reports-timeline .job-wrapper .job-pages[data-v-b59c8186] {\n  display: flex;\n  flex-direction: column;\n  gap: 15px;\n  padding: 0 15px 15px;\n  position: relative;\n}\n.page-container .reports-timeline .job-wrapper .job-pages .blend[data-v-b59c8186] {\n  width: 100%;\n  height: 100px;\n  padding-top: 40px;\n  display: grid;\n  place-content: center;\n  position: absolute;\n  bottom: 0;\n  left: 0;\n  background: linear-gradient(0deg, #ffffffff 25%, #ffffff00 100%);\n  border-radius: 0 0 7px 7px;\n}\n.page-container .details[data-v-b59c8186] {\n  width: 100%;\n  display: flex;\n  flex-direction: column;\n  gap: 30px;\n}\n.page-container .details .nav-row[data-v-b59c8186] {\n  height: 40px;\n  margin-top: 30px;\n}\n.page-container .details .detail-row[data-v-b59c8186] {\n  display: grid;\n  grid-template-columns: repeat(12, 1fr);\n  grid-template-rows: 1fr;\n  gap: 30px;\n}\n.page-container .details .card[data-v-b59c8186] {\n  background: var(--bg);\n  border-radius: 5px;\n  font-size: var(--text-size);\n  overflow: hidden;\n}\n.page-container .details .card h1[data-v-b59c8186], .page-container .details .card h2[data-v-b59c8186], .page-container .details .card h3[data-v-b59c8186], .page-container .details .card h4[data-v-b59c8186], .page-container .details .card h5[data-v-b59c8186], .page-container .details .card h6[data-v-b59c8186] {\n  margin: 0;\n  color: var(--primary);\n  width: 100%;\n  padding: 7px 15px 0;\n}\n.page-container .details .card h4[data-v-b59c8186] {\n  color: var(--heading-gray);\n  font-size: var(--button-size);\n  letter-spacing: 1px;\n  text-transform: uppercase;\n  position: relative;\n  font-family: var(--text-font);\n  padding: 7px 15px 7px 10px;\n  border-bottom: 2px solid var(--border-color);\n}\n.page-container .details .card h4.error[data-v-b59c8186] {\n  color: var(--error);\n  border-color: var(--error);\n}\n.page-container .details .card h4.warning[data-v-b59c8186] {\n  color: var(--warning);\n  border-color: var(--warning);\n}\n.page-container .details .card h4.info[data-v-b59c8186] {\n  color: var(--primary);\n  border-color: var(--primary);\n}\n.page-container .details .card h4 .icon[data-v-b59c8186] {\n  font-size: 20px;\n  font-weight: 300;\n  margin-right: 10px;\n  color: inherit;\n  font-family: \"Material Icons\";\n  vertical-align: middle;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n}\n.page-container .details .card h4 .favicon[data-v-b59c8186] {\n  height: 20px;\n  width: 20px;\n  margin-right: 10px;\n  vertical-align: middle;\n}\n.page-container .details .card.center[data-v-b59c8186] {\n  display: grid;\n  place-content: center;\n}\n.page-container .details .card.primary[data-v-b59c8186] {\n  background: var(--primary);\n  color: #ffffffdd;\n}\n.page-container .details .card.primary h1[data-v-b59c8186], .page-container .details .card.primary h2[data-v-b59c8186], .page-container .details .card.primary h3[data-v-b59c8186], .page-container .details .card.primary h4[data-v-b59c8186], .page-container .details .card.primary h5[data-v-b59c8186], .page-container .details .card.primary h6[data-v-b59c8186] {\n  color: white;\n  border-bottom: var(--border);\n  border-color: #ffffff40;\n}\n.page-container .details .card.span-2[data-v-b59c8186] {\n  grid-column: span 2;\n}\n.page-container .details .card.span-3[data-v-b59c8186] {\n  grid-column: span 3;\n}\n.page-container .details .card.span-4[data-v-b59c8186] {\n  grid-column: span 4;\n}\n.page-container .details .card.span-5[data-v-b59c8186] {\n  grid-column: span 5;\n}\n.page-container .details .card.span-6[data-v-b59c8186] {\n  grid-column: span 6;\n}\n.page-container .details .card.span-7[data-v-b59c8186] {\n  grid-column: span 7;\n}\n.page-container .details .card.span-8[data-v-b59c8186] {\n  grid-column: span 8;\n}\n.page-container .details .card.span-9[data-v-b59c8186] {\n  grid-column: span 9;\n}\n.page-container .details .card.span-12[data-v-b59c8186] {\n  grid-column: span 12;\n}\n.page-container .details .card.page-info-card[data-v-b59c8186] {\n  overflow: hidden;\n}\n.page-container .details .card.page-info-card .preview[data-v-b59c8186] {\n  width: 100%;\n  height: 100%;\n  -o-object-fit: contain;\n     object-fit: contain;\n  filter: saturate(0%);\n  float: left;\n  border-radius: 5px;\n  width: 200px;\n}\n.page-container .details .card.page-info-card .content[data-v-b59c8186] {\n  font-size: var(--text-size);\n  color: var(--text-gray);\n}\n.page-container .details .card p[data-v-b59c8186] {\n  padding: 0 15px;\n}\n.page-container .details .card .metric-card-wrapper[data-v-b59c8186] {\n  width: 100%;\n  padding: 7.5px;\n}\n.page-container .details .card .metric-card[data-v-b59c8186] {\n  background: linear-gradient(90deg, var(--bg-dark) 0%, var(--bg) 70%);\n  border-radius: 5px;\n  display: inline-grid;\n  width: calc(100% - 15px);\n  margin: 7.5px;\n  padding: 5px 0;\n  grid-template: auto 1fr/50px 1fr auto;\n  grid-template-areas: \"icon label info\" \"icon value info\";\n}\n.page-container .details .card .metric-card.half[data-v-b59c8186] {\n  width: calc(50% - 15px);\n}\n.page-container .details .card .metric-card .icon[data-v-b59c8186] {\n  grid-area: icon;\n  font-size: 25px;\n  color: var(--primary);\n  font-family: \"Material Icons\";\n  align-self: center;\n  justify-self: center;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n}\n.page-container .details .card .metric-card .square[data-v-b59c8186] {\n  grid-area: icon;\n  height: 20px;\n  width: 20px;\n  border-radius: 3px;\n  border: var(--border);\n  background: var(--bg);\n  align-self: center;\n  justify-self: center;\n}\n.page-container .details .card .metric-card .label[data-v-b59c8186] {\n  grid-area: label;\n  font-size: var(--text-size);\n  color: var(--text-gray);\n  align-self: center;\n  height: 18px;\n  line-height: 18px;\n  margin-top: 3px;\n}\n.page-container .details .card .metric-card .value[data-v-b59c8186] {\n  grid-area: value;\n  font-size: var(--text-size);\n  color: var(--heading-gray);\n  line-height: 130%;\n  align-self: center;\n  font-weight: 600;\n}\n.page-container .details .card .metric-card .value.no-overflow[data-v-b59c8186] {\n  width: 100%;\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n}\n.page-container .details .card .metric-card .info[data-v-b59c8186] {\n  grid-area: info;\n  align-self: center;\n  justify-self: center;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n}\n.page-container .details .card .checklist-wrapper[data-v-b59c8186] {\n  width: 100%;\n  padding: 10px 0;\n}\n.page-container .details .card .checklist-item[data-v-b59c8186] {\n  width: 100%;\n  display: flex;\n  height: 36px;\n  padding: 0 15px;\n  gap: 15px;\n  align-items: center;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n}\n.page-container .details .card .checklist-item .icon[data-v-b59c8186] {\n  font-size: 20px;\n  color: var(--text-gray);\n  font-family: \"Material Icons\";\n  text-align: center;\n}\n.page-container .details .card .checklist-item .text[data-v-b59c8186] {\n  font-size: var(--button-size);\n  font-weight: 600;\n  color: var(--heading-gray);\n  flex: 1;\n  text-transform: uppercase;\n  letter-spacing: 1px;\n}\n.page-container .details .card .twitter-summary-card[data-v-b59c8186] {\n  display: grid;\n  margin: 15px;\n  border-radius: 12px;\n  grid-template: 125px/125px auto;\n  grid-template-areas: \"image content\";\n  align-items: center;\n  border: var(--border);\n  overflow: hidden;\n}\n.page-container .details .card .twitter-summary-card .image[data-v-b59c8186] {\n  grid-area: image;\n  width: 100%;\n  height: 100%;\n  -o-object-fit: cover;\n     object-fit: cover;\n  border-right: var(--border);\n}\n.page-container .details .card .twitter-summary-card .content[data-v-b59c8186] {\n  grid-area: content;\n  padding: 8px 10px;\n  display: block;\n}\n.page-container .details .card .twitter-summary-card .content .title[data-v-b59c8186] {\n  display: block;\n  font-size: var(--text-size);\n  color: var(--heading-gray);\n  margin-bottom: 3px;\n}\n.page-container .details .card .twitter-summary-card .content .description[data-v-b59c8186] {\n  display: block;\n  font-size: var(--text-size);\n  color: var(--text-gray);\n  line-height: 130%;\n  margin-bottom: 3px;\n}\n.page-container .details .card .twitter-summary-card .content .url[data-v-b59c8186] {\n  display: flex;\n  align-items: center;\n}\n.page-container .details .card .twitter-summary-card .content .url .icon[data-v-b59c8186] {\n  font-size: 16px;\n  width: 22px;\n  color: var(--text-gray);\n  font-family: \"Material Icons\";\n  text-align: left;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n}\n.page-container .details .card .twitter-summary-card .content .url .text[data-v-b59c8186] {\n  font-size: var(--text-size);\n  color: var(--text-gray);\n}\n.page-container .details .card .open-graph-article-card[data-v-b59c8186] {\n  display: grid;\n  margin: 15px;\n  border-radius: 7px;\n  grid-template: auto 1fr/1fr;\n  grid-template-areas: \"image\" \"content\";\n  align-items: center;\n  border: var(--border);\n  overflow: hidden;\n}\n.page-container .details .card .open-graph-article-card .image[data-v-b59c8186] {\n  grid-area: image;\n  width: 100%;\n  height: 100%;\n  -o-object-fit: cover;\n     object-fit: cover;\n  border-bottom: var(--border);\n}\n.page-container .details .card .open-graph-article-card .content[data-v-b59c8186] {\n  grid-area: content;\n  padding: 8px 10px;\n  display: block;\n}\n.page-container .details .card .open-graph-article-card .content .url[data-v-b59c8186] {\n  display: block;\n  align-items: center;\n  font-size: var(--text-size);\n  color: var(--text-gray);\n  text-transform: uppercase;\n  margin-bottom: 3px;\n}\n.page-container .details .card .open-graph-article-card .content .title[data-v-b59c8186] {\n  display: block;\n  font-size: var(--text-size);\n  color: var(--heading-gray);\n  margin-bottom: 3px;\n}\n.page-container .details .card .open-graph-article-card .content .description[data-v-b59c8186] {\n  display: block;\n  font-size: var(--text-size);\n  color: var(--text-gray);\n  line-height: 130%;\n}\n.page-container .details .card .image-card[data-v-b59c8186] {\n  display: grid;\n  margin: 15px;\n  border-radius: 5px;\n  grid-template: 125px/125px auto;\n  grid-template-areas: \"image content\";\n  align-items: center;\n  border: var(--border);\n  overflow: hidden;\n}\n.page-container .details .card .image-card .image[data-v-b59c8186] {\n  grid-area: image;\n  width: 100%;\n  height: 100%;\n  -o-object-fit: contain;\n     object-fit: contain;\n  border-right: var(--border);\n  background: var(--bg-dark);\n  padding: 5px;\n}\n.page-container .details .card .image-card .content[data-v-b59c8186] {\n  grid-area: content;\n  padding: 8px 10px;\n  display: block;\n  max-width: 100%;\n  overflow: hidden;\n}\n.page-container .details .card .image-card .content .title[data-v-b59c8186] {\n  display: block;\n  font-size: var(--text-size);\n  color: var(--heading-gray);\n  margin-bottom: 3px;\n}\n.page-container .details .card .image-card .content .description[data-v-b59c8186] {\n  display: block;\n  font-size: var(--text-size);\n  color: var(--text-gray);\n  line-height: 130%;\n  margin-bottom: 3px;\n  max-width: 100%;\n  overflow: hidden;\n}\n.page-container .details .card .image-card .content .description .no-text-overflow[data-v-b59c8186] {\n  width: 100%;\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -39134,9 +39222,39 @@ var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js
 
 /***/ }),
 
-/***/ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-15[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-15[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-15[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/views/dashboard/Index.vue?vue&type=style&index=0&id=eb9530ca&lang=sass&scoped=true&":
+/***/ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-15[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-15[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-15[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/views/dashboard/Index.vue?vue&type=style&index=0&lang=sass&":
+/*!***********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-15[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-15[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-15[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/views/dashboard/Index.vue?vue&type=style&index=0&lang=sass& ***!
+  \***********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => __WEBPACK_DEFAULT_EXPORT__
+/* harmony export */ });
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! !../../../../../node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js */ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_css_loader_dist_cjs_js_clonedRuleSet_15_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_15_0_rules_0_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_15_0_rules_0_use_3_node_modules_vue_loader_lib_index_js_vue_loader_options_Index_vue_vue_type_style_index_0_lang_sass___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !!../../../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-15[0].rules[0].use[1]!../../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-15[0].rules[0].use[2]!../../../../../node_modules/sass-loader/dist/cjs.js??clonedRuleSet-15[0].rules[0].use[3]!../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./Index.vue?vue&type=style&index=0&lang=sass& */ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-15[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-15[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-15[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/views/dashboard/Index.vue?vue&type=style&index=0&lang=sass&");
+
+            
+
+var options = {};
+
+options.insert = "head";
+options.singleton = false;
+
+var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_css_loader_dist_cjs_js_clonedRuleSet_15_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_15_0_rules_0_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_15_0_rules_0_use_3_node_modules_vue_loader_lib_index_js_vue_loader_options_Index_vue_vue_type_style_index_0_lang_sass___WEBPACK_IMPORTED_MODULE_1__.default, options);
+
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_css_loader_dist_cjs_js_clonedRuleSet_15_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_15_0_rules_0_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_15_0_rules_0_use_3_node_modules_vue_loader_lib_index_js_vue_loader_options_Index_vue_vue_type_style_index_0_lang_sass___WEBPACK_IMPORTED_MODULE_1__.default.locals || {});
+
+/***/ }),
+
+/***/ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-15[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-15[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-15[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/views/dashboard/Index.vue?vue&type=style&index=1&id=eb9530ca&lang=sass&scoped=true&":
 /*!***********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-15[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-15[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-15[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/views/dashboard/Index.vue?vue&type=style&index=0&id=eb9530ca&lang=sass&scoped=true& ***!
+  !*** ./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-15[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-15[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-15[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/views/dashboard/Index.vue?vue&type=style&index=1&id=eb9530ca&lang=sass&scoped=true& ***!
   \***********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -39147,7 +39265,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! !../../../../../node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js */ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js");
 /* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _node_modules_css_loader_dist_cjs_js_clonedRuleSet_15_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_15_0_rules_0_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_15_0_rules_0_use_3_node_modules_vue_loader_lib_index_js_vue_loader_options_Index_vue_vue_type_style_index_0_id_eb9530ca_lang_sass_scoped_true___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !!../../../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-15[0].rules[0].use[1]!../../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-15[0].rules[0].use[2]!../../../../../node_modules/sass-loader/dist/cjs.js??clonedRuleSet-15[0].rules[0].use[3]!../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./Index.vue?vue&type=style&index=0&id=eb9530ca&lang=sass&scoped=true& */ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-15[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-15[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-15[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/views/dashboard/Index.vue?vue&type=style&index=0&id=eb9530ca&lang=sass&scoped=true&");
+/* harmony import */ var _node_modules_css_loader_dist_cjs_js_clonedRuleSet_15_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_15_0_rules_0_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_15_0_rules_0_use_3_node_modules_vue_loader_lib_index_js_vue_loader_options_Index_vue_vue_type_style_index_1_id_eb9530ca_lang_sass_scoped_true___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !!../../../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-15[0].rules[0].use[1]!../../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-15[0].rules[0].use[2]!../../../../../node_modules/sass-loader/dist/cjs.js??clonedRuleSet-15[0].rules[0].use[3]!../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./Index.vue?vue&type=style&index=1&id=eb9530ca&lang=sass&scoped=true& */ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-15[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-15[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-15[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/views/dashboard/Index.vue?vue&type=style&index=1&id=eb9530ca&lang=sass&scoped=true&");
 
             
 
@@ -39156,11 +39274,11 @@ var options = {};
 options.insert = "head";
 options.singleton = false;
 
-var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_css_loader_dist_cjs_js_clonedRuleSet_15_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_15_0_rules_0_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_15_0_rules_0_use_3_node_modules_vue_loader_lib_index_js_vue_loader_options_Index_vue_vue_type_style_index_0_id_eb9530ca_lang_sass_scoped_true___WEBPACK_IMPORTED_MODULE_1__.default, options);
+var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_css_loader_dist_cjs_js_clonedRuleSet_15_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_15_0_rules_0_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_15_0_rules_0_use_3_node_modules_vue_loader_lib_index_js_vue_loader_options_Index_vue_vue_type_style_index_1_id_eb9530ca_lang_sass_scoped_true___WEBPACK_IMPORTED_MODULE_1__.default, options);
 
 
 
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_css_loader_dist_cjs_js_clonedRuleSet_15_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_15_0_rules_0_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_15_0_rules_0_use_3_node_modules_vue_loader_lib_index_js_vue_loader_options_Index_vue_vue_type_style_index_0_id_eb9530ca_lang_sass_scoped_true___WEBPACK_IMPORTED_MODULE_1__.default.locals || {});
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_css_loader_dist_cjs_js_clonedRuleSet_15_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_15_0_rules_0_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_15_0_rules_0_use_3_node_modules_vue_loader_lib_index_js_vue_loader_options_Index_vue_vue_type_style_index_1_id_eb9530ca_lang_sass_scoped_true___WEBPACK_IMPORTED_MODULE_1__.default.locals || {});
 
 /***/ }),
 
@@ -43292,17 +43410,19 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _Index_vue_vue_type_template_id_eb9530ca_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Index.vue?vue&type=template&id=eb9530ca&scoped=true& */ "./resources/js/components/views/dashboard/Index.vue?vue&type=template&id=eb9530ca&scoped=true&");
 /* harmony import */ var _Index_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Index.vue?vue&type=script&lang=js& */ "./resources/js/components/views/dashboard/Index.vue?vue&type=script&lang=js&");
-/* harmony import */ var _Index_vue_vue_type_style_index_0_id_eb9530ca_lang_sass_scoped_true___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Index.vue?vue&type=style&index=0&id=eb9530ca&lang=sass&scoped=true& */ "./resources/js/components/views/dashboard/Index.vue?vue&type=style&index=0&id=eb9530ca&lang=sass&scoped=true&");
-/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! !../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* harmony import */ var _Index_vue_vue_type_style_index_0_lang_sass___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Index.vue?vue&type=style&index=0&lang=sass& */ "./resources/js/components/views/dashboard/Index.vue?vue&type=style&index=0&lang=sass&");
+/* harmony import */ var _Index_vue_vue_type_style_index_1_id_eb9530ca_lang_sass_scoped_true___WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Index.vue?vue&type=style&index=1&id=eb9530ca&lang=sass&scoped=true& */ "./resources/js/components/views/dashboard/Index.vue?vue&type=style&index=1&id=eb9530ca&lang=sass&scoped=true&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! !../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
 
 ;
 
 
+
 /* normalize component */
 
-var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__.default)(
+var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_4__.default)(
   _Index_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__.default,
   _Index_vue_vue_type_template_id_eb9530ca_scoped_true___WEBPACK_IMPORTED_MODULE_0__.render,
   _Index_vue_vue_type_template_id_eb9530ca_scoped_true___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
@@ -44539,15 +44659,28 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/js/components/views/dashboard/Index.vue?vue&type=style&index=0&id=eb9530ca&lang=sass&scoped=true&":
+/***/ "./resources/js/components/views/dashboard/Index.vue?vue&type=style&index=0&lang=sass&":
+/*!*********************************************************************************************!*\
+  !*** ./resources/js/components/views/dashboard/Index.vue?vue&type=style&index=0&lang=sass& ***!
+  \*********************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_dist_cjs_js_node_modules_css_loader_dist_cjs_js_clonedRuleSet_15_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_15_0_rules_0_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_15_0_rules_0_use_3_node_modules_vue_loader_lib_index_js_vue_loader_options_Index_vue_vue_type_style_index_0_lang_sass___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/style-loader/dist/cjs.js!../../../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-15[0].rules[0].use[1]!../../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-15[0].rules[0].use[2]!../../../../../node_modules/sass-loader/dist/cjs.js??clonedRuleSet-15[0].rules[0].use[3]!../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./Index.vue?vue&type=style&index=0&lang=sass& */ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-15[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-15[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-15[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/views/dashboard/Index.vue?vue&type=style&index=0&lang=sass&");
+
+
+/***/ }),
+
+/***/ "./resources/js/components/views/dashboard/Index.vue?vue&type=style&index=1&id=eb9530ca&lang=sass&scoped=true&":
 /*!*********************************************************************************************************************!*\
-  !*** ./resources/js/components/views/dashboard/Index.vue?vue&type=style&index=0&id=eb9530ca&lang=sass&scoped=true& ***!
+  !*** ./resources/js/components/views/dashboard/Index.vue?vue&type=style&index=1&id=eb9530ca&lang=sass&scoped=true& ***!
   \*********************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_style_loader_dist_cjs_js_node_modules_css_loader_dist_cjs_js_clonedRuleSet_15_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_15_0_rules_0_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_15_0_rules_0_use_3_node_modules_vue_loader_lib_index_js_vue_loader_options_Index_vue_vue_type_style_index_0_id_eb9530ca_lang_sass_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/style-loader/dist/cjs.js!../../../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-15[0].rules[0].use[1]!../../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-15[0].rules[0].use[2]!../../../../../node_modules/sass-loader/dist/cjs.js??clonedRuleSet-15[0].rules[0].use[3]!../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./Index.vue?vue&type=style&index=0&id=eb9530ca&lang=sass&scoped=true& */ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-15[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-15[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-15[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/views/dashboard/Index.vue?vue&type=style&index=0&id=eb9530ca&lang=sass&scoped=true&");
+/* harmony import */ var _node_modules_style_loader_dist_cjs_js_node_modules_css_loader_dist_cjs_js_clonedRuleSet_15_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_15_0_rules_0_use_2_node_modules_sass_loader_dist_cjs_js_clonedRuleSet_15_0_rules_0_use_3_node_modules_vue_loader_lib_index_js_vue_loader_options_Index_vue_vue_type_style_index_1_id_eb9530ca_lang_sass_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/style-loader/dist/cjs.js!../../../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-15[0].rules[0].use[1]!../../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-15[0].rules[0].use[2]!../../../../../node_modules/sass-loader/dist/cjs.js??clonedRuleSet-15[0].rules[0].use[3]!../../../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./Index.vue?vue&type=style&index=1&id=eb9530ca&lang=sass&scoped=true& */ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-15[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-15[0].rules[0].use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-15[0].rules[0].use[3]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/views/dashboard/Index.vue?vue&type=style&index=1&id=eb9530ca&lang=sass&scoped=true&");
 
 
 /***/ }),
@@ -47794,26 +47927,6 @@ var render = function() {
           ]
         ),
         _vm._v(" "),
-        _c(
-          "a",
-          {
-            staticClass: "button",
-            class: { active: _vm.$store.getters.page === "notifications" },
-            attrs: { href: "/dashboard/notifications" },
-            on: {
-              click: function($event) {
-                $event.preventDefault()
-                return _vm.$store.dispatch("setPage", "notifications")
-              }
-            }
-          },
-          [
-            _c("div", { staticClass: "icon" }, [_vm._v("󰵚")]),
-            _vm._v(" "),
-            _c("div", { staticClass: "text" }, [_vm._v("Notifications")])
-          ]
-        ),
-        _vm._v(" "),
         _c("div", { staticClass: "bottom" }, [
           _c(
             "a",
@@ -47887,13 +48000,6 @@ var render = function() {
               _vm._v(" "),
               _vm.$store.getters.page === "teams"
                 ? _c("teams-page", { key: "teams-page", staticClass: "page" })
-                : _vm._e(),
-              _vm._v(" "),
-              _vm.$store.getters.page === "notifications"
-                ? _c("notifications-page", {
-                    key: "notifications-page",
-                    staticClass: "page"
-                  })
                 : _vm._e(),
               _vm._v(" "),
               _vm.$store.getters.page === "settings"
@@ -48486,10 +48592,11 @@ var render = function() {
         },
         [
           _c(
-            "p",
+            "div",
+            { staticClass: "name-wrapper" },
             [
               _c("ui-text-input", {
-                attrs: { label: "Firstname", ac: "firstname" },
+                attrs: { label: "Firstname", ac: "firstname", "no-border": "" },
                 model: {
                   value: _vm.nameChange.firstname,
                   callback: function($$v) {
@@ -48500,7 +48607,7 @@ var render = function() {
               }),
               _vm._v(" "),
               _c("ui-text-input", {
-                attrs: { label: "Lastname", ac: "lastname" },
+                attrs: { label: "Lastname", ac: "lastname", "no-border": "" },
                 model: {
                   value: _vm.nameChange.lastname,
                   callback: function($$v) {
@@ -48513,14 +48620,21 @@ var render = function() {
               _c(
                 "ui-button",
                 {
-                  attrs: { loading: _vm.nameChange.loading },
+                  staticClass: "submit-button",
+                  attrs: {
+                    disabled:
+                      (_vm.nameChange.firstname || "") +
+                        (_vm.nameChange.lastname || "") ===
+                      _vm.nameChange.legacy,
+                    loading: _vm.nameChange.loading
+                  },
                   on: {
                     click: function($event) {
                       return _vm.changeName()
                     }
                   }
                 },
-                [_vm._v("Change Name")]
+                [_vm._v("Save")]
               )
             ],
             1
@@ -48555,66 +48669,1316 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    { staticClass: "page-container limiter" },
+    { staticClass: "page-container" },
     [
-      _vm.details === null
-        ? _c(
-            "div",
-            { staticClass: "filter-bar" },
-            [
-              _c("ui-select-input", {
-                staticClass: "entity-input",
-                attrs: {
-                  options: [
-                    { "10": 10 },
-                    { "20": 20 },
-                    { "50": 50 },
-                    { "100": 100 }
-                  ]
-                },
-                model: {
-                  value: _vm.reportSearch.pageCount,
-                  callback: function($$v) {
-                    _vm.$set(_vm.reportSearch, "pageCount", $$v)
+      _c("div", { staticClass: "header-wrapper" }, [
+        _vm.details === null
+          ? _c(
+              "div",
+              { staticClass: "filter-bar limiter" },
+              [
+                _c("ui-select-input", {
+                  staticClass: "sort-input",
+                  attrs: {
+                    options: [{ DESC: "Newest first" }, { ASC: "Oldest first" }]
                   },
-                  expression: "reportSearch.pageCount"
-                }
-              }),
+                  model: {
+                    value: _vm.reportSearch.sort,
+                    callback: function($$v) {
+                      _vm.$set(_vm.reportSearch, "sort", $$v)
+                    },
+                    expression: "reportSearch.sort"
+                  }
+                }),
+                _vm._v(" "),
+                _c("div", { staticClass: "spacer" }),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticClass: "search-bar-wrapper" },
+                  [
+                    _c("ui-text-input", {
+                      staticClass: "input",
+                      attrs: { placeholder: "Search" },
+                      model: {
+                        value: _vm.reportSearch.url,
+                        callback: function($$v) {
+                          _vm.$set(_vm.reportSearch, "url", $$v)
+                        },
+                        expression: "reportSearch.url"
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c(
+                      "transition",
+                      { attrs: { name: "scale" } },
+                      [
+                        _c(
+                          "ui-icon-button",
+                          {
+                            directives: [
+                              {
+                                name: "show",
+                                rawName: "v-show",
+                                value: _vm.reportSearch.url.trim(),
+                                expression: "reportSearch.url.trim()"
+                              }
+                            ],
+                            staticClass: "button",
+                            on: {
+                              click: function($event) {
+                                _vm.reportSearch.url = ""
+                              }
+                            }
+                          },
+                          [_vm._v("󰅖")]
+                        )
+                      ],
+                      1
+                    )
+                  ],
+                  1
+                )
+              ],
+              1
+            )
+          : _vm._e()
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "limiter" }, [
+        _vm.details === null
+          ? _c(
+              "div",
+              { staticClass: "reports-timeline" },
+              [
+                _c(
+                  "transition-group",
+                  { staticClass: "block", attrs: { name: "slide" } },
+                  _vm._l(_vm.paginatedReportGroups.data, function(reportGroup) {
+                    return _c(
+                      "div",
+                      {
+                        key: "report_group_" + reportGroup.id,
+                        staticClass: "job-wrapper"
+                      },
+                      [
+                        _c(
+                          "div",
+                          { staticClass: "job-header" },
+                          [
+                            _c("div", { staticClass: "title" }, [
+                              _vm._v(_vm._s(reportGroup.host))
+                            ]),
+                            _vm._v(" "),
+                            _c(
+                              "div",
+                              {
+                                directives: [
+                                  {
+                                    name: "tooltip",
+                                    rawName: "v-tooltip",
+                                    value: _vm.formateDate(
+                                      reportGroup.created_at
+                                    ),
+                                    expression:
+                                      "formateDate(reportGroup.created_at)"
+                                  }
+                                ],
+                                staticClass: "timestamp"
+                              },
+                              [
+                                _vm._v(
+                                  _vm._s(
+                                    _vm._f("diffForHumans")(
+                                      reportGroup.created_at
+                                    )
+                                  )
+                                )
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "ui-popover-menu",
+                              {
+                                scopedSlots: _vm._u(
+                                  [
+                                    {
+                                      key: "trigger",
+                                      fn: function() {
+                                        return [
+                                          _c(
+                                            "ui-icon-button",
+                                            { staticClass: "more-button" },
+                                            [_vm._v("󰇙")]
+                                          )
+                                        ]
+                                      },
+                                      proxy: true
+                                    }
+                                  ],
+                                  null,
+                                  true
+                                )
+                              },
+                              [
+                                _vm._v(" "),
+                                _c(
+                                  "ui-menu-item",
+                                  {
+                                    attrs: { icon: "&#983881;" },
+                                    on: {
+                                      click: function($event) {
+                                        _vm.reportSearch.url = reportGroup.host
+                                      }
+                                    }
+                                  },
+                                  [_vm._v("Search for domain")]
+                                ),
+                                _vm._v(" "),
+                                _c("ui-menu-divider"),
+                                _vm._v(" "),
+                                _c(
+                                  "ui-menu-item",
+                                  {
+                                    attrs: { icon: "&#985721;" },
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.openReportDeleteDialog(
+                                          reportGroup
+                                        )
+                                      }
+                                    }
+                                  },
+                                  [_vm._v("Delete report")]
+                                )
+                              ],
+                              1
+                            )
+                          ],
+                          1
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          { staticClass: "job-pages" },
+                          [
+                            _vm._l(reportGroup.reports, function(report) {
+                              return _c("page-row", {
+                                key: "report_" + report.id,
+                                attrs: { report: report },
+                                on: {
+                                  details: function($event) {
+                                    return _vm.openDetails($event)
+                                  }
+                                }
+                              })
+                            }),
+                            _vm._v(" "),
+                            reportGroup.reports.length > 4
+                              ? _c(
+                                  "div",
+                                  { staticClass: "blend" },
+                                  [
+                                    _c("ui-button", { attrs: { text: "" } }, [
+                                      _vm._v("Show more")
+                                    ])
+                                  ],
+                                  1
+                                )
+                              : _vm._e()
+                          ],
+                          2
+                        )
+                      ]
+                    )
+                  }),
+                  0
+                )
+              ],
+              1
+            )
+          : _c("div", { staticClass: "details" }, [
+              _c(
+                "div",
+                { staticClass: "nav-row" },
+                [
+                  _c(
+                    "ui-button",
+                    {
+                      attrs: {
+                        icon: "&#983117;",
+                        "icon-left": "",
+                        border: "",
+                        text: ""
+                      },
+                      on: {
+                        click: function($event) {
+                          _vm.details = null
+                        }
+                      }
+                    },
+                    [_vm._v("Back")]
+                  )
+                ],
+                1
+              ),
               _vm._v(" "),
+              _c("div", { staticClass: "detail-row" }, [
+                _c(
+                  "div",
+                  { staticClass: "card span-3" },
+                  [
+                    _vm._m(0),
+                    _vm._v(" "),
+                    _c("apexchart", {
+                      staticStyle: { display: "inherit" },
+                      attrs: {
+                        type: "radialBar",
+                        height: "250",
+                        options: _vm.chartOptions,
+                        series: [_vm.details.score.totalPageScore] || 0
+                      }
+                    })
+                  ],
+                  1
+                ),
+                _vm._v(" "),
+                _c("div", { staticClass: "card span-3" }, [
+                  _vm._m(1),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "metric-card-wrapper" }, [
+                    _c(
+                      "div",
+                      {
+                        directives: [
+                          {
+                            name: "show",
+                            rawName: "v-show",
+                            value: _vm.details.score.hasFavicon,
+                            expression: "details.score.hasFavicon"
+                          }
+                        ],
+                        staticClass: "metric-card"
+                      },
+                      [
+                        _c(
+                          "div",
+                          {
+                            staticClass: "icon",
+                            staticStyle: { color: "var(--success)" }
+                          },
+                          [_vm._v("󰄬")]
+                        ),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "value" }, [
+                          _vm._v("Favicon")
+                        ]),
+                        _vm._v(" "),
+                        _c("ui-tooltip-button", { staticClass: "info" }, [
+                          _c("b", [_vm._v("The Favicon")]),
+                          _c("br"),
+                          _vm._v(
+                            "\n                                The favicon is the small icon next to the page title in the tab above the page. It isn't displayed on the page itself. \n                            "
+                          )
+                        ])
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      {
+                        directives: [
+                          {
+                            name: "show",
+                            rawName: "v-show",
+                            value: _vm.details.score.hasTitle,
+                            expression: "details.score.hasTitle"
+                          }
+                        ],
+                        staticClass: "metric-card"
+                      },
+                      [
+                        _c(
+                          "div",
+                          {
+                            staticClass: "icon",
+                            staticStyle: { color: "var(--success)" }
+                          },
+                          [_vm._v("󰄬")]
+                        ),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "value" }, [
+                          _vm._v("Page Title")
+                        ]),
+                        _vm._v(" "),
+                        _c("ui-tooltip-button", { staticClass: "info" }, [
+                          _c("b", [_vm._v("The Page Title")]),
+                          _c("br"),
+                          _vm._v(
+                            "\n                                The title-tag is a meta-tag in the page's head section. It is displayed in search results and in the tab above the page. Former of which\n                                makes it very relevant for your page's SEO ranking. \n                            "
+                          )
+                        ])
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      {
+                        directives: [
+                          {
+                            name: "show",
+                            rawName: "v-show",
+                            value: _vm.details.score.hasDescription,
+                            expression: "details.score.hasDescription"
+                          }
+                        ],
+                        staticClass: "metric-card"
+                      },
+                      [
+                        _c(
+                          "div",
+                          {
+                            staticClass: "icon",
+                            staticStyle: { color: "var(--success)" }
+                          },
+                          [_vm._v("󰄬")]
+                        ),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "value" }, [
+                          _vm._v("Page Description")
+                        ]),
+                        _vm._v(" "),
+                        _c("ui-tooltip-button", { staticClass: "info" }, [
+                          _c("b", [_vm._v("The Page Description")]),
+                          _c("br"),
+                          _vm._v(
+                            "\n                                The page description is a meta-tag in the page's head section. Search engines display it below your page title and may use it to \n                                rank your page and extract relevant information of what your page is about.\n                            "
+                          )
+                        ])
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      {
+                        directives: [
+                          {
+                            name: "show",
+                            rawName: "v-show",
+                            value: _vm.details.score.hasViewport,
+                            expression: "details.score.hasViewport"
+                          }
+                        ],
+                        staticClass: "metric-card"
+                      },
+                      [
+                        _c(
+                          "div",
+                          {
+                            staticClass: "icon",
+                            staticStyle: { color: "var(--success)" }
+                          },
+                          [_vm._v("󰄬")]
+                        ),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "value" }, [
+                          _vm._v("Mobile Support")
+                        ]),
+                        _vm._v(" "),
+                        _c("ui-tooltip-button", { staticClass: "info" }, [
+                          _c("b", [_vm._v("Mobile Support (WIP)")]),
+                          _c("br"),
+                          _vm._v(
+                            "\n                                A modern web-page is being visited by desktop and mobile users alike. It is therefore strongly recommended to offer a mobile friendly\n                                version of your page."
+                          ),
+                          _c("br"),
+                          _c("br"),
+                          _vm._v(
+                            "\n                                This detection is still work in progress.\n                            "
+                          )
+                        ])
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      {
+                        directives: [
+                          {
+                            name: "show",
+                            rawName: "v-show",
+                            value: _vm.details.score.errorPage.hasCustom404Page,
+                            expression:
+                              "details.score.errorPage.hasCustom404Page"
+                          }
+                        ],
+                        staticClass: "metric-card"
+                      },
+                      [
+                        _c(
+                          "div",
+                          {
+                            staticClass: "icon",
+                            staticStyle: { color: "var(--success)" }
+                          },
+                          [_vm._v("󰄬")]
+                        ),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "value" }, [
+                          _vm._v("Custom 404 Page")
+                        ]),
+                        _vm._v(" "),
+                        _c("ui-tooltip-button", { staticClass: "info" }, [
+                          _c("b", [_vm._v("Custom 404 Pages (WIP)")]),
+                          _c("br"),
+                          _vm._v(
+                            "\n                                When the user visits a non-existing page by default he is shown a standard error page. This my lead the user to believe the whole website\n                                is offline. To mitigate this issue it is recommened to build a custom error page to bring the user back to a functional page."
+                          ),
+                          _c("br"),
+                          _c("br"),
+                          _vm._v(
+                            "\n                                This detection is still work in progress.\n                            "
+                          )
+                        ])
+                      ],
+                      1
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "metric-card-wrapper" }, [
+                    _c(
+                      "div",
+                      {
+                        directives: [
+                          {
+                            name: "show",
+                            rawName: "v-show",
+                            value: !_vm.details.score.hasFavicon,
+                            expression: "!details.score.hasFavicon"
+                          }
+                        ],
+                        staticClass: "metric-card"
+                      },
+                      [
+                        _c(
+                          "div",
+                          {
+                            staticClass: "icon",
+                            staticStyle: { color: "var(--error)" }
+                          },
+                          [_vm._v("󰅖")]
+                        ),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "value" }, [
+                          _vm._v("No Favicon")
+                        ]),
+                        _vm._v(" "),
+                        _c("ui-tooltip-button", { staticClass: "info" }, [
+                          _c("b", [_vm._v("The Favicon")]),
+                          _c("br"),
+                          _vm._v(
+                            "\n                                The favicon is the small icon next to the page title in the tab above the page. It isn't displayed on the page itself. \n                            "
+                          )
+                        ])
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      {
+                        directives: [
+                          {
+                            name: "show",
+                            rawName: "v-show",
+                            value: !_vm.details.score.hasTitle,
+                            expression: "!details.score.hasTitle"
+                          }
+                        ],
+                        staticClass: "metric-card"
+                      },
+                      [
+                        _c(
+                          "div",
+                          {
+                            staticClass: "icon",
+                            staticStyle: { color: "var(--error)" }
+                          },
+                          [_vm._v("󰅖")]
+                        ),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "value" }, [
+                          _vm._v("No Page Title")
+                        ]),
+                        _vm._v(" "),
+                        _c("ui-tooltip-button", { staticClass: "info" }, [
+                          _c("b", [_vm._v("The Page Title")]),
+                          _c("br"),
+                          _vm._v(
+                            "\n                                The title-tag is a meta-tag in the page's head section. It is displayed in search results and in the tab above the page. Former of which\n                                makes it very relevant for your page's SEO ranking. \n                            "
+                          )
+                        ])
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      {
+                        directives: [
+                          {
+                            name: "show",
+                            rawName: "v-show",
+                            value: !_vm.details.score.hasDescription,
+                            expression: "!details.score.hasDescription"
+                          }
+                        ],
+                        staticClass: "metric-card"
+                      },
+                      [
+                        _c(
+                          "div",
+                          {
+                            staticClass: "icon",
+                            staticStyle: { color: "var(--error)" }
+                          },
+                          [_vm._v("󰅖")]
+                        ),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "value" }, [
+                          _vm._v("No Page Description")
+                        ]),
+                        _vm._v(" "),
+                        _c("ui-tooltip-button", { staticClass: "info" }, [
+                          _c("b", [_vm._v("The Page Description")]),
+                          _c("br"),
+                          _vm._v(
+                            "\n                                The page description is a meta-tag in the page's head section. Search engines display it below your page title and may use it to \n                                rank your page and extract relevant information of what your page is about.\n                            "
+                          )
+                        ])
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      {
+                        directives: [
+                          {
+                            name: "show",
+                            rawName: "v-show",
+                            value: !_vm.details.score.hasViewport,
+                            expression: "!details.score.hasViewport"
+                          }
+                        ],
+                        staticClass: "metric-card"
+                      },
+                      [
+                        _c(
+                          "div",
+                          {
+                            staticClass: "icon",
+                            staticStyle: { color: "var(--error)" }
+                          },
+                          [_vm._v("󰅖")]
+                        ),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "value" }, [
+                          _vm._v("No Mobile Support")
+                        ]),
+                        _vm._v(" "),
+                        _c("ui-tooltip-button", { staticClass: "info" }, [
+                          _c("b", [_vm._v("Mobile Support (WIP)")]),
+                          _c("br"),
+                          _vm._v(
+                            "\n                                A modern web-page is being visited by desktop and mobile users alike. It is therefore strongly recommended to offer a mobile friendly\n                                version of your page."
+                          ),
+                          _c("br"),
+                          _c("br"),
+                          _vm._v(
+                            "\n                                This detection is still work in progress.\n                            "
+                          )
+                        ])
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      {
+                        directives: [
+                          {
+                            name: "show",
+                            rawName: "v-show",
+                            value: !_vm.details.score.errorPage
+                              .hasCustom404Page,
+                            expression:
+                              "!details.score.errorPage.hasCustom404Page"
+                          }
+                        ],
+                        staticClass: "metric-card"
+                      },
+                      [
+                        _c(
+                          "div",
+                          {
+                            staticClass: "icon",
+                            staticStyle: { color: "var(--error)" }
+                          },
+                          [_vm._v("󰅖")]
+                        ),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "value" }, [
+                          _vm._v("No Custom 404 Page")
+                        ]),
+                        _vm._v(" "),
+                        _c("ui-tooltip-button", { staticClass: "info" }, [
+                          _c("b", [_vm._v("Custom 404 Pages (WIP)")]),
+                          _c("br"),
+                          _vm._v(
+                            "\n                                When the user visits a non-existing page by default he is shown a standard error page. This my lead the user to believe the whole website\n                                is offline. To mitigate this issue it is recommened to build a custom error page to bring the user back to a functional page."
+                          ),
+                          _c("br"),
+                          _c("br"),
+                          _vm._v(
+                            "\n                                This detection is still work in progress.\n                            "
+                          )
+                        ])
+                      ],
+                      1
+                    )
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "card span-6" }, [
+                  _vm._m(2),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "metric-card-wrapper" }, [
+                    _c("div", { staticClass: "metric-card half" }, [
+                      _c("div", { staticClass: "icon" }, [_vm._v("󰌝")]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "label" }, [
+                        _vm._v("HTML Nodes")
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "value" }, [
+                        _vm._v(_vm._s(_vm.details.metrics.Nodes))
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "metric-card half" }, [
+                      _c("div", { staticClass: "icon" }, [_vm._v("󰊚")]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "label" }, [
+                        _vm._v("Rendertime")
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "value" }, [
+                        _vm._v(
+                          _vm._s(_vm.details.metrics.TaskDuration.toFixed(4)) +
+                            "s"
+                        )
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "metric-card half" }, [
+                      _c("div", { staticClass: "icon" }, [_vm._v("󰕮")]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "label" }, [
+                        _vm._v("Layout Rendertime")
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "value" }, [
+                        _vm._v(
+                          _vm._s(
+                            _vm.details.metrics.LayoutDuration.toFixed(4)
+                          ) + "s"
+                        )
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "metric-card half" }, [
+                      _c("div", { staticClass: "icon" }, [_vm._v("󰌞")]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "label" }, [
+                        _vm._v("Script Rendertime")
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "value" }, [
+                        _vm._v(
+                          _vm._s(
+                            _vm.details.metrics.ScriptDuration.toFixed(4)
+                          ) + "s"
+                        )
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "metric-card half" },
+                      [
+                        _c("div", { staticClass: "icon" }, [_vm._v("󰈇")]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "label" }, [
+                          _vm._v("Outbound-Links")
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "value" }, [
+                          _vm._v(_vm._s(_vm.details.outboundLinks.length))
+                        ]),
+                        _vm._v(" "),
+                        _c("ui-tooltip-button", { staticClass: "info" }, [
+                          _c("b", [_vm._v("Outbound Links")]),
+                          _c("br"),
+                          _vm._v(
+                            "\n                                Outbound links are hyperlinks going to external websites. Search engines use them to better understand what your page is about.\n                                Your page should only link to websites related to your content.\n                            "
+                          )
+                        ])
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "metric-card half" }, [
+                      _c("div", { staticClass: "icon" }, [_vm._v("󰌹")]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "label" }, [
+                        _vm._v("Internal-Links")
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "value" }, [
+                        _vm._v(_vm._s(_vm.details.internalLinks.length))
+                      ])
+                    ])
+                  ])
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "detail-row" }, [
+                _c("div", { staticClass: "card span-12 page-info-card" }, [
+                  _c("h4", [
+                    _vm.details.metaData.favicon
+                      ? _c(
+                          "object",
+                          {
+                            staticClass: "favicon",
+                            attrs: {
+                              data: _vm.details.metaData.favicon,
+                              type: "image/png"
+                            }
+                          },
+                          [
+                            _c("img", {
+                              attrs: {
+                                src: "/images/defaults/default_icon.svg",
+                                alt: "Default Icon Fallback",
+                                width: "100%",
+                                height: "100%"
+                              }
+                            })
+                          ]
+                        )
+                      : _c("img", {
+                          staticClass: "favicon",
+                          attrs: {
+                            src: "/images/defaults/default_icon.svg",
+                            alt: "Default Icon Fallback",
+                            width: "100%",
+                            height: "100%"
+                          }
+                        }),
+                    _vm._v(
+                      "\n                        " +
+                        _vm._s(_vm.details.metaData.title) +
+                        "\n                    "
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "metric-card-wrapper" }, [
+                    _vm.details.metaData.description
+                      ? _c("div", { staticClass: "metric-card" }, [
+                          _c("div", { staticClass: "icon" }, [_vm._v("󰭷")]),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "label" }, [
+                            _vm._v("Description")
+                          ]),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "value" }, [
+                            _vm._v(_vm._s(_vm.details.metaData.description))
+                          ])
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.details.metaData.generator
+                      ? _c("div", { staticClass: "metric-card" }, [
+                          _c("div", { staticClass: "icon" }, [_vm._v("󱕷")]),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "label" }, [
+                            _vm._v("CMS / Generator")
+                          ]),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "value" }, [
+                            _c(
+                              "span",
+                              {
+                                directives: [
+                                  {
+                                    name: "show",
+                                    rawName: "v-show",
+                                    value: _vm.details.metaData.cms,
+                                    expression: "details.metaData.cms"
+                                  }
+                                ]
+                              },
+                              [_vm._v(_vm._s(_vm.details.metaData.cms) + " —")]
+                            ),
+                            _vm._v(
+                              "\n                                " +
+                                _vm._s(_vm.details.metaData.generator) +
+                                "\n                            "
+                            )
+                          ])
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.details.metaData.themeColor
+                      ? _c("div", { staticClass: "metric-card" }, [
+                          _c("div", {
+                            staticClass: "square",
+                            style:
+                              "background:" + _vm.details.metaData.themeColor
+                          }),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "label" }, [
+                            _vm._v("Theme Color")
+                          ]),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "value" }, [
+                            _vm._v(_vm._s(_vm.details.metaData.themeColor))
+                          ])
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.details.metaData.keywords.length > 0
+                      ? _c("div", { staticClass: "metric-card" }, [
+                          _c("div", { staticClass: "icon" }, [_vm._v("󰌋")]),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "label" }, [
+                            _vm._v("Keywords")
+                          ]),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "value" }, [
+                            _vm._v(
+                              _vm._s(_vm.details.metaData.keywords.join(", "))
+                            )
+                          ])
+                        ])
+                      : _vm._e()
+                  ])
+                ])
+              ]),
+              _vm._v(" "),
+              _vm.details.score.errorData.errors.length > 0
+                ? _c("div", { staticClass: "detail-row" }, [
+                    _c("div", { staticClass: "card span-12" }, [
+                      _vm._m(3),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        { staticClass: "metric-card-wrapper" },
+                        _vm._l(_vm.details.score.errorData.errors, function(
+                          error,
+                          i
+                        ) {
+                          return _c(
+                            "div",
+                            { key: i, staticClass: "metric-card" },
+                            [
+                              _c(
+                                "div",
+                                {
+                                  staticClass: "icon",
+                                  staticStyle: { color: "var(--error)" }
+                                },
+                                [_vm._v("󰋭")]
+                              ),
+                              _vm._v(" "),
+                              _c("div", { staticClass: "label" }, [
+                                _vm._v("Error")
+                              ]),
+                              _vm._v(" "),
+                              _c("div", { staticClass: "value" }, [
+                                _vm._v(_vm._s(error.desc))
+                              ])
+                            ]
+                          )
+                        }),
+                        0
+                      )
+                    ])
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.details.score.warningData.warnings.length > 0
+                ? _c("div", { staticClass: "detail-row" }, [
+                    _c("div", { staticClass: "card span-12" }, [
+                      _vm._m(4),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        { staticClass: "metric-card-wrapper" },
+                        _vm._l(_vm.details.score.warningData.warnings, function(
+                          warning,
+                          i
+                        ) {
+                          return _c(
+                            "div",
+                            { key: i, staticClass: "metric-card" },
+                            [
+                              _c(
+                                "div",
+                                {
+                                  staticClass: "icon",
+                                  staticStyle: { color: "var(--warning)" }
+                                },
+                                [_vm._v("󰉫")]
+                              ),
+                              _vm._v(" "),
+                              _c("div", { staticClass: "label" }, [
+                                _vm._v("Warning")
+                              ]),
+                              _vm._v(" "),
+                              _c("div", { staticClass: "value" }, [
+                                _vm._v(_vm._s(warning.desc))
+                              ])
+                            ]
+                          )
+                        }),
+                        0
+                      )
+                    ])
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.details.metaData.twitterCard.hasTwitterCard ||
+              _vm.details.metaData.openGraph.hasOpenGraph
+                ? _c("div", { staticClass: "detail-row" }, [
+                    _vm.details.metaData.twitterCard.hasTwitterCard
+                      ? _c("div", { staticClass: "card span-6" }, [
+                          _vm._m(5),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "twitter-summary-card" }, [
+                            _c("img", {
+                              staticClass: "image",
+                              attrs: {
+                                src:
+                                  _vm.details.metaData.twitterCard[
+                                    "twitter:image"
+                                  ]
+                              }
+                            }),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "content" }, [
+                              _c("div", { staticClass: "title" }, [
+                                _vm._v(
+                                  _vm._s(
+                                    _vm.details.metaData.twitterCard[
+                                      "twitter:title"
+                                    ]
+                                  )
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _c("div", { staticClass: "description" }, [
+                                _vm._v(
+                                  _vm._s(
+                                    _vm.details.metaData.openGraph[
+                                      "og:description"
+                                    ]
+                                  )
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _c("div", { staticClass: "url" }, [
+                                _c("div", { staticClass: "icon" }, [
+                                  _vm._v("󰌹")
+                                ]),
+                                _vm._v(" "),
+                                _c("div", { staticClass: "text" }, [
+                                  _vm._v(_vm._s(_vm.details.url.host))
+                                ])
+                              ])
+                            ])
+                          ])
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.details.metaData.openGraph.hasOpenGraph
+                      ? _c("div", { staticClass: "card span-6" }, [
+                          _vm._m(6),
+                          _vm._v(" "),
+                          _c(
+                            "div",
+                            { staticClass: "open-graph-article-card" },
+                            [
+                              _c("img", {
+                                staticClass: "image",
+                                attrs: {
+                                  src:
+                                    _vm.details.metaData.openGraph["og:image"]
+                                }
+                              }),
+                              _vm._v(" "),
+                              _c("div", { staticClass: "content" }, [
+                                _c("div", { staticClass: "url" }, [
+                                  _vm._v(
+                                    _vm._s(
+                                      _vm.details.metaData.openGraph["og:url"]
+                                        .host
+                                    )
+                                  )
+                                ]),
+                                _vm._v(" "),
+                                _c("div", { staticClass: "title" }, [
+                                  _vm._v(
+                                    _vm._s(
+                                      _vm.details.metaData.openGraph["og:title"]
+                                    )
+                                  )
+                                ]),
+                                _vm._v(" "),
+                                _c("div", { staticClass: "description" }, [
+                                  _vm._v(
+                                    _vm._s(
+                                      _vm.details.metaData.openGraph[
+                                        "og:description"
+                                      ]
+                                    )
+                                  )
+                                ])
+                              ])
+                            ]
+                          )
+                        ])
+                      : _vm._e()
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
+              _c("div", { staticClass: "detail-row" }, [
+                _c("div", { staticClass: "card span-12" }, [
+                  _vm._m(7),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    { staticClass: "metric-card-wrapper" },
+                    _vm._l(_vm.details.meta, function(meta, i) {
+                      return _c("div", { key: i, staticClass: "metric-card" }, [
+                        _c(
+                          "div",
+                          {
+                            staticClass: "icon",
+                            staticStyle: { color: "var(--text-gray)" }
+                          },
+                          [_vm._v("󰓹")]
+                        ),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "label" }, [
+                          _vm._v(
+                            _vm._s(meta.name || meta.property || "Charset")
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "value" }, [
+                          _vm._v(
+                            _vm._s(
+                              meta.content || meta.charset || meta.httpEquiv
+                            )
+                          )
+                        ])
+                      ])
+                    }),
+                    0
+                  )
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "detail-row" }, [
+                _c("div", { staticClass: "card span-12" }, [
+                  _vm._m(8),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    { staticClass: "metric-card-wrapper" },
+                    _vm._l(_vm.details.links, function(link, i) {
+                      return _c("div", { key: i, staticClass: "metric-card" }, [
+                        link.href && link.href.startsWith("mailto:")
+                          ? _c(
+                              "div",
+                              {
+                                staticClass: "icon",
+                                staticStyle: { color: "var(--text-gray)" }
+                              },
+                              [_vm._v("󰇰")]
+                            )
+                          : link.href && link.href.startsWith("tel:")
+                          ? _c(
+                              "div",
+                              {
+                                staticClass: "icon",
+                                staticStyle: { color: "var(--text-gray)" }
+                              },
+                              [_vm._v("󰏲")]
+                            )
+                          : _c(
+                              "div",
+                              {
+                                staticClass: "icon",
+                                staticStyle: { color: "var(--text-gray)" }
+                              },
+                              [_vm._v("󰌹")]
+                            ),
+                        _vm._v(" "),
+                        link.text && link.text.trim()
+                          ? _c("div", { staticClass: "label" }, [
+                              _vm._v(_vm._s(link.text))
+                            ])
+                          : _c("div", { staticClass: "label" }, [
+                              _c("i", [_vm._v("No link text")])
+                            ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "value" }, [
+                          _vm._v(_vm._s(link.href))
+                        ])
+                      ])
+                    }),
+                    0
+                  )
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "detail-row" }, [
+                _c(
+                  "div",
+                  { staticClass: "card span-12" },
+                  [
+                    _vm._m(9),
+                    _vm._v(" "),
+                    _vm._l(_vm.details.images, function(image, i) {
+                      return _c("div", { key: i, staticClass: "image-card" }, [
+                        _c("img", {
+                          directives: [
+                            {
+                              name: "tooltip",
+                              rawName: "v-tooltip.bottom-start",
+                              value: image.src,
+                              expression: "image.src",
+                              modifiers: { "bottom-start": true }
+                            }
+                          ],
+                          staticClass: "image",
+                          attrs: { src: image.href }
+                        }),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "content" }, [
+                          image.alt
+                            ? _c("b", { staticClass: "title" }, [
+                                _vm._v(_vm._s(image.alt))
+                              ])
+                            : _c("i", { staticClass: "title" }, [
+                                _vm._v('No "alt"-attribute')
+                              ]),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "description" }, [
+                            _vm._v(
+                              "\n                                Natural-Size: "
+                            ),
+                            _c("b", [
+                              _vm._v(
+                                _vm._s(image.width) +
+                                  " x " +
+                                  _vm._s(image.height)
+                              )
+                            ]),
+                            _c("br"),
+                            _vm._v(
+                              "\n                                Visible-Size: "
+                            ),
+                            _c("b", [
+                              _vm._v(
+                                _vm._s(image.visibleWidth) +
+                                  " x " +
+                                  _vm._s(image.visibleHeight)
+                              )
+                            ]),
+                            _c("br"),
+                            _vm._v(" "),
+                            _c("span", { staticClass: "no-text-overflow" }, [
+                              _vm._v("Src: "),
+                              _c("b", [_vm._v(_vm._s(image.src))])
+                            ])
+                          ])
+                        ])
+                      ])
+                    })
+                  ],
+                  2
+                )
+              ])
+            ])
+      ]),
+      _vm._v(" "),
+      _c(
+        "div",
+        {
+          directives: [
+            {
+              name: "show",
+              rawName: "v-show",
+              value:
+                _vm.paginatedReportGroups.prev_page_url ||
+                _vm.paginatedReportGroups.next_page_url,
+              expression:
+                "paginatedReportGroups.prev_page_url || paginatedReportGroups.next_page_url"
+            }
+          ],
+          staticClass: "footer-wrapper"
+        },
+        [
+          _c(
+            "div",
+            { staticClass: "limiter" },
+            [
               _c("div", { staticClass: "spacer" }),
               _vm._v(" "),
               _c(
                 "ui-icon-button",
                 {
                   staticClass: "pagination-button",
-                  attrs: { disabled: _vm.reportSearch.pageNumber <= 1 },
+                  attrs: {
+                    disabled: _vm.paginatedReportGroups.prev_page_url === null
+                  },
                   on: {
                     click: function($event) {
-                      return _vm.previousPage()
+                      return _vm.prevPage()
                     }
                   }
                 },
                 [_vm._v("󰅁")]
               ),
               _vm._v(" "),
-              _c("ui-number-input", {
-                staticClass: "page-number-input",
-                model: {
-                  value: _vm.reportSearch.pageNumber,
-                  callback: function($$v) {
-                    _vm.$set(_vm.reportSearch, "pageNumber", $$v)
-                  },
-                  expression: "reportSearch.pageNumber"
-                }
-              }),
+              _c("div", { staticClass: "page-number" }, [
+                _vm._v(_vm._s(_vm.paginatedReportGroups.current_page))
+              ]),
               _vm._v(" "),
               _c(
                 "ui-icon-button",
                 {
                   staticClass: "pagination-button",
                   attrs: {
-                    disabled:
-                      _vm.reportSearch.pageNumber >= _vm.reportSearch.pageMax
+                    disabled: _vm.paginatedReportGroups.next_page_url === null
                   },
                   on: {
                     click: function($event) {
@@ -48623,79 +49987,12 @@ var render = function() {
                   }
                 },
                 [_vm._v("󰅂")]
-              ),
-              _vm._v(" "),
-              _c("div", { staticClass: "spacer" }),
-              _vm._v(" "),
-              _c(
-                "ui-icon-button",
-                {
-                  staticClass: "sort-button",
-                  on: {
-                    click: function($event) {
-                      return _vm.toggleSort()
-                    }
-                  }
-                },
-                [
-                  _vm._v(
-                    "\n            " +
-                      _vm._s(_vm.reportSearch.sort === "ASC" ? "󱕈" : "󱕇") +
-                      "\n        "
-                  )
-                ]
-              ),
-              _vm._v(" "),
-              _c(
-                "div",
-                { staticClass: "search-bar-wrapper" },
-                [
-                  _c("ui-text-input", {
-                    staticClass: "input",
-                    attrs: { placeholder: "Search" },
-                    model: {
-                      value: _vm.reportSearch.url,
-                      callback: function($$v) {
-                        _vm.$set(_vm.reportSearch, "url", $$v)
-                      },
-                      expression: "reportSearch.url"
-                    }
-                  }),
-                  _vm._v(" "),
-                  _c(
-                    "transition",
-                    { attrs: { name: "scale" } },
-                    [
-                      _c(
-                        "ui-icon-button",
-                        {
-                          directives: [
-                            {
-                              name: "show",
-                              rawName: "v-show",
-                              value: _vm.reportSearch.url.trim(),
-                              expression: "reportSearch.url.trim()"
-                            }
-                          ],
-                          staticClass: "button",
-                          on: {
-                            click: function($event) {
-                              _vm.reportSearch.url = ""
-                            }
-                          }
-                        },
-                        [_vm._v("󰅖")]
-                      )
-                    ],
-                    1
-                  )
-                ],
-                1
               )
             ],
             1
           )
-        : _vm._e(),
+        ]
+      ),
       _vm._v(" "),
       _vm.details === null
         ? _c(
@@ -48711,1150 +50008,6 @@ var render = function() {
             [_vm._v("󰐕")]
           )
         : _vm._e(),
-      _vm._v(" "),
-      _vm.details === null
-        ? _c(
-            "div",
-            { staticClass: "reports-timeline" },
-            _vm._l(_vm.searchedGroupedReports, function(reportGroup) {
-              return _c(
-                "div",
-                {
-                  key: "report_group_" + reportGroup.id,
-                  staticClass: "job-wrapper"
-                },
-                [
-                  _c(
-                    "div",
-                    { staticClass: "job-header" },
-                    [
-                      _c("div", { staticClass: "title" }, [
-                        _vm._v(_vm._s(reportGroup.host))
-                      ]),
-                      _vm._v(" "),
-                      _c(
-                        "div",
-                        {
-                          directives: [
-                            {
-                              name: "tooltip",
-                              rawName: "v-tooltip",
-                              value: _vm.formateDate(reportGroup.created_at),
-                              expression: "formateDate(reportGroup.created_at)"
-                            }
-                          ],
-                          staticClass: "timestamp"
-                        },
-                        [
-                          _vm._v(
-                            _vm._s(
-                              _vm._f("diffForHumans")(reportGroup.created_at)
-                            )
-                          )
-                        ]
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "ui-popover-menu",
-                        {
-                          scopedSlots: _vm._u(
-                            [
-                              {
-                                key: "trigger",
-                                fn: function() {
-                                  return [
-                                    _c(
-                                      "ui-icon-button",
-                                      { staticClass: "more-button" },
-                                      [_vm._v("󰇙")]
-                                    )
-                                  ]
-                                },
-                                proxy: true
-                              }
-                            ],
-                            null,
-                            true
-                          )
-                        },
-                        [
-                          _vm._v(" "),
-                          _c(
-                            "ui-menu-item",
-                            {
-                              attrs: { icon: "&#983881;" },
-                              on: {
-                                click: function($event) {
-                                  _vm.reportSearch.url = reportGroup.host
-                                }
-                              }
-                            },
-                            [_vm._v("Search for domain")]
-                          ),
-                          _vm._v(" "),
-                          _c("ui-menu-divider"),
-                          _vm._v(" "),
-                          _c(
-                            "ui-menu-item",
-                            {
-                              attrs: { icon: "&#985721;" },
-                              on: {
-                                click: function($event) {
-                                  return _vm.openReportDeleteDialog(reportGroup)
-                                }
-                              }
-                            },
-                            [_vm._v("Delete report")]
-                          )
-                        ],
-                        1
-                      )
-                    ],
-                    1
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "div",
-                    { staticClass: "job-pages" },
-                    [
-                      _vm._l(reportGroup.reports.slice(0, 5), function(report) {
-                        return _c("page-row", {
-                          key: "report_" + report.id,
-                          attrs: { report: report },
-                          on: {
-                            details: function($event) {
-                              return _vm.openDetails($event)
-                            }
-                          }
-                        })
-                      }),
-                      _vm._v(" "),
-                      reportGroup.reports.length > 4
-                        ? _c(
-                            "div",
-                            { staticClass: "blend" },
-                            [
-                              _c("ui-button", { attrs: { text: "" } }, [
-                                _vm._v("Show more")
-                              ])
-                            ],
-                            1
-                          )
-                        : _vm._e()
-                    ],
-                    2
-                  )
-                ]
-              )
-            }),
-            0
-          )
-        : _c("div", { staticClass: "details" }, [
-            _c(
-              "div",
-              { staticClass: "nav-row" },
-              [
-                _c(
-                  "ui-button",
-                  {
-                    attrs: {
-                      icon: "&#983117;",
-                      "icon-left": "",
-                      border: "",
-                      text: ""
-                    },
-                    on: {
-                      click: function($event) {
-                        _vm.details = null
-                      }
-                    }
-                  },
-                  [_vm._v("Back")]
-                )
-              ],
-              1
-            ),
-            _vm._v(" "),
-            _c("div", { staticClass: "detail-row" }, [
-              _c(
-                "div",
-                { staticClass: "card span-3" },
-                [
-                  _vm._m(0),
-                  _vm._v(" "),
-                  _c("apexchart", {
-                    staticStyle: { display: "inherit" },
-                    attrs: {
-                      type: "radialBar",
-                      height: "250",
-                      options: _vm.chartOptions,
-                      series: [_vm.details.score.totalPageScore] || 0
-                    }
-                  })
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _c("div", { staticClass: "card span-3" }, [
-                _vm._m(1),
-                _vm._v(" "),
-                _c("div", { staticClass: "metric-card-wrapper" }, [
-                  _c(
-                    "div",
-                    {
-                      directives: [
-                        {
-                          name: "show",
-                          rawName: "v-show",
-                          value: _vm.details.score.hasFavicon,
-                          expression: "details.score.hasFavicon"
-                        }
-                      ],
-                      staticClass: "metric-card"
-                    },
-                    [
-                      _c(
-                        "div",
-                        {
-                          staticClass: "icon",
-                          staticStyle: { color: "var(--success)" }
-                        },
-                        [_vm._v("󰄬")]
-                      ),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "value" }, [_vm._v("Favicon")]),
-                      _vm._v(" "),
-                      _c("ui-tooltip-button", { staticClass: "info" }, [
-                        _c("b", [_vm._v("The Favicon")]),
-                        _c("br"),
-                        _vm._v(
-                          "\n                            The favicon is the small icon next to the page title in the tab above the page. It isn't displayed on the page itself. \n                        "
-                        )
-                      ])
-                    ],
-                    1
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "div",
-                    {
-                      directives: [
-                        {
-                          name: "show",
-                          rawName: "v-show",
-                          value: _vm.details.score.hasTitle,
-                          expression: "details.score.hasTitle"
-                        }
-                      ],
-                      staticClass: "metric-card"
-                    },
-                    [
-                      _c(
-                        "div",
-                        {
-                          staticClass: "icon",
-                          staticStyle: { color: "var(--success)" }
-                        },
-                        [_vm._v("󰄬")]
-                      ),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "value" }, [
-                        _vm._v("Page Title")
-                      ]),
-                      _vm._v(" "),
-                      _c("ui-tooltip-button", { staticClass: "info" }, [
-                        _c("b", [_vm._v("The Page Title")]),
-                        _c("br"),
-                        _vm._v(
-                          "\n                            The title-tag is a meta-tag in the page's head section. It is displayed in search results and in the tab above the page. Former of which\n                            makes it very relevant for your page's SEO ranking. \n                        "
-                        )
-                      ])
-                    ],
-                    1
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "div",
-                    {
-                      directives: [
-                        {
-                          name: "show",
-                          rawName: "v-show",
-                          value: _vm.details.score.hasDescription,
-                          expression: "details.score.hasDescription"
-                        }
-                      ],
-                      staticClass: "metric-card"
-                    },
-                    [
-                      _c(
-                        "div",
-                        {
-                          staticClass: "icon",
-                          staticStyle: { color: "var(--success)" }
-                        },
-                        [_vm._v("󰄬")]
-                      ),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "value" }, [
-                        _vm._v("Page Description")
-                      ]),
-                      _vm._v(" "),
-                      _c("ui-tooltip-button", { staticClass: "info" }, [
-                        _c("b", [_vm._v("The Page Description")]),
-                        _c("br"),
-                        _vm._v(
-                          "\n                            The page description is a meta-tag in the page's head section. Search engines display it below your page title and may use it to \n                            rank your page and extract relevant information of what your page is about.\n                        "
-                        )
-                      ])
-                    ],
-                    1
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "div",
-                    {
-                      directives: [
-                        {
-                          name: "show",
-                          rawName: "v-show",
-                          value: _vm.details.score.hasViewport,
-                          expression: "details.score.hasViewport"
-                        }
-                      ],
-                      staticClass: "metric-card"
-                    },
-                    [
-                      _c(
-                        "div",
-                        {
-                          staticClass: "icon",
-                          staticStyle: { color: "var(--success)" }
-                        },
-                        [_vm._v("󰄬")]
-                      ),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "value" }, [
-                        _vm._v("Mobile Support")
-                      ]),
-                      _vm._v(" "),
-                      _c("ui-tooltip-button", { staticClass: "info" }, [
-                        _c("b", [_vm._v("Mobile Support (WIP)")]),
-                        _c("br"),
-                        _vm._v(
-                          "\n                            A modern web-page is being visited by desktop and mobile users alike. It is therefore strongly recommended to offer a mobile friendly\n                            version of your page."
-                        ),
-                        _c("br"),
-                        _c("br"),
-                        _vm._v(
-                          "\n                            This detection is still work in progress.\n                        "
-                        )
-                      ])
-                    ],
-                    1
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "div",
-                    {
-                      directives: [
-                        {
-                          name: "show",
-                          rawName: "v-show",
-                          value: _vm.details.score.errorPage.hasCustom404Page,
-                          expression: "details.score.errorPage.hasCustom404Page"
-                        }
-                      ],
-                      staticClass: "metric-card"
-                    },
-                    [
-                      _c(
-                        "div",
-                        {
-                          staticClass: "icon",
-                          staticStyle: { color: "var(--success)" }
-                        },
-                        [_vm._v("󰄬")]
-                      ),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "value" }, [
-                        _vm._v("Custom 404 Page")
-                      ]),
-                      _vm._v(" "),
-                      _c("ui-tooltip-button", { staticClass: "info" }, [
-                        _c("b", [_vm._v("Custom 404 Pages (WIP)")]),
-                        _c("br"),
-                        _vm._v(
-                          "\n                            When the user visits a non-existing page by default he is shown a standard error page. This my lead the user to believe the whole website\n                            is offline. To mitigate this issue it is recommened to build a custom error page to bring the user back to a functional page."
-                        ),
-                        _c("br"),
-                        _c("br"),
-                        _vm._v(
-                          "\n                            This detection is still work in progress.\n                        "
-                        )
-                      ])
-                    ],
-                    1
-                  )
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "metric-card-wrapper" }, [
-                  _c(
-                    "div",
-                    {
-                      directives: [
-                        {
-                          name: "show",
-                          rawName: "v-show",
-                          value: !_vm.details.score.hasFavicon,
-                          expression: "!details.score.hasFavicon"
-                        }
-                      ],
-                      staticClass: "metric-card"
-                    },
-                    [
-                      _c(
-                        "div",
-                        {
-                          staticClass: "icon",
-                          staticStyle: { color: "var(--error)" }
-                        },
-                        [_vm._v("󰅖")]
-                      ),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "value" }, [
-                        _vm._v("No Favicon")
-                      ]),
-                      _vm._v(" "),
-                      _c("ui-tooltip-button", { staticClass: "info" }, [
-                        _c("b", [_vm._v("The Favicon")]),
-                        _c("br"),
-                        _vm._v(
-                          "\n                            The favicon is the small icon next to the page title in the tab above the page. It isn't displayed on the page itself. \n                        "
-                        )
-                      ])
-                    ],
-                    1
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "div",
-                    {
-                      directives: [
-                        {
-                          name: "show",
-                          rawName: "v-show",
-                          value: !_vm.details.score.hasTitle,
-                          expression: "!details.score.hasTitle"
-                        }
-                      ],
-                      staticClass: "metric-card"
-                    },
-                    [
-                      _c(
-                        "div",
-                        {
-                          staticClass: "icon",
-                          staticStyle: { color: "var(--error)" }
-                        },
-                        [_vm._v("󰅖")]
-                      ),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "value" }, [
-                        _vm._v("No Page Title")
-                      ]),
-                      _vm._v(" "),
-                      _c("ui-tooltip-button", { staticClass: "info" }, [
-                        _c("b", [_vm._v("The Page Title")]),
-                        _c("br"),
-                        _vm._v(
-                          "\n                            The title-tag is a meta-tag in the page's head section. It is displayed in search results and in the tab above the page. Former of which\n                            makes it very relevant for your page's SEO ranking. \n                        "
-                        )
-                      ])
-                    ],
-                    1
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "div",
-                    {
-                      directives: [
-                        {
-                          name: "show",
-                          rawName: "v-show",
-                          value: !_vm.details.score.hasDescription,
-                          expression: "!details.score.hasDescription"
-                        }
-                      ],
-                      staticClass: "metric-card"
-                    },
-                    [
-                      _c(
-                        "div",
-                        {
-                          staticClass: "icon",
-                          staticStyle: { color: "var(--error)" }
-                        },
-                        [_vm._v("󰅖")]
-                      ),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "value" }, [
-                        _vm._v("No Page Description")
-                      ]),
-                      _vm._v(" "),
-                      _c("ui-tooltip-button", { staticClass: "info" }, [
-                        _c("b", [_vm._v("The Page Description")]),
-                        _c("br"),
-                        _vm._v(
-                          "\n                            The page description is a meta-tag in the page's head section. Search engines display it below your page title and may use it to \n                            rank your page and extract relevant information of what your page is about.\n                        "
-                        )
-                      ])
-                    ],
-                    1
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "div",
-                    {
-                      directives: [
-                        {
-                          name: "show",
-                          rawName: "v-show",
-                          value: !_vm.details.score.hasViewport,
-                          expression: "!details.score.hasViewport"
-                        }
-                      ],
-                      staticClass: "metric-card"
-                    },
-                    [
-                      _c(
-                        "div",
-                        {
-                          staticClass: "icon",
-                          staticStyle: { color: "var(--error)" }
-                        },
-                        [_vm._v("󰅖")]
-                      ),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "value" }, [
-                        _vm._v("No Mobile Support")
-                      ]),
-                      _vm._v(" "),
-                      _c("ui-tooltip-button", { staticClass: "info" }, [
-                        _c("b", [_vm._v("Mobile Support (WIP)")]),
-                        _c("br"),
-                        _vm._v(
-                          "\n                            A modern web-page is being visited by desktop and mobile users alike. It is therefore strongly recommended to offer a mobile friendly\n                            version of your page."
-                        ),
-                        _c("br"),
-                        _c("br"),
-                        _vm._v(
-                          "\n                            This detection is still work in progress.\n                        "
-                        )
-                      ])
-                    ],
-                    1
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "div",
-                    {
-                      directives: [
-                        {
-                          name: "show",
-                          rawName: "v-show",
-                          value: !_vm.details.score.errorPage.hasCustom404Page,
-                          expression:
-                            "!details.score.errorPage.hasCustom404Page"
-                        }
-                      ],
-                      staticClass: "metric-card"
-                    },
-                    [
-                      _c(
-                        "div",
-                        {
-                          staticClass: "icon",
-                          staticStyle: { color: "var(--error)" }
-                        },
-                        [_vm._v("󰅖")]
-                      ),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "value" }, [
-                        _vm._v("No Custom 404 Page")
-                      ]),
-                      _vm._v(" "),
-                      _c("ui-tooltip-button", { staticClass: "info" }, [
-                        _c("b", [_vm._v("Custom 404 Pages (WIP)")]),
-                        _c("br"),
-                        _vm._v(
-                          "\n                            When the user visits a non-existing page by default he is shown a standard error page. This my lead the user to believe the whole website\n                            is offline. To mitigate this issue it is recommened to build a custom error page to bring the user back to a functional page."
-                        ),
-                        _c("br"),
-                        _c("br"),
-                        _vm._v(
-                          "\n                            This detection is still work in progress.\n                        "
-                        )
-                      ])
-                    ],
-                    1
-                  )
-                ])
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "card span-6" }, [
-                _vm._m(2),
-                _vm._v(" "),
-                _c("div", { staticClass: "metric-card-wrapper" }, [
-                  _c("div", { staticClass: "metric-card half" }, [
-                    _c("div", { staticClass: "icon" }, [_vm._v("󰌝")]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "label" }, [_vm._v("HTML Nodes")]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "value" }, [
-                      _vm._v(_vm._s(_vm.details.metrics.Nodes))
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "metric-card half" }, [
-                    _c("div", { staticClass: "icon" }, [_vm._v("󰊚")]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "label" }, [_vm._v("Rendertime")]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "value" }, [
-                      _vm._v(
-                        _vm._s(_vm.details.metrics.TaskDuration.toFixed(4)) +
-                          "s"
-                      )
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "metric-card half" }, [
-                    _c("div", { staticClass: "icon" }, [_vm._v("󰕮")]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "label" }, [
-                      _vm._v("Layout Rendertime")
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "value" }, [
-                      _vm._v(
-                        _vm._s(_vm.details.metrics.LayoutDuration.toFixed(4)) +
-                          "s"
-                      )
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "metric-card half" }, [
-                    _c("div", { staticClass: "icon" }, [_vm._v("󰌞")]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "label" }, [
-                      _vm._v("Script Rendertime")
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "value" }, [
-                      _vm._v(
-                        _vm._s(_vm.details.metrics.ScriptDuration.toFixed(4)) +
-                          "s"
-                      )
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c(
-                    "div",
-                    { staticClass: "metric-card half" },
-                    [
-                      _c("div", { staticClass: "icon" }, [_vm._v("󰈇")]),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "label" }, [
-                        _vm._v("Outbound-Links")
-                      ]),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "value" }, [
-                        _vm._v(_vm._s(_vm.details.outboundLinks.length))
-                      ]),
-                      _vm._v(" "),
-                      _c("ui-tooltip-button", { staticClass: "info" }, [
-                        _c("b", [_vm._v("Outbound Links")]),
-                        _c("br"),
-                        _vm._v(
-                          "\n                            Outbound links are hyperlinks going to external websites. Search engines use them to better understand what your page is about.\n                            Your page should only link to websites related to your content.\n                        "
-                        )
-                      ])
-                    ],
-                    1
-                  ),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "metric-card half" }, [
-                    _c("div", { staticClass: "icon" }, [_vm._v("󰌹")]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "label" }, [
-                      _vm._v("Internal-Links")
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "value" }, [
-                      _vm._v(_vm._s(_vm.details.internalLinks.length))
-                    ])
-                  ])
-                ])
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "detail-row" }, [
-              _c("div", { staticClass: "card span-12 page-info-card" }, [
-                _c("h4", [
-                  _vm.details.metaData.favicon
-                    ? _c(
-                        "object",
-                        {
-                          staticClass: "favicon",
-                          attrs: {
-                            data: _vm.details.metaData.favicon,
-                            type: "image/png"
-                          }
-                        },
-                        [
-                          _c("img", {
-                            attrs: {
-                              src: "/images/defaults/default_icon.svg",
-                              alt: "Default Icon Fallback",
-                              width: "100%",
-                              height: "100%"
-                            }
-                          })
-                        ]
-                      )
-                    : _c("img", {
-                        staticClass: "favicon",
-                        attrs: {
-                          src: "/images/defaults/default_icon.svg",
-                          alt: "Default Icon Fallback",
-                          width: "100%",
-                          height: "100%"
-                        }
-                      }),
-                  _vm._v(
-                    "\n                    " +
-                      _vm._s(_vm.details.metaData.title) +
-                      "\n                "
-                  )
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "metric-card-wrapper" }, [
-                  _vm.details.metaData.description
-                    ? _c("div", { staticClass: "metric-card" }, [
-                        _c("div", { staticClass: "icon" }, [_vm._v("󰭷")]),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "label" }, [
-                          _vm._v("Description")
-                        ]),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "value" }, [
-                          _vm._v(_vm._s(_vm.details.metaData.description))
-                        ])
-                      ])
-                    : _vm._e(),
-                  _vm._v(" "),
-                  _vm.details.metaData.generator
-                    ? _c("div", { staticClass: "metric-card" }, [
-                        _c("div", { staticClass: "icon" }, [_vm._v("󱕷")]),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "label" }, [
-                          _vm._v("CMS / Generator")
-                        ]),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "value" }, [
-                          _c(
-                            "span",
-                            {
-                              directives: [
-                                {
-                                  name: "show",
-                                  rawName: "v-show",
-                                  value: _vm.details.metaData.cms,
-                                  expression: "details.metaData.cms"
-                                }
-                              ]
-                            },
-                            [_vm._v(_vm._s(_vm.details.metaData.cms) + " —")]
-                          ),
-                          _vm._v(
-                            "\n                            " +
-                              _vm._s(_vm.details.metaData.generator) +
-                              "\n                        "
-                          )
-                        ])
-                      ])
-                    : _vm._e(),
-                  _vm._v(" "),
-                  _vm.details.metaData.themeColor
-                    ? _c("div", { staticClass: "metric-card" }, [
-                        _c("div", {
-                          staticClass: "square",
-                          style: "background:" + _vm.details.metaData.themeColor
-                        }),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "label" }, [
-                          _vm._v("Theme Color")
-                        ]),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "value" }, [
-                          _vm._v(_vm._s(_vm.details.metaData.themeColor))
-                        ])
-                      ])
-                    : _vm._e(),
-                  _vm._v(" "),
-                  _vm.details.metaData.keywords.length > 0
-                    ? _c("div", { staticClass: "metric-card" }, [
-                        _c("div", { staticClass: "icon" }, [_vm._v("󰌋")]),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "label" }, [
-                          _vm._v("Keywords")
-                        ]),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "value" }, [
-                          _vm._v(
-                            _vm._s(_vm.details.metaData.keywords.join(", "))
-                          )
-                        ])
-                      ])
-                    : _vm._e()
-                ])
-              ])
-            ]),
-            _vm._v(" "),
-            _vm.details.score.errorData.errors.length > 0
-              ? _c("div", { staticClass: "detail-row" }, [
-                  _c("div", { staticClass: "card span-12" }, [
-                    _vm._m(3),
-                    _vm._v(" "),
-                    _c(
-                      "div",
-                      { staticClass: "metric-card-wrapper" },
-                      _vm._l(_vm.details.score.errorData.errors, function(
-                        error,
-                        i
-                      ) {
-                        return _c(
-                          "div",
-                          { key: i, staticClass: "metric-card" },
-                          [
-                            _c(
-                              "div",
-                              {
-                                staticClass: "icon",
-                                staticStyle: { color: "var(--error)" }
-                              },
-                              [_vm._v("󰋭")]
-                            ),
-                            _vm._v(" "),
-                            _c("div", { staticClass: "label" }, [
-                              _vm._v("Error")
-                            ]),
-                            _vm._v(" "),
-                            _c("div", { staticClass: "value" }, [
-                              _vm._v(_vm._s(error.desc))
-                            ])
-                          ]
-                        )
-                      }),
-                      0
-                    )
-                  ])
-                ])
-              : _vm._e(),
-            _vm._v(" "),
-            _vm.details.score.warningData.warnings.length > 0
-              ? _c("div", { staticClass: "detail-row" }, [
-                  _c("div", { staticClass: "card span-12" }, [
-                    _vm._m(4),
-                    _vm._v(" "),
-                    _c(
-                      "div",
-                      { staticClass: "metric-card-wrapper" },
-                      _vm._l(_vm.details.score.warningData.warnings, function(
-                        warning,
-                        i
-                      ) {
-                        return _c(
-                          "div",
-                          { key: i, staticClass: "metric-card" },
-                          [
-                            _c(
-                              "div",
-                              {
-                                staticClass: "icon",
-                                staticStyle: { color: "var(--warning)" }
-                              },
-                              [_vm._v("󰉫")]
-                            ),
-                            _vm._v(" "),
-                            _c("div", { staticClass: "label" }, [
-                              _vm._v("Warning")
-                            ]),
-                            _vm._v(" "),
-                            _c("div", { staticClass: "value" }, [
-                              _vm._v(_vm._s(warning.desc))
-                            ])
-                          ]
-                        )
-                      }),
-                      0
-                    )
-                  ])
-                ])
-              : _vm._e(),
-            _vm._v(" "),
-            _vm.details.metaData.twitterCard.hasTwitterCard ||
-            _vm.details.metaData.openGraph.hasOpenGraph
-              ? _c("div", { staticClass: "detail-row" }, [
-                  _vm.details.metaData.twitterCard.hasTwitterCard
-                    ? _c("div", { staticClass: "card span-6" }, [
-                        _vm._m(5),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "twitter-summary-card" }, [
-                          _c("img", {
-                            staticClass: "image",
-                            attrs: {
-                              src:
-                                _vm.details.metaData.twitterCard[
-                                  "twitter:image"
-                                ]
-                            }
-                          }),
-                          _vm._v(" "),
-                          _c("div", { staticClass: "content" }, [
-                            _c("div", { staticClass: "title" }, [
-                              _vm._v(
-                                _vm._s(
-                                  _vm.details.metaData.twitterCard[
-                                    "twitter:title"
-                                  ]
-                                )
-                              )
-                            ]),
-                            _vm._v(" "),
-                            _c("div", { staticClass: "description" }, [
-                              _vm._v(
-                                _vm._s(
-                                  _vm.details.metaData.openGraph[
-                                    "og:description"
-                                  ]
-                                )
-                              )
-                            ]),
-                            _vm._v(" "),
-                            _c("div", { staticClass: "url" }, [
-                              _c("div", { staticClass: "icon" }, [_vm._v("󰌹")]),
-                              _vm._v(" "),
-                              _c("div", { staticClass: "text" }, [
-                                _vm._v(_vm._s(_vm.details.url.host))
-                              ])
-                            ])
-                          ])
-                        ])
-                      ])
-                    : _vm._e(),
-                  _vm._v(" "),
-                  _vm.details.metaData.openGraph.hasOpenGraph
-                    ? _c("div", { staticClass: "card span-6" }, [
-                        _vm._m(6),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "open-graph-article-card" }, [
-                          _c("img", {
-                            staticClass: "image",
-                            attrs: {
-                              src: _vm.details.metaData.openGraph["og:image"]
-                            }
-                          }),
-                          _vm._v(" "),
-                          _c("div", { staticClass: "content" }, [
-                            _c("div", { staticClass: "url" }, [
-                              _vm._v(
-                                _vm._s(
-                                  _vm.details.metaData.openGraph["og:url"].host
-                                )
-                              )
-                            ]),
-                            _vm._v(" "),
-                            _c("div", { staticClass: "title" }, [
-                              _vm._v(
-                                _vm._s(
-                                  _vm.details.metaData.openGraph["og:title"]
-                                )
-                              )
-                            ]),
-                            _vm._v(" "),
-                            _c("div", { staticClass: "description" }, [
-                              _vm._v(
-                                _vm._s(
-                                  _vm.details.metaData.openGraph[
-                                    "og:description"
-                                  ]
-                                )
-                              )
-                            ])
-                          ])
-                        ])
-                      ])
-                    : _vm._e()
-                ])
-              : _vm._e(),
-            _vm._v(" "),
-            _c("div", { staticClass: "detail-row" }, [
-              _c("div", { staticClass: "card span-12" }, [
-                _vm._m(7),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  { staticClass: "metric-card-wrapper" },
-                  _vm._l(_vm.details.meta, function(meta, i) {
-                    return _c("div", { key: i, staticClass: "metric-card" }, [
-                      _c(
-                        "div",
-                        {
-                          staticClass: "icon",
-                          staticStyle: { color: "var(--text-gray)" }
-                        },
-                        [_vm._v("󰓹")]
-                      ),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "label" }, [
-                        _vm._v(_vm._s(meta.name || meta.property || "Charset"))
-                      ]),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "value" }, [
-                        _vm._v(
-                          _vm._s(meta.content || meta.charset || meta.httpEquiv)
-                        )
-                      ])
-                    ])
-                  }),
-                  0
-                )
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "detail-row" }, [
-              _c("div", { staticClass: "card span-12" }, [
-                _vm._m(8),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  { staticClass: "metric-card-wrapper" },
-                  _vm._l(_vm.details.links, function(link, i) {
-                    return _c("div", { key: i, staticClass: "metric-card" }, [
-                      link.href && link.href.startsWith("mailto:")
-                        ? _c(
-                            "div",
-                            {
-                              staticClass: "icon",
-                              staticStyle: { color: "var(--text-gray)" }
-                            },
-                            [_vm._v("󰇰")]
-                          )
-                        : link.href && link.href.startsWith("tel:")
-                        ? _c(
-                            "div",
-                            {
-                              staticClass: "icon",
-                              staticStyle: { color: "var(--text-gray)" }
-                            },
-                            [_vm._v("󰏲")]
-                          )
-                        : _c(
-                            "div",
-                            {
-                              staticClass: "icon",
-                              staticStyle: { color: "var(--text-gray)" }
-                            },
-                            [_vm._v("󰌹")]
-                          ),
-                      _vm._v(" "),
-                      link.text && link.text.trim()
-                        ? _c("div", { staticClass: "label" }, [
-                            _vm._v(_vm._s(link.text))
-                          ])
-                        : _c("div", { staticClass: "label" }, [
-                            _c("i", [_vm._v("No link text")])
-                          ]),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "value" }, [
-                        _vm._v(_vm._s(link.href))
-                      ])
-                    ])
-                  }),
-                  0
-                )
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "detail-row" }, [
-              _c(
-                "div",
-                { staticClass: "card span-12" },
-                [
-                  _vm._m(9),
-                  _vm._v(" "),
-                  _vm._l(_vm.details.images, function(image, i) {
-                    return _c("div", { key: i, staticClass: "image-card" }, [
-                      _c("img", {
-                        directives: [
-                          {
-                            name: "tooltip",
-                            rawName: "v-tooltip.bottom-start",
-                            value: image.src,
-                            expression: "image.src",
-                            modifiers: { "bottom-start": true }
-                          }
-                        ],
-                        staticClass: "image",
-                        attrs: { src: image.href }
-                      }),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "content" }, [
-                        image.alt
-                          ? _c("b", { staticClass: "title" }, [
-                              _vm._v(_vm._s(image.alt))
-                            ])
-                          : _c("i", { staticClass: "title" }, [
-                              _vm._v('No "alt"-attribute')
-                            ]),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "description" }, [
-                          _vm._v(
-                            "\n                            Natural-Size: "
-                          ),
-                          _c("b", [
-                            _vm._v(
-                              _vm._s(image.width) + " x " + _vm._s(image.height)
-                            )
-                          ]),
-                          _c("br"),
-                          _vm._v(
-                            "\n                            Visible-Size: "
-                          ),
-                          _c("b", [
-                            _vm._v(
-                              _vm._s(image.visibleWidth) +
-                                " x " +
-                                _vm._s(image.visibleHeight)
-                            )
-                          ]),
-                          _c("br"),
-                          _vm._v(" "),
-                          _c("span", { staticClass: "no-text-overflow" }, [
-                            _vm._v("Src: "),
-                            _c("b", [_vm._v(_vm._s(image.src))])
-                          ])
-                        ])
-                      ])
-                    ])
-                  })
-                ],
-                2
-              )
-            ])
-          ]),
       _vm._v(" "),
       _c("ui-option-dialog", {
         ref: "reportCreateDialog",
@@ -49877,37 +50030,6 @@ var render = function() {
             key: "inputs",
             fn: function() {
               return [
-                _c("ui-select-input", {
-                  attrs: {
-                    label: "Mode",
-                    options: [{ full: "Full Scan" }, { single: "Single Page" }]
-                  },
-                  model: {
-                    value: _vm.reportCreate.mode,
-                    callback: function($$v) {
-                      _vm.$set(_vm.reportCreate, "mode", $$v)
-                    },
-                    expression: "reportCreate.mode"
-                  }
-                }),
-                _vm._v(" "),
-                _c("ui-select-input", {
-                  attrs: {
-                    label: "Viewport",
-                    options: [
-                      { "1080p": "1920 x 1080" },
-                      { "720p": "1280 x 720" }
-                    ]
-                  },
-                  model: {
-                    value: _vm.reportCreate.viewport,
-                    callback: function($$v) {
-                      _vm.$set(_vm.reportCreate, "viewport", $$v)
-                    },
-                    expression: "reportCreate.viewport"
-                  }
-                }),
-                _vm._v(" "),
                 _c("ui-text-input", {
                   attrs: { label: "URL" },
                   model: {
@@ -49954,7 +50076,10 @@ var render = function() {
                 _c(
                   "ui-button",
                   {
-                    attrs: { icon: "&#983881;", loading: _vm.reportLoading },
+                    attrs: {
+                      icon: "&#983881;",
+                      loading: _vm.reportCreate.loading
+                    },
                     on: {
                       click: function($event) {
                         return _vm.requestReport()

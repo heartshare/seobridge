@@ -24,7 +24,7 @@
             }
         },
 
-        mounted() {
+        created() {
             this.init()
         },
 
@@ -97,7 +97,7 @@
         border: none
         cursor: pointer
         user-select: none
-        transition: all 100ms
+        transition: background 100ms, color 100ms
         vertical-align: top
         position: relative
 

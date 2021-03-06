@@ -7,6 +7,9 @@ window.Pusher = require('pusher-js')
 // Lodash
 window._ = require('lodash')
 
+// Custom helper methods
+window.debounce = require('./helper/debounce')
+
 // Axios
 window.axios = require('axios')
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest'
