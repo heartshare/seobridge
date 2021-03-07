@@ -17,7 +17,7 @@ class TeamController extends Controller
         $teams = array_merge(TeamMember::where('user_id', Auth::id())->pluck('team_id')->toArray(), Team::where('owner_id', Auth::id())->pluck('id')->toArray());
         $teams = array_unique($teams);
 
-        return Team::whereIn('id', $teams)->with('members')->get();
+        return Team::whereIn('id', $teams)->with('members.user')->get();
     }
 
 
@@ -35,14 +35,21 @@ class TeamController extends Controller
 
         $team = Team::updateOrCreate([
             'id' => $teamId,
-            'owner_id' => Auth::id(),
         ], [
+            'owner_id' => Auth::id(),
             'name' => $request->name,
             'description' => $request->description,
             'category' => $request->category,
         ]);
 
-        return $team;
+        $owner = TeamMember::firstOrCreate([
+            'team_id' => $team->id,
+            'user_id' => $team->owner_id,
+        ], [
+            'roles' => ['owner'],
+        ]);
+
+        return Team::with('members.user')->find($team->id);
     }
 
 

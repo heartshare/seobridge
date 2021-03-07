@@ -98,7 +98,7 @@
                 width: 140px
                 object-fit: cover
                 border-radius: 100%
-                margin: -70px auto 15px
+                margin: -70px auto 25px
                 display: block
                 padding: 5px
                 background: var(--bg)
@@ -109,8 +109,8 @@
                 position: relative
                 display: flex
                 width: 100%
-                max-width: 500px
-                margin: 0 auto 15px
+                max-width: 600px
+                margin: 0 auto 30px
                 
                 .submit-button
                     margin: 5px

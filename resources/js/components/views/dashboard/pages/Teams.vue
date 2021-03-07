@@ -1,22 +1,51 @@
 <template>
     <div class="page-container limiter">
-        <h1>My Teams</h1>
-        <fieldset v-for="team in teams" :key="team.id">
-            <legend>{{team.name}}</legend>
-            <p>
-                Category: <b>{{team.category}}</b><br>
-                Description: <b>{{team.description || '---'}}</b>
-            </p>
-            <p v-for="member in team.members" :key="team.id+'_'+member.id">{{member.id}}</p>
-            <ui-icon-button @click="openTeamEditor(team)">&#984043;</ui-icon-button>
-            <ui-icon-button @click="openTeamInviteDialog(team)">&#983060;</ui-icon-button>
-            <ui-icon-button error @click="openTeamDeletionDialog(team)">&#985721;</ui-icon-button>
-        </fieldset><br>
+        <transition-group name="slide" class="block">
+            <div class="team-wrapper" v-for="team in teams" :key="team.id">
+                <div class="team-header">
+                    <div class="title">{{team.name}}</div>
 
-        <fieldset>
-            <legend>Add Teams</legend>
-            <ui-button icon="&#984085;" @click="openTeamEditor()">New Team</ui-button>
-        </fieldset>
+                    <ui-popover-menu>
+                        <template v-slot:trigger>
+                            <ui-icon-button class="more-button">&#983513;</ui-icon-button>
+                        </template>
+
+                        <ui-menu-item icon="&#984043;" @click="openTeamEditor(team)">Edit Team</ui-menu-item>
+                        <ui-menu-item icon="&#983060;" @click="openTeamInviteDialog(team)">Add Member</ui-menu-item>
+                        <ui-menu-divider></ui-menu-divider>
+                        <ui-menu-item icon="&#985721;" @click="openTeamDeletionDialog(team)">Delete Team</ui-menu-item>
+                    </ui-popover-menu>
+                </div>
+
+                <div class="team-content">
+                    <div class="member-card" v-for="member in team.members" :key="member.id">
+                        <div class="background">
+                            <ui-popover-menu class="more-button">
+                                <template v-slot:trigger>
+                                    <ui-icon-button>&#983513;</ui-icon-button>
+                                </template>
+
+                                <ui-menu-item icon="&#984043;">Edit Member</ui-menu-item>
+                                <ui-menu-item icon="&#983213;">Remove Member</ui-menu-item>
+                            </ui-popover-menu>
+                        </div>
+
+                        <img src="/images/defaults/default_profile_image.svg" class="profile-image">
+
+                        <div class="name">{{member.user.username}}</div>
+                        
+                    </div>
+                    <p>
+                        Category: <b>{{team.category}}</b><br>
+                        Description: <b>{{team.description || '---'}}</b>
+                    </p>
+                </div>
+            </div>
+        </transition-group>
+
+
+
+        <button class="fab" @click="openTeamEditor()">&#984085;</button>
 
 
 
@@ -231,7 +260,126 @@
     .page-container
         width: 100%
 
+        .fab
+            height: 56px
+            width: 56px
+            font-family: 'Material Icons'
+            color: white
+            background: var(--primary)
+            display: grid
+            place-content: center
+            font-size: 24px
+            position: fixed
+            bottom: 30px
+            right: 30px
+            border-radius: 100%
+            border: none
+            filter: var(--elevation-2)
+            cursor: pointer
+            user-select: none
+            transition: all 200ms
+            z-index: 100
+
+            &:hover
+                filter: var(--elevation-4)
+
         .team-description-input
             resize: none
             height: 150px
+
+        .team-wrapper
+            width: 100%
+            display: inline-flex
+            flex-direction: column
+            background: white
+            border-radius: 7px
+            filter: var(--elevation-2)
+            margin: 15px 0
+            transition: all 300ms
+
+            &.slide-enter
+                transform: translateY(-100px)
+                opacity: 0
+
+            &.slide-leave-to
+                transform: scale(0)
+                opacity: 0
+
+            &.slide-leave-active
+                position: absolute
+
+            .team-header
+                display: flex
+                align-items: center
+                padding: 5px 0
+                border-radius: 7px 7px 0 0
+
+                .title
+                    flex: 1
+                    font-size: 16px
+                    line-height: 20px
+                    font-weight: 600
+                    text-transform: uppercase
+                    color: var(--heading-gray)
+                    padding: 0 15px
+
+                .timestamp
+                    line-height: 20px
+                    font-size: var(--text-size)
+                    color: var(--text-gray)
+
+                .more-button
+                    margin: 0 5px
+
+            .team-content
+                display: flex
+                gap: 15px
+                padding: 0 15px 15px
+                position: relative
+
+                .member-card
+                    border-radius: 5px
+                    border: var(--border)
+                    width: 170px
+                    height: 220px
+                    position: relative
+
+                    .name
+                        width: 100%
+                        font-size: var(--text-size)
+                        color: var(--heading-gray)
+                        font-weight: 600
+                        height: 40px
+                        display: grid
+                        place-content: center
+
+                    .more-button
+                        position: absolute
+                        top: 0
+                        right: 0
+                        padding: 5px
+                        display: block !important
+
+                    .background
+                        height: 80px
+                        width: 100%
+                        border-bottom: var(--border)
+                        background: var(--bg)
+                        background-image: url('/images/app/dashboard/pattern.svg')
+                        background-size: 1000px
+                        background-position: top
+                        background-repeat: no-repeat
+                        border-radius: 5px 5px 0 0
+                        display: block
+
+                    .profile-image
+                        height: 80px
+                        width: 80px
+                        object-fit: cover
+                        border-radius: 100%
+                        margin: -40px auto 5px
+                        display: block
+                        padding: 5px
+                        background: var(--bg)
+                        font-size: 15px
 </style>

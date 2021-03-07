@@ -5616,6 +5616,35 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
@@ -6851,7 +6880,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".page-container[data-v-85201bb2] {\n  width: 100%;\n}\n.page-container .header[data-v-85201bb2] {\n  width: 100%;\n  background: var(--bg);\n  filter: var(--elevation-2);\n  border-radius: 7px;\n  margin-top: 15px;\n}\n.page-container .header .background-image[data-v-85201bb2] {\n  height: 250px;\n  width: 100%;\n  background: var(--bg-dark);\n  background-image: url(\"/images/app/dashboard/pattern.svg\");\n  background-size: cover;\n  background-position: center;\n  background-repeat: no-repeat;\n  border-radius: 7px 7px 0 0;\n  display: block;\n}\n.page-container .header .profile-image[data-v-85201bb2] {\n  height: 140px;\n  width: 140px;\n  -o-object-fit: cover;\n     object-fit: cover;\n  border-radius: 100%;\n  margin: -70px auto 15px;\n  display: block;\n  padding: 5px;\n  background: var(--bg);\n}\n.page-container .header .name-wrapper[data-v-85201bb2] {\n  background: var(--bg);\n  border-radius: 5px;\n  position: relative;\n  display: flex;\n  width: 100%;\n  max-width: 500px;\n  margin: 0 auto 15px;\n}\n.page-container .header .name-wrapper .submit-button[data-v-85201bb2] {\n  margin: 5px;\n}\n.page-container .header .name-wrapper[data-v-85201bb2]::after {\n  content: \"\";\n  height: 100%;\n  width: 100%;\n  position: absolute;\n  top: 0;\n  left: 0;\n  border-radius: 5px;\n  border: var(--input-border);\n  pointer-events: none;\n  box-sizing: border-box;\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, ".page-container[data-v-85201bb2] {\n  width: 100%;\n}\n.page-container .header[data-v-85201bb2] {\n  width: 100%;\n  background: var(--bg);\n  filter: var(--elevation-2);\n  border-radius: 7px;\n  margin-top: 15px;\n}\n.page-container .header .background-image[data-v-85201bb2] {\n  height: 250px;\n  width: 100%;\n  background: var(--bg-dark);\n  background-image: url(\"/images/app/dashboard/pattern.svg\");\n  background-size: cover;\n  background-position: center;\n  background-repeat: no-repeat;\n  border-radius: 7px 7px 0 0;\n  display: block;\n}\n.page-container .header .profile-image[data-v-85201bb2] {\n  height: 140px;\n  width: 140px;\n  -o-object-fit: cover;\n     object-fit: cover;\n  border-radius: 100%;\n  margin: -70px auto 25px;\n  display: block;\n  padding: 5px;\n  background: var(--bg);\n}\n.page-container .header .name-wrapper[data-v-85201bb2] {\n  background: var(--bg);\n  border-radius: 5px;\n  position: relative;\n  display: flex;\n  width: 100%;\n  max-width: 600px;\n  margin: 0 auto 30px;\n}\n.page-container .header .name-wrapper .submit-button[data-v-85201bb2] {\n  margin: 5px;\n}\n.page-container .header .name-wrapper[data-v-85201bb2]::after {\n  content: \"\";\n  height: 100%;\n  width: 100%;\n  position: absolute;\n  top: 0;\n  left: 0;\n  border-radius: 5px;\n  border: var(--input-border);\n  pointer-events: none;\n  box-sizing: border-box;\n}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -6923,7 +6952,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".page-container[data-v-763ff598] {\n  width: 100%;\n}\n.page-container .team-description-input[data-v-763ff598] {\n  resize: none;\n  height: 150px;\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, ".page-container[data-v-763ff598] {\n  width: 100%;\n}\n.page-container .fab[data-v-763ff598] {\n  height: 56px;\n  width: 56px;\n  font-family: \"Material Icons\";\n  color: white;\n  background: var(--primary);\n  display: grid;\n  place-content: center;\n  font-size: 24px;\n  position: fixed;\n  bottom: 30px;\n  right: 30px;\n  border-radius: 100%;\n  border: none;\n  filter: var(--elevation-2);\n  cursor: pointer;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n  transition: all 200ms;\n  z-index: 100;\n}\n.page-container .fab[data-v-763ff598]:hover {\n  filter: var(--elevation-4);\n}\n.page-container .team-description-input[data-v-763ff598] {\n  resize: none;\n  height: 150px;\n}\n.page-container .team-wrapper[data-v-763ff598] {\n  width: 100%;\n  display: inline-flex;\n  flex-direction: column;\n  background: white;\n  border-radius: 7px;\n  filter: var(--elevation-2);\n  margin: 15px 0;\n  transition: all 300ms;\n}\n.page-container .team-wrapper.slide-enter[data-v-763ff598] {\n  transform: translateY(-100px);\n  opacity: 0;\n}\n.page-container .team-wrapper.slide-leave-to[data-v-763ff598] {\n  transform: scale(0);\n  opacity: 0;\n}\n.page-container .team-wrapper.slide-leave-active[data-v-763ff598] {\n  position: absolute;\n}\n.page-container .team-wrapper .team-header[data-v-763ff598] {\n  display: flex;\n  align-items: center;\n  padding: 5px 0;\n  border-radius: 7px 7px 0 0;\n}\n.page-container .team-wrapper .team-header .title[data-v-763ff598] {\n  flex: 1;\n  font-size: 16px;\n  line-height: 20px;\n  font-weight: 600;\n  text-transform: uppercase;\n  color: var(--heading-gray);\n  padding: 0 15px;\n}\n.page-container .team-wrapper .team-header .timestamp[data-v-763ff598] {\n  line-height: 20px;\n  font-size: var(--text-size);\n  color: var(--text-gray);\n}\n.page-container .team-wrapper .team-header .more-button[data-v-763ff598] {\n  margin: 0 5px;\n}\n.page-container .team-wrapper .team-content[data-v-763ff598] {\n  display: flex;\n  gap: 15px;\n  padding: 0 15px 15px;\n  position: relative;\n}\n.page-container .team-wrapper .team-content .member-card[data-v-763ff598] {\n  border-radius: 5px;\n  border: var(--border);\n  width: 170px;\n  height: 220px;\n  position: relative;\n}\n.page-container .team-wrapper .team-content .member-card .name[data-v-763ff598] {\n  width: 100%;\n  font-size: var(--text-size);\n  color: var(--heading-gray);\n  font-weight: 600;\n  height: 40px;\n  display: grid;\n  place-content: center;\n}\n.page-container .team-wrapper .team-content .member-card .more-button[data-v-763ff598] {\n  position: absolute;\n  top: 0;\n  right: 0;\n  padding: 5px;\n  display: block !important;\n}\n.page-container .team-wrapper .team-content .member-card .background[data-v-763ff598] {\n  height: 80px;\n  width: 100%;\n  border-bottom: var(--border);\n  background: var(--bg);\n  background-image: url(\"/images/app/dashboard/pattern.svg\");\n  background-size: 1000px;\n  background-position: top;\n  background-repeat: no-repeat;\n  border-radius: 5px 5px 0 0;\n  display: block;\n}\n.page-container .team-wrapper .team-content .member-card .profile-image[data-v-763ff598] {\n  height: 80px;\n  width: 80px;\n  -o-object-fit: cover;\n     object-fit: cover;\n  border-radius: 100%;\n  margin: -40px auto 5px;\n  display: block;\n  padding: 5px;\n  background: var(--bg);\n  font-size: 15px;\n}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -50668,90 +50697,184 @@ var render = function() {
     "div",
     { staticClass: "page-container limiter" },
     [
-      _c("h1", [_vm._v("My Teams")]),
-      _vm._v(" "),
-      _vm._l(_vm.teams, function(team) {
-        return _c(
-          "fieldset",
-          { key: team.id },
-          [
-            _c("legend", [_vm._v(_vm._s(team.name))]),
-            _vm._v(" "),
-            _c("p", [
-              _vm._v("\n            Category: "),
-              _c("b", [_vm._v(_vm._s(team.category))]),
-              _c("br"),
-              _vm._v("\n            Description: "),
-              _c("b", [_vm._v(_vm._s(team.description || "---"))])
-            ]),
-            _vm._v(" "),
-            _vm._l(team.members, function(member) {
-              return _c("p", { key: team.id + "_" + member.id }, [
-                _vm._v(_vm._s(member.id))
-              ])
-            }),
-            _vm._v(" "),
+      _c(
+        "transition-group",
+        { staticClass: "block", attrs: { name: "slide" } },
+        _vm._l(_vm.teams, function(team) {
+          return _c("div", { key: team.id, staticClass: "team-wrapper" }, [
             _c(
-              "ui-icon-button",
-              {
-                on: {
-                  click: function($event) {
-                    return _vm.openTeamEditor(team)
-                  }
-                }
-              },
-              [_vm._v("󰏫")]
+              "div",
+              { staticClass: "team-header" },
+              [
+                _c("div", { staticClass: "title" }, [
+                  _vm._v(_vm._s(team.name))
+                ]),
+                _vm._v(" "),
+                _c(
+                  "ui-popover-menu",
+                  {
+                    scopedSlots: _vm._u(
+                      [
+                        {
+                          key: "trigger",
+                          fn: function() {
+                            return [
+                              _c(
+                                "ui-icon-button",
+                                { staticClass: "more-button" },
+                                [_vm._v("󰇙")]
+                              )
+                            ]
+                          },
+                          proxy: true
+                        }
+                      ],
+                      null,
+                      true
+                    )
+                  },
+                  [
+                    _vm._v(" "),
+                    _c(
+                      "ui-menu-item",
+                      {
+                        attrs: { icon: "&#984043;" },
+                        on: {
+                          click: function($event) {
+                            return _vm.openTeamEditor(team)
+                          }
+                        }
+                      },
+                      [_vm._v("Edit Team")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "ui-menu-item",
+                      {
+                        attrs: { icon: "&#983060;" },
+                        on: {
+                          click: function($event) {
+                            return _vm.openTeamInviteDialog(team)
+                          }
+                        }
+                      },
+                      [_vm._v("Add Member")]
+                    ),
+                    _vm._v(" "),
+                    _c("ui-menu-divider"),
+                    _vm._v(" "),
+                    _c(
+                      "ui-menu-item",
+                      {
+                        attrs: { icon: "&#985721;" },
+                        on: {
+                          click: function($event) {
+                            return _vm.openTeamDeletionDialog(team)
+                          }
+                        }
+                      },
+                      [_vm._v("Delete Team")]
+                    )
+                  ],
+                  1
+                )
+              ],
+              1
             ),
             _vm._v(" "),
             _c(
-              "ui-icon-button",
-              {
-                on: {
-                  click: function($event) {
-                    return _vm.openTeamInviteDialog(team)
-                  }
-                }
-              },
-              [_vm._v("󰀔")]
-            ),
-            _vm._v(" "),
-            _c(
-              "ui-icon-button",
-              {
-                attrs: { error: "" },
-                on: {
-                  click: function($event) {
-                    return _vm.openTeamDeletionDialog(team)
-                  }
-                }
-              },
-              [_vm._v("󰩹")]
+              "div",
+              { staticClass: "team-content" },
+              [
+                _vm._l(team.members, function(member) {
+                  return _c(
+                    "div",
+                    { key: member.id, staticClass: "member-card" },
+                    [
+                      _c(
+                        "div",
+                        { staticClass: "background" },
+                        [
+                          _c(
+                            "ui-popover-menu",
+                            {
+                              staticClass: "more-button",
+                              scopedSlots: _vm._u(
+                                [
+                                  {
+                                    key: "trigger",
+                                    fn: function() {
+                                      return [
+                                        _c("ui-icon-button", [_vm._v("󰇙")])
+                                      ]
+                                    },
+                                    proxy: true
+                                  }
+                                ],
+                                null,
+                                true
+                              )
+                            },
+                            [
+                              _vm._v(" "),
+                              _c(
+                                "ui-menu-item",
+                                { attrs: { icon: "&#984043;" } },
+                                [_vm._v("Edit Member")]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "ui-menu-item",
+                                { attrs: { icon: "&#983213;" } },
+                                [_vm._v("Remove Member")]
+                              )
+                            ],
+                            1
+                          )
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c("img", {
+                        staticClass: "profile-image",
+                        attrs: {
+                          src: "/images/defaults/default_profile_image.svg"
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "name" }, [
+                        _vm._v(_vm._s(member.user.username))
+                      ])
+                    ]
+                  )
+                }),
+                _vm._v(" "),
+                _c("p", [
+                  _vm._v("\n                    Category: "),
+                  _c("b", [_vm._v(_vm._s(team.category))]),
+                  _c("br"),
+                  _vm._v("\n                    Description: "),
+                  _c("b", [_vm._v(_vm._s(team.description || "---"))])
+                ])
+              ],
+              2
             )
-          ],
-          2
-        )
-      }),
-      _c("br"),
+          ])
+        }),
+        0
+      ),
       _vm._v(" "),
       _c(
-        "fieldset",
-        [
-          _c("legend", [_vm._v("Add Teams")]),
-          _vm._v(" "),
-          _c(
-            "ui-button",
-            {
-              attrs: { icon: "&#984085;" },
-              on: {
-                click: function($event) {
-                  return _vm.openTeamEditor()
-                }
-              }
-            },
-            [_vm._v("New Team")]
-          )
-        ],
-        1
+        "button",
+        {
+          staticClass: "fab",
+          on: {
+            click: function($event) {
+              return _vm.openTeamEditor()
+            }
+          }
+        },
+        [_vm._v("󰐕")]
       ),
       _vm._v(" "),
       _c("ui-option-dialog", {
@@ -51030,7 +51153,7 @@ var render = function() {
         ])
       })
     ],
-    2
+    1
   )
 }
 var staticRenderFns = []
