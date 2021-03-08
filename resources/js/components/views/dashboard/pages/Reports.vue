@@ -28,11 +28,11 @@
                                     <ui-icon-button class="more-button">&#983513;</ui-icon-button>
                                 </template>
 
-                                <!-- <ui-menu-item icon="&#984214;">Share report</ui-menu-item> -->
+                                <ui-menu-item icon="&#984214;">Share report</ui-menu-item>
                                 <!-- <ui-menu-item icon="&#983048;">Assign report</ui-menu-item> -->
                                 <ui-menu-item icon="&#983881;" @click="reportSearch.url = reportGroup.host">Search for domain</ui-menu-item>
                                 <ui-menu-divider></ui-menu-divider>
-                                <!-- <ui-menu-item icon="&#984089;" @click="$store.dispatch('createReport', pages[0].url)">New report from URL</ui-menu-item> -->
+                                <ui-menu-item icon="&#984089;" @click="requestReport(reportGroup.url)">New report from URL</ui-menu-item>
                                 <ui-menu-item icon="&#985721;" @click="openReportDeleteDialog(reportGroup)">Delete report</ui-menu-item>
                             </ui-popover-menu>
                         </div>
@@ -585,9 +585,9 @@
                 this.$refs.reportCreateDialog.close()
             },
 
-            requestReport() {
+            requestReport(url = null) {
                 axios.post('/auth/reports/request-site-analysis', {
-                    url: this.reportCreate.url,
+                    url: url || this.reportCreate.url,
                     // mode: this.reportCreate.mode || 'single',
                     mode: 'single',
                     device: {

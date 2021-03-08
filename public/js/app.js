@@ -5219,8 +5219,9 @@ var relativeTime = __webpack_require__(/*! dayjs/plugin/relativeTime */ "./node_
     requestReport: function requestReport() {
       var _this = this;
 
+      var url = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
       axios.post('/auth/reports/request-site-analysis', {
-        url: this.reportCreate.url,
+        url: url || this.reportCreate.url,
         // mode: this.reportCreate.mode || 'single',
         mode: 'single',
         device: {
@@ -48905,6 +48906,12 @@ var render = function() {
                                 _vm._v(" "),
                                 _c(
                                   "ui-menu-item",
+                                  { attrs: { icon: "&#984214;" } },
+                                  [_vm._v("Share report")]
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "ui-menu-item",
                                   {
                                     attrs: { icon: "&#983881;" },
                                     on: {
@@ -48917,6 +48924,21 @@ var render = function() {
                                 ),
                                 _vm._v(" "),
                                 _c("ui-menu-divider"),
+                                _vm._v(" "),
+                                _c(
+                                  "ui-menu-item",
+                                  {
+                                    attrs: { icon: "&#984089;" },
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.requestReport(
+                                          reportGroup.url
+                                        )
+                                      }
+                                    }
+                                  },
+                                  [_vm._v("New report from URL")]
+                                ),
                                 _vm._v(" "),
                                 _c(
                                   "ui-menu-item",
