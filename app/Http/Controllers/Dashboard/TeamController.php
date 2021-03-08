@@ -22,6 +22,13 @@ class TeamController extends Controller
 
 
 
+    public function getAllInvites(Request $request)
+    {
+        return TeamInvite::where('email', Auth::user()->email)->where('status', 'pending')->with('team')->get();
+    }
+
+
+
     public function updateOrCreateTeam(Request $request)
     {
         $request->validate([
@@ -119,5 +126,29 @@ class TeamController extends Controller
         ]);
 
         return $invite;
+    }
+
+
+
+    public function acceptInvite(Request $request)
+    {
+        $request->validate([
+            'id' => ['required', 'exists:team_invites,id'],
+        ]);
+
+        $invite = TeamInvite::find($request->id);
+
+        $invite->status = 'accepted';
+
+        $invite->save();
+
+        
+        $member = TeamMember::create([
+            'team_id' => $invite->team_id,
+            'user_id' => Auth::id(),
+            'roles' => ['member'],
+        ]);
+        
+        return Team::with('members.user')->find($invite->team_id);
     }
 }

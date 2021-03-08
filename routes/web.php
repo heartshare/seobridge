@@ -70,7 +70,9 @@ Route::middleware('auth')->prefix('auth')->group(function() {
         Route::post('/get-all-teams', [App\Http\Controllers\Dashboard\TeamController::class, 'getAllTeams']);
         Route::post('/update-or-create-team', [App\Http\Controllers\Dashboard\TeamController::class, 'updateOrCreateTeam']);
         Route::post('/delete-team', [App\Http\Controllers\Dashboard\TeamController::class, 'deleteTeam']);
+        Route::post('/get-all-invites', [App\Http\Controllers\Dashboard\TeamController::class, 'getAllInvites']);
         Route::post('/create-invite', [App\Http\Controllers\Dashboard\TeamController::class, 'createInvite']);
+        Route::post('/accept-invite', [App\Http\Controllers\Dashboard\TeamController::class, 'acceptInvite']);
     });
 
     Route::prefix('notifications')->group(function() {

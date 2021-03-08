@@ -1,9 +1,22 @@
 <template>
     <div class="page-container limiter">
+        <fieldset v-for="invite in invites" :key="invite.id">
+            <legend>{{invite.team.name}}</legend>
+            <p>
+                You've got invited to join <b>{{invite.team.name}}</b>
+            </p>
+            <ui-button text border icon="&#983382;" icon-left>Ignore</ui-button>
+            <ui-button icon="&#983340;" @click="acceptInvite(invite.id)">Accept</ui-button>
+        </fieldset>
         <transition-group name="slide" class="block">
             <div class="team-wrapper" v-for="team in teams" :key="team.id">
                 <div class="team-header">
-                    <div class="title">{{team.name}}</div>
+                    <div class="title">
+                        <b>{{team.name}}</b><br>
+                        {{team.description}}
+                    </div>
+
+                    <div class="tag">{{team.category}}</div>
 
                     <ui-popover-menu>
                         <template v-slot:trigger>
@@ -32,13 +45,21 @@
 
                         <img src="/images/defaults/default_profile_image.svg" class="profile-image">
 
-                        <div class="name">{{member.user.username}}</div>
-                        
+                        <div class="name" v-if="member.user.firstname || member.user.lastname">
+                            {{member.user.firstname}}
+                            {{member.user.lastname}}
+                        </div>
+                        <div class="name" v-else>
+                            {{member.user.username}}
+                        </div>
+
+                        <div class="role" v-for="(role, i) in member.roles" :key="i">{{role}}</div>    
                     </div>
-                    <p>
-                        Category: <b>{{team.category}}</b><br>
-                        Description: <b>{{team.description || '---'}}</b>
-                    </p>
+
+                    <div class="add-member-card" @click="openTeamInviteDialog(team)">
+                        <div class="icon">&#984085;</div>
+                        <div class="text">Add Member</div>
+                    </div>
                 </div>
             </div>
         </transition-group>
@@ -140,7 +161,11 @@
         computed: {
             teams() {
                 return this.$store.getters.teams
-            }
+            },
+
+            invites() {
+                return this.$store.getters.invites
+            },
         },
 
         methods: {
@@ -252,6 +277,19 @@
                     this.teamInvite.loading = false
                 })
             },
+
+
+
+            acceptInvite(id) {
+                axios.post('/auth/team/accept-invite', {id,})
+                .then(response => {
+                    this.$store.commit('setTeam', response.data)
+                    this.$store.dispatch('fetchAllInvites')
+                })
+                .catch(error => {
+                    console.log(error.response)
+                })
+            },
         },
     }
 </script>
@@ -314,19 +352,31 @@
                 padding: 5px 0
                 border-radius: 7px 7px 0 0
 
+                .tag
+                    margin-left: 15px
+                    font-size: 10px
+                    color: var(--primary)
+                    background: var(--primary-shade)
+                    padding: 1px 8px
+                    line-height: 18px
+                    border-radius: 30px
+                    letter-spacing: 1px
+                    font-weight: 600
+                    text-transform: uppercase
+                    user-select: none
+                    vertical-align: top
+
                 .title
                     flex: 1
                     font-size: 16px
                     line-height: 20px
-                    font-weight: 600
-                    text-transform: uppercase
-                    color: var(--heading-gray)
-                    padding: 0 15px
-
-                .timestamp
-                    line-height: 20px
-                    font-size: var(--text-size)
-                    color: var(--text-gray)
+                    padding: 7px 15px
+                    
+                    b
+                        text-transform: uppercase
+                        font-weight: 600
+                        color: var(--heading-gray)
+                        display: inline-block
 
                 .more-button
                     margin: 0 5px
@@ -334,8 +384,38 @@
             .team-content
                 display: flex
                 gap: 15px
-                padding: 0 15px 15px
+                padding: 5px 15px 15px
                 position: relative
+                flex-wrap: wrap
+
+                .add-member-card
+                    border-radius: 5px
+                    background: var(--bg)
+                    border: var(--border)
+                    width: 170px
+                    height: 220px
+                    display: grid
+                    place-content: center
+                    cursor: pointer
+
+                    &:hover
+                        border-color: transparent
+                        filter: var(--elevation-3)
+
+                    .icon
+                        font-family: 'Material Icons'
+                        font-size: 28px
+                        color: var(--text-gray)
+                        user-select: none
+                        text-align: center
+                        margin-bottom: 10px
+
+                    .text
+                        font-size: var(--button-size)
+                        color: var(--text-gray)
+                        font-weight: 600
+                        letter-spacing: 1px
+                        text-transform: uppercase
 
                 .member-card
                     border-radius: 5px
@@ -344,21 +424,15 @@
                     height: 220px
                     position: relative
 
-                    .name
-                        width: 100%
-                        font-size: var(--text-size)
-                        color: var(--heading-gray)
-                        font-weight: 600
-                        height: 40px
-                        display: grid
-                        place-content: center
+                    &:hover .more-button
+                        opacity: 1
 
                     .more-button
                         position: absolute
                         top: 0
                         right: 0
-                        padding: 5px
                         display: block !important
+                        opacity: 0
 
                     .background
                         height: 80px
@@ -373,13 +447,39 @@
                         display: block
 
                     .profile-image
-                        height: 80px
-                        width: 80px
+                        height: 70px
+                        width: 70px
                         object-fit: cover
                         border-radius: 100%
-                        margin: -40px auto 5px
+                        margin: -35px auto 10px
                         display: block
-                        padding: 5px
                         background: var(--bg)
                         font-size: 15px
+
+                    .name
+                        width: 100%
+                        font-size: var(--text-size)
+                        color: var(--heading-gray)
+                        font-weight: 600
+                        height: 30px
+                        display: grid
+                        place-content: center
+                        margin-bottom: 10px
+
+                    .role
+                        font-size: 13px
+                        color: white
+                        background: var(--primary)
+                        padding: 2px 10px 0
+                        border-radius: 30px
+                        letter-spacing: 1px
+                        font-weight: 600
+                        text-transform: uppercase
+                        display: block
+                        margin: 0 auto
+                        width: min-content
+                        text-overflow: ellipsis
+                        overflow: hidden
+                        white-space: nowrap
+                        user-select: none
 </style>

@@ -5645,6 +5645,27 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
@@ -5678,6 +5699,9 @@ __webpack_require__.r(__webpack_exports__);
   computed: {
     teams: function teams() {
       return this.$store.getters.teams;
+    },
+    invites: function invites() {
+      return this.$store.getters.invites;
     }
   },
   methods: {
@@ -5777,6 +5801,19 @@ __webpack_require__.r(__webpack_exports__);
       })["catch"](function (error) {
         console.log(error.response);
         _this3.teamInvite.loading = false;
+      });
+    },
+    acceptInvite: function acceptInvite(id) {
+      var _this4 = this;
+
+      axios.post('/auth/team/accept-invite', {
+        id: id
+      }).then(function (response) {
+        _this4.$store.commit('setTeam', response.data);
+
+        _this4.$store.dispatch('fetchAllInvites');
+      })["catch"](function (error) {
+        console.log(error.response);
       });
     }
   }
@@ -5911,6 +5948,7 @@ module.exports = {
     navbar: 'open',
     user: {},
     teams: [],
+    invites: [],
     reports: [],
     paginatedReportGroups: {},
     notifications: []
@@ -5930,6 +5968,9 @@ module.exports = {
     },
     teams: function teams(state) {
       return state.teams;
+    },
+    invites: function invites(state) {
+      return state.invites;
     },
     reports: function reports(state) {
       return state.reports;
@@ -5968,6 +6009,13 @@ module.exports = {
         console.log(error.response);
       });
     },
+    fetchAllInvites: function fetchAllInvites(store) {
+      axios.post('/auth/team/get-all-invites').then(function (response) {
+        store.commit('invites', response.data);
+      })["catch"](function (error) {
+        console.log(error.response);
+      });
+    },
     fetchPaginatedReportGroups: function fetchPaginatedReportGroups(store) {
       var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
       axios.post("/auth/reports/get-paginated-report-groups", {
@@ -5993,6 +6041,7 @@ module.exports = {
     initialFetch: function initialFetch(store) {
       store.dispatch('fetchUser');
       store.dispatch('fetchAllTeams');
+      store.dispatch('fetchAllInvites');
       store.dispatch('fetchPaginatedReportGroups');
       store.dispatch('fetchAllNotifications');
     }
@@ -6027,7 +6076,7 @@ module.exports = {
       if (index >= 0) {
         Vue.set(state.teams, index, data);
       } else {
-        state.teams.push(data);
+        state.teams.unshift(data);
       }
     },
     deleteTeam: function deleteTeam(state, data) {
@@ -6038,6 +6087,9 @@ module.exports = {
       if (index >= 0) {
         state.teams.splice(index, 1);
       }
+    },
+    invites: function invites(state, data) {
+      state.invites = data;
     },
     reports: function reports(state, data) {
       state.reports = data;
@@ -6952,7 +7004,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".page-container[data-v-763ff598] {\n  width: 100%;\n}\n.page-container .fab[data-v-763ff598] {\n  height: 56px;\n  width: 56px;\n  font-family: \"Material Icons\";\n  color: white;\n  background: var(--primary);\n  display: grid;\n  place-content: center;\n  font-size: 24px;\n  position: fixed;\n  bottom: 30px;\n  right: 30px;\n  border-radius: 100%;\n  border: none;\n  filter: var(--elevation-2);\n  cursor: pointer;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n  transition: all 200ms;\n  z-index: 100;\n}\n.page-container .fab[data-v-763ff598]:hover {\n  filter: var(--elevation-4);\n}\n.page-container .team-description-input[data-v-763ff598] {\n  resize: none;\n  height: 150px;\n}\n.page-container .team-wrapper[data-v-763ff598] {\n  width: 100%;\n  display: inline-flex;\n  flex-direction: column;\n  background: white;\n  border-radius: 7px;\n  filter: var(--elevation-2);\n  margin: 15px 0;\n  transition: all 300ms;\n}\n.page-container .team-wrapper.slide-enter[data-v-763ff598] {\n  transform: translateY(-100px);\n  opacity: 0;\n}\n.page-container .team-wrapper.slide-leave-to[data-v-763ff598] {\n  transform: scale(0);\n  opacity: 0;\n}\n.page-container .team-wrapper.slide-leave-active[data-v-763ff598] {\n  position: absolute;\n}\n.page-container .team-wrapper .team-header[data-v-763ff598] {\n  display: flex;\n  align-items: center;\n  padding: 5px 0;\n  border-radius: 7px 7px 0 0;\n}\n.page-container .team-wrapper .team-header .title[data-v-763ff598] {\n  flex: 1;\n  font-size: 16px;\n  line-height: 20px;\n  font-weight: 600;\n  text-transform: uppercase;\n  color: var(--heading-gray);\n  padding: 0 15px;\n}\n.page-container .team-wrapper .team-header .timestamp[data-v-763ff598] {\n  line-height: 20px;\n  font-size: var(--text-size);\n  color: var(--text-gray);\n}\n.page-container .team-wrapper .team-header .more-button[data-v-763ff598] {\n  margin: 0 5px;\n}\n.page-container .team-wrapper .team-content[data-v-763ff598] {\n  display: flex;\n  gap: 15px;\n  padding: 0 15px 15px;\n  position: relative;\n}\n.page-container .team-wrapper .team-content .member-card[data-v-763ff598] {\n  border-radius: 5px;\n  border: var(--border);\n  width: 170px;\n  height: 220px;\n  position: relative;\n}\n.page-container .team-wrapper .team-content .member-card .name[data-v-763ff598] {\n  width: 100%;\n  font-size: var(--text-size);\n  color: var(--heading-gray);\n  font-weight: 600;\n  height: 40px;\n  display: grid;\n  place-content: center;\n}\n.page-container .team-wrapper .team-content .member-card .more-button[data-v-763ff598] {\n  position: absolute;\n  top: 0;\n  right: 0;\n  padding: 5px;\n  display: block !important;\n}\n.page-container .team-wrapper .team-content .member-card .background[data-v-763ff598] {\n  height: 80px;\n  width: 100%;\n  border-bottom: var(--border);\n  background: var(--bg);\n  background-image: url(\"/images/app/dashboard/pattern.svg\");\n  background-size: 1000px;\n  background-position: top;\n  background-repeat: no-repeat;\n  border-radius: 5px 5px 0 0;\n  display: block;\n}\n.page-container .team-wrapper .team-content .member-card .profile-image[data-v-763ff598] {\n  height: 80px;\n  width: 80px;\n  -o-object-fit: cover;\n     object-fit: cover;\n  border-radius: 100%;\n  margin: -40px auto 5px;\n  display: block;\n  padding: 5px;\n  background: var(--bg);\n  font-size: 15px;\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, ".page-container[data-v-763ff598] {\n  width: 100%;\n}\n.page-container .fab[data-v-763ff598] {\n  height: 56px;\n  width: 56px;\n  font-family: \"Material Icons\";\n  color: white;\n  background: var(--primary);\n  display: grid;\n  place-content: center;\n  font-size: 24px;\n  position: fixed;\n  bottom: 30px;\n  right: 30px;\n  border-radius: 100%;\n  border: none;\n  filter: var(--elevation-2);\n  cursor: pointer;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n  transition: all 200ms;\n  z-index: 100;\n}\n.page-container .fab[data-v-763ff598]:hover {\n  filter: var(--elevation-4);\n}\n.page-container .team-description-input[data-v-763ff598] {\n  resize: none;\n  height: 150px;\n}\n.page-container .team-wrapper[data-v-763ff598] {\n  width: 100%;\n  display: inline-flex;\n  flex-direction: column;\n  background: white;\n  border-radius: 7px;\n  filter: var(--elevation-2);\n  margin: 15px 0;\n  transition: all 300ms;\n}\n.page-container .team-wrapper.slide-enter[data-v-763ff598] {\n  transform: translateY(-100px);\n  opacity: 0;\n}\n.page-container .team-wrapper.slide-leave-to[data-v-763ff598] {\n  transform: scale(0);\n  opacity: 0;\n}\n.page-container .team-wrapper.slide-leave-active[data-v-763ff598] {\n  position: absolute;\n}\n.page-container .team-wrapper .team-header[data-v-763ff598] {\n  display: flex;\n  align-items: center;\n  padding: 5px 0;\n  border-radius: 7px 7px 0 0;\n}\n.page-container .team-wrapper .team-header .tag[data-v-763ff598] {\n  margin-left: 15px;\n  font-size: 10px;\n  color: var(--primary);\n  background: var(--primary-shade);\n  padding: 1px 8px;\n  line-height: 18px;\n  border-radius: 30px;\n  letter-spacing: 1px;\n  font-weight: 600;\n  text-transform: uppercase;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n  vertical-align: top;\n}\n.page-container .team-wrapper .team-header .title[data-v-763ff598] {\n  flex: 1;\n  font-size: 16px;\n  line-height: 20px;\n  padding: 7px 15px;\n}\n.page-container .team-wrapper .team-header .title b[data-v-763ff598] {\n  text-transform: uppercase;\n  font-weight: 600;\n  color: var(--heading-gray);\n  display: inline-block;\n}\n.page-container .team-wrapper .team-header .more-button[data-v-763ff598] {\n  margin: 0 5px;\n}\n.page-container .team-wrapper .team-content[data-v-763ff598] {\n  display: flex;\n  gap: 15px;\n  padding: 5px 15px 15px;\n  position: relative;\n  flex-wrap: wrap;\n}\n.page-container .team-wrapper .team-content .add-member-card[data-v-763ff598] {\n  border-radius: 5px;\n  background: var(--bg);\n  border: var(--border);\n  width: 170px;\n  height: 220px;\n  display: grid;\n  place-content: center;\n  cursor: pointer;\n}\n.page-container .team-wrapper .team-content .add-member-card[data-v-763ff598]:hover {\n  border-color: transparent;\n  filter: var(--elevation-3);\n}\n.page-container .team-wrapper .team-content .add-member-card .icon[data-v-763ff598] {\n  font-family: \"Material Icons\";\n  font-size: 28px;\n  color: var(--text-gray);\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n  text-align: center;\n  margin-bottom: 10px;\n}\n.page-container .team-wrapper .team-content .add-member-card .text[data-v-763ff598] {\n  font-size: var(--button-size);\n  color: var(--text-gray);\n  font-weight: 600;\n  letter-spacing: 1px;\n  text-transform: uppercase;\n}\n.page-container .team-wrapper .team-content .member-card[data-v-763ff598] {\n  border-radius: 5px;\n  border: var(--border);\n  width: 170px;\n  height: 220px;\n  position: relative;\n}\n.page-container .team-wrapper .team-content .member-card:hover .more-button[data-v-763ff598] {\n  opacity: 1;\n}\n.page-container .team-wrapper .team-content .member-card .more-button[data-v-763ff598] {\n  position: absolute;\n  top: 0;\n  right: 0;\n  display: block !important;\n  opacity: 0;\n}\n.page-container .team-wrapper .team-content .member-card .background[data-v-763ff598] {\n  height: 80px;\n  width: 100%;\n  border-bottom: var(--border);\n  background: var(--bg);\n  background-image: url(\"/images/app/dashboard/pattern.svg\");\n  background-size: 1000px;\n  background-position: top;\n  background-repeat: no-repeat;\n  border-radius: 5px 5px 0 0;\n  display: block;\n}\n.page-container .team-wrapper .team-content .member-card .profile-image[data-v-763ff598] {\n  height: 70px;\n  width: 70px;\n  -o-object-fit: cover;\n     object-fit: cover;\n  border-radius: 100%;\n  margin: -35px auto 10px;\n  display: block;\n  background: var(--bg);\n  font-size: 15px;\n}\n.page-container .team-wrapper .team-content .member-card .name[data-v-763ff598] {\n  width: 100%;\n  font-size: var(--text-size);\n  color: var(--heading-gray);\n  font-weight: 600;\n  height: 30px;\n  display: grid;\n  place-content: center;\n  margin-bottom: 10px;\n}\n.page-container .team-wrapper .team-content .member-card .role[data-v-763ff598] {\n  font-size: 13px;\n  color: white;\n  background: var(--primary);\n  padding: 2px 10px 0;\n  border-radius: 30px;\n  letter-spacing: 1px;\n  font-weight: 600;\n  text-transform: uppercase;\n  display: block;\n  margin: 0 auto;\n  width: -webkit-min-content;\n  width: -moz-min-content;\n  width: min-content;\n  text-overflow: ellipsis;\n  overflow: hidden;\n  white-space: nowrap;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -50697,6 +50749,48 @@ var render = function() {
     "div",
     { staticClass: "page-container limiter" },
     [
+      _vm._l(_vm.invites, function(invite) {
+        return _c(
+          "fieldset",
+          { key: invite.id },
+          [
+            _c("legend", [_vm._v(_vm._s(invite.team.name))]),
+            _vm._v(" "),
+            _c("p", [
+              _vm._v("\n            You've got invited to join "),
+              _c("b", [_vm._v(_vm._s(invite.team.name))])
+            ]),
+            _vm._v(" "),
+            _c(
+              "ui-button",
+              {
+                attrs: {
+                  text: "",
+                  border: "",
+                  icon: "&#983382;",
+                  "icon-left": ""
+                }
+              },
+              [_vm._v("Ignore")]
+            ),
+            _vm._v(" "),
+            _c(
+              "ui-button",
+              {
+                attrs: { icon: "&#983340;" },
+                on: {
+                  click: function($event) {
+                    return _vm.acceptInvite(invite.id)
+                  }
+                }
+              },
+              [_vm._v("Accept")]
+            )
+          ],
+          1
+        )
+      }),
+      _vm._v(" "),
       _c(
         "transition-group",
         { staticClass: "block", attrs: { name: "slide" } },
@@ -50707,7 +50801,17 @@ var render = function() {
               { staticClass: "team-header" },
               [
                 _c("div", { staticClass: "title" }, [
-                  _vm._v(_vm._s(team.name))
+                  _c("b", [_vm._v(_vm._s(team.name))]),
+                  _c("br"),
+                  _vm._v(
+                    "\n                    " +
+                      _vm._s(team.description) +
+                      "\n                "
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "tag" }, [
+                  _vm._v(_vm._s(team.category))
                 ]),
                 _vm._v(" "),
                 _c(
@@ -50842,20 +50946,50 @@ var render = function() {
                         }
                       }),
                       _vm._v(" "),
-                      _c("div", { staticClass: "name" }, [
-                        _vm._v(_vm._s(member.user.username))
-                      ])
-                    ]
+                      member.user.firstname || member.user.lastname
+                        ? _c("div", { staticClass: "name" }, [
+                            _vm._v(
+                              "\n                        " +
+                                _vm._s(member.user.firstname) +
+                                "\n                        " +
+                                _vm._s(member.user.lastname) +
+                                "\n                    "
+                            )
+                          ])
+                        : _c("div", { staticClass: "name" }, [
+                            _vm._v(
+                              "\n                        " +
+                                _vm._s(member.user.username) +
+                                "\n                    "
+                            )
+                          ]),
+                      _vm._v(" "),
+                      _vm._l(member.roles, function(role, i) {
+                        return _c("div", { key: i, staticClass: "role" }, [
+                          _vm._v(_vm._s(role))
+                        ])
+                      })
+                    ],
+                    2
                   )
                 }),
                 _vm._v(" "),
-                _c("p", [
-                  _vm._v("\n                    Category: "),
-                  _c("b", [_vm._v(_vm._s(team.category))]),
-                  _c("br"),
-                  _vm._v("\n                    Description: "),
-                  _c("b", [_vm._v(_vm._s(team.description || "---"))])
-                ])
+                _c(
+                  "div",
+                  {
+                    staticClass: "add-member-card",
+                    on: {
+                      click: function($event) {
+                        return _vm.openTeamInviteDialog(team)
+                      }
+                    }
+                  },
+                  [
+                    _c("div", { staticClass: "icon" }, [_vm._v("󰐕")]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "text" }, [_vm._v("Add Member")])
+                  ]
+                )
               ],
               2
             )
@@ -51153,7 +51287,7 @@ var render = function() {
         ])
       })
     ],
-    1
+    2
   )
 }
 var staticRenderFns = []

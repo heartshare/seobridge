@@ -13,6 +13,7 @@ module.exports = {
         navbar: 'open',
         user: {},
         teams: [],
+        invites: [],
         reports: [],
         paginatedReportGroups: {},
         notifications: [],
@@ -37,6 +38,10 @@ module.exports = {
 
         teams(state) {
             return state.teams
+        },
+
+        invites(state) {
+            return state.invites
         },
 
         reports(state) {
@@ -88,6 +93,16 @@ module.exports = {
             })
         },
 
+        fetchAllInvites(store) {
+            axios.post('/auth/team/get-all-invites')
+            .then(response => {
+                store.commit('invites', response.data)
+            })
+            .catch(error => {
+                console.log(error.response)
+            })
+        },
+
         fetchPaginatedReportGroups(store, data = {}) {
             axios.post(`/auth/reports/get-paginated-report-groups`, {
                 order: data.order || 'DESC',
@@ -116,6 +131,7 @@ module.exports = {
         initialFetch(store) {
             store.dispatch('fetchUser')
             store.dispatch('fetchAllTeams')
+            store.dispatch('fetchAllInvites')
             store.dispatch('fetchPaginatedReportGroups')
             store.dispatch('fetchAllNotifications')
         },
@@ -165,7 +181,7 @@ module.exports = {
             }
             else
             {
-                state.teams.push(data)
+                state.teams.unshift(data)
             }
         },
 
@@ -176,6 +192,12 @@ module.exports = {
             {
                 state.teams.splice(index, 1)
             }
+        },
+
+
+
+        invites(state, data) {
+            state.invites = data
         },
 
 

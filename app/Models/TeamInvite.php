@@ -25,7 +25,7 @@ class TeamInvite extends Model
     ];
 
     protected $attributes = [
-        'status' => 'OK',
+        'status' => 'pending',
         'metadata' => '{}',
     ];
 
@@ -41,5 +41,12 @@ class TeamInvite extends Model
     public static function generateUuid()
     {
         return 'invite_'.Str::uuid();
+    }
+
+
+
+    public function team()
+    {
+        return $this->belongsTo(Team::class, 'team_id', 'id');
     }
 }
