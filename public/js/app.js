@@ -4652,6 +4652,47 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => __WEBPACK_DEFAULT_EXPORT__
 /* harmony export */ });
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -5136,6 +5177,16 @@ var relativeTime = __webpack_require__(/*! dayjs/plugin/relativeTime */ "./node_
         viewport: null,
         loading: false
       },
+      reportShare: {
+        id: null,
+        type: 'group',
+        teamId: null,
+        userId: null,
+        shouldAssign: false,
+        assignedToUserId: null,
+        name: '',
+        loading: false
+      },
       reportDelete: {
         id: null,
         name: '',
@@ -5160,6 +5211,44 @@ var relativeTime = __webpack_require__(/*! dayjs/plugin/relativeTime */ "./node_
   computed: {
     paginatedReportGroups: function paginatedReportGroups() {
       return this.$store.getters.paginatedReportGroups;
+    },
+    teams: function teams() {
+      return this.$store.getters.teams;
+    },
+    user: function user() {
+      return this.$store.getters.user;
+    },
+    reportShareTeamOptions: function reportShareTeamOptions() {
+      return this.teams.map(function (e) {
+        return {
+          'value': e.id,
+          'label': e.name
+        };
+      });
+    },
+    reportShareMemberOptions: function reportShareMemberOptions() {
+      var _this = this;
+
+      var selectedTeam = this.teams.find(function (e) {
+        return e.id === _this.reportShare.teamId;
+      });
+      var users = [];
+
+      if (selectedTeam) {
+        users = selectedTeam.members.filter(function (e) {
+          return e.user_id !== _this.user.id;
+        }).map(function (e) {
+          return {
+            'value': e.user.id,
+            'label': e.user.username
+          };
+        });
+      }
+
+      return [{
+        'value': null,
+        label: 'All'
+      }].concat(_toConsumableArray(users));
     }
   },
   filters: {
@@ -5217,7 +5306,7 @@ var relativeTime = __webpack_require__(/*! dayjs/plugin/relativeTime */ "./node_
       this.$refs.reportCreateDialog.close();
     },
     requestReport: function requestReport() {
-      var _this = this;
+      var _this2 = this;
 
       var url = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
       axios.post('/auth/reports/request-site-analysis', {
@@ -5228,7 +5317,7 @@ var relativeTime = __webpack_require__(/*! dayjs/plugin/relativeTime */ "./node_
           viewport: this.reportCreate.viewport || '1080p'
         }
       }).then(function (response) {
-        _this.resetReportCreate(); // console.log(response.data)
+        _this2.resetReportCreate(); // console.log(response.data)
 
       })["catch"](function (error) {
         console.log(error.response);
@@ -5247,19 +5336,54 @@ var relativeTime = __webpack_require__(/*! dayjs/plugin/relativeTime */ "./node_
       this.$refs.reportDeleteDialog.close();
     },
     deleteReport: function deleteReport() {
-      var _this2 = this;
+      var _this3 = this;
 
       this.reportDelete.loading = true;
       axios.post('/auth/reports/delete-report', {
         id: this.reportDelete.id
       }).then(function (response) {
-        _this2.$store.commit('deleteReportGroup', response.data);
+        _this3.$store.commit('deleteReportGroup', response.data);
 
-        _this2.reportDelete.loading = false;
+        _this3.reportDelete.loading = false;
 
-        _this2.resetReportDelete();
+        _this3.resetReportDelete();
       })["catch"](function (error) {
-        _this2.reportDelete.loading = false;
+        _this3.reportDelete.loading = false;
+        console.log(error.response);
+      });
+    },
+    openReportShareDialog: function openReportShareDialog(type, report) {
+      var shouldAssign = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+      this.reportShare.id = report.id;
+      this.reportShare.type = type;
+      this.reportShare.name = report.host;
+      this.reportShare.shouldAssign = shouldAssign;
+      this.$refs.reportShareDialog.open();
+    },
+    resetReportShare: function resetReportShare() {
+      this.reportShare.id = null;
+      this.reportShare.typo = 'group';
+      this.reportShare.teamId = null;
+      this.reportShare.userId = null;
+      this.reportShare.shouldAssign = false;
+      this.reportShare.assignedToUserId = null;
+      this.reportShare.name = '';
+      this.$refs.reportShareDialog.close();
+    },
+    shareReport: function shareReport() {
+      var _this4 = this;
+
+      this.reportShare.loading = true;
+      axios.post('/auth/reports/share-report', {
+        id: this.reportShare.id,
+        teamId: this.reportShare.teamId,
+        userId: this.reportShare.userId
+      }).then(function (response) {
+        _this4.reportShare.loading = false;
+
+        _this4.resetReportShare();
+      })["catch"](function (error) {
+        _this4.reportShare.loading = false;
         console.log(error.response);
       });
     }
@@ -6957,7 +7081,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".page-container[data-v-b59c8186] {\n  width: 100%;\n  padding-top: 85px;\n}\n.page-container .header-wrapper[data-v-b59c8186] {\n  width: calc(100% - var(--menu-width));\n  position: fixed;\n  top: 0;\n  left: var(--menu-width);\n  z-index: 1;\n}\n.page-container .header-wrapper .limiter[data-v-b59c8186] {\n  filter: var(--elevation-3);\n  background: var(--bg);\n  width: 100%;\n  display: flex !important;\n  padding: 15px;\n  align-items: center;\n  border-radius: 0 0 7px 7px;\n}\n.page-container .header-wrapper .limiter .spacer[data-v-b59c8186] {\n  flex: 1;\n  height: 40px;\n}\n.page-container .header-wrapper .limiter .sort-input[data-v-b59c8186] {\n  width: 150px;\n  --height: 40px;\n}\n.page-container .header-wrapper .limiter .search-bar-wrapper[data-v-b59c8186] {\n  display: block;\n  position: relative;\n  flex: 1;\n  max-width: 300px;\n}\n.page-container .header-wrapper .limiter .search-bar-wrapper .input[data-v-b59c8186] {\n  padding-right: 40px;\n  --height: 40px;\n}\n.page-container .header-wrapper .limiter .search-bar-wrapper .button[data-v-b59c8186] {\n  position: absolute;\n  top: 0;\n  right: 0;\n  z-index: 1;\n  transition: all 100ms;\n}\n.page-container .header-wrapper .limiter .search-bar-wrapper .button.scale-enter[data-v-b59c8186], .page-container .header-wrapper .limiter .search-bar-wrapper .button.scale-leave-to[data-v-b59c8186] {\n  transform: scale(0);\n}\n.page-container .footer-wrapper[data-v-b59c8186] {\n  width: calc(100%);\n}\n.page-container .footer-wrapper .limiter[data-v-b59c8186] {\n  width: 100%;\n  display: flex !important;\n  padding: 15px 0;\n  align-items: center;\n}\n.page-container .footer-wrapper .limiter .entity-input[data-v-b59c8186] {\n  width: 80px;\n  --height: 40px;\n}\n.page-container .footer-wrapper .limiter .spacer[data-v-b59c8186] {\n  flex: 1;\n  height: 40px;\n}\n.page-container .footer-wrapper .limiter .pagination-button[data-v-b59c8186] {\n  width: 40px;\n}\n.page-container .footer-wrapper .limiter .page-number[data-v-b59c8186] {\n  width: 40px;\n  line-height: 20px;\n  height: 20px;\n  font-size: var(--text-size);\n  color: var(--text-gray);\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n  text-align: center;\n}\n.page-container .fab[data-v-b59c8186] {\n  height: 56px;\n  width: 56px;\n  font-family: \"Material Icons\";\n  color: white;\n  background: var(--primary);\n  display: grid;\n  place-content: center;\n  font-size: 24px;\n  position: fixed;\n  bottom: 30px;\n  right: 30px;\n  border-radius: 100%;\n  border: none;\n  filter: var(--elevation-2);\n  cursor: pointer;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n  transition: all 200ms;\n  z-index: 100;\n}\n.page-container .fab[data-v-b59c8186]:hover {\n  filter: var(--elevation-4);\n}\n.page-container .reports-timeline[data-v-b59c8186] {\n  display: block;\n}\n.page-container .reports-timeline .job-wrapper[data-v-b59c8186] {\n  width: 100%;\n  display: inline-flex;\n  flex-direction: column;\n  background: white;\n  border-radius: 7px;\n  filter: var(--elevation-2);\n  margin: 15px 0;\n  transition: all 300ms;\n}\n.page-container .reports-timeline .job-wrapper.slide-enter[data-v-b59c8186] {\n  transform: translateY(-100px);\n  opacity: 0;\n}\n.page-container .reports-timeline .job-wrapper.slide-leave-to[data-v-b59c8186] {\n  transform: scale(0);\n  opacity: 0;\n}\n.page-container .reports-timeline .job-wrapper.slide-leave-active[data-v-b59c8186] {\n  position: absolute;\n}\n.page-container .reports-timeline .job-wrapper .job-header[data-v-b59c8186] {\n  display: flex;\n  align-items: center;\n  padding: 5px 0;\n  border-radius: 7px 7px 0 0;\n}\n.page-container .reports-timeline .job-wrapper .job-header .title[data-v-b59c8186] {\n  flex: 1;\n  font-size: 16px;\n  line-height: 20px;\n  font-weight: 600;\n  text-transform: uppercase;\n  color: var(--heading-gray);\n  padding: 0 15px;\n}\n.page-container .reports-timeline .job-wrapper .job-header .timestamp[data-v-b59c8186] {\n  line-height: 20px;\n  font-size: var(--text-size);\n  color: var(--text-gray);\n}\n.page-container .reports-timeline .job-wrapper .job-header .more-button[data-v-b59c8186] {\n  margin: 0 5px;\n}\n.page-container .reports-timeline .job-wrapper .job-pages[data-v-b59c8186] {\n  display: flex;\n  flex-direction: column;\n  gap: 15px;\n  padding: 0 15px 15px;\n  position: relative;\n}\n.page-container .reports-timeline .job-wrapper .job-pages .blend[data-v-b59c8186] {\n  width: 100%;\n  height: 100px;\n  padding-top: 40px;\n  display: grid;\n  place-content: center;\n  position: absolute;\n  bottom: 0;\n  left: 0;\n  background: linear-gradient(0deg, #ffffffff 25%, #ffffff00 100%);\n  border-radius: 0 0 7px 7px;\n}\n.page-container .details[data-v-b59c8186] {\n  width: 100%;\n  display: flex;\n  flex-direction: column;\n  gap: 30px;\n}\n.page-container .details .nav-row[data-v-b59c8186] {\n  height: 40px;\n  margin-top: 30px;\n}\n.page-container .details .detail-row[data-v-b59c8186] {\n  display: grid;\n  grid-template-columns: repeat(12, 1fr);\n  grid-template-rows: 1fr;\n  gap: 30px;\n}\n.page-container .details .card[data-v-b59c8186] {\n  background: var(--bg);\n  border-radius: 5px;\n  font-size: var(--text-size);\n  overflow: hidden;\n}\n.page-container .details .card h1[data-v-b59c8186], .page-container .details .card h2[data-v-b59c8186], .page-container .details .card h3[data-v-b59c8186], .page-container .details .card h4[data-v-b59c8186], .page-container .details .card h5[data-v-b59c8186], .page-container .details .card h6[data-v-b59c8186] {\n  margin: 0;\n  color: var(--primary);\n  width: 100%;\n  padding: 7px 15px 0;\n}\n.page-container .details .card h4[data-v-b59c8186] {\n  color: var(--heading-gray);\n  font-size: var(--button-size);\n  letter-spacing: 1px;\n  text-transform: uppercase;\n  position: relative;\n  font-family: var(--text-font);\n  padding: 7px 15px 7px 10px;\n  border-bottom: 2px solid var(--border-color);\n}\n.page-container .details .card h4.error[data-v-b59c8186] {\n  color: var(--error);\n  border-color: var(--error);\n}\n.page-container .details .card h4.warning[data-v-b59c8186] {\n  color: var(--warning);\n  border-color: var(--warning);\n}\n.page-container .details .card h4.info[data-v-b59c8186] {\n  color: var(--primary);\n  border-color: var(--primary);\n}\n.page-container .details .card h4 .icon[data-v-b59c8186] {\n  font-size: 20px;\n  font-weight: 300;\n  margin-right: 10px;\n  color: inherit;\n  font-family: \"Material Icons\";\n  vertical-align: middle;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n}\n.page-container .details .card h4 .favicon[data-v-b59c8186] {\n  height: 20px;\n  width: 20px;\n  margin-right: 10px;\n  vertical-align: middle;\n}\n.page-container .details .card.center[data-v-b59c8186] {\n  display: grid;\n  place-content: center;\n}\n.page-container .details .card.primary[data-v-b59c8186] {\n  background: var(--primary);\n  color: #ffffffdd;\n}\n.page-container .details .card.primary h1[data-v-b59c8186], .page-container .details .card.primary h2[data-v-b59c8186], .page-container .details .card.primary h3[data-v-b59c8186], .page-container .details .card.primary h4[data-v-b59c8186], .page-container .details .card.primary h5[data-v-b59c8186], .page-container .details .card.primary h6[data-v-b59c8186] {\n  color: white;\n  border-bottom: var(--border);\n  border-color: #ffffff40;\n}\n.page-container .details .card.span-2[data-v-b59c8186] {\n  grid-column: span 2;\n}\n.page-container .details .card.span-3[data-v-b59c8186] {\n  grid-column: span 3;\n}\n.page-container .details .card.span-4[data-v-b59c8186] {\n  grid-column: span 4;\n}\n.page-container .details .card.span-5[data-v-b59c8186] {\n  grid-column: span 5;\n}\n.page-container .details .card.span-6[data-v-b59c8186] {\n  grid-column: span 6;\n}\n.page-container .details .card.span-7[data-v-b59c8186] {\n  grid-column: span 7;\n}\n.page-container .details .card.span-8[data-v-b59c8186] {\n  grid-column: span 8;\n}\n.page-container .details .card.span-9[data-v-b59c8186] {\n  grid-column: span 9;\n}\n.page-container .details .card.span-12[data-v-b59c8186] {\n  grid-column: span 12;\n}\n.page-container .details .card.page-info-card[data-v-b59c8186] {\n  overflow: hidden;\n}\n.page-container .details .card.page-info-card .preview[data-v-b59c8186] {\n  width: 100%;\n  height: 100%;\n  -o-object-fit: contain;\n     object-fit: contain;\n  filter: saturate(0%);\n  float: left;\n  border-radius: 5px;\n  width: 200px;\n}\n.page-container .details .card.page-info-card .content[data-v-b59c8186] {\n  font-size: var(--text-size);\n  color: var(--text-gray);\n}\n.page-container .details .card p[data-v-b59c8186] {\n  padding: 0 15px;\n}\n.page-container .details .card .metric-card-wrapper[data-v-b59c8186] {\n  width: 100%;\n  padding: 7.5px;\n}\n.page-container .details .card .metric-card[data-v-b59c8186] {\n  background: linear-gradient(90deg, var(--bg-dark) 0%, var(--bg) 70%);\n  border-radius: 5px;\n  display: inline-grid;\n  width: calc(100% - 15px);\n  margin: 7.5px;\n  padding: 5px 0;\n  grid-template: auto 1fr/50px 1fr auto;\n  grid-template-areas: \"icon label info\" \"icon value info\";\n}\n.page-container .details .card .metric-card.half[data-v-b59c8186] {\n  width: calc(50% - 15px);\n}\n.page-container .details .card .metric-card .icon[data-v-b59c8186] {\n  grid-area: icon;\n  font-size: 25px;\n  color: var(--primary);\n  font-family: \"Material Icons\";\n  align-self: center;\n  justify-self: center;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n}\n.page-container .details .card .metric-card .square[data-v-b59c8186] {\n  grid-area: icon;\n  height: 20px;\n  width: 20px;\n  border-radius: 3px;\n  border: var(--border);\n  background: var(--bg);\n  align-self: center;\n  justify-self: center;\n}\n.page-container .details .card .metric-card .label[data-v-b59c8186] {\n  grid-area: label;\n  font-size: var(--text-size);\n  color: var(--text-gray);\n  align-self: center;\n  height: 18px;\n  line-height: 18px;\n  margin-top: 3px;\n}\n.page-container .details .card .metric-card .value[data-v-b59c8186] {\n  grid-area: value;\n  font-size: var(--text-size);\n  color: var(--heading-gray);\n  line-height: 130%;\n  align-self: center;\n  font-weight: 600;\n}\n.page-container .details .card .metric-card .value.no-overflow[data-v-b59c8186] {\n  width: 100%;\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n}\n.page-container .details .card .metric-card .info[data-v-b59c8186] {\n  grid-area: info;\n  align-self: center;\n  justify-self: center;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n}\n.page-container .details .card .checklist-wrapper[data-v-b59c8186] {\n  width: 100%;\n  padding: 10px 0;\n}\n.page-container .details .card .checklist-item[data-v-b59c8186] {\n  width: 100%;\n  display: flex;\n  height: 36px;\n  padding: 0 15px;\n  gap: 15px;\n  align-items: center;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n}\n.page-container .details .card .checklist-item .icon[data-v-b59c8186] {\n  font-size: 20px;\n  color: var(--text-gray);\n  font-family: \"Material Icons\";\n  text-align: center;\n}\n.page-container .details .card .checklist-item .text[data-v-b59c8186] {\n  font-size: var(--button-size);\n  font-weight: 600;\n  color: var(--heading-gray);\n  flex: 1;\n  text-transform: uppercase;\n  letter-spacing: 1px;\n}\n.page-container .details .card .twitter-summary-card[data-v-b59c8186] {\n  display: grid;\n  margin: 15px;\n  border-radius: 12px;\n  grid-template: 125px/125px auto;\n  grid-template-areas: \"image content\";\n  align-items: center;\n  border: var(--border);\n  overflow: hidden;\n}\n.page-container .details .card .twitter-summary-card .image[data-v-b59c8186] {\n  grid-area: image;\n  width: 100%;\n  height: 100%;\n  -o-object-fit: cover;\n     object-fit: cover;\n  border-right: var(--border);\n}\n.page-container .details .card .twitter-summary-card .content[data-v-b59c8186] {\n  grid-area: content;\n  padding: 8px 10px;\n  display: block;\n}\n.page-container .details .card .twitter-summary-card .content .title[data-v-b59c8186] {\n  display: block;\n  font-size: var(--text-size);\n  color: var(--heading-gray);\n  margin-bottom: 3px;\n}\n.page-container .details .card .twitter-summary-card .content .description[data-v-b59c8186] {\n  display: block;\n  font-size: var(--text-size);\n  color: var(--text-gray);\n  line-height: 130%;\n  margin-bottom: 3px;\n}\n.page-container .details .card .twitter-summary-card .content .url[data-v-b59c8186] {\n  display: flex;\n  align-items: center;\n}\n.page-container .details .card .twitter-summary-card .content .url .icon[data-v-b59c8186] {\n  font-size: 16px;\n  width: 22px;\n  color: var(--text-gray);\n  font-family: \"Material Icons\";\n  text-align: left;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n}\n.page-container .details .card .twitter-summary-card .content .url .text[data-v-b59c8186] {\n  font-size: var(--text-size);\n  color: var(--text-gray);\n}\n.page-container .details .card .open-graph-article-card[data-v-b59c8186] {\n  display: grid;\n  margin: 15px;\n  border-radius: 7px;\n  grid-template: auto 1fr/1fr;\n  grid-template-areas: \"image\" \"content\";\n  align-items: center;\n  border: var(--border);\n  overflow: hidden;\n}\n.page-container .details .card .open-graph-article-card .image[data-v-b59c8186] {\n  grid-area: image;\n  width: 100%;\n  height: 100%;\n  -o-object-fit: cover;\n     object-fit: cover;\n  border-bottom: var(--border);\n}\n.page-container .details .card .open-graph-article-card .content[data-v-b59c8186] {\n  grid-area: content;\n  padding: 8px 10px;\n  display: block;\n}\n.page-container .details .card .open-graph-article-card .content .url[data-v-b59c8186] {\n  display: block;\n  align-items: center;\n  font-size: var(--text-size);\n  color: var(--text-gray);\n  text-transform: uppercase;\n  margin-bottom: 3px;\n}\n.page-container .details .card .open-graph-article-card .content .title[data-v-b59c8186] {\n  display: block;\n  font-size: var(--text-size);\n  color: var(--heading-gray);\n  margin-bottom: 3px;\n}\n.page-container .details .card .open-graph-article-card .content .description[data-v-b59c8186] {\n  display: block;\n  font-size: var(--text-size);\n  color: var(--text-gray);\n  line-height: 130%;\n}\n.page-container .details .card .image-card[data-v-b59c8186] {\n  display: grid;\n  margin: 15px;\n  border-radius: 5px;\n  grid-template: 125px/125px auto;\n  grid-template-areas: \"image content\";\n  align-items: center;\n  border: var(--border);\n  overflow: hidden;\n}\n.page-container .details .card .image-card .image[data-v-b59c8186] {\n  grid-area: image;\n  width: 100%;\n  height: 100%;\n  -o-object-fit: contain;\n     object-fit: contain;\n  border-right: var(--border);\n  background: var(--bg-dark);\n  padding: 5px;\n}\n.page-container .details .card .image-card .content[data-v-b59c8186] {\n  grid-area: content;\n  padding: 8px 10px;\n  display: block;\n  max-width: 100%;\n  overflow: hidden;\n}\n.page-container .details .card .image-card .content .title[data-v-b59c8186] {\n  display: block;\n  font-size: var(--text-size);\n  color: var(--heading-gray);\n  margin-bottom: 3px;\n}\n.page-container .details .card .image-card .content .description[data-v-b59c8186] {\n  display: block;\n  font-size: var(--text-size);\n  color: var(--text-gray);\n  line-height: 130%;\n  margin-bottom: 3px;\n  max-width: 100%;\n  overflow: hidden;\n}\n.page-container .details .card .image-card .content .description .no-text-overflow[data-v-b59c8186] {\n  width: 100%;\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, ".page-container[data-v-b59c8186] {\n  width: 100%;\n  padding-top: 85px;\n}\n.page-container .header-wrapper[data-v-b59c8186] {\n  width: calc(100% - var(--menu-width));\n  position: fixed;\n  top: 0;\n  left: var(--menu-width);\n  z-index: 1;\n}\n.page-container .header-wrapper .limiter[data-v-b59c8186] {\n  filter: var(--elevation-3);\n  background: var(--bg);\n  width: 100%;\n  display: flex !important;\n  padding: 15px;\n  align-items: center;\n  border-radius: 0 0 7px 7px;\n}\n.page-container .header-wrapper .limiter .spacer[data-v-b59c8186] {\n  flex: 1;\n  height: 40px;\n}\n.page-container .header-wrapper .limiter .sort-input[data-v-b59c8186] {\n  width: 150px;\n  --height: 40px;\n}\n.page-container .header-wrapper .limiter .search-bar-wrapper[data-v-b59c8186] {\n  display: block;\n  position: relative;\n  flex: 1;\n  max-width: 300px;\n}\n.page-container .header-wrapper .limiter .search-bar-wrapper .input[data-v-b59c8186] {\n  padding-right: 40px;\n  --height: 40px;\n}\n.page-container .header-wrapper .limiter .search-bar-wrapper .button[data-v-b59c8186] {\n  position: absolute;\n  top: 0;\n  right: 0;\n  z-index: 1;\n  transition: all 100ms;\n}\n.page-container .header-wrapper .limiter .search-bar-wrapper .button.scale-enter[data-v-b59c8186], .page-container .header-wrapper .limiter .search-bar-wrapper .button.scale-leave-to[data-v-b59c8186] {\n  transform: scale(0);\n}\n.page-container .footer-wrapper[data-v-b59c8186] {\n  width: calc(100%);\n}\n.page-container .footer-wrapper .limiter[data-v-b59c8186] {\n  width: 100%;\n  display: flex !important;\n  padding: 15px 0;\n  align-items: center;\n}\n.page-container .footer-wrapper .limiter .entity-input[data-v-b59c8186] {\n  width: 80px;\n  --height: 40px;\n}\n.page-container .footer-wrapper .limiter .spacer[data-v-b59c8186] {\n  flex: 1;\n  height: 40px;\n}\n.page-container .footer-wrapper .limiter .pagination-button[data-v-b59c8186] {\n  width: 40px;\n}\n.page-container .footer-wrapper .limiter .page-number[data-v-b59c8186] {\n  width: 40px;\n  line-height: 20px;\n  height: 20px;\n  font-size: var(--text-size);\n  color: var(--text-gray);\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n  text-align: center;\n}\n.page-container .fab[data-v-b59c8186] {\n  height: 56px;\n  width: 56px;\n  font-family: \"Material Icons\";\n  color: white;\n  background: var(--primary);\n  display: grid;\n  place-content: center;\n  font-size: 24px;\n  position: fixed;\n  bottom: 30px;\n  right: 30px;\n  border-radius: 100%;\n  border: none;\n  filter: var(--elevation-2);\n  cursor: pointer;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n  transition: all 200ms;\n  z-index: 100;\n}\n.page-container .fab[data-v-b59c8186]:hover {\n  filter: var(--elevation-4);\n}\n.page-container .reports-timeline[data-v-b59c8186] {\n  display: block;\n}\n.page-container .reports-timeline .job-wrapper[data-v-b59c8186] {\n  width: 100%;\n  display: inline-flex;\n  flex-direction: column;\n  background: white;\n  border-radius: 7px;\n  filter: var(--elevation-2);\n  margin: 15px 0;\n  transition: all 300ms;\n  position: relative;\n}\n.page-container .reports-timeline .job-wrapper.has-indicator[data-v-b59c8186] {\n  padding-left: 18px;\n}\n.page-container .reports-timeline .job-wrapper.slide-enter[data-v-b59c8186] {\n  transform: translateY(-100px);\n  opacity: 0;\n}\n.page-container .reports-timeline .job-wrapper.slide-leave-to[data-v-b59c8186] {\n  transform: scale(0);\n  opacity: 0;\n}\n.page-container .reports-timeline .job-wrapper.slide-leave-active[data-v-b59c8186] {\n  position: absolute;\n}\n.page-container .reports-timeline .job-wrapper .indicator[data-v-b59c8186] {\n  position: absolute;\n  top: 0;\n  left: 0;\n  width: 18px;\n  height: 100%;\n  background: var(--text-gray-shade);\n  border-radius: 7px 0 0 7px;\n  display: grid;\n  place-content: center;\n  color: var(--text-gray);\n}\n.page-container .reports-timeline .job-wrapper .indicator.assigned[data-v-b59c8186] {\n  color: white;\n  background: var(--warning);\n}\n.page-container .reports-timeline .job-wrapper .indicator .text[data-v-b59c8186] {\n  color: inherit;\n  text-transform: uppercase;\n  font-size: 13px;\n  font-weight: 600;\n  letter-spacing: 1px;\n  transform: rotate(-90deg);\n  padding-top: 1.5px;\n}\n.page-container .reports-timeline .job-wrapper .job-header[data-v-b59c8186] {\n  display: flex;\n  align-items: center;\n  padding: 5px 0;\n  border-radius: 7px 7px 0 0;\n}\n.page-container .reports-timeline .job-wrapper .job-header .title[data-v-b59c8186] {\n  flex: 1;\n  font-size: 16px;\n  line-height: 20px;\n  font-weight: 600;\n  text-transform: uppercase;\n  color: var(--heading-gray);\n  padding: 0 15px;\n}\n.page-container .reports-timeline .job-wrapper .job-header .timestamp[data-v-b59c8186] {\n  line-height: 20px;\n  font-size: var(--text-size);\n  color: var(--text-gray);\n}\n.page-container .reports-timeline .job-wrapper .job-header .more-button[data-v-b59c8186] {\n  margin: 0 5px;\n}\n.page-container .reports-timeline .job-wrapper .job-pages[data-v-b59c8186] {\n  display: flex;\n  flex-direction: column;\n  gap: 15px;\n  padding: 0 15px 15px;\n  position: relative;\n}\n.page-container .reports-timeline .job-wrapper .job-pages .blend[data-v-b59c8186] {\n  width: 100%;\n  height: 100px;\n  padding-top: 40px;\n  display: grid;\n  place-content: center;\n  position: absolute;\n  bottom: 0;\n  left: 0;\n  background: linear-gradient(0deg, #ffffffff 25%, #ffffff00 100%);\n  border-radius: 0 0 7px 7px;\n}\n.page-container .details[data-v-b59c8186] {\n  width: 100%;\n  display: flex;\n  flex-direction: column;\n  gap: 30px;\n}\n.page-container .details .nav-row[data-v-b59c8186] {\n  height: 40px;\n  margin-top: 30px;\n}\n.page-container .details .detail-row[data-v-b59c8186] {\n  display: grid;\n  grid-template-columns: repeat(12, 1fr);\n  grid-template-rows: 1fr;\n  gap: 30px;\n}\n.page-container .details .card[data-v-b59c8186] {\n  background: var(--bg);\n  border-radius: 5px;\n  font-size: var(--text-size);\n  overflow: hidden;\n}\n.page-container .details .card h1[data-v-b59c8186], .page-container .details .card h2[data-v-b59c8186], .page-container .details .card h3[data-v-b59c8186], .page-container .details .card h4[data-v-b59c8186], .page-container .details .card h5[data-v-b59c8186], .page-container .details .card h6[data-v-b59c8186] {\n  margin: 0;\n  color: var(--primary);\n  width: 100%;\n  padding: 7px 15px 0;\n}\n.page-container .details .card h4[data-v-b59c8186] {\n  color: var(--heading-gray);\n  font-size: var(--button-size);\n  letter-spacing: 1px;\n  text-transform: uppercase;\n  position: relative;\n  font-family: var(--text-font);\n  padding: 7px 15px 7px 10px;\n  border-bottom: 2px solid var(--border-color);\n}\n.page-container .details .card h4.error[data-v-b59c8186] {\n  color: var(--error);\n  border-color: var(--error);\n}\n.page-container .details .card h4.warning[data-v-b59c8186] {\n  color: var(--warning);\n  border-color: var(--warning);\n}\n.page-container .details .card h4.info[data-v-b59c8186] {\n  color: var(--primary);\n  border-color: var(--primary);\n}\n.page-container .details .card h4 .icon[data-v-b59c8186] {\n  font-size: 20px;\n  font-weight: 300;\n  margin-right: 10px;\n  color: inherit;\n  font-family: \"Material Icons\";\n  vertical-align: middle;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n}\n.page-container .details .card h4 .favicon[data-v-b59c8186] {\n  height: 20px;\n  width: 20px;\n  margin-right: 10px;\n  vertical-align: middle;\n}\n.page-container .details .card.center[data-v-b59c8186] {\n  display: grid;\n  place-content: center;\n}\n.page-container .details .card.primary[data-v-b59c8186] {\n  background: var(--primary);\n  color: #ffffffdd;\n}\n.page-container .details .card.primary h1[data-v-b59c8186], .page-container .details .card.primary h2[data-v-b59c8186], .page-container .details .card.primary h3[data-v-b59c8186], .page-container .details .card.primary h4[data-v-b59c8186], .page-container .details .card.primary h5[data-v-b59c8186], .page-container .details .card.primary h6[data-v-b59c8186] {\n  color: white;\n  border-bottom: var(--border);\n  border-color: #ffffff40;\n}\n.page-container .details .card.span-2[data-v-b59c8186] {\n  grid-column: span 2;\n}\n.page-container .details .card.span-3[data-v-b59c8186] {\n  grid-column: span 3;\n}\n.page-container .details .card.span-4[data-v-b59c8186] {\n  grid-column: span 4;\n}\n.page-container .details .card.span-5[data-v-b59c8186] {\n  grid-column: span 5;\n}\n.page-container .details .card.span-6[data-v-b59c8186] {\n  grid-column: span 6;\n}\n.page-container .details .card.span-7[data-v-b59c8186] {\n  grid-column: span 7;\n}\n.page-container .details .card.span-8[data-v-b59c8186] {\n  grid-column: span 8;\n}\n.page-container .details .card.span-9[data-v-b59c8186] {\n  grid-column: span 9;\n}\n.page-container .details .card.span-12[data-v-b59c8186] {\n  grid-column: span 12;\n}\n.page-container .details .card.page-info-card[data-v-b59c8186] {\n  overflow: hidden;\n}\n.page-container .details .card.page-info-card .preview[data-v-b59c8186] {\n  width: 100%;\n  height: 100%;\n  -o-object-fit: contain;\n     object-fit: contain;\n  filter: saturate(0%);\n  float: left;\n  border-radius: 5px;\n  width: 200px;\n}\n.page-container .details .card.page-info-card .content[data-v-b59c8186] {\n  font-size: var(--text-size);\n  color: var(--text-gray);\n}\n.page-container .details .card p[data-v-b59c8186] {\n  padding: 0 15px;\n}\n.page-container .details .card .metric-card-wrapper[data-v-b59c8186] {\n  width: 100%;\n  padding: 7.5px;\n}\n.page-container .details .card .metric-card[data-v-b59c8186] {\n  background: linear-gradient(90deg, var(--bg-dark) 0%, var(--bg) 70%);\n  border-radius: 5px;\n  display: inline-grid;\n  width: calc(100% - 15px);\n  margin: 7.5px;\n  padding: 5px 0;\n  grid-template: auto 1fr/50px 1fr auto;\n  grid-template-areas: \"icon label info\" \"icon value info\";\n}\n.page-container .details .card .metric-card.half[data-v-b59c8186] {\n  width: calc(50% - 15px);\n}\n.page-container .details .card .metric-card .icon[data-v-b59c8186] {\n  grid-area: icon;\n  font-size: 25px;\n  color: var(--primary);\n  font-family: \"Material Icons\";\n  align-self: center;\n  justify-self: center;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n}\n.page-container .details .card .metric-card .square[data-v-b59c8186] {\n  grid-area: icon;\n  height: 20px;\n  width: 20px;\n  border-radius: 3px;\n  border: var(--border);\n  background: var(--bg);\n  align-self: center;\n  justify-self: center;\n}\n.page-container .details .card .metric-card .label[data-v-b59c8186] {\n  grid-area: label;\n  font-size: var(--text-size);\n  color: var(--text-gray);\n  align-self: center;\n  height: 18px;\n  line-height: 18px;\n  margin-top: 3px;\n}\n.page-container .details .card .metric-card .value[data-v-b59c8186] {\n  grid-area: value;\n  font-size: var(--text-size);\n  color: var(--heading-gray);\n  line-height: 130%;\n  align-self: center;\n  font-weight: 600;\n}\n.page-container .details .card .metric-card .value.no-overflow[data-v-b59c8186] {\n  width: 100%;\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n}\n.page-container .details .card .metric-card .info[data-v-b59c8186] {\n  grid-area: info;\n  align-self: center;\n  justify-self: center;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n}\n.page-container .details .card .checklist-wrapper[data-v-b59c8186] {\n  width: 100%;\n  padding: 10px 0;\n}\n.page-container .details .card .checklist-item[data-v-b59c8186] {\n  width: 100%;\n  display: flex;\n  height: 36px;\n  padding: 0 15px;\n  gap: 15px;\n  align-items: center;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n}\n.page-container .details .card .checklist-item .icon[data-v-b59c8186] {\n  font-size: 20px;\n  color: var(--text-gray);\n  font-family: \"Material Icons\";\n  text-align: center;\n}\n.page-container .details .card .checklist-item .text[data-v-b59c8186] {\n  font-size: var(--button-size);\n  font-weight: 600;\n  color: var(--heading-gray);\n  flex: 1;\n  text-transform: uppercase;\n  letter-spacing: 1px;\n}\n.page-container .details .card .twitter-summary-card[data-v-b59c8186] {\n  display: grid;\n  margin: 15px;\n  border-radius: 12px;\n  grid-template: 125px/125px auto;\n  grid-template-areas: \"image content\";\n  align-items: center;\n  border: var(--border);\n  overflow: hidden;\n}\n.page-container .details .card .twitter-summary-card .image[data-v-b59c8186] {\n  grid-area: image;\n  width: 100%;\n  height: 100%;\n  -o-object-fit: cover;\n     object-fit: cover;\n  border-right: var(--border);\n}\n.page-container .details .card .twitter-summary-card .content[data-v-b59c8186] {\n  grid-area: content;\n  padding: 8px 10px;\n  display: block;\n}\n.page-container .details .card .twitter-summary-card .content .title[data-v-b59c8186] {\n  display: block;\n  font-size: var(--text-size);\n  color: var(--heading-gray);\n  margin-bottom: 3px;\n}\n.page-container .details .card .twitter-summary-card .content .description[data-v-b59c8186] {\n  display: block;\n  font-size: var(--text-size);\n  color: var(--text-gray);\n  line-height: 130%;\n  margin-bottom: 3px;\n}\n.page-container .details .card .twitter-summary-card .content .url[data-v-b59c8186] {\n  display: flex;\n  align-items: center;\n}\n.page-container .details .card .twitter-summary-card .content .url .icon[data-v-b59c8186] {\n  font-size: 16px;\n  width: 22px;\n  color: var(--text-gray);\n  font-family: \"Material Icons\";\n  text-align: left;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n}\n.page-container .details .card .twitter-summary-card .content .url .text[data-v-b59c8186] {\n  font-size: var(--text-size);\n  color: var(--text-gray);\n}\n.page-container .details .card .open-graph-article-card[data-v-b59c8186] {\n  display: grid;\n  margin: 15px;\n  border-radius: 7px;\n  grid-template: auto 1fr/1fr;\n  grid-template-areas: \"image\" \"content\";\n  align-items: center;\n  border: var(--border);\n  overflow: hidden;\n}\n.page-container .details .card .open-graph-article-card .image[data-v-b59c8186] {\n  grid-area: image;\n  width: 100%;\n  height: 100%;\n  -o-object-fit: cover;\n     object-fit: cover;\n  border-bottom: var(--border);\n}\n.page-container .details .card .open-graph-article-card .content[data-v-b59c8186] {\n  grid-area: content;\n  padding: 8px 10px;\n  display: block;\n}\n.page-container .details .card .open-graph-article-card .content .url[data-v-b59c8186] {\n  display: block;\n  align-items: center;\n  font-size: var(--text-size);\n  color: var(--text-gray);\n  text-transform: uppercase;\n  margin-bottom: 3px;\n}\n.page-container .details .card .open-graph-article-card .content .title[data-v-b59c8186] {\n  display: block;\n  font-size: var(--text-size);\n  color: var(--heading-gray);\n  margin-bottom: 3px;\n}\n.page-container .details .card .open-graph-article-card .content .description[data-v-b59c8186] {\n  display: block;\n  font-size: var(--text-size);\n  color: var(--text-gray);\n  line-height: 130%;\n}\n.page-container .details .card .image-card[data-v-b59c8186] {\n  display: grid;\n  margin: 15px;\n  border-radius: 5px;\n  grid-template: 125px/125px auto;\n  grid-template-areas: \"image content\";\n  align-items: center;\n  border: var(--border);\n  overflow: hidden;\n}\n.page-container .details .card .image-card .image[data-v-b59c8186] {\n  grid-area: image;\n  width: 100%;\n  height: 100%;\n  -o-object-fit: contain;\n     object-fit: contain;\n  border-right: var(--border);\n  background: var(--bg-dark);\n  padding: 5px;\n}\n.page-container .details .card .image-card .content[data-v-b59c8186] {\n  grid-area: content;\n  padding: 8px 10px;\n  display: block;\n  max-width: 100%;\n  overflow: hidden;\n}\n.page-container .details .card .image-card .content .title[data-v-b59c8186] {\n  display: block;\n  font-size: var(--text-size);\n  color: var(--heading-gray);\n  margin-bottom: 3px;\n}\n.page-container .details .card .image-card .content .description[data-v-b59c8186] {\n  display: block;\n  font-size: var(--text-size);\n  color: var(--text-gray);\n  line-height: 130%;\n  margin-bottom: 3px;\n  max-width: 100%;\n  overflow: hidden;\n}\n.page-container .details .card .image-card .content .description .no-text-overflow[data-v-b59c8186] {\n  width: 100%;\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -48841,9 +48965,15 @@ var render = function() {
                       "div",
                       {
                         key: "report_group_" + reportGroup.id,
-                        staticClass: "job-wrapper"
+                        staticClass: "job-wrapper has-indicator"
                       },
                       [
+                        _c("div", { staticClass: "indicator assigned" }, [
+                          _c("div", { staticClass: "text" }, [
+                            _vm._v("Assigned")
+                          ])
+                        ]),
+                        _vm._v(" "),
                         _c(
                           "div",
                           { staticClass: "job-header" },
@@ -48906,8 +49036,36 @@ var render = function() {
                                 _vm._v(" "),
                                 _c(
                                   "ui-menu-item",
-                                  { attrs: { icon: "&#984214;" } },
+                                  {
+                                    attrs: { icon: "&#984214;" },
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.openReportShareDialog(
+                                          "group",
+                                          reportGroup,
+                                          false
+                                        )
+                                      }
+                                    }
+                                  },
                                   [_vm._v("Share report")]
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "ui-menu-item",
+                                  {
+                                    attrs: { icon: "&#983048;" },
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.openReportShareDialog(
+                                          "group",
+                                          reportGroup,
+                                          true
+                                        )
+                                      }
+                                    }
+                                  },
+                                  [_vm._v("Assign report")]
                                 ),
                                 _vm._v(" "),
                                 _c(
@@ -48939,6 +49097,8 @@ var render = function() {
                                   },
                                   [_vm._v("New report from URL")]
                                 ),
+                                _vm._v(" "),
+                                _c("ui-menu-divider"),
                                 _vm._v(" "),
                                 _c(
                                   "ui-menu-item",
@@ -50278,7 +50438,165 @@ var render = function() {
             _vm._v("?\n        ")
           ])
         ]
-      )
+      ),
+      _vm._v(" "),
+      _c("ui-option-dialog", {
+        ref: "reportShareDialog",
+        on: {
+          close: function($event) {
+            return _vm.resetReportShare()
+          }
+        },
+        scopedSlots: _vm._u([
+          {
+            key: "heading",
+            fn: function() {
+              return [
+                _vm.reportShare.shouldAssign
+                  ? _c("span", [
+                      _vm._v("Assign Report: "),
+                      _c("b", [_vm._v(_vm._s(_vm.reportShare.name))])
+                    ])
+                  : _c("span", [
+                      _vm._v("Share Report: "),
+                      _c("b", [_vm._v(_vm._s(_vm.reportShare.name))])
+                    ])
+              ]
+            },
+            proxy: true
+          },
+          {
+            key: "inputs",
+            fn: function() {
+              return [
+                _c("ui-select-input", {
+                  attrs: { label: "Team", options: _vm.reportShareTeamOptions },
+                  model: {
+                    value: _vm.reportShare.teamId,
+                    callback: function($$v) {
+                      _vm.$set(_vm.reportShare, "teamId", $$v)
+                    },
+                    expression: "reportShare.teamId"
+                  }
+                }),
+                _vm._v(" "),
+                _c("ui-select-input", {
+                  directives: [
+                    {
+                      name: "show",
+                      rawName: "v-show",
+                      value:
+                        _vm.reportShare.teamId && !_vm.reportShare.shouldAssign,
+                      expression:
+                        "reportShare.teamId && !reportShare.shouldAssign"
+                    }
+                  ],
+                  attrs: {
+                    label: "Share with",
+                    options: _vm.reportShareMemberOptions
+                  },
+                  model: {
+                    value: _vm.reportShare.userId,
+                    callback: function($$v) {
+                      _vm.$set(_vm.reportShare, "userId", $$v)
+                    },
+                    expression: "reportShare.userId"
+                  }
+                }),
+                _vm._v(" "),
+                _c("ui-select-input", {
+                  directives: [
+                    {
+                      name: "show",
+                      rawName: "v-show",
+                      value:
+                        _vm.reportShare.teamId && _vm.reportShare.shouldAssign,
+                      expression:
+                        "reportShare.teamId && reportShare.shouldAssign"
+                    }
+                  ],
+                  attrs: {
+                    label: "Assign to",
+                    options: _vm.reportShareMemberOptions.slice(1)
+                  },
+                  model: {
+                    value: _vm.reportShare.assignedToUserId,
+                    callback: function($$v) {
+                      _vm.$set(_vm.reportShare, "assignedToUserId", $$v)
+                    },
+                    expression: "reportShare.assignedToUserId"
+                  }
+                })
+              ]
+            },
+            proxy: true
+          },
+          {
+            key: "button-1",
+            fn: function() {
+              return [
+                _c(
+                  "ui-button",
+                  {
+                    attrs: {
+                      text: "",
+                      border: "",
+                      "icon-left": "",
+                      icon: "&#983382;"
+                    },
+                    on: {
+                      click: function($event) {
+                        return _vm.resetReportShare()
+                      }
+                    }
+                  },
+                  [_vm._v("Cancel")]
+                )
+              ]
+            },
+            proxy: true
+          },
+          {
+            key: "button-2",
+            fn: function() {
+              return [
+                _vm.reportShare.shouldAssign
+                  ? _c(
+                      "ui-button",
+                      {
+                        attrs: {
+                          icon: "&#983048;",
+                          loading: _vm.reportShare.loading
+                        },
+                        on: {
+                          click: function($event) {
+                            return _vm.shareReport()
+                          }
+                        }
+                      },
+                      [_vm._v("Assign")]
+                    )
+                  : _c(
+                      "ui-button",
+                      {
+                        attrs: {
+                          icon: "&#984214;",
+                          loading: _vm.reportShare.loading
+                        },
+                        on: {
+                          click: function($event) {
+                            return _vm.shareReport()
+                          }
+                        }
+                      },
+                      [_vm._v("Share")]
+                    )
+              ]
+            },
+            proxy: true
+          }
+        ])
+      })
     ],
     1
   )

@@ -18,7 +18,11 @@
         <div class="limiter">
             <div class="reports-timeline" v-if="details === null">
                 <transition-group name="slide" class="block">
-                    <div class="job-wrapper" v-for="reportGroup in paginatedReportGroups.data" :key="'report_group_'+reportGroup.id">
+                    <div class="job-wrapper has-indicator" v-for="reportGroup in paginatedReportGroups.data" :key="'report_group_'+reportGroup.id">
+                        <div class="indicator assigned">
+                            <div class="text">Assigned</div>
+                        </div>
+
                         <div class="job-header">
                             <div class="title">{{reportGroup.host}}</div>
                             <div class="timestamp" v-tooltip="formateDate(reportGroup.created_at)">{{reportGroup.created_at | diffForHumans}}</div>
@@ -28,11 +32,12 @@
                                     <ui-icon-button class="more-button">&#983513;</ui-icon-button>
                                 </template>
 
-                                <ui-menu-item icon="&#984214;">Share report</ui-menu-item>
-                                <!-- <ui-menu-item icon="&#983048;">Assign report</ui-menu-item> -->
+                                <ui-menu-item icon="&#984214;" @click="openReportShareDialog('group', reportGroup, false)">Share report</ui-menu-item>
+                                <ui-menu-item icon="&#983048;" @click="openReportShareDialog('group', reportGroup, true)">Assign report</ui-menu-item>
                                 <ui-menu-item icon="&#983881;" @click="reportSearch.url = reportGroup.host">Search for domain</ui-menu-item>
                                 <ui-menu-divider></ui-menu-divider>
                                 <ui-menu-item icon="&#984089;" @click="requestReport(reportGroup.url)">New report from URL</ui-menu-item>
+                                <ui-menu-divider></ui-menu-divider>
                                 <ui-menu-item icon="&#985721;" @click="openReportDeleteDialog(reportGroup)">Delete report</ui-menu-item>
                             </ui-popover-menu>
                         </div>
@@ -413,6 +418,30 @@
             </template>
         </ui-option-dialog>
 
+
+
+        <ui-option-dialog ref="reportShareDialog" @close="resetReportShare()">
+            <template v-slot:heading>
+                <span v-if="reportShare.shouldAssign">Assign Report: <b>{{reportShare.name}}</b></span>
+                <span v-else>Share Report: <b>{{reportShare.name}}</b></span>
+            </template>
+
+            <template v-slot:inputs>
+                <ui-select-input label="Team" v-model="reportShare.teamId" :options="reportShareTeamOptions"></ui-select-input>
+
+                <ui-select-input label="Share with" v-show="reportShare.teamId && !reportShare.shouldAssign" v-model="reportShare.userId" :options="reportShareMemberOptions"></ui-select-input>
+                <ui-select-input label="Assign to" v-show="reportShare.teamId && reportShare.shouldAssign" v-model="reportShare.assignedToUserId" :options="reportShareMemberOptions.slice(1)"></ui-select-input>
+            </template>
+
+            <template v-slot:button-1>
+                <ui-button text border icon-left icon="&#983382;" @click="resetReportShare()">Cancel</ui-button>
+            </template>
+
+            <template v-slot:button-2>
+                <ui-button v-if="reportShare.shouldAssign" icon="&#983048;" :loading="reportShare.loading" @click="shareReport()">Assign</ui-button>
+                <ui-button v-else icon="&#984214;" :loading="reportShare.loading" @click="shareReport()">Share</ui-button>
+            </template>
+        </ui-option-dialog>
     </div>
 </template>
 
@@ -490,6 +519,17 @@
                     loading: false,
                 },
 
+                reportShare: {
+                    id: null,
+                    type: 'group',
+                    teamId: null,
+                    userId: null,
+                    shouldAssign: false,
+                    assignedToUserId: null,
+                    name: '',
+                    loading: false,
+                },
+
                 reportDelete: {
                     id: null,
                     name: '',
@@ -517,6 +557,30 @@
         computed: {
             paginatedReportGroups() {
                 return this.$store.getters.paginatedReportGroups
+            },
+
+            teams() {
+                return this.$store.getters.teams
+            },
+
+            user() {
+                return this.$store.getters.user
+            },
+
+            reportShareTeamOptions() {
+                return this.teams.map(e => ({'value': e.id, 'label': e.name}))
+            },
+
+            reportShareMemberOptions() {
+                let selectedTeam = this.teams.find(e => e.id === this.reportShare.teamId)
+                let users = []
+
+                if (selectedTeam)
+                {
+                    users = selectedTeam.members.filter(e => e.user_id !== this.user.id).map(e => ({'value': e.user.id, 'label': e.user.username}))
+                }
+
+                return [{'value': null, label: 'All'}, ...users]
             },
         },
 
@@ -632,6 +696,45 @@
                 })
                 .catch(error => {
                     this.reportDelete.loading = false
+                    console.log(error.response)
+                })
+            },
+
+
+
+            openReportShareDialog(type, report, shouldAssign = false) {
+                this.reportShare.id = report.id
+                this.reportShare.type = type
+                this.reportShare.name = report.host
+                this.reportShare.shouldAssign = shouldAssign
+                this.$refs.reportShareDialog.open()
+            },
+
+            resetReportShare() {
+                this.reportShare.id = null
+                this.reportShare.typo = 'group'
+                this.reportShare.teamId = null
+                this.reportShare.userId = null
+                this.reportShare.shouldAssign = false
+                this.reportShare.assignedToUserId = null
+                this.reportShare.name = ''
+                this.$refs.reportShareDialog.close()
+            },
+
+            shareReport() {
+                this.reportShare.loading = true
+
+                axios.post('/auth/reports/share-report', {
+                    id: this.reportShare.id,
+                    teamId: this.reportShare.teamId,
+                    userId: this.reportShare.userId,
+                })
+                .then(response => {
+                    this.reportShare.loading = false
+                    this.resetReportShare()
+                })
+                .catch(error => {
+                    this.reportShare.loading = false
                     console.log(error.response)
                 })
             },
@@ -758,6 +861,10 @@
                 filter: var(--elevation-2)
                 margin: 15px 0
                 transition: all 300ms
+                position: relative
+
+                &.has-indicator
+                    padding-left: 18px
 
                 &.slide-enter
                     transform: translateY(-100px)
@@ -769,6 +876,31 @@
 
                 &.slide-leave-active
                     position: absolute
+
+                .indicator
+                    position: absolute
+                    top: 0
+                    left: 0
+                    width: 18px
+                    height: 100%
+                    background: var(--text-gray-shade)
+                    border-radius: 7px 0 0 7px
+                    display: grid
+                    place-content: center
+                    color: var(--text-gray)
+
+                    &.assigned
+                        color: white
+                        background: var(--warning)
+
+                    .text
+                        color: inherit
+                        text-transform: uppercase
+                        font-size: 13px
+                        font-weight: 600
+                        letter-spacing: 1px
+                        transform: rotate(-90deg)
+                        padding-top: 1.5px
 
                 .job-header
                     display: flex
