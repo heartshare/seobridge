@@ -5323,8 +5323,9 @@ var relativeTime = __webpack_require__(/*! dayjs/plugin/relativeTime */ "./node_
           viewport: this.reportCreate.viewport || '1080p'
         }
       }).then(function (response) {
-        _this2.resetReportCreate(); // console.log(response.data)
+        _this2.resetReportCreate();
 
+        console.log(response.data);
       })["catch"](function (error) {
         console.log(error.response);
       });

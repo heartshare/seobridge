@@ -15,7 +15,8 @@ class CreateUserReportGroupsTable extends Migration
     {
         Schema::create('user_report_groups', function (Blueprint $table) {
             $table->string('id')->primary();
-            $table->string('user_id')->nullable();
+            $table->string('owner_id')->nullable();
+            $table->string('team_id')->nullable();
             $table->string('url')->nullable();
             $table->string('mode')->nullable();
             $table->string('host')->nullable();
@@ -25,7 +26,8 @@ class CreateUserReportGroupsTable extends Migration
             $table->text('metadata');
             $table->timestamps();
 
-            $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('set null');
+            $table->foreign('owner_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('set null');
+            $table->foreign('team_id')->references('id')->on('teams')->onUpdate('cascade')->onDelete('set null');
         });
     }
 

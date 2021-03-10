@@ -13,7 +13,8 @@ class UserReportGroup extends Model
     public $incrementing = false;
 
     protected $fillable = [
-        'user_id',
+        'owner_id',
+        'team_id',
         'url',
         'host',
         'mode',

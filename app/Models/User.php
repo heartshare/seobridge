@@ -23,7 +23,7 @@ class User extends Authenticatable
         'email',
         'password',
         'metadata',
-        'roles',
+        'active_team_id',
         'email_verified_at',
     ];
 
@@ -36,12 +36,10 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'deleted_at' => 'datetime',
         'metadata' => 'array',
-        'roles' => 'array',
     ];
 
     protected $attributes = [
         'metadata' => '{}',
-        'roles' => '[]',
     ];
 
     public static function boot()
@@ -73,5 +71,10 @@ class User extends Authenticatable
     public function teams()
     {
         return $this->belongsToMany(Team::class, 'team_members', 'user_id', 'team_id', 'id', 'id');
+    }
+
+    public function active_team()
+    {
+        return $this->hasOne(Team::class, 'id', 'active_team_id');
     }
 }

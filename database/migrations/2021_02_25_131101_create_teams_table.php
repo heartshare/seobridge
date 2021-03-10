@@ -20,6 +20,8 @@ class CreateTeamsTable extends Migration
             $table->text('description')->nullable();
             $table->string('address')->nullable();
             $table->string('category')->nullable();
+            $table->string('status')->nullable();
+            $table->string('payment_method_id')->nullable();
             $table->text('metadata');
             $table->timestamps();
 

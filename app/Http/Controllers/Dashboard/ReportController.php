@@ -27,17 +27,19 @@ class ReportController extends Controller
         $userTeamIds = User::find(Auth::id())->teams()->pluck('teams.id')->toArray();
 
         // Get all report group ids that are related to the user (shared, assigned and own reports)
-        $assignedReportGroupIds = UserReportGroupShare::where('owner_id', '!=', Auth::id())->where('assigned_to_user_id', Auth::id())->pluck('report_group_id')->toArray();
+        $assignedReportGroupIds = UserReportGroupShare::where('owner_id', '!=', Auth::id())->whereIn('team_id', $userTeamIds)->where('assigned_to_user_id', Auth::id())->pluck('report_group_id')->toArray();
         
-        // Queries report groups where:
-        // INDIRECT SHARE: User doesn't own the report group; user is in team referenced by team_id; user_id === null; assigned_to_user_id === null
-        // DIRECT SHARE:   User doesn't own the report group; user_id === Auth::id()
-        $sharedReportGroupIds = array_merge([],                    UserReportGroupShare::where('owner_id', '!=', Auth::id())->whereIn('team_id', $userTeamIds)->where('user_id', null)->where('assigned_to_user_id', null)->pluck('report_group_id')->toArray());
-        $sharedReportGroupIds = array_merge($sharedReportGroupIds, UserReportGroupShare::where('owner_id', '!=', Auth::id())->where('user_id', Auth::id())->pluck('report_group_id')->toArray());
+        // Queries shared report groups where:
+        // • user doesn't own the report group
+        // • user is in team referenced by team_id
+        // • user_id is null or Auth::id
+        // • assigned_to_user_id is null
+        $sharedReportGroupIds = UserReportGroupShare::where('owner_id', '!=', Auth::id())->whereIn('team_id', $userTeamIds)->whereIn('user_id', [null, Auth::id()])->where('assigned_to_user_id', null)->pluck('report_group_id')->toArray();
         
-        $ownReportGroupIds = UserReportGroup::where('user_id', Auth::id())->pluck('id')->toArray();
+        // Queries all own reports
+        $ownReportGroupIds = UserReportGroup::where('owner_id', Auth::id())->pluck('id')->toArray();
 
-        // Merge all ids and make them unique (so we dont have items with the same id)
+        // Merge all ids and make them unique (so we dont have items with identical ids)
         $reportGroupIds = array_unique(array_merge($assignedReportGroupIds, $sharedReportGroupIds, $ownReportGroupIds));
 
         $reports = UserReportGroup::whereIn('id', $reportGroupIds)
@@ -85,8 +87,11 @@ class ReportController extends Controller
             'device' => ['required', 'array'],
         ]);
 
+        $user = User::find(Auth::id());
+
         $reportGroup = UserReportGroup::create([
-            'user_id' => Auth::id(),
+            'owner_id' => Auth::id(),
+            'team_id' => $user->active_team_id,
             'url' => $request->url,
             'host' => parse_url($request->url, PHP_URL_HOST),
             'mode' => $request->mode,
@@ -211,7 +216,7 @@ class ReportController extends Controller
 
         $reportGroup = UserReportGroup::find($request->id);
         
-        if ($reportGroup->user_id !== Auth::id())
+        if ($reportGroup->owner_id !== Auth::id())
         {
             return response('UNAUTHORIZED', 403);
         }

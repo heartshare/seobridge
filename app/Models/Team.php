@@ -18,6 +18,8 @@ class Team extends Model
         'description',
         'address',
         'category',
+        'status',
+        'payment_method_id',
         'metadata',
     ];
 

@@ -54,14 +54,25 @@ class TeamController extends Controller
             'name' => $request->name,
             'description' => $request->description,
             'category' => $request->category,
+            'status' => 'inactive',
         ]);
 
-        $owner = TeamMember::firstOrCreate([
+        // Find first or create owner-member for new team
+        TeamMember::firstOrCreate([
             'team_id' => $team->id,
             'user_id' => $team->owner_id,
         ], [
             'roles' => ['owner'],
         ]);
+
+        $user = User::find(Auth::id());
+
+        // Set active team id to new team if user doesn't have an active team
+        if (!$user->active_team_id)
+        {
+            $user->active_team_id = $team->id;
+            $user->save();
+        }
 
         return Team::with('members.user')->find($team->id);
     }
