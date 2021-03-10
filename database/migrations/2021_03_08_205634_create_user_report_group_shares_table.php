@@ -28,6 +28,7 @@ class CreateUserReportGroupSharesTable extends Migration
             $table->foreign('report_group_id')->references('id')->on('user_report_groups')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('team_id')->references('id')->on('teams')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('set null');
+            $table->foreign('owner_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('assigned_to_user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('set null');
         });
     }

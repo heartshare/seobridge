@@ -79,6 +79,12 @@
 <style lang="sass">
     #wrapper
         --menu-width: 280px
+
+        main
+            .limiter
+                max-width: 1240px !important
+                padding-left: 15px !important
+                padding-right: 15px !important
 </style>
 
 <style lang="sass" scoped>
@@ -233,11 +239,7 @@
         main
             display: block
             margin-left: var(--menu-width)
-
-            .limiter
-                max-width: 1240px !important
-                padding: 0 15px !important
-
+            
             .transition-group
                 width: 100%
 

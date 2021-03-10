@@ -8,16 +8,23 @@ use App\Models\Team;
 use App\Models\TeamInvite;
 use App\Models\TeamMember;
 use App\Models\User;
+use App\Models\UserReportGroup;
+use App\Models\UserReportGroupShare;
 use Illuminate\Support\Facades\Auth;
 
 class TeamController extends Controller
 {
     public function getAllTeams(Request $request)
     {
-        $teams = array_merge(TeamMember::where('user_id', Auth::id())->pluck('team_id')->toArray(), Team::where('owner_id', Auth::id())->pluck('id')->toArray());
-        $teams = array_unique($teams);
+        $teamIds = array_unique(array_merge(TeamMember::where('user_id', Auth::id())->pluck('team_id')->toArray(), Team::where('owner_id', Auth::id())->pluck('id')->toArray()));
 
-        return Team::whereIn('id', $teams)->with('members.user')->get();
+        $teams = Team::whereIn('id', $teamIds)->with('members.user')->get();
+
+        $teams->each(function($team) {
+            $team->is_owner = ($team->owner_id === Auth::id());
+        });
+
+        return $teams;
     }
 
 

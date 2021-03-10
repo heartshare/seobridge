@@ -1,16 +1,18 @@
 <template>
     <div class="page-container">
         <div class="header-wrapper">
-            <div class="filter-bar limiter" v-if="details === null">
-                <ui-select-input class="sort-input" v-model="reportSearch.sort" :options="[{'DESC':'Newest first'}, {'ASC':'Oldest first'}]"></ui-select-input>
+            <div class="limiter">
+                <div class="filter-bar" v-if="details === null">
+                    <ui-select-input class="sort-input" v-model="reportSearch.sort" :options="[{'DESC':'Newest first'}, {'ASC':'Oldest first'}]"></ui-select-input>
 
-                <div class="spacer"></div>
+                    <div class="spacer"></div>
 
-                <div class="search-bar-wrapper">
-                    <ui-text-input class="input" placeholder="Search" v-model="reportSearch.url"></ui-text-input>
-                    <transition name="scale">
-                        <ui-icon-button v-show="reportSearch.url.trim()" class="button" @click="reportSearch.url = ''">&#983382;</ui-icon-button>
-                    </transition>
+                    <div class="search-bar-wrapper">
+                        <ui-text-input class="input" placeholder="Search" v-model="reportSearch.url"></ui-text-input>
+                        <transition name="scale">
+                            <ui-icon-button v-show="reportSearch.url.trim()" class="button" @click="reportSearch.url = ''">&#983382;</ui-icon-button>
+                        </transition>
+                    </div>
                 </div>
             </div>
         </div>
@@ -18,8 +20,12 @@
         <div class="limiter">
             <div class="reports-timeline" v-if="details === null">
                 <transition-group name="slide" class="block">
-                    <div class="job-wrapper has-indicator" v-for="reportGroup in paginatedReportGroups.data" :key="'report_group_'+reportGroup.id">
-                        <div class="indicator assigned">
+                    <div class="job-wrapper" :class="{'has-indicator': !reportGroup.is_own}" v-for="reportGroup in paginatedReportGroups.data" :key="'report_group_'+reportGroup.id">
+                        
+                        <div class="indicator shared" v-show="reportGroup.has_been_shared && !reportGroup.has_been_assigned">
+                            <div class="text">Shared</div>
+                        </div>
+                        <div class="indicator assigned" v-show="reportGroup.has_been_assigned">
                             <div class="text">Assigned</div>
                         </div>
 
@@ -32,13 +38,13 @@
                                     <ui-icon-button class="more-button">&#983513;</ui-icon-button>
                                 </template>
 
-                                <ui-menu-item icon="&#984214;" @click="openReportShareDialog('group', reportGroup, false)">Share report</ui-menu-item>
-                                <ui-menu-item icon="&#983048;" @click="openReportShareDialog('group', reportGroup, true)">Assign report</ui-menu-item>
+                                <ui-menu-item icon="&#984214;" v-if="reportGroup.is_own" @click="openReportShareDialog('group', reportGroup, false)">Share report</ui-menu-item>
+                                <ui-menu-item icon="&#983048;" v-if="reportGroup.is_own" @click="openReportShareDialog('group', reportGroup, true)">Assign report</ui-menu-item>
                                 <ui-menu-item icon="&#983881;" @click="reportSearch.url = reportGroup.host">Search for domain</ui-menu-item>
                                 <ui-menu-divider></ui-menu-divider>
                                 <ui-menu-item icon="&#984089;" @click="requestReport(reportGroup.url)">New report from URL</ui-menu-item>
-                                <ui-menu-divider></ui-menu-divider>
-                                <ui-menu-item icon="&#985721;" @click="openReportDeleteDialog(reportGroup)">Delete report</ui-menu-item>
+                                <ui-menu-divider v-if="reportGroup.is_own"></ui-menu-divider>
+                                <ui-menu-item icon="&#985721;" v-if="reportGroup.is_own" @click="openReportDeleteDialog(reportGroup)">Delete report</ui-menu-item>
                             </ui-popover-menu>
                         </div>
 
@@ -303,7 +309,7 @@
                         <div class="open-graph-article-card">
                             <img :src="details.metaData.openGraph['og:image']" class="image">
                             <div class="content">
-                                <div class="url">{{details.metaData.openGraph['og:url'].host}}</div>
+                                <div class="url" v-if="details.metaData.openGraph['og:url']">{{details.metaData.openGraph['og:url'].host}}</div>
                                 <div class="title">{{details.metaData.openGraph['og:title']}}</div>
                                 <div class="description">{{details.metaData.openGraph['og:description']}}</div>
                             </div>
@@ -726,8 +732,10 @@
 
                 axios.post('/auth/reports/share-report', {
                     id: this.reportShare.id,
+                    type: this.reportShare.type,
                     teamId: this.reportShare.teamId,
                     userId: this.reportShare.userId,
+                    assignedToUserId: this.reportShare.assignedToUserId,
                 })
                 .then(response => {
                     this.reportShare.loading = false
@@ -759,7 +767,7 @@
             left: var(--menu-width)
             z-index: 1
 
-            .limiter
+            .filter-bar
                 filter: var(--elevation-3)
                 background: var(--bg)
                 width: 100%

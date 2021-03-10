@@ -23,17 +23,18 @@
                             <ui-icon-button class="more-button">&#983513;</ui-icon-button>
                         </template>
 
-                        <ui-menu-item icon="&#984043;" @click="openTeamEditor(team)">Edit Team</ui-menu-item>
-                        <ui-menu-item icon="&#983060;" @click="openTeamInviteDialog(team)">Add Member</ui-menu-item>
-                        <ui-menu-divider></ui-menu-divider>
-                        <ui-menu-item icon="&#985721;" @click="openTeamDeletionDialog(team)">Delete Team</ui-menu-item>
+                        <ui-menu-item v-if="team.is_owner" icon="&#984043;" @click="openTeamEditor(team)">Edit Team</ui-menu-item>
+                        <ui-menu-item v-if="team.is_owner" icon="&#983060;" @click="openTeamInviteDialog(team)">Add Member</ui-menu-item>
+                        <ui-menu-divider v-if="team.is_owner"></ui-menu-divider>
+                        <ui-menu-item v-if="team.is_owner" icon="&#985721;" @click="openTeamDeletionDialog(team)">Delete Team</ui-menu-item>
+                        <ui-menu-item v-else icon="&#983558;">Leave Team</ui-menu-item>
                     </ui-popover-menu>
                 </div>
 
                 <div class="team-content">
                     <div class="member-card" v-for="member in team.members" :key="member.id">
                         <div class="background">
-                            <ui-popover-menu class="more-button">
+                            <ui-popover-menu class="more-button" v-if="team.is_owner">
                                 <template v-slot:trigger>
                                     <ui-icon-button>&#983513;</ui-icon-button>
                                 </template>
@@ -53,10 +54,10 @@
                             {{member.user.username}}
                         </div>
 
-                        <div class="role" v-for="(role, i) in member.roles" :key="i">{{role}}</div>    
+                        <div class="role" v-for="(role, i) in member.roles" :key="i" :class="[{'owner': role == 'owner'}]">{{role}}</div>    
                     </div>
 
-                    <div class="add-member-card" @click="openTeamInviteDialog(team)">
+                    <div class="add-member-card" @click="openTeamInviteDialog(team)" v-if="team.is_owner">
                         <div class="icon">&#984085;</div>
                         <div class="text">Add Member</div>
                     </div>
@@ -468,8 +469,8 @@
 
                     .role
                         font-size: 13px
-                        color: white
-                        background: var(--primary)
+                        color: var(--primary)
+                        background: var(--primary-shade)
                         padding: 2px 10px 0
                         border-radius: 30px
                         letter-spacing: 1px
@@ -482,4 +483,8 @@
                         overflow: hidden
                         white-space: nowrap
                         user-select: none
+
+                        &.owner
+                            background: var(--primary)
+                            color: white
 </style>

@@ -5111,6 +5111,12 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 //
 //
 //
+//
+//
+//
+//
+//
+//
 var dayjs = __webpack_require__(/*! dayjs */ "./node_modules/dayjs/dayjs.min.js");
 
 var relativeTime = __webpack_require__(/*! dayjs/plugin/relativeTime */ "./node_modules/dayjs/plugin/relativeTime.js"); // require('dayjs/locale/de')
@@ -5376,8 +5382,10 @@ var relativeTime = __webpack_require__(/*! dayjs/plugin/relativeTime */ "./node_
       this.reportShare.loading = true;
       axios.post('/auth/reports/share-report', {
         id: this.reportShare.id,
+        type: this.reportShare.type,
         teamId: this.reportShare.teamId,
-        userId: this.reportShare.userId
+        userId: this.reportShare.userId,
+        assignedToUserId: this.reportShare.assignedToUserId
       }).then(function (response) {
         _this4.reportShare.loading = false;
 
@@ -5664,6 +5672,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => __WEBPACK_DEFAULT_EXPORT__
 /* harmony export */ });
+//
 //
 //
 //
@@ -6913,7 +6922,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "#wrapper {\n  --menu-width: 280px;\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "#wrapper {\n  --menu-width: 280px;\n}\n#wrapper main .limiter {\n  max-width: 1240px !important;\n  padding-left: 15px !important;\n  padding-right: 15px !important;\n}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -6937,7 +6946,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "#wrapper[data-v-eb9530ca] {\n  height: 100%;\n  width: 100%;\n  --menu-width: 280px;\n}\n#wrapper header[data-v-eb9530ca] {\n  display: none;\n  background: var(--bg);\n  filter: drop-shadow(0 1px 2px #00000020);\n}\n#wrapper nav[data-v-eb9530ca] {\n  text-align: left;\n  position: fixed;\n  left: 0;\n  top: 0;\n  width: var(--menu-width);\n  height: 100%;\n  z-index: 100;\n  color: var(--text-gray);\n  font-size: var(--text-size);\n  background: var(--bg);\n  border-right: var(--border);\n}\n#wrapper nav #logo[data-v-eb9530ca] {\n  height: 60px;\n  width: 100%;\n  margin: 10px 0;\n  text-align: center;\n}\n#wrapper nav #logo img[data-v-eb9530ca] {\n  height: 100%;\n}\n#wrapper nav .logo-divider[data-v-eb9530ca] {\n  width: 100%;\n  height: 20px;\n  display: block;\n}\n#wrapper nav .bottom[data-v-eb9530ca] {\n  position: absolute;\n  bottom: 0;\n  left: 0;\n  width: 100%;\n}\n#wrapper nav .button[data-v-eb9530ca] {\n  width: 100%;\n  text-decoration: none;\n  height: 50px;\n  cursor: pointer;\n  color: var(--text-gray);\n  display: flex;\n  align-content: center;\n  position: relative;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n}\n#wrapper nav .button .icon[data-v-eb9530ca] {\n  font-family: \"Material Icons\";\n  font-size: 24px;\n  width: 60px;\n  text-align: center;\n  align-self: center;\n  z-index: 1;\n  position: relative;\n}\n#wrapper nav .button .text[data-v-eb9530ca] {\n  font-size: var(--button-size);\n  font-weight: 500;\n  letter-spacing: 1px;\n  color: inherit;\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  text-transform: uppercase;\n  align-self: center;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n  flex: 1;\n  z-index: 1;\n  position: relative;\n}\n#wrapper nav .button .notifications[data-v-eb9530ca] {\n  height: 16px;\n  min-width: 16px;\n  line-height: 16px;\n  border-radius: 20px;\n  background: var(--error);\n  font-size: 11px;\n  font-weight: 500;\n  padding: 0 6px;\n  color: white;\n  margin: 0 10px;\n  align-self: center;\n  pointer-events: none;\n  z-index: 1;\n  position: relative;\n}\n#wrapper nav .button[data-v-eb9530ca]::before {\n  content: \"\";\n  height: 100%;\n  width: 100%;\n  position: absolute;\n  left: 0;\n  top: 0;\n  background: var(--primary-shade);\n  transition: -webkit-clip-path 200ms;\n  transition: clip-path 200ms;\n  transition: clip-path 200ms, -webkit-clip-path 200ms;\n  -webkit-clip-path: circle(0 at -10% 50%);\n          clip-path: circle(0 at -10% 50%);\n}\n#wrapper nav .button[data-v-eb9530ca]::after {\n  content: \"\";\n  height: calc(100% - 10px);\n  width: 0px;\n  position: absolute;\n  left: 0;\n  top: 5px;\n  background: var(--primary);\n  border-radius: 0 10px 10px 0;\n  transition: width 100ms;\n}\n#wrapper nav .button[data-v-eb9530ca]:hover::after, #wrapper nav .button.active[data-v-eb9530ca]::after {\n  width: 4px;\n}\n#wrapper nav .button.active[data-v-eb9530ca]::before {\n  -webkit-clip-path: circle(180% at -10% 50%);\n          clip-path: circle(180% at -10% 50%);\n}\n#wrapper nav .button[data-v-eb9530ca]:hover, #wrapper nav .button.active[data-v-eb9530ca] {\n  color: var(--primary);\n}\n#wrapper[data-v-eb9530ca]:not(.navbar-open) {\n  grid-template-columns: 60px auto;\n}\n#wrapper:not(.navbar-open) nav #logo[data-v-eb9530ca] {\n  height: 60px;\n  margin: 0 0 10px;\n}\n#wrapper:not(.navbar-open) nav #logo img[data-v-eb9530ca] {\n  width: 100%;\n  padding: 5px;\n}\n#wrapper:not(.navbar-open) nav .logo-divider[data-v-eb9530ca] {\n  height: 0;\n}\n#wrapper:not(.navbar-open) nav .button .text[data-v-eb9530ca],\n#wrapper:not(.navbar-open) nav .button .notifications[data-v-eb9530ca] {\n  display: none;\n}\n#wrapper main[data-v-eb9530ca] {\n  display: block;\n  margin-left: var(--menu-width);\n}\n#wrapper main .limiter[data-v-eb9530ca] {\n  max-width: 1240px !important;\n  padding: 0 15px !important;\n}\n#wrapper main .transition-group[data-v-eb9530ca] {\n  width: 100%;\n}\n#wrapper main .page[data-v-eb9530ca] {\n  transition: all 100ms;\n}\n#wrapper main .page.opacity-slide-down-enter[data-v-eb9530ca], #wrapper main .page.opacity-slide-up-leave-to[data-v-eb9530ca] {\n  opacity: 0;\n  transform: translateY(-20px);\n}\n#wrapper main .page.opacity-slide-down-leave-to[data-v-eb9530ca], #wrapper main .page.opacity-slide-up-enter[data-v-eb9530ca] {\n  opacity: 0;\n  transform: translateY(20px);\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "#wrapper[data-v-eb9530ca] {\n  height: 100%;\n  width: 100%;\n  --menu-width: 280px;\n}\n#wrapper header[data-v-eb9530ca] {\n  display: none;\n  background: var(--bg);\n  filter: drop-shadow(0 1px 2px #00000020);\n}\n#wrapper nav[data-v-eb9530ca] {\n  text-align: left;\n  position: fixed;\n  left: 0;\n  top: 0;\n  width: var(--menu-width);\n  height: 100%;\n  z-index: 100;\n  color: var(--text-gray);\n  font-size: var(--text-size);\n  background: var(--bg);\n  border-right: var(--border);\n}\n#wrapper nav #logo[data-v-eb9530ca] {\n  height: 60px;\n  width: 100%;\n  margin: 10px 0;\n  text-align: center;\n}\n#wrapper nav #logo img[data-v-eb9530ca] {\n  height: 100%;\n}\n#wrapper nav .logo-divider[data-v-eb9530ca] {\n  width: 100%;\n  height: 20px;\n  display: block;\n}\n#wrapper nav .bottom[data-v-eb9530ca] {\n  position: absolute;\n  bottom: 0;\n  left: 0;\n  width: 100%;\n}\n#wrapper nav .button[data-v-eb9530ca] {\n  width: 100%;\n  text-decoration: none;\n  height: 50px;\n  cursor: pointer;\n  color: var(--text-gray);\n  display: flex;\n  align-content: center;\n  position: relative;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n}\n#wrapper nav .button .icon[data-v-eb9530ca] {\n  font-family: \"Material Icons\";\n  font-size: 24px;\n  width: 60px;\n  text-align: center;\n  align-self: center;\n  z-index: 1;\n  position: relative;\n}\n#wrapper nav .button .text[data-v-eb9530ca] {\n  font-size: var(--button-size);\n  font-weight: 500;\n  letter-spacing: 1px;\n  color: inherit;\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  text-transform: uppercase;\n  align-self: center;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n  flex: 1;\n  z-index: 1;\n  position: relative;\n}\n#wrapper nav .button .notifications[data-v-eb9530ca] {\n  height: 16px;\n  min-width: 16px;\n  line-height: 16px;\n  border-radius: 20px;\n  background: var(--error);\n  font-size: 11px;\n  font-weight: 500;\n  padding: 0 6px;\n  color: white;\n  margin: 0 10px;\n  align-self: center;\n  pointer-events: none;\n  z-index: 1;\n  position: relative;\n}\n#wrapper nav .button[data-v-eb9530ca]::before {\n  content: \"\";\n  height: 100%;\n  width: 100%;\n  position: absolute;\n  left: 0;\n  top: 0;\n  background: var(--primary-shade);\n  transition: -webkit-clip-path 200ms;\n  transition: clip-path 200ms;\n  transition: clip-path 200ms, -webkit-clip-path 200ms;\n  -webkit-clip-path: circle(0 at -10% 50%);\n          clip-path: circle(0 at -10% 50%);\n}\n#wrapper nav .button[data-v-eb9530ca]::after {\n  content: \"\";\n  height: calc(100% - 10px);\n  width: 0px;\n  position: absolute;\n  left: 0;\n  top: 5px;\n  background: var(--primary);\n  border-radius: 0 10px 10px 0;\n  transition: width 100ms;\n}\n#wrapper nav .button[data-v-eb9530ca]:hover::after, #wrapper nav .button.active[data-v-eb9530ca]::after {\n  width: 4px;\n}\n#wrapper nav .button.active[data-v-eb9530ca]::before {\n  -webkit-clip-path: circle(180% at -10% 50%);\n          clip-path: circle(180% at -10% 50%);\n}\n#wrapper nav .button[data-v-eb9530ca]:hover, #wrapper nav .button.active[data-v-eb9530ca] {\n  color: var(--primary);\n}\n#wrapper[data-v-eb9530ca]:not(.navbar-open) {\n  grid-template-columns: 60px auto;\n}\n#wrapper:not(.navbar-open) nav #logo[data-v-eb9530ca] {\n  height: 60px;\n  margin: 0 0 10px;\n}\n#wrapper:not(.navbar-open) nav #logo img[data-v-eb9530ca] {\n  width: 100%;\n  padding: 5px;\n}\n#wrapper:not(.navbar-open) nav .logo-divider[data-v-eb9530ca] {\n  height: 0;\n}\n#wrapper:not(.navbar-open) nav .button .text[data-v-eb9530ca],\n#wrapper:not(.navbar-open) nav .button .notifications[data-v-eb9530ca] {\n  display: none;\n}\n#wrapper main[data-v-eb9530ca] {\n  display: block;\n  margin-left: var(--menu-width);\n}\n#wrapper main .transition-group[data-v-eb9530ca] {\n  width: 100%;\n}\n#wrapper main .page[data-v-eb9530ca] {\n  transition: all 100ms;\n}\n#wrapper main .page.opacity-slide-down-enter[data-v-eb9530ca], #wrapper main .page.opacity-slide-up-leave-to[data-v-eb9530ca] {\n  opacity: 0;\n  transform: translateY(-20px);\n}\n#wrapper main .page.opacity-slide-down-leave-to[data-v-eb9530ca], #wrapper main .page.opacity-slide-up-enter[data-v-eb9530ca] {\n  opacity: 0;\n  transform: translateY(20px);\n}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -7081,7 +7090,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".page-container[data-v-b59c8186] {\n  width: 100%;\n  padding-top: 85px;\n}\n.page-container .header-wrapper[data-v-b59c8186] {\n  width: calc(100% - var(--menu-width));\n  position: fixed;\n  top: 0;\n  left: var(--menu-width);\n  z-index: 1;\n}\n.page-container .header-wrapper .limiter[data-v-b59c8186] {\n  filter: var(--elevation-3);\n  background: var(--bg);\n  width: 100%;\n  display: flex !important;\n  padding: 15px;\n  align-items: center;\n  border-radius: 0 0 7px 7px;\n}\n.page-container .header-wrapper .limiter .spacer[data-v-b59c8186] {\n  flex: 1;\n  height: 40px;\n}\n.page-container .header-wrapper .limiter .sort-input[data-v-b59c8186] {\n  width: 150px;\n  --height: 40px;\n}\n.page-container .header-wrapper .limiter .search-bar-wrapper[data-v-b59c8186] {\n  display: block;\n  position: relative;\n  flex: 1;\n  max-width: 300px;\n}\n.page-container .header-wrapper .limiter .search-bar-wrapper .input[data-v-b59c8186] {\n  padding-right: 40px;\n  --height: 40px;\n}\n.page-container .header-wrapper .limiter .search-bar-wrapper .button[data-v-b59c8186] {\n  position: absolute;\n  top: 0;\n  right: 0;\n  z-index: 1;\n  transition: all 100ms;\n}\n.page-container .header-wrapper .limiter .search-bar-wrapper .button.scale-enter[data-v-b59c8186], .page-container .header-wrapper .limiter .search-bar-wrapper .button.scale-leave-to[data-v-b59c8186] {\n  transform: scale(0);\n}\n.page-container .footer-wrapper[data-v-b59c8186] {\n  width: calc(100%);\n}\n.page-container .footer-wrapper .limiter[data-v-b59c8186] {\n  width: 100%;\n  display: flex !important;\n  padding: 15px 0;\n  align-items: center;\n}\n.page-container .footer-wrapper .limiter .entity-input[data-v-b59c8186] {\n  width: 80px;\n  --height: 40px;\n}\n.page-container .footer-wrapper .limiter .spacer[data-v-b59c8186] {\n  flex: 1;\n  height: 40px;\n}\n.page-container .footer-wrapper .limiter .pagination-button[data-v-b59c8186] {\n  width: 40px;\n}\n.page-container .footer-wrapper .limiter .page-number[data-v-b59c8186] {\n  width: 40px;\n  line-height: 20px;\n  height: 20px;\n  font-size: var(--text-size);\n  color: var(--text-gray);\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n  text-align: center;\n}\n.page-container .fab[data-v-b59c8186] {\n  height: 56px;\n  width: 56px;\n  font-family: \"Material Icons\";\n  color: white;\n  background: var(--primary);\n  display: grid;\n  place-content: center;\n  font-size: 24px;\n  position: fixed;\n  bottom: 30px;\n  right: 30px;\n  border-radius: 100%;\n  border: none;\n  filter: var(--elevation-2);\n  cursor: pointer;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n  transition: all 200ms;\n  z-index: 100;\n}\n.page-container .fab[data-v-b59c8186]:hover {\n  filter: var(--elevation-4);\n}\n.page-container .reports-timeline[data-v-b59c8186] {\n  display: block;\n}\n.page-container .reports-timeline .job-wrapper[data-v-b59c8186] {\n  width: 100%;\n  display: inline-flex;\n  flex-direction: column;\n  background: white;\n  border-radius: 7px;\n  filter: var(--elevation-2);\n  margin: 15px 0;\n  transition: all 300ms;\n  position: relative;\n}\n.page-container .reports-timeline .job-wrapper.has-indicator[data-v-b59c8186] {\n  padding-left: 18px;\n}\n.page-container .reports-timeline .job-wrapper.slide-enter[data-v-b59c8186] {\n  transform: translateY(-100px);\n  opacity: 0;\n}\n.page-container .reports-timeline .job-wrapper.slide-leave-to[data-v-b59c8186] {\n  transform: scale(0);\n  opacity: 0;\n}\n.page-container .reports-timeline .job-wrapper.slide-leave-active[data-v-b59c8186] {\n  position: absolute;\n}\n.page-container .reports-timeline .job-wrapper .indicator[data-v-b59c8186] {\n  position: absolute;\n  top: 0;\n  left: 0;\n  width: 18px;\n  height: 100%;\n  background: var(--text-gray-shade);\n  border-radius: 7px 0 0 7px;\n  display: grid;\n  place-content: center;\n  color: var(--text-gray);\n}\n.page-container .reports-timeline .job-wrapper .indicator.assigned[data-v-b59c8186] {\n  color: white;\n  background: var(--warning);\n}\n.page-container .reports-timeline .job-wrapper .indicator .text[data-v-b59c8186] {\n  color: inherit;\n  text-transform: uppercase;\n  font-size: 13px;\n  font-weight: 600;\n  letter-spacing: 1px;\n  transform: rotate(-90deg);\n  padding-top: 1.5px;\n}\n.page-container .reports-timeline .job-wrapper .job-header[data-v-b59c8186] {\n  display: flex;\n  align-items: center;\n  padding: 5px 0;\n  border-radius: 7px 7px 0 0;\n}\n.page-container .reports-timeline .job-wrapper .job-header .title[data-v-b59c8186] {\n  flex: 1;\n  font-size: 16px;\n  line-height: 20px;\n  font-weight: 600;\n  text-transform: uppercase;\n  color: var(--heading-gray);\n  padding: 0 15px;\n}\n.page-container .reports-timeline .job-wrapper .job-header .timestamp[data-v-b59c8186] {\n  line-height: 20px;\n  font-size: var(--text-size);\n  color: var(--text-gray);\n}\n.page-container .reports-timeline .job-wrapper .job-header .more-button[data-v-b59c8186] {\n  margin: 0 5px;\n}\n.page-container .reports-timeline .job-wrapper .job-pages[data-v-b59c8186] {\n  display: flex;\n  flex-direction: column;\n  gap: 15px;\n  padding: 0 15px 15px;\n  position: relative;\n}\n.page-container .reports-timeline .job-wrapper .job-pages .blend[data-v-b59c8186] {\n  width: 100%;\n  height: 100px;\n  padding-top: 40px;\n  display: grid;\n  place-content: center;\n  position: absolute;\n  bottom: 0;\n  left: 0;\n  background: linear-gradient(0deg, #ffffffff 25%, #ffffff00 100%);\n  border-radius: 0 0 7px 7px;\n}\n.page-container .details[data-v-b59c8186] {\n  width: 100%;\n  display: flex;\n  flex-direction: column;\n  gap: 30px;\n}\n.page-container .details .nav-row[data-v-b59c8186] {\n  height: 40px;\n  margin-top: 30px;\n}\n.page-container .details .detail-row[data-v-b59c8186] {\n  display: grid;\n  grid-template-columns: repeat(12, 1fr);\n  grid-template-rows: 1fr;\n  gap: 30px;\n}\n.page-container .details .card[data-v-b59c8186] {\n  background: var(--bg);\n  border-radius: 5px;\n  font-size: var(--text-size);\n  overflow: hidden;\n}\n.page-container .details .card h1[data-v-b59c8186], .page-container .details .card h2[data-v-b59c8186], .page-container .details .card h3[data-v-b59c8186], .page-container .details .card h4[data-v-b59c8186], .page-container .details .card h5[data-v-b59c8186], .page-container .details .card h6[data-v-b59c8186] {\n  margin: 0;\n  color: var(--primary);\n  width: 100%;\n  padding: 7px 15px 0;\n}\n.page-container .details .card h4[data-v-b59c8186] {\n  color: var(--heading-gray);\n  font-size: var(--button-size);\n  letter-spacing: 1px;\n  text-transform: uppercase;\n  position: relative;\n  font-family: var(--text-font);\n  padding: 7px 15px 7px 10px;\n  border-bottom: 2px solid var(--border-color);\n}\n.page-container .details .card h4.error[data-v-b59c8186] {\n  color: var(--error);\n  border-color: var(--error);\n}\n.page-container .details .card h4.warning[data-v-b59c8186] {\n  color: var(--warning);\n  border-color: var(--warning);\n}\n.page-container .details .card h4.info[data-v-b59c8186] {\n  color: var(--primary);\n  border-color: var(--primary);\n}\n.page-container .details .card h4 .icon[data-v-b59c8186] {\n  font-size: 20px;\n  font-weight: 300;\n  margin-right: 10px;\n  color: inherit;\n  font-family: \"Material Icons\";\n  vertical-align: middle;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n}\n.page-container .details .card h4 .favicon[data-v-b59c8186] {\n  height: 20px;\n  width: 20px;\n  margin-right: 10px;\n  vertical-align: middle;\n}\n.page-container .details .card.center[data-v-b59c8186] {\n  display: grid;\n  place-content: center;\n}\n.page-container .details .card.primary[data-v-b59c8186] {\n  background: var(--primary);\n  color: #ffffffdd;\n}\n.page-container .details .card.primary h1[data-v-b59c8186], .page-container .details .card.primary h2[data-v-b59c8186], .page-container .details .card.primary h3[data-v-b59c8186], .page-container .details .card.primary h4[data-v-b59c8186], .page-container .details .card.primary h5[data-v-b59c8186], .page-container .details .card.primary h6[data-v-b59c8186] {\n  color: white;\n  border-bottom: var(--border);\n  border-color: #ffffff40;\n}\n.page-container .details .card.span-2[data-v-b59c8186] {\n  grid-column: span 2;\n}\n.page-container .details .card.span-3[data-v-b59c8186] {\n  grid-column: span 3;\n}\n.page-container .details .card.span-4[data-v-b59c8186] {\n  grid-column: span 4;\n}\n.page-container .details .card.span-5[data-v-b59c8186] {\n  grid-column: span 5;\n}\n.page-container .details .card.span-6[data-v-b59c8186] {\n  grid-column: span 6;\n}\n.page-container .details .card.span-7[data-v-b59c8186] {\n  grid-column: span 7;\n}\n.page-container .details .card.span-8[data-v-b59c8186] {\n  grid-column: span 8;\n}\n.page-container .details .card.span-9[data-v-b59c8186] {\n  grid-column: span 9;\n}\n.page-container .details .card.span-12[data-v-b59c8186] {\n  grid-column: span 12;\n}\n.page-container .details .card.page-info-card[data-v-b59c8186] {\n  overflow: hidden;\n}\n.page-container .details .card.page-info-card .preview[data-v-b59c8186] {\n  width: 100%;\n  height: 100%;\n  -o-object-fit: contain;\n     object-fit: contain;\n  filter: saturate(0%);\n  float: left;\n  border-radius: 5px;\n  width: 200px;\n}\n.page-container .details .card.page-info-card .content[data-v-b59c8186] {\n  font-size: var(--text-size);\n  color: var(--text-gray);\n}\n.page-container .details .card p[data-v-b59c8186] {\n  padding: 0 15px;\n}\n.page-container .details .card .metric-card-wrapper[data-v-b59c8186] {\n  width: 100%;\n  padding: 7.5px;\n}\n.page-container .details .card .metric-card[data-v-b59c8186] {\n  background: linear-gradient(90deg, var(--bg-dark) 0%, var(--bg) 70%);\n  border-radius: 5px;\n  display: inline-grid;\n  width: calc(100% - 15px);\n  margin: 7.5px;\n  padding: 5px 0;\n  grid-template: auto 1fr/50px 1fr auto;\n  grid-template-areas: \"icon label info\" \"icon value info\";\n}\n.page-container .details .card .metric-card.half[data-v-b59c8186] {\n  width: calc(50% - 15px);\n}\n.page-container .details .card .metric-card .icon[data-v-b59c8186] {\n  grid-area: icon;\n  font-size: 25px;\n  color: var(--primary);\n  font-family: \"Material Icons\";\n  align-self: center;\n  justify-self: center;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n}\n.page-container .details .card .metric-card .square[data-v-b59c8186] {\n  grid-area: icon;\n  height: 20px;\n  width: 20px;\n  border-radius: 3px;\n  border: var(--border);\n  background: var(--bg);\n  align-self: center;\n  justify-self: center;\n}\n.page-container .details .card .metric-card .label[data-v-b59c8186] {\n  grid-area: label;\n  font-size: var(--text-size);\n  color: var(--text-gray);\n  align-self: center;\n  height: 18px;\n  line-height: 18px;\n  margin-top: 3px;\n}\n.page-container .details .card .metric-card .value[data-v-b59c8186] {\n  grid-area: value;\n  font-size: var(--text-size);\n  color: var(--heading-gray);\n  line-height: 130%;\n  align-self: center;\n  font-weight: 600;\n}\n.page-container .details .card .metric-card .value.no-overflow[data-v-b59c8186] {\n  width: 100%;\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n}\n.page-container .details .card .metric-card .info[data-v-b59c8186] {\n  grid-area: info;\n  align-self: center;\n  justify-self: center;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n}\n.page-container .details .card .checklist-wrapper[data-v-b59c8186] {\n  width: 100%;\n  padding: 10px 0;\n}\n.page-container .details .card .checklist-item[data-v-b59c8186] {\n  width: 100%;\n  display: flex;\n  height: 36px;\n  padding: 0 15px;\n  gap: 15px;\n  align-items: center;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n}\n.page-container .details .card .checklist-item .icon[data-v-b59c8186] {\n  font-size: 20px;\n  color: var(--text-gray);\n  font-family: \"Material Icons\";\n  text-align: center;\n}\n.page-container .details .card .checklist-item .text[data-v-b59c8186] {\n  font-size: var(--button-size);\n  font-weight: 600;\n  color: var(--heading-gray);\n  flex: 1;\n  text-transform: uppercase;\n  letter-spacing: 1px;\n}\n.page-container .details .card .twitter-summary-card[data-v-b59c8186] {\n  display: grid;\n  margin: 15px;\n  border-radius: 12px;\n  grid-template: 125px/125px auto;\n  grid-template-areas: \"image content\";\n  align-items: center;\n  border: var(--border);\n  overflow: hidden;\n}\n.page-container .details .card .twitter-summary-card .image[data-v-b59c8186] {\n  grid-area: image;\n  width: 100%;\n  height: 100%;\n  -o-object-fit: cover;\n     object-fit: cover;\n  border-right: var(--border);\n}\n.page-container .details .card .twitter-summary-card .content[data-v-b59c8186] {\n  grid-area: content;\n  padding: 8px 10px;\n  display: block;\n}\n.page-container .details .card .twitter-summary-card .content .title[data-v-b59c8186] {\n  display: block;\n  font-size: var(--text-size);\n  color: var(--heading-gray);\n  margin-bottom: 3px;\n}\n.page-container .details .card .twitter-summary-card .content .description[data-v-b59c8186] {\n  display: block;\n  font-size: var(--text-size);\n  color: var(--text-gray);\n  line-height: 130%;\n  margin-bottom: 3px;\n}\n.page-container .details .card .twitter-summary-card .content .url[data-v-b59c8186] {\n  display: flex;\n  align-items: center;\n}\n.page-container .details .card .twitter-summary-card .content .url .icon[data-v-b59c8186] {\n  font-size: 16px;\n  width: 22px;\n  color: var(--text-gray);\n  font-family: \"Material Icons\";\n  text-align: left;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n}\n.page-container .details .card .twitter-summary-card .content .url .text[data-v-b59c8186] {\n  font-size: var(--text-size);\n  color: var(--text-gray);\n}\n.page-container .details .card .open-graph-article-card[data-v-b59c8186] {\n  display: grid;\n  margin: 15px;\n  border-radius: 7px;\n  grid-template: auto 1fr/1fr;\n  grid-template-areas: \"image\" \"content\";\n  align-items: center;\n  border: var(--border);\n  overflow: hidden;\n}\n.page-container .details .card .open-graph-article-card .image[data-v-b59c8186] {\n  grid-area: image;\n  width: 100%;\n  height: 100%;\n  -o-object-fit: cover;\n     object-fit: cover;\n  border-bottom: var(--border);\n}\n.page-container .details .card .open-graph-article-card .content[data-v-b59c8186] {\n  grid-area: content;\n  padding: 8px 10px;\n  display: block;\n}\n.page-container .details .card .open-graph-article-card .content .url[data-v-b59c8186] {\n  display: block;\n  align-items: center;\n  font-size: var(--text-size);\n  color: var(--text-gray);\n  text-transform: uppercase;\n  margin-bottom: 3px;\n}\n.page-container .details .card .open-graph-article-card .content .title[data-v-b59c8186] {\n  display: block;\n  font-size: var(--text-size);\n  color: var(--heading-gray);\n  margin-bottom: 3px;\n}\n.page-container .details .card .open-graph-article-card .content .description[data-v-b59c8186] {\n  display: block;\n  font-size: var(--text-size);\n  color: var(--text-gray);\n  line-height: 130%;\n}\n.page-container .details .card .image-card[data-v-b59c8186] {\n  display: grid;\n  margin: 15px;\n  border-radius: 5px;\n  grid-template: 125px/125px auto;\n  grid-template-areas: \"image content\";\n  align-items: center;\n  border: var(--border);\n  overflow: hidden;\n}\n.page-container .details .card .image-card .image[data-v-b59c8186] {\n  grid-area: image;\n  width: 100%;\n  height: 100%;\n  -o-object-fit: contain;\n     object-fit: contain;\n  border-right: var(--border);\n  background: var(--bg-dark);\n  padding: 5px;\n}\n.page-container .details .card .image-card .content[data-v-b59c8186] {\n  grid-area: content;\n  padding: 8px 10px;\n  display: block;\n  max-width: 100%;\n  overflow: hidden;\n}\n.page-container .details .card .image-card .content .title[data-v-b59c8186] {\n  display: block;\n  font-size: var(--text-size);\n  color: var(--heading-gray);\n  margin-bottom: 3px;\n}\n.page-container .details .card .image-card .content .description[data-v-b59c8186] {\n  display: block;\n  font-size: var(--text-size);\n  color: var(--text-gray);\n  line-height: 130%;\n  margin-bottom: 3px;\n  max-width: 100%;\n  overflow: hidden;\n}\n.page-container .details .card .image-card .content .description .no-text-overflow[data-v-b59c8186] {\n  width: 100%;\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, ".page-container[data-v-b59c8186] {\n  width: 100%;\n  padding-top: 85px;\n}\n.page-container .header-wrapper[data-v-b59c8186] {\n  width: calc(100% - var(--menu-width));\n  position: fixed;\n  top: 0;\n  left: var(--menu-width);\n  z-index: 1;\n}\n.page-container .header-wrapper .filter-bar[data-v-b59c8186] {\n  filter: var(--elevation-3);\n  background: var(--bg);\n  width: 100%;\n  display: flex !important;\n  padding: 15px;\n  align-items: center;\n  border-radius: 0 0 7px 7px;\n}\n.page-container .header-wrapper .filter-bar .spacer[data-v-b59c8186] {\n  flex: 1;\n  height: 40px;\n}\n.page-container .header-wrapper .filter-bar .sort-input[data-v-b59c8186] {\n  width: 150px;\n  --height: 40px;\n}\n.page-container .header-wrapper .filter-bar .search-bar-wrapper[data-v-b59c8186] {\n  display: block;\n  position: relative;\n  flex: 1;\n  max-width: 300px;\n}\n.page-container .header-wrapper .filter-bar .search-bar-wrapper .input[data-v-b59c8186] {\n  padding-right: 40px;\n  --height: 40px;\n}\n.page-container .header-wrapper .filter-bar .search-bar-wrapper .button[data-v-b59c8186] {\n  position: absolute;\n  top: 0;\n  right: 0;\n  z-index: 1;\n  transition: all 100ms;\n}\n.page-container .header-wrapper .filter-bar .search-bar-wrapper .button.scale-enter[data-v-b59c8186], .page-container .header-wrapper .filter-bar .search-bar-wrapper .button.scale-leave-to[data-v-b59c8186] {\n  transform: scale(0);\n}\n.page-container .footer-wrapper[data-v-b59c8186] {\n  width: calc(100%);\n}\n.page-container .footer-wrapper .limiter[data-v-b59c8186] {\n  width: 100%;\n  display: flex !important;\n  padding: 15px 0;\n  align-items: center;\n}\n.page-container .footer-wrapper .limiter .entity-input[data-v-b59c8186] {\n  width: 80px;\n  --height: 40px;\n}\n.page-container .footer-wrapper .limiter .spacer[data-v-b59c8186] {\n  flex: 1;\n  height: 40px;\n}\n.page-container .footer-wrapper .limiter .pagination-button[data-v-b59c8186] {\n  width: 40px;\n}\n.page-container .footer-wrapper .limiter .page-number[data-v-b59c8186] {\n  width: 40px;\n  line-height: 20px;\n  height: 20px;\n  font-size: var(--text-size);\n  color: var(--text-gray);\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n  text-align: center;\n}\n.page-container .fab[data-v-b59c8186] {\n  height: 56px;\n  width: 56px;\n  font-family: \"Material Icons\";\n  color: white;\n  background: var(--primary);\n  display: grid;\n  place-content: center;\n  font-size: 24px;\n  position: fixed;\n  bottom: 30px;\n  right: 30px;\n  border-radius: 100%;\n  border: none;\n  filter: var(--elevation-2);\n  cursor: pointer;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n  transition: all 200ms;\n  z-index: 100;\n}\n.page-container .fab[data-v-b59c8186]:hover {\n  filter: var(--elevation-4);\n}\n.page-container .reports-timeline[data-v-b59c8186] {\n  display: block;\n}\n.page-container .reports-timeline .job-wrapper[data-v-b59c8186] {\n  width: 100%;\n  display: inline-flex;\n  flex-direction: column;\n  background: white;\n  border-radius: 7px;\n  filter: var(--elevation-2);\n  margin: 15px 0;\n  transition: all 300ms;\n  position: relative;\n}\n.page-container .reports-timeline .job-wrapper.has-indicator[data-v-b59c8186] {\n  padding-left: 18px;\n}\n.page-container .reports-timeline .job-wrapper.slide-enter[data-v-b59c8186] {\n  transform: translateY(-100px);\n  opacity: 0;\n}\n.page-container .reports-timeline .job-wrapper.slide-leave-to[data-v-b59c8186] {\n  transform: scale(0);\n  opacity: 0;\n}\n.page-container .reports-timeline .job-wrapper.slide-leave-active[data-v-b59c8186] {\n  position: absolute;\n}\n.page-container .reports-timeline .job-wrapper .indicator[data-v-b59c8186] {\n  position: absolute;\n  top: 0;\n  left: 0;\n  width: 18px;\n  height: 100%;\n  background: var(--text-gray-shade);\n  border-radius: 7px 0 0 7px;\n  display: grid;\n  place-content: center;\n  color: var(--text-gray);\n}\n.page-container .reports-timeline .job-wrapper .indicator.assigned[data-v-b59c8186] {\n  color: white;\n  background: var(--warning);\n}\n.page-container .reports-timeline .job-wrapper .indicator .text[data-v-b59c8186] {\n  color: inherit;\n  text-transform: uppercase;\n  font-size: 13px;\n  font-weight: 600;\n  letter-spacing: 1px;\n  transform: rotate(-90deg);\n  padding-top: 1.5px;\n}\n.page-container .reports-timeline .job-wrapper .job-header[data-v-b59c8186] {\n  display: flex;\n  align-items: center;\n  padding: 5px 0;\n  border-radius: 7px 7px 0 0;\n}\n.page-container .reports-timeline .job-wrapper .job-header .title[data-v-b59c8186] {\n  flex: 1;\n  font-size: 16px;\n  line-height: 20px;\n  font-weight: 600;\n  text-transform: uppercase;\n  color: var(--heading-gray);\n  padding: 0 15px;\n}\n.page-container .reports-timeline .job-wrapper .job-header .timestamp[data-v-b59c8186] {\n  line-height: 20px;\n  font-size: var(--text-size);\n  color: var(--text-gray);\n}\n.page-container .reports-timeline .job-wrapper .job-header .more-button[data-v-b59c8186] {\n  margin: 0 5px;\n}\n.page-container .reports-timeline .job-wrapper .job-pages[data-v-b59c8186] {\n  display: flex;\n  flex-direction: column;\n  gap: 15px;\n  padding: 0 15px 15px;\n  position: relative;\n}\n.page-container .reports-timeline .job-wrapper .job-pages .blend[data-v-b59c8186] {\n  width: 100%;\n  height: 100px;\n  padding-top: 40px;\n  display: grid;\n  place-content: center;\n  position: absolute;\n  bottom: 0;\n  left: 0;\n  background: linear-gradient(0deg, #ffffffff 25%, #ffffff00 100%);\n  border-radius: 0 0 7px 7px;\n}\n.page-container .details[data-v-b59c8186] {\n  width: 100%;\n  display: flex;\n  flex-direction: column;\n  gap: 30px;\n}\n.page-container .details .nav-row[data-v-b59c8186] {\n  height: 40px;\n  margin-top: 30px;\n}\n.page-container .details .detail-row[data-v-b59c8186] {\n  display: grid;\n  grid-template-columns: repeat(12, 1fr);\n  grid-template-rows: 1fr;\n  gap: 30px;\n}\n.page-container .details .card[data-v-b59c8186] {\n  background: var(--bg);\n  border-radius: 5px;\n  font-size: var(--text-size);\n  overflow: hidden;\n}\n.page-container .details .card h1[data-v-b59c8186], .page-container .details .card h2[data-v-b59c8186], .page-container .details .card h3[data-v-b59c8186], .page-container .details .card h4[data-v-b59c8186], .page-container .details .card h5[data-v-b59c8186], .page-container .details .card h6[data-v-b59c8186] {\n  margin: 0;\n  color: var(--primary);\n  width: 100%;\n  padding: 7px 15px 0;\n}\n.page-container .details .card h4[data-v-b59c8186] {\n  color: var(--heading-gray);\n  font-size: var(--button-size);\n  letter-spacing: 1px;\n  text-transform: uppercase;\n  position: relative;\n  font-family: var(--text-font);\n  padding: 7px 15px 7px 10px;\n  border-bottom: 2px solid var(--border-color);\n}\n.page-container .details .card h4.error[data-v-b59c8186] {\n  color: var(--error);\n  border-color: var(--error);\n}\n.page-container .details .card h4.warning[data-v-b59c8186] {\n  color: var(--warning);\n  border-color: var(--warning);\n}\n.page-container .details .card h4.info[data-v-b59c8186] {\n  color: var(--primary);\n  border-color: var(--primary);\n}\n.page-container .details .card h4 .icon[data-v-b59c8186] {\n  font-size: 20px;\n  font-weight: 300;\n  margin-right: 10px;\n  color: inherit;\n  font-family: \"Material Icons\";\n  vertical-align: middle;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n}\n.page-container .details .card h4 .favicon[data-v-b59c8186] {\n  height: 20px;\n  width: 20px;\n  margin-right: 10px;\n  vertical-align: middle;\n}\n.page-container .details .card.center[data-v-b59c8186] {\n  display: grid;\n  place-content: center;\n}\n.page-container .details .card.primary[data-v-b59c8186] {\n  background: var(--primary);\n  color: #ffffffdd;\n}\n.page-container .details .card.primary h1[data-v-b59c8186], .page-container .details .card.primary h2[data-v-b59c8186], .page-container .details .card.primary h3[data-v-b59c8186], .page-container .details .card.primary h4[data-v-b59c8186], .page-container .details .card.primary h5[data-v-b59c8186], .page-container .details .card.primary h6[data-v-b59c8186] {\n  color: white;\n  border-bottom: var(--border);\n  border-color: #ffffff40;\n}\n.page-container .details .card.span-2[data-v-b59c8186] {\n  grid-column: span 2;\n}\n.page-container .details .card.span-3[data-v-b59c8186] {\n  grid-column: span 3;\n}\n.page-container .details .card.span-4[data-v-b59c8186] {\n  grid-column: span 4;\n}\n.page-container .details .card.span-5[data-v-b59c8186] {\n  grid-column: span 5;\n}\n.page-container .details .card.span-6[data-v-b59c8186] {\n  grid-column: span 6;\n}\n.page-container .details .card.span-7[data-v-b59c8186] {\n  grid-column: span 7;\n}\n.page-container .details .card.span-8[data-v-b59c8186] {\n  grid-column: span 8;\n}\n.page-container .details .card.span-9[data-v-b59c8186] {\n  grid-column: span 9;\n}\n.page-container .details .card.span-12[data-v-b59c8186] {\n  grid-column: span 12;\n}\n.page-container .details .card.page-info-card[data-v-b59c8186] {\n  overflow: hidden;\n}\n.page-container .details .card.page-info-card .preview[data-v-b59c8186] {\n  width: 100%;\n  height: 100%;\n  -o-object-fit: contain;\n     object-fit: contain;\n  filter: saturate(0%);\n  float: left;\n  border-radius: 5px;\n  width: 200px;\n}\n.page-container .details .card.page-info-card .content[data-v-b59c8186] {\n  font-size: var(--text-size);\n  color: var(--text-gray);\n}\n.page-container .details .card p[data-v-b59c8186] {\n  padding: 0 15px;\n}\n.page-container .details .card .metric-card-wrapper[data-v-b59c8186] {\n  width: 100%;\n  padding: 7.5px;\n}\n.page-container .details .card .metric-card[data-v-b59c8186] {\n  background: linear-gradient(90deg, var(--bg-dark) 0%, var(--bg) 70%);\n  border-radius: 5px;\n  display: inline-grid;\n  width: calc(100% - 15px);\n  margin: 7.5px;\n  padding: 5px 0;\n  grid-template: auto 1fr/50px 1fr auto;\n  grid-template-areas: \"icon label info\" \"icon value info\";\n}\n.page-container .details .card .metric-card.half[data-v-b59c8186] {\n  width: calc(50% - 15px);\n}\n.page-container .details .card .metric-card .icon[data-v-b59c8186] {\n  grid-area: icon;\n  font-size: 25px;\n  color: var(--primary);\n  font-family: \"Material Icons\";\n  align-self: center;\n  justify-self: center;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n}\n.page-container .details .card .metric-card .square[data-v-b59c8186] {\n  grid-area: icon;\n  height: 20px;\n  width: 20px;\n  border-radius: 3px;\n  border: var(--border);\n  background: var(--bg);\n  align-self: center;\n  justify-self: center;\n}\n.page-container .details .card .metric-card .label[data-v-b59c8186] {\n  grid-area: label;\n  font-size: var(--text-size);\n  color: var(--text-gray);\n  align-self: center;\n  height: 18px;\n  line-height: 18px;\n  margin-top: 3px;\n}\n.page-container .details .card .metric-card .value[data-v-b59c8186] {\n  grid-area: value;\n  font-size: var(--text-size);\n  color: var(--heading-gray);\n  line-height: 130%;\n  align-self: center;\n  font-weight: 600;\n}\n.page-container .details .card .metric-card .value.no-overflow[data-v-b59c8186] {\n  width: 100%;\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n}\n.page-container .details .card .metric-card .info[data-v-b59c8186] {\n  grid-area: info;\n  align-self: center;\n  justify-self: center;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n}\n.page-container .details .card .checklist-wrapper[data-v-b59c8186] {\n  width: 100%;\n  padding: 10px 0;\n}\n.page-container .details .card .checklist-item[data-v-b59c8186] {\n  width: 100%;\n  display: flex;\n  height: 36px;\n  padding: 0 15px;\n  gap: 15px;\n  align-items: center;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n}\n.page-container .details .card .checklist-item .icon[data-v-b59c8186] {\n  font-size: 20px;\n  color: var(--text-gray);\n  font-family: \"Material Icons\";\n  text-align: center;\n}\n.page-container .details .card .checklist-item .text[data-v-b59c8186] {\n  font-size: var(--button-size);\n  font-weight: 600;\n  color: var(--heading-gray);\n  flex: 1;\n  text-transform: uppercase;\n  letter-spacing: 1px;\n}\n.page-container .details .card .twitter-summary-card[data-v-b59c8186] {\n  display: grid;\n  margin: 15px;\n  border-radius: 12px;\n  grid-template: 125px/125px auto;\n  grid-template-areas: \"image content\";\n  align-items: center;\n  border: var(--border);\n  overflow: hidden;\n}\n.page-container .details .card .twitter-summary-card .image[data-v-b59c8186] {\n  grid-area: image;\n  width: 100%;\n  height: 100%;\n  -o-object-fit: cover;\n     object-fit: cover;\n  border-right: var(--border);\n}\n.page-container .details .card .twitter-summary-card .content[data-v-b59c8186] {\n  grid-area: content;\n  padding: 8px 10px;\n  display: block;\n}\n.page-container .details .card .twitter-summary-card .content .title[data-v-b59c8186] {\n  display: block;\n  font-size: var(--text-size);\n  color: var(--heading-gray);\n  margin-bottom: 3px;\n}\n.page-container .details .card .twitter-summary-card .content .description[data-v-b59c8186] {\n  display: block;\n  font-size: var(--text-size);\n  color: var(--text-gray);\n  line-height: 130%;\n  margin-bottom: 3px;\n}\n.page-container .details .card .twitter-summary-card .content .url[data-v-b59c8186] {\n  display: flex;\n  align-items: center;\n}\n.page-container .details .card .twitter-summary-card .content .url .icon[data-v-b59c8186] {\n  font-size: 16px;\n  width: 22px;\n  color: var(--text-gray);\n  font-family: \"Material Icons\";\n  text-align: left;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n}\n.page-container .details .card .twitter-summary-card .content .url .text[data-v-b59c8186] {\n  font-size: var(--text-size);\n  color: var(--text-gray);\n}\n.page-container .details .card .open-graph-article-card[data-v-b59c8186] {\n  display: grid;\n  margin: 15px;\n  border-radius: 7px;\n  grid-template: auto 1fr/1fr;\n  grid-template-areas: \"image\" \"content\";\n  align-items: center;\n  border: var(--border);\n  overflow: hidden;\n}\n.page-container .details .card .open-graph-article-card .image[data-v-b59c8186] {\n  grid-area: image;\n  width: 100%;\n  height: 100%;\n  -o-object-fit: cover;\n     object-fit: cover;\n  border-bottom: var(--border);\n}\n.page-container .details .card .open-graph-article-card .content[data-v-b59c8186] {\n  grid-area: content;\n  padding: 8px 10px;\n  display: block;\n}\n.page-container .details .card .open-graph-article-card .content .url[data-v-b59c8186] {\n  display: block;\n  align-items: center;\n  font-size: var(--text-size);\n  color: var(--text-gray);\n  text-transform: uppercase;\n  margin-bottom: 3px;\n}\n.page-container .details .card .open-graph-article-card .content .title[data-v-b59c8186] {\n  display: block;\n  font-size: var(--text-size);\n  color: var(--heading-gray);\n  margin-bottom: 3px;\n}\n.page-container .details .card .open-graph-article-card .content .description[data-v-b59c8186] {\n  display: block;\n  font-size: var(--text-size);\n  color: var(--text-gray);\n  line-height: 130%;\n}\n.page-container .details .card .image-card[data-v-b59c8186] {\n  display: grid;\n  margin: 15px;\n  border-radius: 5px;\n  grid-template: 125px/125px auto;\n  grid-template-areas: \"image content\";\n  align-items: center;\n  border: var(--border);\n  overflow: hidden;\n}\n.page-container .details .card .image-card .image[data-v-b59c8186] {\n  grid-area: image;\n  width: 100%;\n  height: 100%;\n  -o-object-fit: contain;\n     object-fit: contain;\n  border-right: var(--border);\n  background: var(--bg-dark);\n  padding: 5px;\n}\n.page-container .details .card .image-card .content[data-v-b59c8186] {\n  grid-area: content;\n  padding: 8px 10px;\n  display: block;\n  max-width: 100%;\n  overflow: hidden;\n}\n.page-container .details .card .image-card .content .title[data-v-b59c8186] {\n  display: block;\n  font-size: var(--text-size);\n  color: var(--heading-gray);\n  margin-bottom: 3px;\n}\n.page-container .details .card .image-card .content .description[data-v-b59c8186] {\n  display: block;\n  font-size: var(--text-size);\n  color: var(--text-gray);\n  line-height: 130%;\n  margin-bottom: 3px;\n  max-width: 100%;\n  overflow: hidden;\n}\n.page-container .details .card .image-card .content .description .no-text-overflow[data-v-b59c8186] {\n  width: 100%;\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -7129,7 +7138,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".page-container[data-v-763ff598] {\n  width: 100%;\n}\n.page-container .fab[data-v-763ff598] {\n  height: 56px;\n  width: 56px;\n  font-family: \"Material Icons\";\n  color: white;\n  background: var(--primary);\n  display: grid;\n  place-content: center;\n  font-size: 24px;\n  position: fixed;\n  bottom: 30px;\n  right: 30px;\n  border-radius: 100%;\n  border: none;\n  filter: var(--elevation-2);\n  cursor: pointer;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n  transition: all 200ms;\n  z-index: 100;\n}\n.page-container .fab[data-v-763ff598]:hover {\n  filter: var(--elevation-4);\n}\n.page-container .team-description-input[data-v-763ff598] {\n  resize: none;\n  height: 150px;\n}\n.page-container .team-wrapper[data-v-763ff598] {\n  width: 100%;\n  display: inline-flex;\n  flex-direction: column;\n  background: white;\n  border-radius: 7px;\n  filter: var(--elevation-2);\n  margin: 15px 0;\n  transition: all 300ms;\n}\n.page-container .team-wrapper.slide-enter[data-v-763ff598] {\n  transform: translateY(-100px);\n  opacity: 0;\n}\n.page-container .team-wrapper.slide-leave-to[data-v-763ff598] {\n  transform: scale(0);\n  opacity: 0;\n}\n.page-container .team-wrapper.slide-leave-active[data-v-763ff598] {\n  position: absolute;\n}\n.page-container .team-wrapper .team-header[data-v-763ff598] {\n  display: flex;\n  align-items: center;\n  padding: 5px 0;\n  border-radius: 7px 7px 0 0;\n}\n.page-container .team-wrapper .team-header .tag[data-v-763ff598] {\n  margin-left: 15px;\n  font-size: 10px;\n  color: var(--primary);\n  background: var(--primary-shade);\n  padding: 1px 8px;\n  line-height: 18px;\n  border-radius: 30px;\n  letter-spacing: 1px;\n  font-weight: 600;\n  text-transform: uppercase;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n  vertical-align: top;\n}\n.page-container .team-wrapper .team-header .title[data-v-763ff598] {\n  flex: 1;\n  font-size: 16px;\n  line-height: 20px;\n  padding: 7px 15px;\n}\n.page-container .team-wrapper .team-header .title b[data-v-763ff598] {\n  text-transform: uppercase;\n  font-weight: 600;\n  color: var(--heading-gray);\n  display: inline-block;\n}\n.page-container .team-wrapper .team-header .more-button[data-v-763ff598] {\n  margin: 0 5px;\n}\n.page-container .team-wrapper .team-content[data-v-763ff598] {\n  display: flex;\n  gap: 15px;\n  padding: 5px 15px 15px;\n  position: relative;\n  flex-wrap: wrap;\n}\n.page-container .team-wrapper .team-content .add-member-card[data-v-763ff598] {\n  border-radius: 5px;\n  background: var(--bg);\n  border: var(--border);\n  width: 170px;\n  height: 220px;\n  display: grid;\n  place-content: center;\n  cursor: pointer;\n}\n.page-container .team-wrapper .team-content .add-member-card[data-v-763ff598]:hover {\n  border-color: transparent;\n  filter: var(--elevation-3);\n}\n.page-container .team-wrapper .team-content .add-member-card .icon[data-v-763ff598] {\n  font-family: \"Material Icons\";\n  font-size: 28px;\n  color: var(--text-gray);\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n  text-align: center;\n  margin-bottom: 10px;\n}\n.page-container .team-wrapper .team-content .add-member-card .text[data-v-763ff598] {\n  font-size: var(--button-size);\n  color: var(--text-gray);\n  font-weight: 600;\n  letter-spacing: 1px;\n  text-transform: uppercase;\n}\n.page-container .team-wrapper .team-content .member-card[data-v-763ff598] {\n  border-radius: 5px;\n  border: var(--border);\n  width: 170px;\n  height: 220px;\n  position: relative;\n}\n.page-container .team-wrapper .team-content .member-card:hover .more-button[data-v-763ff598] {\n  opacity: 1;\n}\n.page-container .team-wrapper .team-content .member-card .more-button[data-v-763ff598] {\n  position: absolute;\n  top: 0;\n  right: 0;\n  display: block !important;\n  opacity: 0;\n}\n.page-container .team-wrapper .team-content .member-card .background[data-v-763ff598] {\n  height: 80px;\n  width: 100%;\n  border-bottom: var(--border);\n  background: var(--bg);\n  background-image: url(\"/images/app/dashboard/pattern.svg\");\n  background-size: 1000px;\n  background-position: top;\n  background-repeat: no-repeat;\n  border-radius: 5px 5px 0 0;\n  display: block;\n}\n.page-container .team-wrapper .team-content .member-card .profile-image[data-v-763ff598] {\n  height: 70px;\n  width: 70px;\n  -o-object-fit: cover;\n     object-fit: cover;\n  border-radius: 100%;\n  margin: -35px auto 10px;\n  display: block;\n  background: var(--bg);\n  font-size: 15px;\n}\n.page-container .team-wrapper .team-content .member-card .name[data-v-763ff598] {\n  width: 100%;\n  font-size: var(--text-size);\n  color: var(--heading-gray);\n  font-weight: 600;\n  height: 30px;\n  display: grid;\n  place-content: center;\n  margin-bottom: 10px;\n}\n.page-container .team-wrapper .team-content .member-card .role[data-v-763ff598] {\n  font-size: 13px;\n  color: white;\n  background: var(--primary);\n  padding: 2px 10px 0;\n  border-radius: 30px;\n  letter-spacing: 1px;\n  font-weight: 600;\n  text-transform: uppercase;\n  display: block;\n  margin: 0 auto;\n  width: -webkit-min-content;\n  width: -moz-min-content;\n  width: min-content;\n  text-overflow: ellipsis;\n  overflow: hidden;\n  white-space: nowrap;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, ".page-container[data-v-763ff598] {\n  width: 100%;\n}\n.page-container .fab[data-v-763ff598] {\n  height: 56px;\n  width: 56px;\n  font-family: \"Material Icons\";\n  color: white;\n  background: var(--primary);\n  display: grid;\n  place-content: center;\n  font-size: 24px;\n  position: fixed;\n  bottom: 30px;\n  right: 30px;\n  border-radius: 100%;\n  border: none;\n  filter: var(--elevation-2);\n  cursor: pointer;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n  transition: all 200ms;\n  z-index: 100;\n}\n.page-container .fab[data-v-763ff598]:hover {\n  filter: var(--elevation-4);\n}\n.page-container .team-description-input[data-v-763ff598] {\n  resize: none;\n  height: 150px;\n}\n.page-container .team-wrapper[data-v-763ff598] {\n  width: 100%;\n  display: inline-flex;\n  flex-direction: column;\n  background: white;\n  border-radius: 7px;\n  filter: var(--elevation-2);\n  margin: 15px 0;\n  transition: all 300ms;\n}\n.page-container .team-wrapper.slide-enter[data-v-763ff598] {\n  transform: translateY(-100px);\n  opacity: 0;\n}\n.page-container .team-wrapper.slide-leave-to[data-v-763ff598] {\n  transform: scale(0);\n  opacity: 0;\n}\n.page-container .team-wrapper.slide-leave-active[data-v-763ff598] {\n  position: absolute;\n}\n.page-container .team-wrapper .team-header[data-v-763ff598] {\n  display: flex;\n  align-items: center;\n  padding: 5px 0;\n  border-radius: 7px 7px 0 0;\n}\n.page-container .team-wrapper .team-header .tag[data-v-763ff598] {\n  margin-left: 15px;\n  font-size: 10px;\n  color: var(--primary);\n  background: var(--primary-shade);\n  padding: 1px 8px;\n  line-height: 18px;\n  border-radius: 30px;\n  letter-spacing: 1px;\n  font-weight: 600;\n  text-transform: uppercase;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n  vertical-align: top;\n}\n.page-container .team-wrapper .team-header .title[data-v-763ff598] {\n  flex: 1;\n  font-size: 16px;\n  line-height: 20px;\n  padding: 7px 15px;\n}\n.page-container .team-wrapper .team-header .title b[data-v-763ff598] {\n  text-transform: uppercase;\n  font-weight: 600;\n  color: var(--heading-gray);\n  display: inline-block;\n}\n.page-container .team-wrapper .team-header .more-button[data-v-763ff598] {\n  margin: 0 5px;\n}\n.page-container .team-wrapper .team-content[data-v-763ff598] {\n  display: flex;\n  gap: 15px;\n  padding: 5px 15px 15px;\n  position: relative;\n  flex-wrap: wrap;\n}\n.page-container .team-wrapper .team-content .add-member-card[data-v-763ff598] {\n  border-radius: 5px;\n  background: var(--bg);\n  border: var(--border);\n  width: 170px;\n  height: 220px;\n  display: grid;\n  place-content: center;\n  cursor: pointer;\n}\n.page-container .team-wrapper .team-content .add-member-card[data-v-763ff598]:hover {\n  border-color: transparent;\n  filter: var(--elevation-3);\n}\n.page-container .team-wrapper .team-content .add-member-card .icon[data-v-763ff598] {\n  font-family: \"Material Icons\";\n  font-size: 28px;\n  color: var(--text-gray);\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n  text-align: center;\n  margin-bottom: 10px;\n}\n.page-container .team-wrapper .team-content .add-member-card .text[data-v-763ff598] {\n  font-size: var(--button-size);\n  color: var(--text-gray);\n  font-weight: 600;\n  letter-spacing: 1px;\n  text-transform: uppercase;\n}\n.page-container .team-wrapper .team-content .member-card[data-v-763ff598] {\n  border-radius: 5px;\n  border: var(--border);\n  width: 170px;\n  height: 220px;\n  position: relative;\n}\n.page-container .team-wrapper .team-content .member-card:hover .more-button[data-v-763ff598] {\n  opacity: 1;\n}\n.page-container .team-wrapper .team-content .member-card .more-button[data-v-763ff598] {\n  position: absolute;\n  top: 0;\n  right: 0;\n  display: block !important;\n  opacity: 0;\n}\n.page-container .team-wrapper .team-content .member-card .background[data-v-763ff598] {\n  height: 80px;\n  width: 100%;\n  border-bottom: var(--border);\n  background: var(--bg);\n  background-image: url(\"/images/app/dashboard/pattern.svg\");\n  background-size: 1000px;\n  background-position: top;\n  background-repeat: no-repeat;\n  border-radius: 5px 5px 0 0;\n  display: block;\n}\n.page-container .team-wrapper .team-content .member-card .profile-image[data-v-763ff598] {\n  height: 70px;\n  width: 70px;\n  -o-object-fit: cover;\n     object-fit: cover;\n  border-radius: 100%;\n  margin: -35px auto 10px;\n  display: block;\n  background: var(--bg);\n  font-size: 15px;\n}\n.page-container .team-wrapper .team-content .member-card .name[data-v-763ff598] {\n  width: 100%;\n  font-size: var(--text-size);\n  color: var(--heading-gray);\n  font-weight: 600;\n  height: 30px;\n  display: grid;\n  place-content: center;\n  margin-bottom: 10px;\n}\n.page-container .team-wrapper .team-content .member-card .role[data-v-763ff598] {\n  font-size: 13px;\n  color: var(--primary);\n  background: var(--primary-shade);\n  padding: 2px 10px 0;\n  border-radius: 30px;\n  letter-spacing: 1px;\n  font-weight: 600;\n  text-transform: uppercase;\n  display: block;\n  margin: 0 auto;\n  width: -webkit-min-content;\n  width: -moz-min-content;\n  width: min-content;\n  text-overflow: ellipsis;\n  overflow: hidden;\n  white-space: nowrap;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n}\n.page-container .team-wrapper .team-content .member-card .role.owner[data-v-763ff598] {\n  background: var(--primary);\n  color: white;\n}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -48878,77 +48887,82 @@ var render = function() {
     { staticClass: "page-container" },
     [
       _c("div", { staticClass: "header-wrapper" }, [
-        _vm.details === null
-          ? _c(
-              "div",
-              { staticClass: "filter-bar limiter" },
-              [
-                _c("ui-select-input", {
-                  staticClass: "sort-input",
-                  attrs: {
-                    options: [{ DESC: "Newest first" }, { ASC: "Oldest first" }]
-                  },
-                  model: {
-                    value: _vm.reportSearch.sort,
-                    callback: function($$v) {
-                      _vm.$set(_vm.reportSearch, "sort", $$v)
+        _c("div", { staticClass: "limiter" }, [
+          _vm.details === null
+            ? _c(
+                "div",
+                { staticClass: "filter-bar" },
+                [
+                  _c("ui-select-input", {
+                    staticClass: "sort-input",
+                    attrs: {
+                      options: [
+                        { DESC: "Newest first" },
+                        { ASC: "Oldest first" }
+                      ]
                     },
-                    expression: "reportSearch.sort"
-                  }
-                }),
-                _vm._v(" "),
-                _c("div", { staticClass: "spacer" }),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  { staticClass: "search-bar-wrapper" },
-                  [
-                    _c("ui-text-input", {
-                      staticClass: "input",
-                      attrs: { placeholder: "Search" },
-                      model: {
-                        value: _vm.reportSearch.url,
-                        callback: function($$v) {
-                          _vm.$set(_vm.reportSearch, "url", $$v)
-                        },
-                        expression: "reportSearch.url"
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c(
-                      "transition",
-                      { attrs: { name: "scale" } },
-                      [
-                        _c(
-                          "ui-icon-button",
-                          {
-                            directives: [
-                              {
-                                name: "show",
-                                rawName: "v-show",
-                                value: _vm.reportSearch.url.trim(),
-                                expression: "reportSearch.url.trim()"
-                              }
-                            ],
-                            staticClass: "button",
-                            on: {
-                              click: function($event) {
-                                _vm.reportSearch.url = ""
-                              }
-                            }
+                    model: {
+                      value: _vm.reportSearch.sort,
+                      callback: function($$v) {
+                        _vm.$set(_vm.reportSearch, "sort", $$v)
+                      },
+                      expression: "reportSearch.sort"
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "spacer" }),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    { staticClass: "search-bar-wrapper" },
+                    [
+                      _c("ui-text-input", {
+                        staticClass: "input",
+                        attrs: { placeholder: "Search" },
+                        model: {
+                          value: _vm.reportSearch.url,
+                          callback: function($$v) {
+                            _vm.$set(_vm.reportSearch, "url", $$v)
                           },
-                          [_vm._v("󰅖")]
-                        )
-                      ],
-                      1
-                    )
-                  ],
-                  1
-                )
-              ],
-              1
-            )
-          : _vm._e()
+                          expression: "reportSearch.url"
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c(
+                        "transition",
+                        { attrs: { name: "scale" } },
+                        [
+                          _c(
+                            "ui-icon-button",
+                            {
+                              directives: [
+                                {
+                                  name: "show",
+                                  rawName: "v-show",
+                                  value: _vm.reportSearch.url.trim(),
+                                  expression: "reportSearch.url.trim()"
+                                }
+                              ],
+                              staticClass: "button",
+                              on: {
+                                click: function($event) {
+                                  _vm.reportSearch.url = ""
+                                }
+                              }
+                            },
+                            [_vm._v("󰅖")]
+                          )
+                        ],
+                        1
+                      )
+                    ],
+                    1
+                  )
+                ],
+                1
+              )
+            : _vm._e()
+        ])
       ]),
       _vm._v(" "),
       _c("div", { staticClass: "limiter" }, [
@@ -48965,14 +48979,52 @@ var render = function() {
                       "div",
                       {
                         key: "report_group_" + reportGroup.id,
-                        staticClass: "job-wrapper has-indicator"
+                        staticClass: "job-wrapper",
+                        class: { "has-indicator": !reportGroup.is_own }
                       },
                       [
-                        _c("div", { staticClass: "indicator assigned" }, [
-                          _c("div", { staticClass: "text" }, [
-                            _vm._v("Assigned")
-                          ])
-                        ]),
+                        _c(
+                          "div",
+                          {
+                            directives: [
+                              {
+                                name: "show",
+                                rawName: "v-show",
+                                value:
+                                  reportGroup.has_been_shared &&
+                                  !reportGroup.has_been_assigned,
+                                expression:
+                                  "reportGroup.has_been_shared && !reportGroup.has_been_assigned"
+                              }
+                            ],
+                            staticClass: "indicator shared"
+                          },
+                          [
+                            _c("div", { staticClass: "text" }, [
+                              _vm._v("Shared")
+                            ])
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          {
+                            directives: [
+                              {
+                                name: "show",
+                                rawName: "v-show",
+                                value: reportGroup.has_been_assigned,
+                                expression: "reportGroup.has_been_assigned"
+                              }
+                            ],
+                            staticClass: "indicator assigned"
+                          },
+                          [
+                            _c("div", { staticClass: "text" }, [
+                              _vm._v("Assigned")
+                            ])
+                          ]
+                        ),
                         _vm._v(" "),
                         _c(
                           "div",
@@ -49034,39 +49086,43 @@ var render = function() {
                               },
                               [
                                 _vm._v(" "),
-                                _c(
-                                  "ui-menu-item",
-                                  {
-                                    attrs: { icon: "&#984214;" },
-                                    on: {
-                                      click: function($event) {
-                                        return _vm.openReportShareDialog(
-                                          "group",
-                                          reportGroup,
-                                          false
-                                        )
-                                      }
-                                    }
-                                  },
-                                  [_vm._v("Share report")]
-                                ),
+                                reportGroup.is_own
+                                  ? _c(
+                                      "ui-menu-item",
+                                      {
+                                        attrs: { icon: "&#984214;" },
+                                        on: {
+                                          click: function($event) {
+                                            return _vm.openReportShareDialog(
+                                              "group",
+                                              reportGroup,
+                                              false
+                                            )
+                                          }
+                                        }
+                                      },
+                                      [_vm._v("Share report")]
+                                    )
+                                  : _vm._e(),
                                 _vm._v(" "),
-                                _c(
-                                  "ui-menu-item",
-                                  {
-                                    attrs: { icon: "&#983048;" },
-                                    on: {
-                                      click: function($event) {
-                                        return _vm.openReportShareDialog(
-                                          "group",
-                                          reportGroup,
-                                          true
-                                        )
-                                      }
-                                    }
-                                  },
-                                  [_vm._v("Assign report")]
-                                ),
+                                reportGroup.is_own
+                                  ? _c(
+                                      "ui-menu-item",
+                                      {
+                                        attrs: { icon: "&#983048;" },
+                                        on: {
+                                          click: function($event) {
+                                            return _vm.openReportShareDialog(
+                                              "group",
+                                              reportGroup,
+                                              true
+                                            )
+                                          }
+                                        }
+                                      },
+                                      [_vm._v("Assign report")]
+                                    )
+                                  : _vm._e(),
                                 _vm._v(" "),
                                 _c(
                                   "ui-menu-item",
@@ -49098,22 +49154,26 @@ var render = function() {
                                   [_vm._v("New report from URL")]
                                 ),
                                 _vm._v(" "),
-                                _c("ui-menu-divider"),
+                                reportGroup.is_own
+                                  ? _c("ui-menu-divider")
+                                  : _vm._e(),
                                 _vm._v(" "),
-                                _c(
-                                  "ui-menu-item",
-                                  {
-                                    attrs: { icon: "&#985721;" },
-                                    on: {
-                                      click: function($event) {
-                                        return _vm.openReportDeleteDialog(
-                                          reportGroup
-                                        )
-                                      }
-                                    }
-                                  },
-                                  [_vm._v("Delete report")]
-                                )
+                                reportGroup.is_own
+                                  ? _c(
+                                      "ui-menu-item",
+                                      {
+                                        attrs: { icon: "&#985721;" },
+                                        on: {
+                                          click: function($event) {
+                                            return _vm.openReportDeleteDialog(
+                                              reportGroup
+                                            )
+                                          }
+                                        }
+                                      },
+                                      [_vm._v("Delete report")]
+                                    )
+                                  : _vm._e()
                               ],
                               1
                             )
@@ -49996,14 +50056,17 @@ var render = function() {
                               }),
                               _vm._v(" "),
                               _c("div", { staticClass: "content" }, [
-                                _c("div", { staticClass: "url" }, [
-                                  _vm._v(
-                                    _vm._s(
-                                      _vm.details.metaData.openGraph["og:url"]
-                                        .host
-                                    )
-                                  )
-                                ]),
+                                _vm.details.metaData.openGraph["og:url"]
+                                  ? _c("div", { staticClass: "url" }, [
+                                      _vm._v(
+                                        _vm._s(
+                                          _vm.details.metaData.openGraph[
+                                            "og:url"
+                                          ].host
+                                        )
+                                      )
+                                    ])
+                                  : _vm._e(),
                                 _vm._v(" "),
                                 _c("div", { staticClass: "title" }, [
                                   _vm._v(
@@ -51179,46 +51242,54 @@ var render = function() {
                   },
                   [
                     _vm._v(" "),
-                    _c(
-                      "ui-menu-item",
-                      {
-                        attrs: { icon: "&#984043;" },
-                        on: {
-                          click: function($event) {
-                            return _vm.openTeamEditor(team)
-                          }
-                        }
-                      },
-                      [_vm._v("Edit Team")]
-                    ),
+                    team.is_owner
+                      ? _c(
+                          "ui-menu-item",
+                          {
+                            attrs: { icon: "&#984043;" },
+                            on: {
+                              click: function($event) {
+                                return _vm.openTeamEditor(team)
+                              }
+                            }
+                          },
+                          [_vm._v("Edit Team")]
+                        )
+                      : _vm._e(),
                     _vm._v(" "),
-                    _c(
-                      "ui-menu-item",
-                      {
-                        attrs: { icon: "&#983060;" },
-                        on: {
-                          click: function($event) {
-                            return _vm.openTeamInviteDialog(team)
-                          }
-                        }
-                      },
-                      [_vm._v("Add Member")]
-                    ),
+                    team.is_owner
+                      ? _c(
+                          "ui-menu-item",
+                          {
+                            attrs: { icon: "&#983060;" },
+                            on: {
+                              click: function($event) {
+                                return _vm.openTeamInviteDialog(team)
+                              }
+                            }
+                          },
+                          [_vm._v("Add Member")]
+                        )
+                      : _vm._e(),
                     _vm._v(" "),
-                    _c("ui-menu-divider"),
+                    team.is_owner ? _c("ui-menu-divider") : _vm._e(),
                     _vm._v(" "),
-                    _c(
-                      "ui-menu-item",
-                      {
-                        attrs: { icon: "&#985721;" },
-                        on: {
-                          click: function($event) {
-                            return _vm.openTeamDeletionDialog(team)
-                          }
-                        }
-                      },
-                      [_vm._v("Delete Team")]
-                    )
+                    team.is_owner
+                      ? _c(
+                          "ui-menu-item",
+                          {
+                            attrs: { icon: "&#985721;" },
+                            on: {
+                              click: function($event) {
+                                return _vm.openTeamDeletionDialog(team)
+                              }
+                            }
+                          },
+                          [_vm._v("Delete Team")]
+                        )
+                      : _c("ui-menu-item", { attrs: { icon: "&#983558;" } }, [
+                          _vm._v("Leave Team")
+                        ])
                   ],
                   1
                 )
@@ -51239,42 +51310,44 @@ var render = function() {
                         "div",
                         { staticClass: "background" },
                         [
-                          _c(
-                            "ui-popover-menu",
-                            {
-                              staticClass: "more-button",
-                              scopedSlots: _vm._u(
+                          team.is_owner
+                            ? _c(
+                                "ui-popover-menu",
+                                {
+                                  staticClass: "more-button",
+                                  scopedSlots: _vm._u(
+                                    [
+                                      {
+                                        key: "trigger",
+                                        fn: function() {
+                                          return [
+                                            _c("ui-icon-button", [_vm._v("󰇙")])
+                                          ]
+                                        },
+                                        proxy: true
+                                      }
+                                    ],
+                                    null,
+                                    true
+                                  )
+                                },
                                 [
-                                  {
-                                    key: "trigger",
-                                    fn: function() {
-                                      return [
-                                        _c("ui-icon-button", [_vm._v("󰇙")])
-                                      ]
-                                    },
-                                    proxy: true
-                                  }
+                                  _vm._v(" "),
+                                  _c(
+                                    "ui-menu-item",
+                                    { attrs: { icon: "&#984043;" } },
+                                    [_vm._v("Edit Member")]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "ui-menu-item",
+                                    { attrs: { icon: "&#983213;" } },
+                                    [_vm._v("Remove Member")]
+                                  )
                                 ],
-                                null,
-                                true
+                                1
                               )
-                            },
-                            [
-                              _vm._v(" "),
-                              _c(
-                                "ui-menu-item",
-                                { attrs: { icon: "&#984043;" } },
-                                [_vm._v("Edit Member")]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "ui-menu-item",
-                                { attrs: { icon: "&#983213;" } },
-                                [_vm._v("Remove Member")]
-                              )
-                            ],
-                            1
-                          )
+                            : _vm._e()
                         ],
                         1
                       ),
@@ -51305,31 +51378,41 @@ var render = function() {
                           ]),
                       _vm._v(" "),
                       _vm._l(member.roles, function(role, i) {
-                        return _c("div", { key: i, staticClass: "role" }, [
-                          _vm._v(_vm._s(role))
-                        ])
+                        return _c(
+                          "div",
+                          {
+                            key: i,
+                            staticClass: "role",
+                            class: [{ owner: role == "owner" }]
+                          },
+                          [_vm._v(_vm._s(role))]
+                        )
                       })
                     ],
                     2
                   )
                 }),
                 _vm._v(" "),
-                _c(
-                  "div",
-                  {
-                    staticClass: "add-member-card",
-                    on: {
-                      click: function($event) {
-                        return _vm.openTeamInviteDialog(team)
-                      }
-                    }
-                  },
-                  [
-                    _c("div", { staticClass: "icon" }, [_vm._v("󰐕")]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "text" }, [_vm._v("Add Member")])
-                  ]
-                )
+                team.is_owner
+                  ? _c(
+                      "div",
+                      {
+                        staticClass: "add-member-card",
+                        on: {
+                          click: function($event) {
+                            return _vm.openTeamInviteDialog(team)
+                          }
+                        }
+                      },
+                      [
+                        _c("div", { staticClass: "icon" }, [_vm._v("󰐕")]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "text" }, [
+                          _vm._v("Add Member")
+                        ])
+                      ]
+                    )
+                  : _vm._e()
               ],
               2
             )

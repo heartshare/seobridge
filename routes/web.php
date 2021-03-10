@@ -57,6 +57,7 @@ Route::middleware('auth')->prefix('auth')->group(function() {
         Route::post('/get-paginated-report-groups', [App\Http\Controllers\Dashboard\ReportController::class, 'getPaginatedReportGroups']);
         Route::post('/request-site-analysis', [App\Http\Controllers\Dashboard\ReportController::class, 'requestSiteAnalysis']);
         Route::post('/delete-report', [App\Http\Controllers\Dashboard\ReportController::class, 'deleteReport']);
+        Route::post('/share-report', [App\Http\Controllers\Dashboard\ReportController::class, 'shareReport']);
     });
 
     Route::prefix('user')->group(function() {

@@ -69,4 +69,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(UserReportGroup::class, 'user_id', 'id');
     }
+    
+    public function teams()
+    {
+        return $this->belongsToMany(Team::class, 'team_members', 'user_id', 'team_id', 'id', 'id');
+    }
 }
