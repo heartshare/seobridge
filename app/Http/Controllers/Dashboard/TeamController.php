@@ -47,34 +47,53 @@ class TeamController extends Controller
 
         $teamId = $request->id ? $request->id : null;
 
-        $team = Team::updateOrCreate([
-            'id' => $teamId,
-        ], [
-            'owner_id' => Auth::id(),
-            'name' => $request->name,
-            'description' => $request->description,
-            'category' => $request->category,
-            'status' => 'inactive',
-        ]);
-
-        // Find first or create owner-member for new team
-        TeamMember::firstOrCreate([
-            'team_id' => $team->id,
-            'user_id' => $team->owner_id,
-        ], [
-            'roles' => ['owner'],
-        ]);
-
-        $user = User::find(Auth::id());
-
-        // Set active team id to new team if user doesn't have an active team
-        if (!$user->active_team_id)
+        if ($teamId)
         {
-            $user->active_team_id = $team->id;
-            $user->save();
+            $team = Team::find($teamId);
+
+            // Checks if user is authorized to edit team
+            if ($team->owner_id !== Auth::id())
+            {
+                return response('UNAUTHORIZED', 403);
+            }
+
+            $team->name = $request->name;
+            $team->description = $request->description;
+            $team->category = $request->category;
+            $team->save();
+        }
+        else
+        {
+            $team = Team::create([
+                'owner_id' => Auth::id(),
+                'name' => $request->name,
+                'description' => $request->description,
+                'category' => $request->category,
+                'status' => 'inactive',
+            ]);
+            
+            // Create owner-member for new team
+            TeamMember::create([
+                'team_id' => $team->id,
+                'user_id' => $team->owner_id,
+            ], [
+                'roles' => ['owner'],
+            ]);
+            
+            $user = User::find(Auth::id());
+    
+            // Set users active team id to new team if user doesn't have an active team
+            if (!$user->active_team_id)
+            {
+                $user->active_team_id = $team->id;
+                $user->save();
+            }
         }
 
-        return Team::with('members.user')->find($team->id);
+        $team = Team::with('members.user')->find($team->id);
+        $team->is_owner = true;
+
+        return $team;
     }
 
 
@@ -148,25 +167,137 @@ class TeamController extends Controller
 
 
 
-    public function acceptInvite(Request $request)
+    /**
+     * This function handles the team invites i.e. can be executed by the user to
+     * accept or ignore an invite. If the user accepts the invite a new team member for
+     * the respective team is created and the team + new member is returned.
+     * 
+     * @param String $id Team Invite ID
+     * @param String $action accepted or ignored
+     * @return Team Returns Team object when user accepts
+     * @return String Returns string 'OK' when user ignores
+     */
+    public function handleInvite(Request $request)
     {
         $request->validate([
             'id' => ['required', 'exists:team_invites,id'],
+            'action' => ['required', 'in:accepted,ignored'],
         ]);
 
         $invite = TeamInvite::find($request->id);
 
-        $invite->status = 'accepted';
-
+        $invite->status = $request->action;
         $invite->save();
 
-        
-        $member = TeamMember::create([
-            'team_id' => $invite->team_id,
-            'user_id' => Auth::id(),
-            'roles' => ['member'],
+        // If user accepted the invite, create member and return team
+        if ($invite->status === 'accepted')
+        {
+            TeamMember::create([
+                'team_id' => $invite->team_id,
+                'user_id' => Auth::id(),
+                'roles' => ['member'],
+            ]);
+    
+            $user = User::find(Auth::id());
+    
+            // Set active team id to new team if user doesn't have an active team
+            if (!$user->active_team_id)
+            {
+                $user->active_team_id = $invite->team_id;
+                $user->save();
+            }
+    
+            $team = Team::with('members.user')->find($invite->team_id);
+            $team->is_owner = ($team->owner_id === Auth::id());
+            
+            return $team;
+        }
+        else
+        {
+            return 'OK';
+        }
+    }
+
+
+
+    /**
+     * This function lets the user leave a team by deleting its
+     * corresponding member entry. If the user is also the owner
+     * (either by having the owner role or being referenced by the teams owner_id)
+     * the team gets deleted entirely.
+     * 
+     * @param String $id Team ID
+     * @return String Team ID
+     */
+    public function leaveTeam(Request $request)
+    {
+        $request->validate([
+            'id' => ['required', 'exists:teams,id'],
         ]);
+
+        $team = Team::find($request->id);
+        $member = TeamMember::where('team_id', $team->id)->firstWhere('user', Auth::id());
+        $user = User::find(Auth::id());
+
+        // Deletes team if owner leaves
+        if (in_array('owner', $member->roles) || $team->owner_id === Auth::id())
+        {
+            // By deleting the team, all members will be removed as well
+            $team->delete();
+        }
+        else
+        {
+            // Only deletes member
+            $member->delete();
+        }
         
-        return Team::with('members.user')->find($invite->team_id);
+        // Reset active team id on user if user leaves active team
+        if ($user->active_team_id == $request->id)
+        {
+            $user->active_team_id = null;
+            $user->save();
+        }
+        
+        return $request->id;
+    }
+
+
+
+    public function deleteMember(Request $request)
+    {
+        $request->validate([
+            'id' => ['required', 'exists:teams,id'],
+            'memberId' => ['required', 'exists:team_members,id'],
+        ]);
+
+        $team = Team::find($request->id);
+        $member = TeamMember::where('team_id', $team->id)->firstWhere('id', $request->memberId);
+
+        if (!$member)
+        {
+            return response('MEMBER_NOT_FOUND', 404);
+        }
+        
+        // Checks if user is authorized to delete member
+        if ($team->owner_id !== Auth::id())
+        {
+            return response('UNAUTHORIZED', 403);
+        }
+
+        // Prevent user from deleting self
+        if ($member->user_id === Auth::id())
+        {
+            return response('CANNOT_DELETE_SELF', 403);
+        }
+        
+        // Just in case: prevent user from deleting owner
+        if (in_array('owner', $member->roles))
+        {
+            return response('CANNOT_DELETE_OWNER', 403);
+        }
+
+        $member->delete();
+
+        return $request->memberId;
     }
 }

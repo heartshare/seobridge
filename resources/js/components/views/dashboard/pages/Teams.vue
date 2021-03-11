@@ -40,7 +40,7 @@
                                 </template>
 
                                 <ui-menu-item icon="&#984043;">Edit Member</ui-menu-item>
-                                <ui-menu-item icon="&#983213;">Remove Member</ui-menu-item>
+                                <ui-menu-item icon="&#983213;" @click="openMemberDeleteDialog(team, member)">Remove Member</ui-menu-item>
                             </ui-popover-menu>
                         </div>
 
@@ -107,6 +107,23 @@
             </template>
         </ui-option-dialog>
 
+        <ui-option-dialog ref="memberDeleteDialog" @close="resetMemberDelete()">
+            <template v-slot:heading>
+                Remove <b>{{memberDelete.memberName}}</b> from {{memberDelete.teamName}}
+            </template>
+
+            <span>
+                Do you want to remove <b>{{memberDelete.memberName}}</b> from {{memberDelete.teamName}}?
+            </span>
+
+            <template v-slot:button-1>
+                <ui-button text border icon-left icon="&#983382;" @click="resetMemberDelete()">Cancel</ui-button>
+            </template>
+            <template v-slot:button-2>
+                <ui-button error icon="&#983213;" @click="deleteMember()">Remove</ui-button>
+            </template>
+        </ui-option-dialog>
+
         <ui-option-dialog ref="teamInviteDialog" @close="resetTeamInvite()">
             <template v-slot:heading>
                 Add team member to: <b>{{teamInvite.name}}</b>
@@ -155,7 +172,15 @@
                     name: '',
                     id: null,
                     loading: false,
-                }
+                },
+
+                memberDelete: {
+                    memberId: null,
+                    memberName: '',
+                    teamId: null,
+                    teamName: '',
+                    loading: false,
+                },
             }
         },
 
@@ -243,6 +268,42 @@
                 .catch(error => {
                     console.log(error.response)
                     this.teamDelete.loading = false
+                })
+            },
+
+
+
+            openMemberDeleteDialog(team, member) {
+                this.memberDelete.teamId = team.id
+                this.memberDelete.teamName = team.name
+                this.memberDelete.memberId = member.id
+                this.memberDelete.memberName = member.user.username
+                this.$refs.memberDeleteDialog.open()
+            },
+
+            resetMemberDelete() {
+                this.memberDelete.teamId = null
+                this.memberDelete.teamName = ''
+                this.memberDelete.memberId = null
+                this.memberDelete.memberName = ''
+                this.$refs.memberDeleteDialog.close()
+            },
+            
+            deleteMember() {
+                this.memberDelete.loading = true
+                
+                axios.post('/auth/team/delete-member', {
+                    id: this.memberDelete.teamId,
+                    memberId: this.memberDelete.memberId,
+                })
+                .then(response => {
+                    // this.$store.commit('deleteTeam', response.data)
+                    this.memberDelete.loading = false
+                    this.resetMemberDelete()
+                })
+                .catch(error => {
+                    console.log(error.response)
+                    this.memberDelete.loading = false
                 })
             },
 

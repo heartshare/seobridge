@@ -5801,6 +5801,23 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
@@ -5827,6 +5844,13 @@ __webpack_require__.r(__webpack_exports__);
       teamDelete: {
         name: '',
         id: null,
+        loading: false
+      },
+      memberDelete: {
+        memberId: null,
+        memberName: '',
+        teamId: null,
+        teamName: '',
         loading: false
       }
     };
@@ -5910,6 +5934,37 @@ __webpack_require__.r(__webpack_exports__);
         _this2.teamDelete.loading = false;
       });
     },
+    openMemberDeleteDialog: function openMemberDeleteDialog(team, member) {
+      this.memberDelete.teamId = team.id;
+      this.memberDelete.teamName = team.name;
+      this.memberDelete.memberId = member.id;
+      this.memberDelete.memberName = member.user.username;
+      this.$refs.memberDeleteDialog.open();
+    },
+    resetMemberDelete: function resetMemberDelete() {
+      this.memberDelete.teamId = null;
+      this.memberDelete.teamName = '';
+      this.memberDelete.memberId = null;
+      this.memberDelete.memberName = '';
+      this.$refs.memberDeleteDialog.close();
+    },
+    deleteMember: function deleteMember() {
+      var _this3 = this;
+
+      this.memberDelete.loading = true;
+      axios.post('/auth/team/delete-member', {
+        id: this.memberDelete.teamId,
+        memberId: this.memberDelete.memberId
+      }).then(function (response) {
+        // this.$store.commit('deleteTeam', response.data)
+        _this3.memberDelete.loading = false;
+
+        _this3.resetMemberDelete();
+      })["catch"](function (error) {
+        console.log(error.response);
+        _this3.memberDelete.loading = false;
+      });
+    },
     openTeamInviteDialog: function openTeamInviteDialog(team) {
       this.teamInvite.id = team.id;
       this.teamInvite.name = team.name;
@@ -5922,7 +5977,7 @@ __webpack_require__.r(__webpack_exports__);
       this.$refs.teamInviteDialog.close();
     },
     sendTeamInvitation: function sendTeamInvitation() {
-      var _this3 = this;
+      var _this4 = this;
 
       this.teamInvite.loading = true;
       axios.post('/auth/team/create-invite', {
@@ -5930,23 +5985,23 @@ __webpack_require__.r(__webpack_exports__);
         inviteName: this.teamInvite.inviteName
       }).then(function (response) {
         console.log(response.data);
-        _this3.teamInvite.loading = false;
+        _this4.teamInvite.loading = false;
 
-        _this3.resetTeamInvite();
+        _this4.resetTeamInvite();
       })["catch"](function (error) {
         console.log(error.response);
-        _this3.teamInvite.loading = false;
+        _this4.teamInvite.loading = false;
       });
     },
     acceptInvite: function acceptInvite(id) {
-      var _this4 = this;
+      var _this5 = this;
 
       axios.post('/auth/team/accept-invite', {
         id: id
       }).then(function (response) {
-        _this4.$store.commit('setTeam', response.data);
+        _this5.$store.commit('setTeam', response.data);
 
-        _this4.$store.dispatch('fetchAllInvites');
+        _this5.$store.dispatch('fetchAllInvites');
       })["catch"](function (error) {
         console.log(error.response);
       });
@@ -51342,7 +51397,17 @@ var render = function() {
                                   _vm._v(" "),
                                   _c(
                                     "ui-menu-item",
-                                    { attrs: { icon: "&#983213;" } },
+                                    {
+                                      attrs: { icon: "&#983213;" },
+                                      on: {
+                                        click: function($event) {
+                                          return _vm.openMemberDeleteDialog(
+                                            team,
+                                            member
+                                          )
+                                        }
+                                      }
+                                    },
                                     [_vm._v("Remove Member")]
                                   )
                                 ],
@@ -51623,6 +51688,86 @@ var render = function() {
             ),
             _c("b", [_vm._v(_vm._s(_vm.teamDelete.name))]),
             _vm._v("?\n        ")
+          ])
+        ]
+      ),
+      _vm._v(" "),
+      _c(
+        "ui-option-dialog",
+        {
+          ref: "memberDeleteDialog",
+          on: {
+            close: function($event) {
+              return _vm.resetMemberDelete()
+            }
+          },
+          scopedSlots: _vm._u([
+            {
+              key: "heading",
+              fn: function() {
+                return [
+                  _vm._v("\n            Remove "),
+                  _c("b", [_vm._v(_vm._s(_vm.memberDelete.memberName))]),
+                  _vm._v(
+                    " from " + _vm._s(_vm.memberDelete.teamName) + "\n        "
+                  )
+                ]
+              },
+              proxy: true
+            },
+            {
+              key: "button-1",
+              fn: function() {
+                return [
+                  _c(
+                    "ui-button",
+                    {
+                      attrs: {
+                        text: "",
+                        border: "",
+                        "icon-left": "",
+                        icon: "&#983382;"
+                      },
+                      on: {
+                        click: function($event) {
+                          return _vm.resetMemberDelete()
+                        }
+                      }
+                    },
+                    [_vm._v("Cancel")]
+                  )
+                ]
+              },
+              proxy: true
+            },
+            {
+              key: "button-2",
+              fn: function() {
+                return [
+                  _c(
+                    "ui-button",
+                    {
+                      attrs: { error: "", icon: "&#983213;" },
+                      on: {
+                        click: function($event) {
+                          return _vm.deleteMember()
+                        }
+                      }
+                    },
+                    [_vm._v("Remove")]
+                  )
+                ]
+              },
+              proxy: true
+            }
+          ])
+        },
+        [
+          _vm._v(" "),
+          _c("span", [
+            _vm._v("\n            Do you want to remove "),
+            _c("b", [_vm._v(_vm._s(_vm.memberDelete.memberName))]),
+            _vm._v(" from " + _vm._s(_vm.memberDelete.teamName) + "?\n        ")
           ])
         ]
       ),
