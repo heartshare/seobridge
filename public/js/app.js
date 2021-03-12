@@ -5818,6 +5818,41 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
@@ -5841,7 +5876,17 @@ __webpack_require__.r(__webpack_exports__);
         inviteName: '',
         loading: false
       },
+      inviteIgnore: {
+        id: null,
+        name: '',
+        loading: false
+      },
       teamDelete: {
+        name: '',
+        id: null,
+        loading: false
+      },
+      teamLeave: {
         name: '',
         id: null,
         loading: false
@@ -5905,15 +5950,15 @@ __webpack_require__.r(__webpack_exports__);
         _this.teamEdit.loading = false;
       });
     },
-    openTeamDeletionDialog: function openTeamDeletionDialog(team) {
+    openTeamDeleteDialog: function openTeamDeleteDialog(team) {
       this.teamDelete.id = team.id;
       this.teamDelete.name = team.name;
-      this.$refs.teamDeletionDialog.open();
+      this.$refs.teamDeleteDialog.open();
     },
-    resetTeamDeletion: function resetTeamDeletion() {
+    resetTeamDelete: function resetTeamDelete() {
       this.teamDelete.id = null;
       this.teamDelete.name = '';
-      this.$refs.teamDeletionDialog.close();
+      this.$refs.teamDeleteDialog.close();
     },
     deleteTeam: function deleteTeam() {
       var _this2 = this;
@@ -5928,10 +5973,38 @@ __webpack_require__.r(__webpack_exports__);
 
         _this2.teamDelete.loading = false;
 
-        _this2.resetTeamDeletion();
+        _this2.resetTeamDelete();
       })["catch"](function (error) {
         console.log(error.response);
         _this2.teamDelete.loading = false;
+      });
+    },
+    openTeamLeaveDialog: function openTeamLeaveDialog(team) {
+      this.teamLeave.id = team.id;
+      this.teamLeave.name = team.name;
+      this.$refs.teamLeaveDialog.open();
+    },
+    resetTeamLeave: function resetTeamLeave() {
+      this.teamLeave.id = null;
+      this.teamLeave.name = '';
+      this.$refs.teamLeaveDialog.close();
+    },
+    leaveTeam: function leaveTeam() {
+      var _this3 = this;
+
+      this.teamLeave.loading = true;
+      axios.post('/auth/team/leave-team', {
+        id: this.teamLeave.id
+      }).then(function (response) {
+        // deleteTeam is applicable because it only removes the team locally
+        _this3.$store.commit('deleteTeam', response.data);
+
+        _this3.teamLeave.loading = false;
+
+        _this3.resetTeamLeave();
+      })["catch"](function (error) {
+        console.log(error.response);
+        _this3.teamLeave.loading = false;
       });
     },
     openMemberDeleteDialog: function openMemberDeleteDialog(team, member) {
@@ -5949,7 +6022,7 @@ __webpack_require__.r(__webpack_exports__);
       this.$refs.memberDeleteDialog.close();
     },
     deleteMember: function deleteMember() {
-      var _this3 = this;
+      var _this4 = this;
 
       this.memberDelete.loading = true;
       axios.post('/auth/team/delete-member', {
@@ -5957,12 +6030,12 @@ __webpack_require__.r(__webpack_exports__);
         memberId: this.memberDelete.memberId
       }).then(function (response) {
         // this.$store.commit('deleteTeam', response.data)
-        _this3.memberDelete.loading = false;
+        _this4.memberDelete.loading = false;
 
-        _this3.resetMemberDelete();
+        _this4.resetMemberDelete();
       })["catch"](function (error) {
         console.log(error.response);
-        _this3.memberDelete.loading = false;
+        _this4.memberDelete.loading = false;
       });
     },
     openTeamInviteDialog: function openTeamInviteDialog(team) {
@@ -5977,7 +6050,7 @@ __webpack_require__.r(__webpack_exports__);
       this.$refs.teamInviteDialog.close();
     },
     sendTeamInvitation: function sendTeamInvitation() {
-      var _this4 = this;
+      var _this5 = this;
 
       this.teamInvite.loading = true;
       axios.post('/auth/team/create-invite', {
@@ -5985,23 +6058,34 @@ __webpack_require__.r(__webpack_exports__);
         inviteName: this.teamInvite.inviteName
       }).then(function (response) {
         console.log(response.data);
-        _this4.teamInvite.loading = false;
+        _this5.teamInvite.loading = false;
 
-        _this4.resetTeamInvite();
+        _this5.resetTeamInvite();
       })["catch"](function (error) {
         console.log(error.response);
-        _this4.teamInvite.loading = false;
+        _this5.teamInvite.loading = false;
       });
     },
-    acceptInvite: function acceptInvite(id) {
-      var _this5 = this;
+    openInviteIgnoreDialog: function openInviteIgnoreDialog(inviteId, team) {
+      this.inviteIgnore.id = inviteId;
+      this.inviteIgnore.name = team.name;
+      this.$refs.inviteIgnoreDialog.open();
+    },
+    resetInviteIgnore: function resetInviteIgnore() {
+      this.inviteIgnore.id = null;
+      this.inviteIgnore.name = '';
+      this.$refs.inviteIgnoreDialog.close();
+    },
+    handleInvite: function handleInvite(id, action) {
+      var _this6 = this;
 
-      axios.post('/auth/team/accept-invite', {
-        id: id
+      axios.post('/auth/team/handle-invite', {
+        id: id,
+        action: action
       }).then(function (response) {
-        _this5.$store.commit('setTeam', response.data);
+        if (action === 'accepted') _this6.$store.commit('setTeam', response.data);else _this6.resetInviteIgnore();
 
-        _this5.$store.dispatch('fetchAllInvites');
+        _this6.$store.dispatch('fetchAllInvites');
       })["catch"](function (error) {
         console.log(error.response);
       });
@@ -51226,11 +51310,16 @@ var render = function() {
                 attrs: {
                   text: "",
                   border: "",
-                  icon: "&#983382;",
+                  icon: "&#983213;",
                   "icon-left": ""
+                },
+                on: {
+                  click: function($event) {
+                    return _vm.openInviteIgnoreDialog(invite.id, invite.team)
+                  }
                 }
               },
-              [_vm._v("Ignore")]
+              [_vm._v("Decline")]
             ),
             _vm._v(" "),
             _c(
@@ -51239,7 +51328,7 @@ var render = function() {
                 attrs: { icon: "&#983340;" },
                 on: {
                   click: function($event) {
-                    return _vm.acceptInvite(invite.id)
+                    return _vm.handleInvite(invite.id, "accepted")
                   }
                 }
               },
@@ -51343,9 +51432,18 @@ var render = function() {
                           },
                           [_vm._v("Delete Team")]
                         )
-                      : _c("ui-menu-item", { attrs: { icon: "&#983558;" } }, [
-                          _vm._v("Leave Team")
-                        ])
+                      : _c(
+                          "ui-menu-item",
+                          {
+                            attrs: { icon: "&#983558;" },
+                            on: {
+                              click: function($event) {
+                                return _vm.openTeamLeaveDialog(team)
+                              }
+                            }
+                          },
+                          [_vm._v("Leave Team")]
+                        )
                   ],
                   1
                 )
@@ -51616,10 +51714,10 @@ var render = function() {
       _c(
         "ui-option-dialog",
         {
-          ref: "teamDeletionDialog",
+          ref: "teamDeleteDialog",
           on: {
             close: function($event) {
-              return _vm.resetTeamDeletion()
+              return _vm.resetTeamDelete()
             }
           },
           scopedSlots: _vm._u([
@@ -51648,7 +51746,7 @@ var render = function() {
                       },
                       on: {
                         click: function($event) {
-                          return _vm.resetTeamDeletion()
+                          return _vm.resetTeamDelete()
                         }
                       }
                     },
@@ -51687,6 +51785,163 @@ var render = function() {
               "\n            Do you want to permanently delete your team: "
             ),
             _c("b", [_vm._v(_vm._s(_vm.teamDelete.name))]),
+            _vm._v("?\n        ")
+          ])
+        ]
+      ),
+      _vm._v(" "),
+      _c(
+        "ui-option-dialog",
+        {
+          ref: "teamLeaveDialog",
+          on: {
+            close: function($event) {
+              return _vm.resetTeamLeave()
+            }
+          },
+          scopedSlots: _vm._u([
+            {
+              key: "heading",
+              fn: function() {
+                return [
+                  _vm._v("\n            Leave "),
+                  _c("b", [_vm._v(_vm._s(_vm.teamLeave.name))])
+                ]
+              },
+              proxy: true
+            },
+            {
+              key: "button-1",
+              fn: function() {
+                return [
+                  _c(
+                    "ui-button",
+                    {
+                      attrs: {
+                        text: "",
+                        border: "",
+                        "icon-left": "",
+                        icon: "&#983382;"
+                      },
+                      on: {
+                        click: function($event) {
+                          return _vm.resetTeamLeave()
+                        }
+                      }
+                    },
+                    [_vm._v("Cancel")]
+                  )
+                ]
+              },
+              proxy: true
+            },
+            {
+              key: "button-2",
+              fn: function() {
+                return [
+                  _c(
+                    "ui-button",
+                    {
+                      attrs: { error: "", icon: "&#983558;" },
+                      on: {
+                        click: function($event) {
+                          return _vm.leaveTeam()
+                        }
+                      }
+                    },
+                    [_vm._v("Leave Now")]
+                  )
+                ]
+              },
+              proxy: true
+            }
+          ])
+        },
+        [
+          _vm._v(" "),
+          _c("span", [
+            _vm._v("\n            Do you want to leave "),
+            _c("b", [_vm._v(_vm._s(_vm.teamLeave.name))]),
+            _vm._v("?\n        ")
+          ])
+        ]
+      ),
+      _vm._v(" "),
+      _c(
+        "ui-option-dialog",
+        {
+          ref: "inviteIgnoreDialog",
+          on: {
+            close: function($event) {
+              return _vm.resetInviteIgnore()
+            }
+          },
+          scopedSlots: _vm._u([
+            {
+              key: "heading",
+              fn: function() {
+                return [
+                  _vm._v("\n            Decline invite to "),
+                  _c("b", [_vm._v(_vm._s(_vm.inviteIgnore.name))])
+                ]
+              },
+              proxy: true
+            },
+            {
+              key: "button-1",
+              fn: function() {
+                return [
+                  _c(
+                    "ui-button",
+                    {
+                      attrs: {
+                        text: "",
+                        border: "",
+                        "icon-left": "",
+                        icon: "&#983382;"
+                      },
+                      on: {
+                        click: function($event) {
+                          return _vm.resetInviteIgnore()
+                        }
+                      }
+                    },
+                    [_vm._v("Cancel")]
+                  )
+                ]
+              },
+              proxy: true
+            },
+            {
+              key: "button-2",
+              fn: function() {
+                return [
+                  _c(
+                    "ui-button",
+                    {
+                      attrs: { icon: "&#983213;" },
+                      on: {
+                        click: function($event) {
+                          return _vm.handleInvite(
+                            _vm.inviteIgnore.id,
+                            "ignored"
+                          )
+                        }
+                      }
+                    },
+                    [_vm._v("Decline")]
+                  )
+                ]
+              },
+              proxy: true
+            }
+          ])
+        },
+        [
+          _vm._v(" "),
+          _c("span", [
+            _vm._v("\n            Do you want to decline your invite to "),
+            _c("b", [_vm._v(_vm._s(_vm.inviteIgnore.name))]),
             _vm._v("?\n        ")
           ])
         ]

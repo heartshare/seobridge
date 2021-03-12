@@ -5,9 +5,10 @@
             <p>
                 You've got invited to join <b>{{invite.team.name}}</b>
             </p>
-            <ui-button text border icon="&#983382;" icon-left>Ignore</ui-button>
-            <ui-button icon="&#983340;" @click="acceptInvite(invite.id)">Accept</ui-button>
+            <ui-button text border icon="&#983213;" icon-left @click="openInviteIgnoreDialog(invite.id, invite.team)">Decline</ui-button>
+            <ui-button icon="&#983340;" @click="handleInvite(invite.id, 'accepted')">Accept</ui-button>
         </fieldset>
+
         <transition-group name="slide" class="block">
             <div class="team-wrapper" v-for="team in teams" :key="team.id">
                 <div class="team-header">
@@ -27,7 +28,7 @@
                         <ui-menu-item v-if="team.is_owner" icon="&#983060;" @click="openTeamInviteDialog(team)">Add Member</ui-menu-item>
                         <ui-menu-divider v-if="team.is_owner"></ui-menu-divider>
                         <ui-menu-item v-if="team.is_owner" icon="&#985721;" @click="openTeamDeletionDialog(team)">Delete Team</ui-menu-item>
-                        <ui-menu-item v-else icon="&#983558;">Leave Team</ui-menu-item>
+                        <ui-menu-item v-else icon="&#983558;" @click="openTeamLeaveDialog(team)">Leave Team</ui-menu-item>
                     </ui-popover-menu>
                 </div>
 
@@ -90,7 +91,7 @@
             </template>
         </ui-option-dialog>
 
-        <ui-option-dialog ref="teamDeletionDialog" @close="resetTeamDeletion()">
+        <ui-option-dialog ref="teamDeleteDialog" @close="resetTeamDelete()">
             <template v-slot:heading>
                 Delete: <b>{{teamDelete.name}}</b>
             </template>
@@ -100,10 +101,44 @@
             </span>
 
             <template v-slot:button-1>
-                <ui-button text border icon-left icon="&#983382;" @click="resetTeamDeletion()">Cancel</ui-button>
+                <ui-button text border icon-left icon="&#983382;" @click="resetTeamDelete()">Cancel</ui-button>
             </template>
             <template v-slot:button-2>
                 <ui-button error icon="&#985721;" @click="deleteTeam()">Delete Now</ui-button>
+            </template>
+        </ui-option-dialog>
+
+        <ui-option-dialog ref="teamLeaveDialog" @close="resetTeamLeave()">
+            <template v-slot:heading>
+                Leave <b>{{teamLeave.name}}</b>
+            </template>
+
+            <span>
+                Do you want to leave <b>{{teamLeave.name}}</b>?
+            </span>
+
+            <template v-slot:button-1>
+                <ui-button text border icon-left icon="&#983382;" @click="resetTeamLeave()">Cancel</ui-button>
+            </template>
+            <template v-slot:button-2>
+                <ui-button error icon="&#983558;" @click="leaveTeam()">Leave Now</ui-button>
+            </template>
+        </ui-option-dialog>
+
+        <ui-option-dialog ref="inviteIgnoreDialog" @close="resetInviteIgnore()">
+            <template v-slot:heading>
+                Decline invite to <b>{{inviteIgnore.name}}</b>
+            </template>
+
+            <span>
+                Do you want to decline your invite to <b>{{inviteIgnore.name}}</b>?
+            </span>
+
+            <template v-slot:button-1>
+                <ui-button text border icon-left icon="&#983382;" @click="resetInviteIgnore()">Cancel</ui-button>
+            </template>
+            <template v-slot:button-2>
+                <ui-button icon="&#983213;" @click="handleInvite(inviteIgnore.id, 'ignored')">Decline</ui-button>
             </template>
         </ui-option-dialog>
 
@@ -168,7 +203,19 @@
                     loading: false,
                 },
 
+                inviteIgnore: {
+                    id: null,
+                    name: '',
+                    loading: false,
+                },
+
                 teamDelete: {
+                    name: '',
+                    id: null,
+                    loading: false,
+                },
+
+                teamLeave: {
                     name: '',
                     id: null,
                     loading: false,
@@ -241,16 +288,16 @@
 
 
 
-            openTeamDeletionDialog(team) {
+            openTeamDeleteDialog(team) {
                 this.teamDelete.id = team.id
                 this.teamDelete.name = team.name
-                this.$refs.teamDeletionDialog.open()
+                this.$refs.teamDeleteDialog.open()
             },
 
-            resetTeamDeletion() {
+            resetTeamDelete() {
                 this.teamDelete.id = null
                 this.teamDelete.name = ''
-                this.$refs.teamDeletionDialog.close()
+                this.$refs.teamDeleteDialog.close()
             },
 
             deleteTeam(team = this.teamDelete) {
@@ -263,11 +310,43 @@
                 .then(response => {
                     this.$store.commit('deleteTeam', response.data)
                     this.teamDelete.loading = false
-                    this.resetTeamDeletion()
+                    this.resetTeamDelete()
                 })
                 .catch(error => {
                     console.log(error.response)
                     this.teamDelete.loading = false
+                })
+            },
+
+
+
+            openTeamLeaveDialog(team) {
+                this.teamLeave.id = team.id
+                this.teamLeave.name = team.name
+                this.$refs.teamLeaveDialog.open()
+            },
+
+            resetTeamLeave() {
+                this.teamLeave.id = null
+                this.teamLeave.name = ''
+                this.$refs.teamLeaveDialog.close()
+            },
+
+            leaveTeam() {
+                this.teamLeave.loading = true
+                
+                axios.post('/auth/team/leave-team', {
+                    id: this.teamLeave.id,
+                })
+                .then(response => {
+                    // deleteTeam is applicable because it only removes the team locally
+                    this.$store.commit('deleteTeam', response.data)
+                    this.teamLeave.loading = false
+                    this.resetTeamLeave()
+                })
+                .catch(error => {
+                    console.log(error.response)
+                    this.teamLeave.loading = false
                 })
             },
 
@@ -342,10 +421,24 @@
 
 
 
-            acceptInvite(id) {
-                axios.post('/auth/team/accept-invite', {id,})
+            openInviteIgnoreDialog(inviteId, team) {
+                this.inviteIgnore.id = inviteId
+                this.inviteIgnore.name = team.name
+                this.$refs.inviteIgnoreDialog.open()
+            },
+
+            resetInviteIgnore() {
+                this.inviteIgnore.id = null
+                this.inviteIgnore.name = ''
+                this.$refs.inviteIgnoreDialog.close()
+            },
+
+            handleInvite(id, action) {
+                axios.post('/auth/team/handle-invite', {id, action})
                 .then(response => {
-                    this.$store.commit('setTeam', response.data)
+                    if (action === 'accepted') this.$store.commit('setTeam', response.data)
+                    else this.resetInviteIgnore()
+
                     this.$store.dispatch('fetchAllInvites')
                 })
                 .catch(error => {

@@ -36,6 +36,17 @@ class TeamController extends Controller
 
 
 
+    /**
+     * This function creates or updates a team.
+     * 
+     * IMPORTANT: mutates active_team_id if empty
+     * 
+     * @param String $id
+     * @param String $name
+     * @param String $description
+     * @param String $category
+     * @return Team
+     */
     public function updateOrCreateTeam(Request $request)
     {
         $request->validate([
@@ -76,7 +87,6 @@ class TeamController extends Controller
             TeamMember::create([
                 'team_id' => $team->id,
                 'user_id' => $team->owner_id,
-            ], [
                 'roles' => ['owner'],
             ]);
             
@@ -98,13 +108,15 @@ class TeamController extends Controller
 
 
     /**
-     * Checks if teams owner is same as authorized user then deletes team
-     * @param team_id $id
+     * This function deletes a team.
+     * 
+     * @param String $id Team ID
+     * @return String Team ID
      */
     public function deleteTeam(Request $request)
     {
         $request->validate([
-            'id' => ['exists:teams,id'],
+            'id' => ['required', 'exists:teams,id'],
         ]);
 
         $team = Team::find($request->id);
@@ -116,11 +128,18 @@ class TeamController extends Controller
 
         $team->delete();
 
-        return response($request->id, 200);
+        return $request->id;
     }
 
 
 
+    /**
+     * This function creates an invite for a specific team.
+     * 
+     * @param String $inviteName Email or User ID of the user to invite
+     * @param String $teamId Team ID
+     * @return TeamInvite
+     */
     public function createInvite(Request $request)
     {
         $request->validate([
@@ -172,10 +191,12 @@ class TeamController extends Controller
      * accept or ignore an invite. If the user accepts the invite a new team member for
      * the respective team is created and the team + new member is returned.
      * 
+     * IMPORTANT: mutates active_team_id if empty
+     * 
      * @param String $id Team Invite ID
      * @param String $action accepted or ignored
      * @return Team Returns Team object when user accepts
-     * @return String Returns string 'OK' when user ignores
+     * @return String Returns Team Invite ID when user ignores
      */
     public function handleInvite(Request $request)
     {
@@ -214,7 +235,7 @@ class TeamController extends Controller
         }
         else
         {
-            return 'OK';
+            return $invite->id;
         }
     }
 
@@ -222,9 +243,7 @@ class TeamController extends Controller
 
     /**
      * This function lets the user leave a team by deleting its
-     * corresponding member entry. If the user is also the owner
-     * (either by having the owner role or being referenced by the teams owner_id)
-     * the team gets deleted entirely.
+     * corresponding member entry. (Owners excluded)
      * 
      * @param String $id Team ID
      * @return String Team ID
@@ -236,33 +255,33 @@ class TeamController extends Controller
         ]);
 
         $team = Team::find($request->id);
-        $member = TeamMember::where('team_id', $team->id)->firstWhere('user', Auth::id());
-        $user = User::find(Auth::id());
+        $member = TeamMember::where('team_id', $team->id)->firstWhere('user_id', Auth::id());
 
-        // Deletes team if owner leaves
-        if (in_array('owner', $member->roles) || $team->owner_id === Auth::id())
+        // Stops owner from leaving team
+        if ($team->owner_id === Auth::id())
         {
-            // By deleting the team, all members will be removed as well
-            $team->delete();
+            return response('OWNER_CANNOT_LEAVE_TEAM', 403);
         }
-        else
+
+        if (!$member)
         {
-            // Only deletes member
-            $member->delete();
+            return response('MEMBER_NOT_FOUND', 404);
         }
-        
-        // Reset active team id on user if user leaves active team
-        if ($user->active_team_id == $request->id)
-        {
-            $user->active_team_id = null;
-            $user->save();
-        }
+
+        $member->delete();
         
         return $request->id;
     }
 
 
 
+    /**
+     * This function deletes a member from a team.
+     * 
+     * @param String $id Team ID
+     * @param String $memberId Member ID
+     * @return String Member ID
+     */
     public function deleteMember(Request $request)
     {
         $request->validate([
