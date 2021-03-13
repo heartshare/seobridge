@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit;
+namespace Tests\Feature;
 
 use App\Models\Team;
 use App\Models\User;
@@ -11,7 +11,7 @@ class CreateTeamInviteTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_none_owner_sends_request_and_gets_403()
+    public function test_none_owner_sends_request_and_gets_403_with_text_response()
     {
         $user1 = User::factory()->create();
         $user2 = User::factory()->make();
@@ -61,7 +61,7 @@ class CreateTeamInviteTest extends TestCase
         ]);
         
         $response->assertSuccessful();
-        $this->assertEquals(json_decode($response->getContent())->email, $exampleEmail);
+        $this->assertEquals($exampleEmail, json_decode($response->getContent())->email);
     }
 
     public function test_owner_sends_request_with_userid_as_invitename()
@@ -79,6 +79,6 @@ class CreateTeamInviteTest extends TestCase
         ]);
         
         $response->assertSuccessful();
-        $this->assertEquals(json_decode($response->getContent())->user_id, $user2->id);
+        $this->assertEquals($user2->id, json_decode($response->getContent())->user_id);
     }
 }

@@ -37,9 +37,56 @@ class TeamController extends Controller
 
 
     /**
-     * This function creates or updates a team.
+     * This function creates a team and mutates active_team_id on
+     * the user if it's empty.
      * 
-     * IMPORTANT: mutates active_team_id if empty
+     * @param String $name
+     * @param String $description
+     * @param String $category
+     * @return Team
+     */
+    public function createTeam(Request $request)
+    {
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'description' => ['present', 'max:1000'],
+            'category' => ['required', 'string', 'max:100'],
+        ]);
+
+        $team = Team::create([
+            'owner_id' => Auth::id(),
+            'name' => $request->name,
+            'description' => $request->description,
+            'category' => $request->category,
+            'status' => 'inactive',
+        ]);
+        
+        // Create owner-member for new team
+        TeamMember::create([
+            'team_id' => $team->id,
+            'user_id' => $team->owner_id,
+            'roles' => ['owner'],
+        ]);
+        
+        $user = User::find(Auth::id());
+
+        // Set users active team id to new team if user doesn't have an active team
+        if (!$user->active_team_id)
+        {
+            $user->active_team_id = $team->id;
+            $user->save();
+        }
+
+        $team = Team::with('members.user')->find($team->id);
+        $team->is_owner = true;
+
+        return $team;
+    }
+
+
+
+    /**
+     * This function updates a team.
      * 
      * @param String $id
      * @param String $name
@@ -47,58 +94,27 @@ class TeamController extends Controller
      * @param String $category
      * @return Team
      */
-    public function updateOrCreateTeam(Request $request)
+    public function updateTeam(Request $request)
     {
         $request->validate([
-            'id' => ['max:255'],
+            'teamId' => ['required', 'exists:teams,id'],
             'name' => ['required', 'string', 'max:255'],
             'description' => ['present', 'max:1000'],
             'category' => ['required', 'string', 'max:100'],
         ]);
+        
+        $team = Team::find($request->teamId);
 
-        $teamId = $request->id ? $request->id : null;
-
-        if ($teamId)
+        // Checks if user is authorized to edit team
+        if ($team->owner_id !== Auth::id())
         {
-            $team = Team::find($teamId);
-
-            // Checks if user is authorized to edit team
-            if ($team->owner_id !== Auth::id())
-            {
-                return response('UNAUTHORIZED', 403);
-            }
-
-            $team->name = $request->name;
-            $team->description = $request->description;
-            $team->category = $request->category;
-            $team->save();
+            return response('UNAUTHORIZED', 403);
         }
-        else
-        {
-            $team = Team::create([
-                'owner_id' => Auth::id(),
-                'name' => $request->name,
-                'description' => $request->description,
-                'category' => $request->category,
-                'status' => 'inactive',
-            ]);
-            
-            // Create owner-member for new team
-            TeamMember::create([
-                'team_id' => $team->id,
-                'user_id' => $team->owner_id,
-                'roles' => ['owner'],
-            ]);
-            
-            $user = User::find(Auth::id());
-    
-            // Set users active team id to new team if user doesn't have an active team
-            if (!$user->active_team_id)
-            {
-                $user->active_team_id = $team->id;
-                $user->save();
-            }
-        }
+
+        $team->name = $request->name;
+        $team->description = $request->description;
+        $team->category = $request->category;
+        $team->save();
 
         $team = Team::with('members.user')->find($team->id);
         $team->is_owner = true;
@@ -116,10 +132,10 @@ class TeamController extends Controller
     public function deleteTeam(Request $request)
     {
         $request->validate([
-            'id' => ['required', 'exists:teams,id'],
+            'teamId' => ['required', 'exists:teams,id'],
         ]);
 
-        $team = Team::find($request->id);
+        $team = Team::find($request->teamId);
 
         if ($team->owner_id !== Auth::id())
         {
@@ -128,7 +144,7 @@ class TeamController extends Controller
 
         $team->delete();
 
-        return $request->id;
+        return $request->teamId;
     }
 
 
@@ -201,11 +217,11 @@ class TeamController extends Controller
     public function handleInvite(Request $request)
     {
         $request->validate([
-            'id' => ['required', 'exists:team_invites,id'],
+            'inviteId' => ['required', 'exists:team_invites,id'],
             'action' => ['required', 'in:accepted,ignored'],
         ]);
 
-        $invite = TeamInvite::find($request->id);
+        $invite = TeamInvite::find($request->inviteId);
 
         $invite->status = $request->action;
         $invite->save();
@@ -251,10 +267,10 @@ class TeamController extends Controller
     public function leaveTeam(Request $request)
     {
         $request->validate([
-            'id' => ['required', 'exists:teams,id'],
+            'teamId' => ['required', 'exists:teams,id'],
         ]);
 
-        $team = Team::find($request->id);
+        $team = Team::find($request->teamId);
         $member = TeamMember::where('team_id', $team->id)->firstWhere('user_id', Auth::id());
 
         // Stops owner from leaving team
@@ -270,7 +286,7 @@ class TeamController extends Controller
 
         $member->delete();
         
-        return $request->id;
+        return $request->teamId;
     }
 
 
@@ -285,11 +301,11 @@ class TeamController extends Controller
     public function deleteMember(Request $request)
     {
         $request->validate([
-            'id' => ['required', 'exists:teams,id'],
+            'teamId' => ['required', 'exists:teams,id'],
             'memberId' => ['required', 'exists:team_members,id'],
         ]);
 
-        $team = Team::find($request->id);
+        $team = Team::find($request->teamId);
         $member = TeamMember::where('team_id', $team->id)->firstWhere('id', $request->memberId);
 
         if (!$member)

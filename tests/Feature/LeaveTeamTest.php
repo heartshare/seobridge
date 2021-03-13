@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit;
+namespace Tests\Feature;
 
 use App\Models\Team;
 use App\Models\TeamMember;
@@ -12,7 +12,7 @@ class LeaveTeamTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_owner_leaves_team_and_gets_403()
+    public function test_owner_leaves_team_and_gets_403_with_text_response()
     {
         $user1 = User::factory()->create();
 
@@ -21,14 +21,14 @@ class LeaveTeamTest extends TestCase
         ]);
 
         $response = $this->actingAs($user1)->post('/auth/team/leave-team', [
-            'id' => $team->id,
+            'teamId' => $team->id,
         ]);
         
         $response->assertStatus(403);
         $response->assertSeeText('OWNER_CANNOT_LEAVE_TEAM', true);
     }
 
-    public function test_user_leaves_without_having_a_member_entry_and_gets_404()
+    public function test_user_leaves_without_having_a_member_entry_and_gets_404_with_text_response()
     {
         $user1 = User::factory()->create();
         
@@ -39,7 +39,7 @@ class LeaveTeamTest extends TestCase
         $user2 = User::factory()->create();
 
         $response = $this->actingAs($user2)->post('/auth/team/leave-team', [
-            'id' => $team->id,
+            'teamId' => $team->id,
         ]);
         
         $response->assertStatus(404);
@@ -63,10 +63,10 @@ class LeaveTeamTest extends TestCase
         ]);
 
         $response = $this->actingAs($user2)->post('/auth/team/leave-team', [
-            'id' => $team->id,
+            'teamId' => $team->id,
         ]);
         
         $response->assertSuccessful();
-        $this->assertEquals($response->getContent(), $team->id);
+        $this->assertEquals($team->id, $response->getContent());
     }
 }

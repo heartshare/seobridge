@@ -27,7 +27,7 @@
                         <ui-menu-item v-if="team.is_owner" icon="&#984043;" @click="openTeamEditor(team)">Edit Team</ui-menu-item>
                         <ui-menu-item v-if="team.is_owner" icon="&#983060;" @click="openTeamInviteDialog(team)">Add Member</ui-menu-item>
                         <ui-menu-divider v-if="team.is_owner"></ui-menu-divider>
-                        <ui-menu-item v-if="team.is_owner" icon="&#985721;" @click="openTeamDeletionDialog(team)">Delete Team</ui-menu-item>
+                        <ui-menu-item v-if="team.is_owner" icon="&#985721;" @click="openTeamDeleteDialog(team)">Delete Team</ui-menu-item>
                         <ui-menu-item v-else icon="&#983558;" @click="openTeamLeaveDialog(team)">Leave Team</ui-menu-item>
                     </ui-popover-menu>
                 </div>
@@ -269,8 +269,10 @@
             saveTeam() {
                 this.teamEdit.loading = true
                 
-                axios.post('/auth/team/update-or-create-team', {
-                    id: this.teamEdit.id,
+                let route = this.teamEdit.id ? '/auth/team/update-team' : '/auth/team/create-team'
+                
+                axios.post(route, {
+                    teamId: this.teamEdit.id,
                     name: this.teamEdit.name,
                     category: this.teamEdit.category,
                     description: this.teamEdit.description,
@@ -304,7 +306,7 @@
                 this.teamDelete.loading = true
                 
                 axios.post('/auth/team/delete-team', {
-                    id: team.id,
+                    teamId: team.id,
                     name: team.name,
                 })
                 .then(response => {
@@ -336,7 +338,7 @@
                 this.teamLeave.loading = true
                 
                 axios.post('/auth/team/leave-team', {
-                    id: this.teamLeave.id,
+                    teamId: this.teamLeave.id,
                 })
                 .then(response => {
                     // deleteTeam is applicable because it only removes the team locally
@@ -372,7 +374,7 @@
                 this.memberDelete.loading = true
                 
                 axios.post('/auth/team/delete-member', {
-                    id: this.memberDelete.teamId,
+                    teamId: this.memberDelete.teamId,
                     memberId: this.memberDelete.memberId,
                 })
                 .then(response => {
@@ -434,7 +436,10 @@
             },
 
             handleInvite(id, action) {
-                axios.post('/auth/team/handle-invite', {id, action})
+                axios.post('/auth/team/handle-invite', {
+                    inviteId: id,
+                    action
+                })
                 .then(response => {
                     if (action === 'accepted') this.$store.commit('setTeam', response.data)
                     else this.resetInviteIgnore()

@@ -5934,8 +5934,9 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       this.teamEdit.loading = true;
-      axios.post('/auth/team/update-or-create-team', {
-        id: this.teamEdit.id,
+      var route = this.teamEdit.id ? '/auth/team/update-team' : '/auth/team/create-team';
+      axios.post(route, {
+        teamId: this.teamEdit.id,
         name: this.teamEdit.name,
         category: this.teamEdit.category,
         description: this.teamEdit.description
@@ -5966,7 +5967,7 @@ __webpack_require__.r(__webpack_exports__);
       var team = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.teamDelete;
       this.teamDelete.loading = true;
       axios.post('/auth/team/delete-team', {
-        id: team.id,
+        teamId: team.id,
         name: team.name
       }).then(function (response) {
         _this2.$store.commit('deleteTeam', response.data);
@@ -5994,7 +5995,7 @@ __webpack_require__.r(__webpack_exports__);
 
       this.teamLeave.loading = true;
       axios.post('/auth/team/leave-team', {
-        id: this.teamLeave.id
+        teamId: this.teamLeave.id
       }).then(function (response) {
         // deleteTeam is applicable because it only removes the team locally
         _this3.$store.commit('deleteTeam', response.data);
@@ -6026,7 +6027,7 @@ __webpack_require__.r(__webpack_exports__);
 
       this.memberDelete.loading = true;
       axios.post('/auth/team/delete-member', {
-        id: this.memberDelete.teamId,
+        teamId: this.memberDelete.teamId,
         memberId: this.memberDelete.memberId
       }).then(function (response) {
         // this.$store.commit('deleteTeam', response.data)
@@ -6080,7 +6081,7 @@ __webpack_require__.r(__webpack_exports__);
       var _this6 = this;
 
       axios.post('/auth/team/handle-invite', {
-        id: id,
+        inviteId: id,
         action: action
       }).then(function (response) {
         if (action === 'accepted') _this6.$store.commit('setTeam', response.data);else _this6.resetInviteIgnore();
@@ -51426,7 +51427,7 @@ var render = function() {
                             attrs: { icon: "&#985721;" },
                             on: {
                               click: function($event) {
-                                return _vm.openTeamDeletionDialog(team)
+                                return _vm.openTeamDeleteDialog(team)
                               }
                             }
                           },

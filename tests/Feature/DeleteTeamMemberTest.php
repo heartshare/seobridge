@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit;
+namespace Tests\Feature;
 
 use App\Models\Team;
 use App\Models\TeamMember;
@@ -19,7 +19,7 @@ class DeleteTeamMemberTest extends TestCase
     //     $response->assertSessionHasErrors(['memberId', 'id']);
     // }
 
-    public function test_none_owner_sends_request_and_gets_403()
+    public function test_none_owner_sends_request_and_gets_403_with_text_response()
     {
         $user = User::factory()->create();
 
@@ -37,14 +37,14 @@ class DeleteTeamMemberTest extends TestCase
 
         $response = $this->actingAs($user2)->post('/auth/team/delete-member', [
             'memberId' => $member->id,
-            'id' => $team->id,
+            'teamId' => $team->id,
         ]);
         
         $response->assertStatus(403);
         $response->assertSeeText('UNAUTHORIZED', true);
     }
 
-    public function test_owner_sends_request_to_remove_self_and_gets_403()
+    public function test_owner_sends_request_to_remove_self_and_gets_403_with_text_response()
     {
         $user = User::factory()->create();
 
@@ -60,25 +60,25 @@ class DeleteTeamMemberTest extends TestCase
 
         $response = $this->actingAs($user)->post('/auth/team/delete-member', [
             'memberId' => $member->id,
-            'id' => $team->id,
+            'teamId' => $team->id,
         ]);
         
         $response->assertStatus(403);
         $response->assertSeeText('CANNOT_DELETE_SELF', true);
     }
 
-    public function test_user_sends_request_to_delete_user_from_another_team_and_gets_404()
+    public function test_user_sends_request_to_delete_user_from_another_team_and_gets_404_with_text_response()
     {
-        $user = User::factory()->create();
+        $user1 = User::factory()->create();
 
-        $team = Team::factory()->create([
-            'owner_id' => $user->id,
+        $team1 = Team::factory()->create([
+            'owner_id' => $user1->id,
         ]);
 
         $user2 = User::factory()->create();
 
         $team2 = Team::factory()->create([
-            'owner_id' => $user->id,
+            'owner_id' => $user1->id,
         ]);
 
         $member2 = TeamMember::create([
@@ -87,9 +87,9 @@ class DeleteTeamMemberTest extends TestCase
             'user_id' => $user2->id,
         ]);
 
-        $response = $this->actingAs($user2)->post('/auth/team/delete-member', [
+        $response = $this->actingAs($user1)->post('/auth/team/delete-member', [
             'memberId' => $member2->id,
-            'id' => $team->id,
+            'teamId' => $team1->id,
         ]);
         
         $response->assertStatus(404);
@@ -97,7 +97,7 @@ class DeleteTeamMemberTest extends TestCase
     }
 
 
-    public function test_user_sends_request_to_delete_owner_and_gets_403()
+    public function test_user_sends_request_to_delete_owner_and_gets_403_with_text_response()
     {
         $user1 = User::factory()->create();
 
@@ -115,7 +115,7 @@ class DeleteTeamMemberTest extends TestCase
 
         $response = $this->actingAs($user1)->post('/auth/team/delete-member', [
             'memberId' => $member2->id,
-            'id' => $team->id,
+            'teamId' => $team->id,
         ]);
         
         $response->assertStatus(403);
@@ -140,10 +140,10 @@ class DeleteTeamMemberTest extends TestCase
 
         $response = $this->actingAs($user1)->post('/auth/team/delete-member', [
             'memberId' => $member2->id,
-            'id' => $team->id,
+            'teamId' => $team->id,
         ]);
         
         $response->assertSuccessful();
-        $this->assertEquals($response->getContent(), $member2->id);
+        $this->assertEquals($member2->id, $response->getContent());
     }
 }
