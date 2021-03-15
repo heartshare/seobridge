@@ -1,20 +1,27 @@
 <template>
     <div class="page-container limiter">
-        <fieldset v-for="invite in invites" :key="invite.id">
-            <legend>{{invite.team.name}}</legend>
-            <p>
-                You've got invited to join <b>{{invite.team.name}}</b>
-            </p>
-            <ui-button text border icon="&#983213;" icon-left @click="openInviteIgnoreDialog(invite.id, invite.team)">Decline</ui-button>
-            <ui-button icon="&#983340;" @click="handleInvite(invite.id, 'accepted')">Accept</ui-button>
-        </fieldset>
+        <div class="header" v-if="activeTeam">
+            <div class="background-image"></div>
 
+            <h2 style="text-align: center">{{activeTeam.name}}</h2>
+        
+            <fieldset v-for="invite in invites" :key="invite.id">
+                <legend>{{invite.team.name}}</legend>
+                <p>
+                    You've got invited to join <b>{{invite.team.name}}</b>
+                </p>
+                <ui-button text border icon="&#983213;" icon-left @click="openInviteIgnoreDialog(invite.id, invite.team)">Decline</ui-button>
+                <ui-button icon="&#983340;" @click="handleInvite(invite.id, 'accepted')">Accept</ui-button>
+            </fieldset>
+        </div>
+        
         <transition-group name="slide" class="block">
             <div class="team-wrapper" v-for="team in teams" :key="team.id">
                 <div class="team-header">
                     <div class="title">
                         <b>{{team.name}}</b><br>
-                        {{team.description}}
+                        <span v-if="team.description">{{team.description}}</span>
+                        <i v-else>No Description</i>
                     </div>
 
                     <div class="tag">{{team.category}}</div>
@@ -24,30 +31,24 @@
                             <ui-icon-button class="more-button">&#983513;</ui-icon-button>
                         </template>
 
+                        <ui-menu-item icon="&#984270;" :disabled="user.active_team_id === team.id" @click="setActiveTeamId(team)">Select As Main Team</ui-menu-item>
                         <ui-menu-item v-if="team.is_owner" icon="&#984043;" @click="openTeamEditor(team)">Edit Team</ui-menu-item>
                         <ui-menu-item v-if="team.is_owner" icon="&#983060;" @click="openTeamInviteDialog(team)">Add Member</ui-menu-item>
+                        <ui-menu-item v-if="team.is_owner" icon="&#987309;" @click="openTeamSiteCreateDialog(team)">Add Namespace</ui-menu-item>
                         <ui-menu-divider v-if="team.is_owner"></ui-menu-divider>
                         <ui-menu-item v-if="team.is_owner" icon="&#985721;" @click="openTeamDeleteDialog(team)">Delete Team</ui-menu-item>
                         <ui-menu-item v-else icon="&#983558;" @click="openTeamLeaveDialog(team)">Leave Team</ui-menu-item>
                     </ui-popover-menu>
+
+                    <ui-icon-button class="expand-button" :class="{'expanded': team.id === openedTeamSheet}" @click="openedTeamSheet = team.id">&#983360;</ui-icon-button>
                 </div>
 
-                <div class="team-content">
-                    <div class="member-card" v-for="member in team.members" :key="member.id">
-                        <div class="background">
-                            <ui-popover-menu class="more-button" v-if="team.is_owner">
-                                <template v-slot:trigger>
-                                    <ui-icon-button>&#983513;</ui-icon-button>
-                                </template>
-
-                                <ui-menu-item icon="&#984043;">Edit Member</ui-menu-item>
-                                <ui-menu-item icon="&#983213;" @click="openMemberDeleteDialog(team, member)">Remove Member</ui-menu-item>
-                            </ui-popover-menu>
-                        </div>
-
+                <div class="team-content" v-show="team.id === openedTeamSheet">
+                    <div class="member-row" v-for="member in team.members" :key="member.id">
                         <img src="/images/defaults/default_profile_image.svg" class="profile-image">
 
-                        <div class="name" v-if="member.user.firstname || member.user.lastname">
+                        <div class="name" v-if="member.user_id === user.id"><i>You</i></div>
+                        <div class="name" v-else-if="member.user.firstname || member.user.lastname">
                             {{member.user.firstname}}
                             {{member.user.lastname}}
                         </div>
@@ -56,11 +57,19 @@
                         </div>
 
                         <div class="role" v-for="(role, i) in member.roles" :key="i" :class="[{'owner': role == 'owner'}]">{{role}}</div>    
+
+                        <ui-popover-menu class="more-button" v-if="team.is_owner">
+                            <template v-slot:trigger>
+                                <ui-icon-button>&#983513;</ui-icon-button>
+                            </template>
+
+                            <ui-menu-item icon="&#984043;" disabled>Edit Member (WIP)</ui-menu-item>
+                            <ui-menu-item icon="&#983213;" @click="openMemberDeleteDialog(team, member)">Remove Member</ui-menu-item>
+                        </ui-popover-menu>
                     </div>
 
-                    <div class="add-member-card" @click="openTeamInviteDialog(team)" v-if="team.is_owner">
-                        <div class="icon">&#984085;</div>
-                        <div class="text">Add Member</div>
+                    <div class="centerer" v-if="team.is_owner">
+                        <ui-button icon="&#984085;" icon-left text @click="openTeamInviteDialog(team)">Add Member</ui-button>
                     </div>
                 </div>
             </div>
@@ -88,6 +97,23 @@
             </template>
             <template v-slot:button-2>
                 <ui-button icon="&#983443;" @click="saveTeam()">Save</ui-button>
+            </template>
+        </ui-option-dialog>
+
+        <ui-option-dialog ref="teamSiteCreateDialog" @close="resetTeamSiteCreate()">
+            <template v-slot:heading>
+                Create a Site Namespace
+            </template>
+
+            <template v-slot:inputs>
+                <ui-text-input label="Domain" v-model="teamSiteCreate.host"></ui-text-input>
+            </template>
+
+            <template v-slot:button-1>
+                <ui-button text border icon-left icon="&#983382;" @click="resetTeamSiteCreate()">Cancel</ui-button>
+            </template>
+            <template v-slot:button-2>
+                <ui-button icon="&#984085;" @click="createTeamSite()">Add Namespace</ui-button>
             </template>
         </ui-option-dialog>
 
@@ -188,11 +214,20 @@
                     {'other': 'Other'},
                 ],
 
+                openedTeamSheet: '',
+
                 teamEdit: {
                     id: null,
                     name: '',
                     description: '',
                     category: '',
+                    loading: true,
+                },
+
+                teamSiteCreate: {
+                    id: null,
+                    name: '',
+                    host: '',
                     loading: true,
                 },
 
@@ -232,8 +267,17 @@
         },
 
         computed: {
+            user() {
+                return this.$store.getters.user
+            },
+
             teams() {
                 return this.$store.getters.teams
+            },
+
+            activeTeam() {
+                let activeTeam = this.teams.find(e => e.id === this.user.active_team_id)
+                return activeTeam || false
             },
 
             invites() {
@@ -290,6 +334,39 @@
 
 
 
+            openTeamSiteCreateDialog(team) {
+                this.teamSiteCreate.id = team.id
+                this.teamSiteCreate.name = team.name
+                this.$refs.teamSiteCreateDialog.open()
+            },
+
+            resetTeamSiteCreate() {
+                this.teamSiteCreate.id = null
+                this.teamSiteCreate.name = ''
+                this.teamSiteCreate.host = ''
+                this.$refs.teamSiteCreateDialog.close()
+            },
+
+            createTeamSite() {
+                this.teamSiteCreate.loading = true
+                
+                axios.post('/auth/team/create-team-site', {
+                    teamId: this.teamSiteCreate.id,
+                    host: this.teamSiteCreate.host,
+                })
+                .then(response => {
+                    // this.$store.commit('deleteTeam', response.data)
+                    this.teamSiteCreate.loading = false
+                    this.resetTeamSiteCreate()
+                })
+                .catch(error => {
+                    console.log(error.response)
+                    this.teamSiteCreate.loading = false
+                })
+            },
+
+
+
             openTeamDeleteDialog(team) {
                 this.teamDelete.id = team.id
                 this.teamDelete.name = team.name
@@ -302,12 +379,12 @@
                 this.$refs.teamDeleteDialog.close()
             },
 
-            deleteTeam(team = this.teamDelete) {
+            deleteTeam() {
                 this.teamDelete.loading = true
                 
                 axios.post('/auth/team/delete-team', {
-                    teamId: team.id,
-                    name: team.name,
+                    teamId: this.teamDelete.id,
+                    name: this.teamDelete.name,
                 })
                 .then(response => {
                     this.$store.commit('deleteTeam', response.data)
@@ -423,6 +500,25 @@
 
 
 
+            setActiveTeamId(team) {
+                // this.teamDelete.loading = true
+                
+                axios.post('/auth/team/set-active-team-id', {
+                    teamId: team.id,
+                })
+                .then(response => {
+                    this.$store.commit('userInfo', {active_team_id: response.data})
+                    // this.teamDelete.loading = false
+                    // this.resetTeamDelete()
+                })
+                .catch(error => {
+                    console.log(error.response)
+                    // this.teamDelete.loading = false
+                })
+            },
+
+
+
             openInviteIgnoreDialog(inviteId, team) {
                 this.inviteIgnore.id = inviteId
                 this.inviteIgnore.name = team.name
@@ -457,6 +553,34 @@
 <style lang="sass" scoped>
     .page-container
         width: 100%
+
+        .header
+            width: 100%
+            background: var(--bg)
+            filter: var(--elevation-2)
+            border-radius: 7px
+            margin-top: 15px
+
+            .background-image
+                height: 250px
+                width: 100%
+                background: var(--bg-dark)
+                background-image: url('/images/app/dashboard/pattern.svg')
+                background-size: cover
+                background-position: center
+                background-repeat: no-repeat
+                border-radius: 7px 7px 0 0
+                display: block
+
+            .profile-image
+                height: 140px
+                width: 140px
+                object-fit: cover
+                border-radius: 100%
+                margin: -70px auto 25px
+                display: block
+                padding: 5px
+                background: var(--bg)
 
         .fab
             height: 56px
@@ -509,7 +633,7 @@
             .team-header
                 display: flex
                 align-items: center
-                padding: 5px 0
+                padding: 5px
                 border-radius: 7px 7px 0 0
 
                 .tag
@@ -530,7 +654,7 @@
                     flex: 1
                     font-size: 16px
                     line-height: 20px
-                    padding: 7px 15px
+                    padding: 7px 10px
                     
                     b
                         text-transform: uppercase
@@ -540,6 +664,12 @@
 
                 .more-button
                     margin: 0 5px
+                
+                .expand-button
+                    transition: transform 200ms
+
+                    &.expanded
+                        transform: rotate(180deg)
 
             .team-content
                 display: flex
@@ -548,102 +678,56 @@
                 position: relative
                 flex-wrap: wrap
 
-                .add-member-card
-                    border-radius: 5px
-                    background: var(--bg)
-                    border: var(--border)
-                    width: 170px
-                    height: 220px
+                .centerer
+                    width: 100%
                     display: grid
                     place-content: center
-                    cursor: pointer
+                    height: 50px
 
-                    &:hover
-                        border-color: transparent
-                        filter: var(--elevation-3)
-
-                    .icon
-                        font-family: 'Material Icons'
-                        font-size: 28px
-                        color: var(--text-gray)
-                        user-select: none
-                        text-align: center
-                        margin-bottom: 10px
-
-                    .text
-                        font-size: var(--button-size)
-                        color: var(--text-gray)
-                        font-weight: 600
-                        letter-spacing: 1px
-                        text-transform: uppercase
-
-                .member-card
+                .member-row
                     border-radius: 5px
                     border: var(--border)
-                    width: 170px
-                    height: 220px
-                    position: relative
-
-                    &:hover .more-button
-                        opacity: 1
+                    width: 100%
+                    display: flex
+                    height: 50px
+                    padding: 5px
+                    gap: 5px
 
                     .more-button
-                        position: absolute
-                        top: 0
-                        right: 0
                         display: block !important
-                        opacity: 0
-
-                    .background
-                        height: 80px
-                        width: 100%
-                        border-bottom: var(--border)
-                        background: var(--bg)
-                        background-image: url('/images/app/dashboard/pattern.svg')
-                        background-size: 1000px
-                        background-position: top
-                        background-repeat: no-repeat
-                        border-radius: 5px 5px 0 0
-                        display: block
+                        align-self: center
 
                     .profile-image
-                        height: 70px
-                        width: 70px
+                        height: 40px
+                        width: 40px
                         object-fit: cover
                         border-radius: 100%
-                        margin: -35px auto 10px
-                        display: block
                         background: var(--bg)
-                        font-size: 15px
+                        align-self: center
 
                     .name
-                        width: 100%
+                        flex: 1
                         font-size: var(--text-size)
                         color: var(--heading-gray)
                         font-weight: 600
-                        height: 30px
-                        display: grid
-                        place-content: center
-                        margin-bottom: 10px
+                        align-self: center
+                        padding: 0 5px
 
                     .role
-                        font-size: 13px
-                        color: var(--primary)
-                        background: var(--primary-shade)
-                        padding: 2px 10px 0
+                        height: 20px
+                        line-height: 20px
+                        font-size: 12px
+                        color: var(--success)
+                        background: var(--success-shade)
+                        padding: 0 10px
                         border-radius: 30px
                         letter-spacing: 1px
                         font-weight: 600
                         text-transform: uppercase
-                        display: block
-                        margin: 0 auto
-                        width: min-content
-                        text-overflow: ellipsis
-                        overflow: hidden
-                        white-space: nowrap
                         user-select: none
+                        align-self: center
 
                         &.owner
-                            background: var(--primary)
+                            background: var(--success)
                             color: white
 </style>

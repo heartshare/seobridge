@@ -44,8 +44,9 @@
                 </a>
 
                 <a href="/dashboard/profile" class="button" :class="{'active': $store.getters.page === 'profile'}" @click.prevent="$store.dispatch('setPage', 'profile')">
-                    <div class="icon">&#983049;</div>
-                    <div class="text">My Profile</div>
+                    <img class="image" src="/images/defaults/default_profile_image.svg">
+                    <div class="text bold">{{user.username}}</div>
+                    <ui-icon-button class="logout-button" @click="logout()">&#984573;</ui-icon-button>
                 </a>
             </div>
         </nav>
@@ -65,6 +66,20 @@
 
 <script>
     export default {
+        computed: {
+            user() {
+                return this.$store.getters.user
+            },
+        },
+
+        methods: {
+            logout() {
+                this.$store.dispatch('logout', () => {
+                    window.location = '/'
+                })
+            }
+        },
+
         components: {
             OverviewPage: require('./pages/Overview.vue').default,
             ReportsPage: require('./pages/Reports.vue').default,
@@ -151,6 +166,16 @@
                     z-index: 1
                     position: relative
 
+                .image
+                    margin: 0 18px
+                    width: 24px
+                    height: 24px
+                    object-fit: contain
+                    border-radius: 100px
+                    align-self: center
+                    z-index: 1
+                    position: relative
+
                 .text
                     font-size: var(--button-size)
                     font-weight: 500
@@ -165,6 +190,9 @@
                     flex: 1
                     z-index: 1
                     position: relative
+
+                    &.bold
+                        font-weight: 600
 
                 .notifications
                     height: 16px
@@ -181,6 +209,12 @@
                     pointer-events: none
                     z-index: 1
                     position: relative
+
+                .logout-button
+                    align-self: center
+                    z-index: 1
+                    position: relative
+                    margin: 0 5px
 
                 &::before
                     content: ''

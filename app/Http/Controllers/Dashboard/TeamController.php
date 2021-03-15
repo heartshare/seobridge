@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Team;
 use App\Models\TeamInvite;
 use App\Models\TeamMember;
+use App\Models\TeamSite;
 use App\Models\User;
 use App\Models\UserReportGroup;
 use App\Models\UserReportGroupShare;
@@ -97,19 +98,12 @@ class TeamController extends Controller
     public function updateTeam(Request $request)
     {
         $request->validate([
-            'teamId' => ['required', 'exists:teams,id'],
             'name' => ['required', 'string', 'max:255'],
             'description' => ['present', 'max:1000'],
             'category' => ['required', 'string', 'max:100'],
         ]);
-        
-        $team = Team::find($request->teamId);
 
-        // Checks if user is authorized to edit team
-        if ($team->owner_id !== Auth::id())
-        {
-            return response('UNAUTHORIZED', 403);
-        }
+        $team = $request->team_object;
 
         $team->name = $request->name;
         $team->description = $request->description;
@@ -131,20 +125,25 @@ class TeamController extends Controller
      */
     public function deleteTeam(Request $request)
     {
-        $request->validate([
-            'teamId' => ['required', 'exists:teams,id'],
-        ]);
-
-        $team = Team::find($request->teamId);
-
-        if ($team->owner_id !== Auth::id())
-        {
-            return response('UNAUTHORIZED', 403);
-        }
-
-        $team->delete();
+        $request->team_object->delete();
 
         return $request->teamId;
+    }
+
+
+
+    public function createTeamSite(Request $request)
+    {
+        $request->validate([
+            'host' => ['required', 'string', 'max:255'],
+        ]);
+
+        $teamSite = TeamSite::create([
+            'team_id' => $request->team_object->id,
+            'host' => $request->host,
+        ]);
+
+        return $teamSite;
     }
 
 
@@ -164,12 +163,6 @@ class TeamController extends Controller
         ]);
 
         $team = Team::find($request->teamId);
-
-        // Checks if user is authorized to invite users
-        if ($team->owner_id !== Auth::id())
-        {
-            return response('UNAUTHORIZED', 403);
-        }
 
         $email = null;
         $userId = null;
@@ -201,6 +194,22 @@ class TeamController extends Controller
     }
 
 
+    
+    /**
+     * This function sets the active team id of the user.
+     */
+    public function setActiveTeamId(Request $request)
+    {
+        $user = User::find(Auth::id());
+        $team = $request->team_object;
+
+        $user->active_team_id = $team->id;
+        $user->save();
+
+        return $team->id;
+    }
+
+
 
     /**
      * This function handles the team invites i.e. can be executed by the user to
@@ -209,7 +218,7 @@ class TeamController extends Controller
      * 
      * IMPORTANT: mutates active_team_id if empty
      * 
-     * @param String $id Team Invite ID
+     * @param String $inviteId Team Invite ID
      * @param String $action accepted or ignored
      * @return Team Returns Team object when user accepts
      * @return String Returns Team Invite ID when user ignores
@@ -261,27 +270,17 @@ class TeamController extends Controller
      * This function lets the user leave a team by deleting its
      * corresponding member entry. (Owners excluded)
      * 
-     * @param String $id Team ID
+     * @param String $teamId Team ID
      * @return String Team ID
      */
     public function leaveTeam(Request $request)
     {
-        $request->validate([
-            'teamId' => ['required', 'exists:teams,id'],
-        ]);
-
-        $team = Team::find($request->teamId);
-        $member = TeamMember::where('team_id', $team->id)->firstWhere('user_id', Auth::id());
+        $member = TeamMember::where('team_id', $request->team_object->id)->firstWhere('user_id', Auth::id());
 
         // Stops owner from leaving team
-        if ($team->owner_id === Auth::id())
+        if ($request->team_object->owner_id === Auth::id())
         {
             return response('OWNER_CANNOT_LEAVE_TEAM', 403);
-        }
-
-        if (!$member)
-        {
-            return response('MEMBER_NOT_FOUND', 404);
         }
 
         $member->delete();
@@ -301,22 +300,14 @@ class TeamController extends Controller
     public function deleteMember(Request $request)
     {
         $request->validate([
-            'teamId' => ['required', 'exists:teams,id'],
             'memberId' => ['required', 'exists:team_members,id'],
         ]);
 
-        $team = Team::find($request->teamId);
-        $member = TeamMember::where('team_id', $team->id)->firstWhere('id', $request->memberId);
+        $member = TeamMember::where('team_id', $request->team_object->id)->firstWhere('id', $request->memberId);
 
         if (!$member)
         {
             return response('MEMBER_NOT_FOUND', 404);
-        }
-        
-        // Checks if user is authorized to delete member
-        if ($team->owner_id !== Auth::id())
-        {
-            return response('UNAUTHORIZED', 403);
         }
 
         // Prevent user from deleting self

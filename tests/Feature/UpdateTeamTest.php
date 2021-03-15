@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Team;
+use App\Models\TeamMember;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -38,6 +39,12 @@ class UpdateTeamTest extends TestCase
 
         $team = Team::factory()->create([
             'owner_id' => $user->id,
+        ]);
+
+        TeamMember::create([
+            'roles' => ['owner'],
+            'team_id' => $team->id,
+            'user_id' => $user->id,
         ]);
 
         $response = $this->actingAs($user)->post('/auth/team/update-team', [

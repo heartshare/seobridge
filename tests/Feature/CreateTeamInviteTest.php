@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Team;
+use App\Models\TeamMember;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -18,6 +19,12 @@ class CreateTeamInviteTest extends TestCase
 
         $team = Team::factory()->create([
             'owner_id' => $user1->id,
+        ]);
+
+        TeamMember::create([
+            'roles' => ['owner'],
+            'team_id' => $team->id,
+            'user_id' => $user1->id,
         ]);
 
         $response = $this->actingAs($user2)->post('/auth/team/create-invite', [
@@ -37,11 +44,17 @@ class CreateTeamInviteTest extends TestCase
             'owner_id' => $user1->id,
         ]);
 
+        TeamMember::create([
+            'roles' => ['owner'],
+            'team_id' => $team->id,
+            'user_id' => $user1->id,
+        ]);
+
         $response = $this->actingAs($user1)->post('/auth/team/create-invite', [
             'teamId' => $team->id,
             'inviteName' => 'test-at-example.com', // Intentionally invalid Email
         ]);
-        
+
         $response->assertSessionHasErrors(['inviteName']);
     }
 
@@ -53,6 +66,12 @@ class CreateTeamInviteTest extends TestCase
 
         $team = Team::factory()->create([
             'owner_id' => $user1->id,
+        ]);
+
+        TeamMember::create([
+            'roles' => ['owner'],
+            'team_id' => $team->id,
+            'user_id' => $user1->id,
         ]);
 
         $response = $this->actingAs($user1)->post('/auth/team/create-invite', [
@@ -71,6 +90,12 @@ class CreateTeamInviteTest extends TestCase
 
         $team = Team::factory()->create([
             'owner_id' => $user1->id,
+        ]);
+
+        TeamMember::create([
+            'roles' => ['owner'],
+            'team_id' => $team->id,
+            'user_id' => $user1->id,
         ]);
 
         $response = $this->actingAs($user1)->post('/auth/team/create-invite', [

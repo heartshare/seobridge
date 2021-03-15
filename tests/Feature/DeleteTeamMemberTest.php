@@ -53,7 +53,7 @@ class DeleteTeamMemberTest extends TestCase
         ]);
 
         $member = TeamMember::create([
-            'roles' => ['member'],
+            'roles' => ['owner'],
             'team_id' => $team->id,
             'user_id' => $user->id,
         ]);
@@ -73,6 +73,12 @@ class DeleteTeamMemberTest extends TestCase
 
         $team1 = Team::factory()->create([
             'owner_id' => $user1->id,
+        ]);
+
+        TeamMember::create([
+            'roles' => ['owner'],
+            'team_id' => $team1->id,
+            'user_id' => $user1->id,
         ]);
 
         $user2 = User::factory()->create();
@@ -105,6 +111,12 @@ class DeleteTeamMemberTest extends TestCase
             'owner_id' => $user1->id,
         ]);
 
+        TeamMember::create([
+            'roles' => ['owner'],
+            'team_id' => $team->id,
+            'user_id' => $user1->id,
+        ]);
+
         $user2 = User::factory()->create();
 
         $member2 = TeamMember::create([
@@ -128,6 +140,12 @@ class DeleteTeamMemberTest extends TestCase
 
         $team = Team::factory()->create([
             'owner_id' => $user1->id,
+        ]);
+
+        TeamMember::create([
+            'roles' => ['owner'],
+            'team_id' => $team->id,
+            'user_id' => $user1->id,
         ]);
 
         $user2 = User::factory()->create();

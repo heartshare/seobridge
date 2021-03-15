@@ -2298,7 +2298,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  props: ['icon'],
+  props: ['icon', 'disabled'],
   data: function data() {
     return {
       icon_: null
@@ -2310,6 +2310,11 @@ __webpack_require__.r(__webpack_exports__);
   watch: {
     icon: function icon() {
       this.init();
+    }
+  },
+  computed: {
+    disabled_: function disabled_() {
+      return this.disabled == true || typeof this.disabled !== 'undefined' && this.disabled === '';
     }
   },
   methods: {
@@ -4439,7 +4444,20 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  computed: {
+    user: function user() {
+      return this.$store.getters.user;
+    }
+  },
+  methods: {
+    logout: function logout() {
+      this.$store.dispatch('logout', function () {
+        window.location = '/';
+      });
+    }
+  },
   components: {
     OverviewPage: __webpack_require__(/*! ./pages/Overview.vue */ "./resources/js/components/views/dashboard/pages/Overview.vue").default,
     ReportsPage: __webpack_require__(/*! ./pages/Reports.vue */ "./resources/js/components/views/dashboard/pages/Reports.vue").default,
@@ -4623,9 +4641,10 @@ __webpack_require__.r(__webpack_exports__);
         firstname: this.nameChange.firstname,
         lastname: this.nameChange.lastname
       }).then(function (response) {
-        _this.$store.commit('userFirstname', response.data.firstname);
-
-        _this.$store.commit('userLastname', response.data.lastname);
+        _this.$store.commit('userInfo', {
+          firstname: response.data.firstname,
+          lastname: response.data.lastname
+        });
 
         _this.nameChange.legacy = (response.data.firstname || '') + (response.data.lastname || '');
         setTimeout(function () {
@@ -5853,6 +5872,32 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
@@ -5863,11 +5908,18 @@ __webpack_require__.r(__webpack_exports__);
       }, {
         'other': 'Other'
       }],
+      openedTeamSheet: '',
       teamEdit: {
         id: null,
         name: '',
         description: '',
         category: '',
+        loading: true
+      },
+      teamSiteCreate: {
+        id: null,
+        name: '',
+        host: '',
         loading: true
       },
       teamInvite: {
@@ -5901,8 +5953,19 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   computed: {
+    user: function user() {
+      return this.$store.getters.user;
+    },
     teams: function teams() {
       return this.$store.getters.teams;
+    },
+    activeTeam: function activeTeam() {
+      var _this = this;
+
+      var activeTeam = this.teams.find(function (e) {
+        return e.id === _this.user.active_team_id;
+      });
+      return activeTeam || false;
     },
     invites: function invites() {
       return this.$store.getters.invites;
@@ -5931,7 +5994,7 @@ __webpack_require__.r(__webpack_exports__);
       this.$refs.teamEditDialog.close();
     },
     saveTeam: function saveTeam() {
-      var _this = this;
+      var _this2 = this;
 
       this.teamEdit.loading = true;
       var route = this.teamEdit.id ? '/auth/team/update-team' : '/auth/team/create-team';
@@ -5941,14 +6004,42 @@ __webpack_require__.r(__webpack_exports__);
         category: this.teamEdit.category,
         description: this.teamEdit.description
       }).then(function (response) {
-        _this.$store.commit('setTeam', response.data);
+        _this2.$store.commit('setTeam', response.data);
 
-        _this.teamEdit.loading = false;
+        _this2.teamEdit.loading = false;
 
-        _this.resetTeamEditor();
+        _this2.resetTeamEditor();
       })["catch"](function (error) {
         console.log(error.response);
-        _this.teamEdit.loading = false;
+        _this2.teamEdit.loading = false;
+      });
+    },
+    openTeamSiteCreateDialog: function openTeamSiteCreateDialog(team) {
+      this.teamSiteCreate.id = team.id;
+      this.teamSiteCreate.name = team.name;
+      this.$refs.teamSiteCreateDialog.open();
+    },
+    resetTeamSiteCreate: function resetTeamSiteCreate() {
+      this.teamSiteCreate.id = null;
+      this.teamSiteCreate.name = '';
+      this.teamSiteCreate.host = '';
+      this.$refs.teamSiteCreateDialog.close();
+    },
+    createTeamSite: function createTeamSite() {
+      var _this3 = this;
+
+      this.teamSiteCreate.loading = true;
+      axios.post('/auth/team/create-team-site', {
+        teamId: this.teamSiteCreate.id,
+        host: this.teamSiteCreate.host
+      }).then(function (response) {
+        // this.$store.commit('deleteTeam', response.data)
+        _this3.teamSiteCreate.loading = false;
+
+        _this3.resetTeamSiteCreate();
+      })["catch"](function (error) {
+        console.log(error.response);
+        _this3.teamSiteCreate.loading = false;
       });
     },
     openTeamDeleteDialog: function openTeamDeleteDialog(team) {
@@ -5962,22 +6053,21 @@ __webpack_require__.r(__webpack_exports__);
       this.$refs.teamDeleteDialog.close();
     },
     deleteTeam: function deleteTeam() {
-      var _this2 = this;
+      var _this4 = this;
 
-      var team = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.teamDelete;
       this.teamDelete.loading = true;
       axios.post('/auth/team/delete-team', {
-        teamId: team.id,
-        name: team.name
+        teamId: this.teamDelete.id,
+        name: this.teamDelete.name
       }).then(function (response) {
-        _this2.$store.commit('deleteTeam', response.data);
+        _this4.$store.commit('deleteTeam', response.data);
 
-        _this2.teamDelete.loading = false;
+        _this4.teamDelete.loading = false;
 
-        _this2.resetTeamDelete();
+        _this4.resetTeamDelete();
       })["catch"](function (error) {
         console.log(error.response);
-        _this2.teamDelete.loading = false;
+        _this4.teamDelete.loading = false;
       });
     },
     openTeamLeaveDialog: function openTeamLeaveDialog(team) {
@@ -5991,21 +6081,21 @@ __webpack_require__.r(__webpack_exports__);
       this.$refs.teamLeaveDialog.close();
     },
     leaveTeam: function leaveTeam() {
-      var _this3 = this;
+      var _this5 = this;
 
       this.teamLeave.loading = true;
       axios.post('/auth/team/leave-team', {
         teamId: this.teamLeave.id
       }).then(function (response) {
         // deleteTeam is applicable because it only removes the team locally
-        _this3.$store.commit('deleteTeam', response.data);
+        _this5.$store.commit('deleteTeam', response.data);
 
-        _this3.teamLeave.loading = false;
+        _this5.teamLeave.loading = false;
 
-        _this3.resetTeamLeave();
+        _this5.resetTeamLeave();
       })["catch"](function (error) {
         console.log(error.response);
-        _this3.teamLeave.loading = false;
+        _this5.teamLeave.loading = false;
       });
     },
     openMemberDeleteDialog: function openMemberDeleteDialog(team, member) {
@@ -6023,7 +6113,7 @@ __webpack_require__.r(__webpack_exports__);
       this.$refs.memberDeleteDialog.close();
     },
     deleteMember: function deleteMember() {
-      var _this4 = this;
+      var _this6 = this;
 
       this.memberDelete.loading = true;
       axios.post('/auth/team/delete-member', {
@@ -6031,12 +6121,12 @@ __webpack_require__.r(__webpack_exports__);
         memberId: this.memberDelete.memberId
       }).then(function (response) {
         // this.$store.commit('deleteTeam', response.data)
-        _this4.memberDelete.loading = false;
+        _this6.memberDelete.loading = false;
 
-        _this4.resetMemberDelete();
+        _this6.resetMemberDelete();
       })["catch"](function (error) {
         console.log(error.response);
-        _this4.memberDelete.loading = false;
+        _this6.memberDelete.loading = false;
       });
     },
     openTeamInviteDialog: function openTeamInviteDialog(team) {
@@ -6051,7 +6141,7 @@ __webpack_require__.r(__webpack_exports__);
       this.$refs.teamInviteDialog.close();
     },
     sendTeamInvitation: function sendTeamInvitation() {
-      var _this5 = this;
+      var _this7 = this;
 
       this.teamInvite.loading = true;
       axios.post('/auth/team/create-invite', {
@@ -6059,12 +6149,28 @@ __webpack_require__.r(__webpack_exports__);
         inviteName: this.teamInvite.inviteName
       }).then(function (response) {
         console.log(response.data);
-        _this5.teamInvite.loading = false;
+        _this7.teamInvite.loading = false;
 
-        _this5.resetTeamInvite();
+        _this7.resetTeamInvite();
       })["catch"](function (error) {
         console.log(error.response);
-        _this5.teamInvite.loading = false;
+        _this7.teamInvite.loading = false;
+      });
+    },
+    setActiveTeamId: function setActiveTeamId(team) {
+      var _this8 = this;
+
+      // this.teamDelete.loading = true
+      axios.post('/auth/team/set-active-team-id', {
+        teamId: team.id
+      }).then(function (response) {
+        _this8.$store.commit('userInfo', {
+          active_team_id: response.data
+        }); // this.teamDelete.loading = false
+        // this.resetTeamDelete()
+
+      })["catch"](function (error) {
+        console.log(error.response); // this.teamDelete.loading = false
       });
     },
     openInviteIgnoreDialog: function openInviteIgnoreDialog(inviteId, team) {
@@ -6078,15 +6184,15 @@ __webpack_require__.r(__webpack_exports__);
       this.$refs.inviteIgnoreDialog.close();
     },
     handleInvite: function handleInvite(id, action) {
-      var _this6 = this;
+      var _this9 = this;
 
       axios.post('/auth/team/handle-invite', {
         inviteId: id,
         action: action
       }).then(function (response) {
-        if (action === 'accepted') _this6.$store.commit('setTeam', response.data);else _this6.resetInviteIgnore();
+        if (action === 'accepted') _this9.$store.commit('setTeam', response.data);else _this9.resetInviteIgnore();
 
-        _this6.$store.dispatch('fetchAllInvites');
+        _this9.$store.dispatch('fetchAllInvites');
       })["catch"](function (error) {
         console.log(error.response);
       });
@@ -6340,6 +6446,9 @@ module.exports = {
     userLastname: function userLastname(state, data) {
       state.user.firstname = data;
     },
+    userInfo: function userInfo(state, data) {
+      state.user = _objectSpread(_objectSpread({}, state.user), data);
+    },
     teams: function teams(state, data) {
       state.teams = data;
     },
@@ -6559,7 +6668,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".ccc-ui-container[data-v-64e1acf4] {\n  display: block;\n  font-size: var(--text-size);\n  color: var(--heading-gray);\n  padding: 0 15px;\n  height: 46px;\n  cursor: pointer;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n  display: flex;\n  align-items: center;\n  gap: 15px;\n}\n.ccc-ui-container[data-v-64e1acf4]:hover {\n  background: var(--primary-shade);\n  color: var(--primary);\n}\n.ccc-ui-container:hover .icon[data-v-64e1acf4] {\n  color: inherit;\n}\n.ccc-ui-container .icon[data-v-64e1acf4] {\n  color: inherit;\n  font-size: 20px !important;\n  color: var(--text-gray);\n  letter-spacing: 0;\n  font-weight: normal;\n  pointer-events: none;\n  vertical-align: top;\n  font-family: \"Material Icons\";\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, ".ccc-ui-container[data-v-64e1acf4] {\n  display: block;\n  font-size: var(--text-size);\n  color: var(--heading-gray);\n  padding: 0 15px;\n  height: 46px;\n  cursor: pointer;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n  display: flex;\n  align-items: center;\n  gap: 15px;\n  background: transparent;\n  border: none;\n  width: 100%;\n  font-family: var(--text-font);\n}\n.ccc-ui-container .icon[data-v-64e1acf4] {\n  color: inherit;\n  font-size: 20px !important;\n  color: var(--text-gray);\n  letter-spacing: 0;\n  font-weight: normal;\n  pointer-events: none;\n  vertical-align: top;\n  font-family: \"Material Icons\";\n}\n.ccc-ui-container[data-v-64e1acf4]:hover {\n  background: var(--primary-shade);\n  color: var(--primary);\n}\n.ccc-ui-container:hover .icon[data-v-64e1acf4] {\n  color: inherit;\n}\n.ccc-ui-container[data-v-64e1acf4]:disabled {\n  color: var(--disabled-color);\n  background: transparent;\n  cursor: auto;\n}\n.ccc-ui-container:disabled .icon[data-v-64e1acf4] {\n  color: inherit;\n}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -7087,7 +7196,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "#wrapper[data-v-eb9530ca] {\n  height: 100%;\n  width: 100%;\n  --menu-width: 280px;\n}\n#wrapper header[data-v-eb9530ca] {\n  display: none;\n  background: var(--bg);\n  filter: drop-shadow(0 1px 2px #00000020);\n}\n#wrapper nav[data-v-eb9530ca] {\n  text-align: left;\n  position: fixed;\n  left: 0;\n  top: 0;\n  width: var(--menu-width);\n  height: 100%;\n  z-index: 100;\n  color: var(--text-gray);\n  font-size: var(--text-size);\n  background: var(--bg);\n  border-right: var(--border);\n}\n#wrapper nav #logo[data-v-eb9530ca] {\n  height: 60px;\n  width: 100%;\n  margin: 10px 0;\n  text-align: center;\n}\n#wrapper nav #logo img[data-v-eb9530ca] {\n  height: 100%;\n}\n#wrapper nav .logo-divider[data-v-eb9530ca] {\n  width: 100%;\n  height: 20px;\n  display: block;\n}\n#wrapper nav .bottom[data-v-eb9530ca] {\n  position: absolute;\n  bottom: 0;\n  left: 0;\n  width: 100%;\n}\n#wrapper nav .button[data-v-eb9530ca] {\n  width: 100%;\n  text-decoration: none;\n  height: 50px;\n  cursor: pointer;\n  color: var(--text-gray);\n  display: flex;\n  align-content: center;\n  position: relative;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n}\n#wrapper nav .button .icon[data-v-eb9530ca] {\n  font-family: \"Material Icons\";\n  font-size: 24px;\n  width: 60px;\n  text-align: center;\n  align-self: center;\n  z-index: 1;\n  position: relative;\n}\n#wrapper nav .button .text[data-v-eb9530ca] {\n  font-size: var(--button-size);\n  font-weight: 500;\n  letter-spacing: 1px;\n  color: inherit;\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  text-transform: uppercase;\n  align-self: center;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n  flex: 1;\n  z-index: 1;\n  position: relative;\n}\n#wrapper nav .button .notifications[data-v-eb9530ca] {\n  height: 16px;\n  min-width: 16px;\n  line-height: 16px;\n  border-radius: 20px;\n  background: var(--error);\n  font-size: 11px;\n  font-weight: 500;\n  padding: 0 6px;\n  color: white;\n  margin: 0 10px;\n  align-self: center;\n  pointer-events: none;\n  z-index: 1;\n  position: relative;\n}\n#wrapper nav .button[data-v-eb9530ca]::before {\n  content: \"\";\n  height: 100%;\n  width: 100%;\n  position: absolute;\n  left: 0;\n  top: 0;\n  background: var(--primary-shade);\n  transition: -webkit-clip-path 200ms;\n  transition: clip-path 200ms;\n  transition: clip-path 200ms, -webkit-clip-path 200ms;\n  -webkit-clip-path: circle(0 at -10% 50%);\n          clip-path: circle(0 at -10% 50%);\n}\n#wrapper nav .button[data-v-eb9530ca]::after {\n  content: \"\";\n  height: calc(100% - 10px);\n  width: 0px;\n  position: absolute;\n  left: 0;\n  top: 5px;\n  background: var(--primary);\n  border-radius: 0 10px 10px 0;\n  transition: width 100ms;\n}\n#wrapper nav .button[data-v-eb9530ca]:hover::after, #wrapper nav .button.active[data-v-eb9530ca]::after {\n  width: 4px;\n}\n#wrapper nav .button.active[data-v-eb9530ca]::before {\n  -webkit-clip-path: circle(180% at -10% 50%);\n          clip-path: circle(180% at -10% 50%);\n}\n#wrapper nav .button[data-v-eb9530ca]:hover, #wrapper nav .button.active[data-v-eb9530ca] {\n  color: var(--primary);\n}\n#wrapper[data-v-eb9530ca]:not(.navbar-open) {\n  grid-template-columns: 60px auto;\n}\n#wrapper:not(.navbar-open) nav #logo[data-v-eb9530ca] {\n  height: 60px;\n  margin: 0 0 10px;\n}\n#wrapper:not(.navbar-open) nav #logo img[data-v-eb9530ca] {\n  width: 100%;\n  padding: 5px;\n}\n#wrapper:not(.navbar-open) nav .logo-divider[data-v-eb9530ca] {\n  height: 0;\n}\n#wrapper:not(.navbar-open) nav .button .text[data-v-eb9530ca],\n#wrapper:not(.navbar-open) nav .button .notifications[data-v-eb9530ca] {\n  display: none;\n}\n#wrapper main[data-v-eb9530ca] {\n  display: block;\n  margin-left: var(--menu-width);\n}\n#wrapper main .transition-group[data-v-eb9530ca] {\n  width: 100%;\n}\n#wrapper main .page[data-v-eb9530ca] {\n  transition: all 100ms;\n}\n#wrapper main .page.opacity-slide-down-enter[data-v-eb9530ca], #wrapper main .page.opacity-slide-up-leave-to[data-v-eb9530ca] {\n  opacity: 0;\n  transform: translateY(-20px);\n}\n#wrapper main .page.opacity-slide-down-leave-to[data-v-eb9530ca], #wrapper main .page.opacity-slide-up-enter[data-v-eb9530ca] {\n  opacity: 0;\n  transform: translateY(20px);\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "#wrapper[data-v-eb9530ca] {\n  height: 100%;\n  width: 100%;\n  --menu-width: 280px;\n}\n#wrapper header[data-v-eb9530ca] {\n  display: none;\n  background: var(--bg);\n  filter: drop-shadow(0 1px 2px #00000020);\n}\n#wrapper nav[data-v-eb9530ca] {\n  text-align: left;\n  position: fixed;\n  left: 0;\n  top: 0;\n  width: var(--menu-width);\n  height: 100%;\n  z-index: 100;\n  color: var(--text-gray);\n  font-size: var(--text-size);\n  background: var(--bg);\n  border-right: var(--border);\n}\n#wrapper nav #logo[data-v-eb9530ca] {\n  height: 60px;\n  width: 100%;\n  margin: 10px 0;\n  text-align: center;\n}\n#wrapper nav #logo img[data-v-eb9530ca] {\n  height: 100%;\n}\n#wrapper nav .logo-divider[data-v-eb9530ca] {\n  width: 100%;\n  height: 20px;\n  display: block;\n}\n#wrapper nav .bottom[data-v-eb9530ca] {\n  position: absolute;\n  bottom: 0;\n  left: 0;\n  width: 100%;\n}\n#wrapper nav .button[data-v-eb9530ca] {\n  width: 100%;\n  text-decoration: none;\n  height: 50px;\n  cursor: pointer;\n  color: var(--text-gray);\n  display: flex;\n  align-content: center;\n  position: relative;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n}\n#wrapper nav .button .icon[data-v-eb9530ca] {\n  font-family: \"Material Icons\";\n  font-size: 24px;\n  width: 60px;\n  text-align: center;\n  align-self: center;\n  z-index: 1;\n  position: relative;\n}\n#wrapper nav .button .image[data-v-eb9530ca] {\n  margin: 0 18px;\n  width: 24px;\n  height: 24px;\n  -o-object-fit: contain;\n     object-fit: contain;\n  border-radius: 100px;\n  align-self: center;\n  z-index: 1;\n  position: relative;\n}\n#wrapper nav .button .text[data-v-eb9530ca] {\n  font-size: var(--button-size);\n  font-weight: 500;\n  letter-spacing: 1px;\n  color: inherit;\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  text-transform: uppercase;\n  align-self: center;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n  flex: 1;\n  z-index: 1;\n  position: relative;\n}\n#wrapper nav .button .text.bold[data-v-eb9530ca] {\n  font-weight: 600;\n}\n#wrapper nav .button .notifications[data-v-eb9530ca] {\n  height: 16px;\n  min-width: 16px;\n  line-height: 16px;\n  border-radius: 20px;\n  background: var(--error);\n  font-size: 11px;\n  font-weight: 500;\n  padding: 0 6px;\n  color: white;\n  margin: 0 10px;\n  align-self: center;\n  pointer-events: none;\n  z-index: 1;\n  position: relative;\n}\n#wrapper nav .button .logout-button[data-v-eb9530ca] {\n  align-self: center;\n  z-index: 1;\n  position: relative;\n  margin: 0 5px;\n}\n#wrapper nav .button[data-v-eb9530ca]::before {\n  content: \"\";\n  height: 100%;\n  width: 100%;\n  position: absolute;\n  left: 0;\n  top: 0;\n  background: var(--primary-shade);\n  transition: -webkit-clip-path 200ms;\n  transition: clip-path 200ms;\n  transition: clip-path 200ms, -webkit-clip-path 200ms;\n  -webkit-clip-path: circle(0 at -10% 50%);\n          clip-path: circle(0 at -10% 50%);\n}\n#wrapper nav .button[data-v-eb9530ca]::after {\n  content: \"\";\n  height: calc(100% - 10px);\n  width: 0px;\n  position: absolute;\n  left: 0;\n  top: 5px;\n  background: var(--primary);\n  border-radius: 0 10px 10px 0;\n  transition: width 100ms;\n}\n#wrapper nav .button[data-v-eb9530ca]:hover::after, #wrapper nav .button.active[data-v-eb9530ca]::after {\n  width: 4px;\n}\n#wrapper nav .button.active[data-v-eb9530ca]::before {\n  -webkit-clip-path: circle(180% at -10% 50%);\n          clip-path: circle(180% at -10% 50%);\n}\n#wrapper nav .button[data-v-eb9530ca]:hover, #wrapper nav .button.active[data-v-eb9530ca] {\n  color: var(--primary);\n}\n#wrapper[data-v-eb9530ca]:not(.navbar-open) {\n  grid-template-columns: 60px auto;\n}\n#wrapper:not(.navbar-open) nav #logo[data-v-eb9530ca] {\n  height: 60px;\n  margin: 0 0 10px;\n}\n#wrapper:not(.navbar-open) nav #logo img[data-v-eb9530ca] {\n  width: 100%;\n  padding: 5px;\n}\n#wrapper:not(.navbar-open) nav .logo-divider[data-v-eb9530ca] {\n  height: 0;\n}\n#wrapper:not(.navbar-open) nav .button .text[data-v-eb9530ca],\n#wrapper:not(.navbar-open) nav .button .notifications[data-v-eb9530ca] {\n  display: none;\n}\n#wrapper main[data-v-eb9530ca] {\n  display: block;\n  margin-left: var(--menu-width);\n}\n#wrapper main .transition-group[data-v-eb9530ca] {\n  width: 100%;\n}\n#wrapper main .page[data-v-eb9530ca] {\n  transition: all 100ms;\n}\n#wrapper main .page.opacity-slide-down-enter[data-v-eb9530ca], #wrapper main .page.opacity-slide-up-leave-to[data-v-eb9530ca] {\n  opacity: 0;\n  transform: translateY(-20px);\n}\n#wrapper main .page.opacity-slide-down-leave-to[data-v-eb9530ca], #wrapper main .page.opacity-slide-up-enter[data-v-eb9530ca] {\n  opacity: 0;\n  transform: translateY(20px);\n}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -7279,7 +7388,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".page-container[data-v-763ff598] {\n  width: 100%;\n}\n.page-container .fab[data-v-763ff598] {\n  height: 56px;\n  width: 56px;\n  font-family: \"Material Icons\";\n  color: white;\n  background: var(--primary);\n  display: grid;\n  place-content: center;\n  font-size: 24px;\n  position: fixed;\n  bottom: 30px;\n  right: 30px;\n  border-radius: 100%;\n  border: none;\n  filter: var(--elevation-2);\n  cursor: pointer;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n  transition: all 200ms;\n  z-index: 100;\n}\n.page-container .fab[data-v-763ff598]:hover {\n  filter: var(--elevation-4);\n}\n.page-container .team-description-input[data-v-763ff598] {\n  resize: none;\n  height: 150px;\n}\n.page-container .team-wrapper[data-v-763ff598] {\n  width: 100%;\n  display: inline-flex;\n  flex-direction: column;\n  background: white;\n  border-radius: 7px;\n  filter: var(--elevation-2);\n  margin: 15px 0;\n  transition: all 300ms;\n}\n.page-container .team-wrapper.slide-enter[data-v-763ff598] {\n  transform: translateY(-100px);\n  opacity: 0;\n}\n.page-container .team-wrapper.slide-leave-to[data-v-763ff598] {\n  transform: scale(0);\n  opacity: 0;\n}\n.page-container .team-wrapper.slide-leave-active[data-v-763ff598] {\n  position: absolute;\n}\n.page-container .team-wrapper .team-header[data-v-763ff598] {\n  display: flex;\n  align-items: center;\n  padding: 5px 0;\n  border-radius: 7px 7px 0 0;\n}\n.page-container .team-wrapper .team-header .tag[data-v-763ff598] {\n  margin-left: 15px;\n  font-size: 10px;\n  color: var(--primary);\n  background: var(--primary-shade);\n  padding: 1px 8px;\n  line-height: 18px;\n  border-radius: 30px;\n  letter-spacing: 1px;\n  font-weight: 600;\n  text-transform: uppercase;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n  vertical-align: top;\n}\n.page-container .team-wrapper .team-header .title[data-v-763ff598] {\n  flex: 1;\n  font-size: 16px;\n  line-height: 20px;\n  padding: 7px 15px;\n}\n.page-container .team-wrapper .team-header .title b[data-v-763ff598] {\n  text-transform: uppercase;\n  font-weight: 600;\n  color: var(--heading-gray);\n  display: inline-block;\n}\n.page-container .team-wrapper .team-header .more-button[data-v-763ff598] {\n  margin: 0 5px;\n}\n.page-container .team-wrapper .team-content[data-v-763ff598] {\n  display: flex;\n  gap: 15px;\n  padding: 5px 15px 15px;\n  position: relative;\n  flex-wrap: wrap;\n}\n.page-container .team-wrapper .team-content .add-member-card[data-v-763ff598] {\n  border-radius: 5px;\n  background: var(--bg);\n  border: var(--border);\n  width: 170px;\n  height: 220px;\n  display: grid;\n  place-content: center;\n  cursor: pointer;\n}\n.page-container .team-wrapper .team-content .add-member-card[data-v-763ff598]:hover {\n  border-color: transparent;\n  filter: var(--elevation-3);\n}\n.page-container .team-wrapper .team-content .add-member-card .icon[data-v-763ff598] {\n  font-family: \"Material Icons\";\n  font-size: 28px;\n  color: var(--text-gray);\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n  text-align: center;\n  margin-bottom: 10px;\n}\n.page-container .team-wrapper .team-content .add-member-card .text[data-v-763ff598] {\n  font-size: var(--button-size);\n  color: var(--text-gray);\n  font-weight: 600;\n  letter-spacing: 1px;\n  text-transform: uppercase;\n}\n.page-container .team-wrapper .team-content .member-card[data-v-763ff598] {\n  border-radius: 5px;\n  border: var(--border);\n  width: 170px;\n  height: 220px;\n  position: relative;\n}\n.page-container .team-wrapper .team-content .member-card:hover .more-button[data-v-763ff598] {\n  opacity: 1;\n}\n.page-container .team-wrapper .team-content .member-card .more-button[data-v-763ff598] {\n  position: absolute;\n  top: 0;\n  right: 0;\n  display: block !important;\n  opacity: 0;\n}\n.page-container .team-wrapper .team-content .member-card .background[data-v-763ff598] {\n  height: 80px;\n  width: 100%;\n  border-bottom: var(--border);\n  background: var(--bg);\n  background-image: url(\"/images/app/dashboard/pattern.svg\");\n  background-size: 1000px;\n  background-position: top;\n  background-repeat: no-repeat;\n  border-radius: 5px 5px 0 0;\n  display: block;\n}\n.page-container .team-wrapper .team-content .member-card .profile-image[data-v-763ff598] {\n  height: 70px;\n  width: 70px;\n  -o-object-fit: cover;\n     object-fit: cover;\n  border-radius: 100%;\n  margin: -35px auto 10px;\n  display: block;\n  background: var(--bg);\n  font-size: 15px;\n}\n.page-container .team-wrapper .team-content .member-card .name[data-v-763ff598] {\n  width: 100%;\n  font-size: var(--text-size);\n  color: var(--heading-gray);\n  font-weight: 600;\n  height: 30px;\n  display: grid;\n  place-content: center;\n  margin-bottom: 10px;\n}\n.page-container .team-wrapper .team-content .member-card .role[data-v-763ff598] {\n  font-size: 13px;\n  color: var(--primary);\n  background: var(--primary-shade);\n  padding: 2px 10px 0;\n  border-radius: 30px;\n  letter-spacing: 1px;\n  font-weight: 600;\n  text-transform: uppercase;\n  display: block;\n  margin: 0 auto;\n  width: -webkit-min-content;\n  width: -moz-min-content;\n  width: min-content;\n  text-overflow: ellipsis;\n  overflow: hidden;\n  white-space: nowrap;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n}\n.page-container .team-wrapper .team-content .member-card .role.owner[data-v-763ff598] {\n  background: var(--primary);\n  color: white;\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, ".page-container[data-v-763ff598] {\n  width: 100%;\n}\n.page-container .header[data-v-763ff598] {\n  width: 100%;\n  background: var(--bg);\n  filter: var(--elevation-2);\n  border-radius: 7px;\n  margin-top: 15px;\n}\n.page-container .header .background-image[data-v-763ff598] {\n  height: 250px;\n  width: 100%;\n  background: var(--bg-dark);\n  background-image: url(\"/images/app/dashboard/pattern.svg\");\n  background-size: cover;\n  background-position: center;\n  background-repeat: no-repeat;\n  border-radius: 7px 7px 0 0;\n  display: block;\n}\n.page-container .header .profile-image[data-v-763ff598] {\n  height: 140px;\n  width: 140px;\n  -o-object-fit: cover;\n     object-fit: cover;\n  border-radius: 100%;\n  margin: -70px auto 25px;\n  display: block;\n  padding: 5px;\n  background: var(--bg);\n}\n.page-container .fab[data-v-763ff598] {\n  height: 56px;\n  width: 56px;\n  font-family: \"Material Icons\";\n  color: white;\n  background: var(--primary);\n  display: grid;\n  place-content: center;\n  font-size: 24px;\n  position: fixed;\n  bottom: 30px;\n  right: 30px;\n  border-radius: 100%;\n  border: none;\n  filter: var(--elevation-2);\n  cursor: pointer;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n  transition: all 200ms;\n  z-index: 100;\n}\n.page-container .fab[data-v-763ff598]:hover {\n  filter: var(--elevation-4);\n}\n.page-container .team-description-input[data-v-763ff598] {\n  resize: none;\n  height: 150px;\n}\n.page-container .team-wrapper[data-v-763ff598] {\n  width: 100%;\n  display: inline-flex;\n  flex-direction: column;\n  background: white;\n  border-radius: 7px;\n  filter: var(--elevation-2);\n  margin: 15px 0;\n  transition: all 300ms;\n}\n.page-container .team-wrapper.slide-enter[data-v-763ff598] {\n  transform: translateY(-100px);\n  opacity: 0;\n}\n.page-container .team-wrapper.slide-leave-to[data-v-763ff598] {\n  transform: scale(0);\n  opacity: 0;\n}\n.page-container .team-wrapper.slide-leave-active[data-v-763ff598] {\n  position: absolute;\n}\n.page-container .team-wrapper .team-header[data-v-763ff598] {\n  display: flex;\n  align-items: center;\n  padding: 5px;\n  border-radius: 7px 7px 0 0;\n}\n.page-container .team-wrapper .team-header .tag[data-v-763ff598] {\n  margin-left: 15px;\n  font-size: 10px;\n  color: var(--primary);\n  background: var(--primary-shade);\n  padding: 1px 8px;\n  line-height: 18px;\n  border-radius: 30px;\n  letter-spacing: 1px;\n  font-weight: 600;\n  text-transform: uppercase;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n  vertical-align: top;\n}\n.page-container .team-wrapper .team-header .title[data-v-763ff598] {\n  flex: 1;\n  font-size: 16px;\n  line-height: 20px;\n  padding: 7px 10px;\n}\n.page-container .team-wrapper .team-header .title b[data-v-763ff598] {\n  text-transform: uppercase;\n  font-weight: 600;\n  color: var(--heading-gray);\n  display: inline-block;\n}\n.page-container .team-wrapper .team-header .more-button[data-v-763ff598] {\n  margin: 0 5px;\n}\n.page-container .team-wrapper .team-header .expand-button[data-v-763ff598] {\n  transition: transform 200ms;\n}\n.page-container .team-wrapper .team-header .expand-button.expanded[data-v-763ff598] {\n  transform: rotate(180deg);\n}\n.page-container .team-wrapper .team-content[data-v-763ff598] {\n  display: flex;\n  gap: 15px;\n  padding: 5px 15px 15px;\n  position: relative;\n  flex-wrap: wrap;\n}\n.page-container .team-wrapper .team-content .centerer[data-v-763ff598] {\n  width: 100%;\n  display: grid;\n  place-content: center;\n  height: 50px;\n}\n.page-container .team-wrapper .team-content .member-row[data-v-763ff598] {\n  border-radius: 5px;\n  border: var(--border);\n  width: 100%;\n  display: flex;\n  height: 50px;\n  padding: 5px;\n  gap: 5px;\n}\n.page-container .team-wrapper .team-content .member-row .more-button[data-v-763ff598] {\n  display: block !important;\n  align-self: center;\n}\n.page-container .team-wrapper .team-content .member-row .profile-image[data-v-763ff598] {\n  height: 40px;\n  width: 40px;\n  -o-object-fit: cover;\n     object-fit: cover;\n  border-radius: 100%;\n  background: var(--bg);\n  align-self: center;\n}\n.page-container .team-wrapper .team-content .member-row .name[data-v-763ff598] {\n  flex: 1;\n  font-size: var(--text-size);\n  color: var(--heading-gray);\n  font-weight: 600;\n  align-self: center;\n  padding: 0 5px;\n}\n.page-container .team-wrapper .team-content .member-row .role[data-v-763ff598] {\n  height: 20px;\n  line-height: 20px;\n  font-size: 12px;\n  color: var(--success);\n  background: var(--success-shade);\n  padding: 0 10px;\n  border-radius: 30px;\n  letter-spacing: 1px;\n  font-weight: 600;\n  text-transform: uppercase;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n  align-self: center;\n}\n.page-container .team-wrapper .team-content .member-row .role.owner[data-v-763ff598] {\n  background: var(--success);\n  color: white;\n}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -46264,10 +46373,11 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c(
-    "div",
+    "button",
     {
       directives: [{ name: "close-popover", rawName: "v-close-popover" }],
       staticClass: "ccc-ui-container",
+      attrs: { disabled: _vm.disabled_ },
       on: {
         click: function($event) {
           return _vm.$emit("click")
@@ -48318,10 +48428,29 @@ var render = function() {
               }
             },
             [
-              _c("div", { staticClass: "icon" }, [_vm._v("󰀉")]),
+              _c("img", {
+                staticClass: "image",
+                attrs: { src: "/images/defaults/default_profile_image.svg" }
+              }),
               _vm._v(" "),
-              _c("div", { staticClass: "text" }, [_vm._v("My Profile")])
-            ]
+              _c("div", { staticClass: "text bold" }, [
+                _vm._v(_vm._s(_vm.user.username))
+              ]),
+              _vm._v(" "),
+              _c(
+                "ui-icon-button",
+                {
+                  staticClass: "logout-button",
+                  on: {
+                    click: function($event) {
+                      return _vm.logout()
+                    }
+                  }
+                },
+                [_vm._v("󰗽")]
+              )
+            ],
+            1
           )
         ])
       ]),
@@ -51293,52 +51422,70 @@ var render = function() {
     "div",
     { staticClass: "page-container limiter" },
     [
-      _vm._l(_vm.invites, function(invite) {
-        return _c(
-          "fieldset",
-          { key: invite.id },
-          [
-            _c("legend", [_vm._v(_vm._s(invite.team.name))]),
-            _vm._v(" "),
-            _c("p", [
-              _vm._v("\n            You've got invited to join "),
-              _c("b", [_vm._v(_vm._s(invite.team.name))])
-            ]),
-            _vm._v(" "),
-            _c(
-              "ui-button",
-              {
-                attrs: {
-                  text: "",
-                  border: "",
-                  icon: "&#983213;",
-                  "icon-left": ""
-                },
-                on: {
-                  click: function($event) {
-                    return _vm.openInviteIgnoreDialog(invite.id, invite.team)
-                  }
-                }
-              },
-              [_vm._v("Decline")]
-            ),
-            _vm._v(" "),
-            _c(
-              "ui-button",
-              {
-                attrs: { icon: "&#983340;" },
-                on: {
-                  click: function($event) {
-                    return _vm.handleInvite(invite.id, "accepted")
-                  }
-                }
-              },
-              [_vm._v("Accept")]
-            )
-          ],
-          1
-        )
-      }),
+      _vm.activeTeam
+        ? _c(
+            "div",
+            { staticClass: "header" },
+            [
+              _c("div", { staticClass: "background-image" }),
+              _vm._v(" "),
+              _c("h2", { staticStyle: { "text-align": "center" } }, [
+                _vm._v(_vm._s(_vm.activeTeam.name))
+              ]),
+              _vm._v(" "),
+              _vm._l(_vm.invites, function(invite) {
+                return _c(
+                  "fieldset",
+                  { key: invite.id },
+                  [
+                    _c("legend", [_vm._v(_vm._s(invite.team.name))]),
+                    _vm._v(" "),
+                    _c("p", [
+                      _vm._v("\n                You've got invited to join "),
+                      _c("b", [_vm._v(_vm._s(invite.team.name))])
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "ui-button",
+                      {
+                        attrs: {
+                          text: "",
+                          border: "",
+                          icon: "&#983213;",
+                          "icon-left": ""
+                        },
+                        on: {
+                          click: function($event) {
+                            return _vm.openInviteIgnoreDialog(
+                              invite.id,
+                              invite.team
+                            )
+                          }
+                        }
+                      },
+                      [_vm._v("Decline")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "ui-button",
+                      {
+                        attrs: { icon: "&#983340;" },
+                        on: {
+                          click: function($event) {
+                            return _vm.handleInvite(invite.id, "accepted")
+                          }
+                        }
+                      },
+                      [_vm._v("Accept")]
+                    )
+                  ],
+                  1
+                )
+              })
+            ],
+            2
+          )
+        : _vm._e(),
       _vm._v(" "),
       _c(
         "transition-group",
@@ -51352,11 +51499,10 @@ var render = function() {
                 _c("div", { staticClass: "title" }, [
                   _c("b", [_vm._v(_vm._s(team.name))]),
                   _c("br"),
-                  _vm._v(
-                    "\n                    " +
-                      _vm._s(team.description) +
-                      "\n                "
-                  )
+                  _vm._v(" "),
+                  team.description
+                    ? _c("span", [_vm._v(_vm._s(team.description))])
+                    : _c("i", [_vm._v("No Description")])
                 ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "tag" }, [
@@ -51388,6 +51534,22 @@ var render = function() {
                   },
                   [
                     _vm._v(" "),
+                    _c(
+                      "ui-menu-item",
+                      {
+                        attrs: {
+                          icon: "&#984270;",
+                          disabled: _vm.user.active_team_id === team.id
+                        },
+                        on: {
+                          click: function($event) {
+                            return _vm.setActiveTeamId(team)
+                          }
+                        }
+                      },
+                      [_vm._v("Select As Main Team")]
+                    ),
+                    _vm._v(" "),
                     team.is_owner
                       ? _c(
                           "ui-menu-item",
@@ -51415,6 +51577,21 @@ var render = function() {
                             }
                           },
                           [_vm._v("Add Member")]
+                        )
+                      : _vm._e(),
+                    _vm._v(" "),
+                    team.is_owner
+                      ? _c(
+                          "ui-menu-item",
+                          {
+                            attrs: { icon: "&#987309;" },
+                            on: {
+                              click: function($event) {
+                                return _vm.openTeamSiteCreateDialog(team)
+                              }
+                            }
+                          },
+                          [_vm._v("Add Namespace")]
                         )
                       : _vm._e(),
                     _vm._v(" "),
@@ -51447,6 +51624,20 @@ var render = function() {
                         )
                   ],
                   1
+                ),
+                _vm._v(" "),
+                _c(
+                  "ui-icon-button",
+                  {
+                    staticClass: "expand-button",
+                    class: { expanded: team.id === _vm.openedTeamSheet },
+                    on: {
+                      click: function($event) {
+                        _vm.openedTeamSheet = team.id
+                      }
+                    }
+                  },
+                  [_vm._v("󰅀")]
                 )
               ],
               1
@@ -51454,69 +51645,23 @@ var render = function() {
             _vm._v(" "),
             _c(
               "div",
-              { staticClass: "team-content" },
+              {
+                directives: [
+                  {
+                    name: "show",
+                    rawName: "v-show",
+                    value: team.id === _vm.openedTeamSheet,
+                    expression: "team.id === openedTeamSheet"
+                  }
+                ],
+                staticClass: "team-content"
+              },
               [
                 _vm._l(team.members, function(member) {
                   return _c(
                     "div",
-                    { key: member.id, staticClass: "member-card" },
+                    { key: member.id, staticClass: "member-row" },
                     [
-                      _c(
-                        "div",
-                        { staticClass: "background" },
-                        [
-                          team.is_owner
-                            ? _c(
-                                "ui-popover-menu",
-                                {
-                                  staticClass: "more-button",
-                                  scopedSlots: _vm._u(
-                                    [
-                                      {
-                                        key: "trigger",
-                                        fn: function() {
-                                          return [
-                                            _c("ui-icon-button", [_vm._v("󰇙")])
-                                          ]
-                                        },
-                                        proxy: true
-                                      }
-                                    ],
-                                    null,
-                                    true
-                                  )
-                                },
-                                [
-                                  _vm._v(" "),
-                                  _c(
-                                    "ui-menu-item",
-                                    { attrs: { icon: "&#984043;" } },
-                                    [_vm._v("Edit Member")]
-                                  ),
-                                  _vm._v(" "),
-                                  _c(
-                                    "ui-menu-item",
-                                    {
-                                      attrs: { icon: "&#983213;" },
-                                      on: {
-                                        click: function($event) {
-                                          return _vm.openMemberDeleteDialog(
-                                            team,
-                                            member
-                                          )
-                                        }
-                                      }
-                                    },
-                                    [_vm._v("Remove Member")]
-                                  )
-                                ],
-                                1
-                              )
-                            : _vm._e()
-                        ],
-                        1
-                      ),
-                      _vm._v(" "),
                       _c("img", {
                         staticClass: "profile-image",
                         attrs: {
@@ -51524,7 +51669,11 @@ var render = function() {
                         }
                       }),
                       _vm._v(" "),
-                      member.user.firstname || member.user.lastname
+                      member.user_id === _vm.user.id
+                        ? _c("div", { staticClass: "name" }, [
+                            _c("i", [_vm._v("You")])
+                          ])
+                        : member.user.firstname || member.user.lastname
                         ? _c("div", { staticClass: "name" }, [
                             _vm._v(
                               "\n                        " +
@@ -51552,7 +51701,56 @@ var render = function() {
                           },
                           [_vm._v(_vm._s(role))]
                         )
-                      })
+                      }),
+                      _vm._v(" "),
+                      team.is_owner
+                        ? _c(
+                            "ui-popover-menu",
+                            {
+                              staticClass: "more-button",
+                              scopedSlots: _vm._u(
+                                [
+                                  {
+                                    key: "trigger",
+                                    fn: function() {
+                                      return [
+                                        _c("ui-icon-button", [_vm._v("󰇙")])
+                                      ]
+                                    },
+                                    proxy: true
+                                  }
+                                ],
+                                null,
+                                true
+                              )
+                            },
+                            [
+                              _vm._v(" "),
+                              _c(
+                                "ui-menu-item",
+                                { attrs: { icon: "&#984043;", disabled: "" } },
+                                [_vm._v("Edit Member (WIP)")]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "ui-menu-item",
+                                {
+                                  attrs: { icon: "&#983213;" },
+                                  on: {
+                                    click: function($event) {
+                                      return _vm.openMemberDeleteDialog(
+                                        team,
+                                        member
+                                      )
+                                    }
+                                  }
+                                },
+                                [_vm._v("Remove Member")]
+                              )
+                            ],
+                            1
+                          )
+                        : _vm._e()
                     ],
                     2
                   )
@@ -51561,21 +51759,26 @@ var render = function() {
                 team.is_owner
                   ? _c(
                       "div",
-                      {
-                        staticClass: "add-member-card",
-                        on: {
-                          click: function($event) {
-                            return _vm.openTeamInviteDialog(team)
-                          }
-                        }
-                      },
+                      { staticClass: "centerer" },
                       [
-                        _c("div", { staticClass: "icon" }, [_vm._v("󰐕")]),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "text" }, [
-                          _vm._v("Add Member")
-                        ])
-                      ]
+                        _c(
+                          "ui-button",
+                          {
+                            attrs: {
+                              icon: "&#984085;",
+                              "icon-left": "",
+                              text: ""
+                            },
+                            on: {
+                              click: function($event) {
+                                return _vm.openTeamInviteDialog(team)
+                              }
+                            }
+                          },
+                          [_vm._v("Add Member")]
+                        )
+                      ],
+                      1
                     )
                   : _vm._e()
               ],
@@ -51704,6 +51907,87 @@ var render = function() {
                     }
                   },
                   [_vm._v("Save")]
+                )
+              ]
+            },
+            proxy: true
+          }
+        ])
+      }),
+      _vm._v(" "),
+      _c("ui-option-dialog", {
+        ref: "teamSiteCreateDialog",
+        on: {
+          close: function($event) {
+            return _vm.resetTeamSiteCreate()
+          }
+        },
+        scopedSlots: _vm._u([
+          {
+            key: "heading",
+            fn: function() {
+              return [_vm._v("\n            Create a Site Namespace\n        ")]
+            },
+            proxy: true
+          },
+          {
+            key: "inputs",
+            fn: function() {
+              return [
+                _c("ui-text-input", {
+                  attrs: { label: "Domain" },
+                  model: {
+                    value: _vm.teamSiteCreate.host,
+                    callback: function($$v) {
+                      _vm.$set(_vm.teamSiteCreate, "host", $$v)
+                    },
+                    expression: "teamSiteCreate.host"
+                  }
+                })
+              ]
+            },
+            proxy: true
+          },
+          {
+            key: "button-1",
+            fn: function() {
+              return [
+                _c(
+                  "ui-button",
+                  {
+                    attrs: {
+                      text: "",
+                      border: "",
+                      "icon-left": "",
+                      icon: "&#983382;"
+                    },
+                    on: {
+                      click: function($event) {
+                        return _vm.resetTeamSiteCreate()
+                      }
+                    }
+                  },
+                  [_vm._v("Cancel")]
+                )
+              ]
+            },
+            proxy: true
+          },
+          {
+            key: "button-2",
+            fn: function() {
+              return [
+                _c(
+                  "ui-button",
+                  {
+                    attrs: { icon: "&#984085;" },
+                    on: {
+                      click: function($event) {
+                        return _vm.createTeamSite()
+                      }
+                    }
+                  },
+                  [_vm._v("Add Namespace")]
                 )
               ]
             },
@@ -52112,7 +52396,7 @@ var render = function() {
         ])
       })
     ],
-    2
+    1
   )
 }
 var staticRenderFns = []

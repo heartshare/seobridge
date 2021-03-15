@@ -55,8 +55,10 @@
                     lastname: this.nameChange.lastname,
                 })
                 .then(response => {
-                    this.$store.commit('userFirstname', response.data.firstname)
-                    this.$store.commit('userLastname', response.data.lastname)
+                    this.$store.commit('userInfo', {
+                        firstname: response.data.firstname,
+                        lastname: response.data.lastname,
+                    })
 
                     this.nameChange.legacy = (response.data.firstname || '') + (response.data.lastname || '')
 

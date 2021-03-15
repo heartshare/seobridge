@@ -72,12 +72,17 @@ Route::middleware('auth')->prefix('auth')->group(function() {
         Route::post('/create-team', [App\Http\Controllers\Dashboard\TeamController::class, 'createTeam']);
         Route::post('/get-all-invites', [App\Http\Controllers\Dashboard\TeamController::class, 'getAllInvites']);
         Route::post('/handle-invite', [App\Http\Controllers\Dashboard\TeamController::class, 'handleInvite']);
-        Route::post('/leave-team', [App\Http\Controllers\Dashboard\TeamController::class, 'leaveTeam']);
+        
+        Route::group(['middleware' => 'team.auth:member'], function() {
+            Route::post('/leave-team', [App\Http\Controllers\Dashboard\TeamController::class, 'leaveTeam']);
+            Route::post('/set-active-team-id', [App\Http\Controllers\Dashboard\TeamController::class, 'setActiveTeamId']);
+        });
         
         Route::group(['middleware' => 'team.auth:owner'], function() {
             Route::post('/update-team', [App\Http\Controllers\Dashboard\TeamController::class, 'updateTeam']);
             Route::post('/delete-team', [App\Http\Controllers\Dashboard\TeamController::class, 'deleteTeam']);
             Route::post('/create-invite', [App\Http\Controllers\Dashboard\TeamController::class, 'createInvite']);
+            Route::post('/create-team-site', [App\Http\Controllers\Dashboard\TeamController::class, 'createTeamSite']);
             Route::post('/delete-member', [App\Http\Controllers\Dashboard\TeamController::class, 'deleteMember']);
         });
     });

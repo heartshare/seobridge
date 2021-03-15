@@ -166,6 +166,10 @@ module.exports = {
             state.user.firstname = data
         },
 
+        userInfo(state, data) {
+            state.user = {...state.user, ...data}
+        },
+
 
 
         teams(state, data) {

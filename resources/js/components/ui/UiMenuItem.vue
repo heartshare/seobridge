@@ -1,13 +1,13 @@
 <template>
-    <div class="ccc-ui-container" @click="$emit('click')" v-close-popover>
+    <button class="ccc-ui-container" @click="$emit('click')" :disabled="disabled_" v-close-popover>
         <div class="icon" v-if="icon_" v-html="icon_"></div>
         <slot></slot>
-    </div>
+    </button>
 </template>
 
 <script>
     export default {
-        props: ['icon'],
+        props: ['icon', 'disabled'],
 
         data() {
             return {
@@ -22,6 +22,12 @@
         watch: {
             icon() {
                 this.init()
+            },
+        },
+
+        computed: {
+            disabled_(){
+                return (this.disabled == true || (typeof this.disabled !== 'undefined' && this.disabled === ''))
             },
         },
 
@@ -49,13 +55,10 @@
         display: flex
         align-items: center
         gap: 15px
-
-        &:hover
-            background: var(--primary-shade)
-            color: var(--primary)
-
-            .icon
-                color: inherit
+        background: transparent
+        border: none
+        width: 100%
+        font-family: var(--text-font)
 
         .icon
             color: inherit
@@ -66,4 +69,19 @@
             pointer-events: none
             vertical-align: top
             font-family: 'Material Icons'
+
+        &:hover
+            background: var(--primary-shade)
+            color: var(--primary)
+
+            .icon
+                color: inherit
+
+        &:disabled
+            color: var(--disabled-color)
+            background: transparent
+            cursor: auto
+
+            .icon
+                color: inherit
 </style>

@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Team;
+use App\Models\TeamMember;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -35,6 +36,12 @@ class DeleteTeamTest extends TestCase
 
         $team1 = Team::factory()->create([
             'owner_id' => $user1->id,
+        ]);
+
+        TeamMember::create([
+            'roles' => ['owner'],
+            'team_id' => $team1->id,
+            'user_id' => $user1->id,
         ]);
 
         $response = $this->actingAs($user1)->post('/auth/team/delete-team', [

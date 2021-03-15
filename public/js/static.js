@@ -2262,7 +2262,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  props: ['icon'],
+  props: ['icon', 'disabled'],
   data: function data() {
     return {
       icon_: null
@@ -2274,6 +2274,11 @@ __webpack_require__.r(__webpack_exports__);
   watch: {
     icon: function icon() {
       this.init();
+    }
+  },
+  computed: {
+    disabled_: function disabled_() {
+      return this.disabled == true || typeof this.disabled !== 'undefined' && this.disabled === '';
     }
   },
   methods: {
@@ -4488,7 +4493,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".ccc-ui-container[data-v-64e1acf4] {\n  display: block;\n  font-size: var(--text-size);\n  color: var(--heading-gray);\n  padding: 0 15px;\n  height: 46px;\n  cursor: pointer;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n  display: flex;\n  align-items: center;\n  gap: 15px;\n}\n.ccc-ui-container[data-v-64e1acf4]:hover {\n  background: var(--primary-shade);\n  color: var(--primary);\n}\n.ccc-ui-container:hover .icon[data-v-64e1acf4] {\n  color: inherit;\n}\n.ccc-ui-container .icon[data-v-64e1acf4] {\n  color: inherit;\n  font-size: 20px !important;\n  color: var(--text-gray);\n  letter-spacing: 0;\n  font-weight: normal;\n  pointer-events: none;\n  vertical-align: top;\n  font-family: \"Material Icons\";\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, ".ccc-ui-container[data-v-64e1acf4] {\n  display: block;\n  font-size: var(--text-size);\n  color: var(--heading-gray);\n  padding: 0 15px;\n  height: 46px;\n  cursor: pointer;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n  display: flex;\n  align-items: center;\n  gap: 15px;\n  background: transparent;\n  border: none;\n  width: 100%;\n  font-family: var(--text-font);\n}\n.ccc-ui-container .icon[data-v-64e1acf4] {\n  color: inherit;\n  font-size: 20px !important;\n  color: var(--text-gray);\n  letter-spacing: 0;\n  font-weight: normal;\n  pointer-events: none;\n  vertical-align: top;\n  font-family: \"Material Icons\";\n}\n.ccc-ui-container[data-v-64e1acf4]:hover {\n  background: var(--primary-shade);\n  color: var(--primary);\n}\n.ccc-ui-container:hover .icon[data-v-64e1acf4] {\n  color: inherit;\n}\n.ccc-ui-container[data-v-64e1acf4]:disabled {\n  color: var(--disabled-color);\n  background: transparent;\n  cursor: auto;\n}\n.ccc-ui-container:disabled .icon[data-v-64e1acf4] {\n  color: inherit;\n}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -26428,10 +26433,11 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c(
-    "div",
+    "button",
     {
       directives: [{ name: "close-popover", rawName: "v-close-popover" }],
       staticClass: "ccc-ui-container",
+      attrs: { disabled: _vm.disabled_ },
       on: {
         click: function($event) {
           return _vm.$emit("click")
