@@ -83,6 +83,7 @@ Route::middleware('auth')->prefix('auth')->group(function() {
             Route::post('/delete-team', [App\Http\Controllers\Dashboard\TeamController::class, 'deleteTeam']);
             Route::post('/create-invite', [App\Http\Controllers\Dashboard\TeamController::class, 'createInvite']);
             Route::post('/create-team-site', [App\Http\Controllers\Dashboard\TeamController::class, 'createTeamSite']);
+            Route::post('/delete-team-site', [App\Http\Controllers\Dashboard\TeamController::class, 'deleteTeamSite']);
             Route::post('/delete-member', [App\Http\Controllers\Dashboard\TeamController::class, 'deleteMember']);
         });
     });

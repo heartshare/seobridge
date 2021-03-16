@@ -5898,6 +5898,43 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
@@ -5914,13 +5951,20 @@ __webpack_require__.r(__webpack_exports__);
         name: '',
         description: '',
         category: '',
-        loading: true
+        loading: false
       },
       teamSiteCreate: {
         id: null,
         name: '',
         host: '',
-        loading: true
+        loading: false
+      },
+      teamSiteDelete: {
+        id: null,
+        name: '',
+        siteId: null,
+        host: '',
+        loading: false
       },
       teamInvite: {
         id: null,
@@ -6042,6 +6086,36 @@ __webpack_require__.r(__webpack_exports__);
         _this3.teamSiteCreate.loading = false;
       });
     },
+    openTeamSiteDeleteDialog: function openTeamSiteDeleteDialog(team, site) {
+      this.teamSiteDelete.id = team.id;
+      this.teamSiteDelete.name = team.name;
+      this.teamSiteDelete.siteId = site.id;
+      this.teamSiteDelete.host = site.host;
+      this.$refs.teamSiteDeleteDialog.open();
+    },
+    resetTeamSiteDelete: function resetTeamSiteDelete() {
+      this.teamSiteDelete.id = null;
+      this.teamSiteDelete.name = '';
+      this.teamSiteDelete.siteId = null;
+      this.teamSiteDelete.host = '';
+      this.$refs.teamSiteDeleteDialog.close();
+    },
+    deleteTeamSite: function deleteTeamSite() {
+      var _this4 = this;
+
+      this.teamSiteDelete.loading = true;
+      axios.post('/auth/team/delete-team-site', {
+        teamId: this.teamSiteDelete.id,
+        siteId: this.teamSiteDelete.siteId
+      }).then(function (response) {
+        _this4.teamSiteDelete.loading = false;
+
+        _this4.resetTeamSiteDelete();
+      })["catch"](function (error) {
+        console.log(error.response);
+        _this4.teamSiteDelete.loading = false;
+      });
+    },
     openTeamDeleteDialog: function openTeamDeleteDialog(team) {
       this.teamDelete.id = team.id;
       this.teamDelete.name = team.name;
@@ -6053,21 +6127,21 @@ __webpack_require__.r(__webpack_exports__);
       this.$refs.teamDeleteDialog.close();
     },
     deleteTeam: function deleteTeam() {
-      var _this4 = this;
+      var _this5 = this;
 
       this.teamDelete.loading = true;
       axios.post('/auth/team/delete-team', {
         teamId: this.teamDelete.id,
         name: this.teamDelete.name
       }).then(function (response) {
-        _this4.$store.commit('deleteTeam', response.data);
+        _this5.$store.commit('deleteTeam', response.data);
 
-        _this4.teamDelete.loading = false;
+        _this5.teamDelete.loading = false;
 
-        _this4.resetTeamDelete();
+        _this5.resetTeamDelete();
       })["catch"](function (error) {
         console.log(error.response);
-        _this4.teamDelete.loading = false;
+        _this5.teamDelete.loading = false;
       });
     },
     openTeamLeaveDialog: function openTeamLeaveDialog(team) {
@@ -6081,21 +6155,21 @@ __webpack_require__.r(__webpack_exports__);
       this.$refs.teamLeaveDialog.close();
     },
     leaveTeam: function leaveTeam() {
-      var _this5 = this;
+      var _this6 = this;
 
       this.teamLeave.loading = true;
       axios.post('/auth/team/leave-team', {
         teamId: this.teamLeave.id
       }).then(function (response) {
         // deleteTeam is applicable because it only removes the team locally
-        _this5.$store.commit('deleteTeam', response.data);
+        _this6.$store.commit('deleteTeam', response.data);
 
-        _this5.teamLeave.loading = false;
+        _this6.teamLeave.loading = false;
 
-        _this5.resetTeamLeave();
+        _this6.resetTeamLeave();
       })["catch"](function (error) {
         console.log(error.response);
-        _this5.teamLeave.loading = false;
+        _this6.teamLeave.loading = false;
       });
     },
     openMemberDeleteDialog: function openMemberDeleteDialog(team, member) {
@@ -6113,7 +6187,7 @@ __webpack_require__.r(__webpack_exports__);
       this.$refs.memberDeleteDialog.close();
     },
     deleteMember: function deleteMember() {
-      var _this6 = this;
+      var _this7 = this;
 
       this.memberDelete.loading = true;
       axios.post('/auth/team/delete-member', {
@@ -6121,12 +6195,12 @@ __webpack_require__.r(__webpack_exports__);
         memberId: this.memberDelete.memberId
       }).then(function (response) {
         // this.$store.commit('deleteTeam', response.data)
-        _this6.memberDelete.loading = false;
+        _this7.memberDelete.loading = false;
 
-        _this6.resetMemberDelete();
+        _this7.resetMemberDelete();
       })["catch"](function (error) {
         console.log(error.response);
-        _this6.memberDelete.loading = false;
+        _this7.memberDelete.loading = false;
       });
     },
     openTeamInviteDialog: function openTeamInviteDialog(team) {
@@ -6141,7 +6215,7 @@ __webpack_require__.r(__webpack_exports__);
       this.$refs.teamInviteDialog.close();
     },
     sendTeamInvitation: function sendTeamInvitation() {
-      var _this7 = this;
+      var _this8 = this;
 
       this.teamInvite.loading = true;
       axios.post('/auth/team/create-invite', {
@@ -6149,22 +6223,22 @@ __webpack_require__.r(__webpack_exports__);
         inviteName: this.teamInvite.inviteName
       }).then(function (response) {
         console.log(response.data);
-        _this7.teamInvite.loading = false;
+        _this8.teamInvite.loading = false;
 
-        _this7.resetTeamInvite();
+        _this8.resetTeamInvite();
       })["catch"](function (error) {
         console.log(error.response);
-        _this7.teamInvite.loading = false;
+        _this8.teamInvite.loading = false;
       });
     },
     setActiveTeamId: function setActiveTeamId(team) {
-      var _this8 = this;
+      var _this9 = this;
 
       // this.teamDelete.loading = true
       axios.post('/auth/team/set-active-team-id', {
         teamId: team.id
       }).then(function (response) {
-        _this8.$store.commit('userInfo', {
+        _this9.$store.commit('userInfo', {
           active_team_id: response.data
         }); // this.teamDelete.loading = false
         // this.resetTeamDelete()
@@ -6184,15 +6258,15 @@ __webpack_require__.r(__webpack_exports__);
       this.$refs.inviteIgnoreDialog.close();
     },
     handleInvite: function handleInvite(id, action) {
-      var _this9 = this;
+      var _this10 = this;
 
       axios.post('/auth/team/handle-invite', {
         inviteId: id,
         action: action
       }).then(function (response) {
-        if (action === 'accepted') _this9.$store.commit('setTeam', response.data);else _this9.resetInviteIgnore();
+        if (action === 'accepted') _this10.$store.commit('setTeam', response.data);else _this10.resetInviteIgnore();
 
-        _this9.$store.dispatch('fetchAllInvites');
+        _this10.$store.dispatch('fetchAllInvites');
       })["catch"](function (error) {
         console.log(error.response);
       });
@@ -51433,6 +51507,107 @@ var render = function() {
                 _vm._v(_vm._s(_vm.activeTeam.name))
               ]),
               _vm._v(" "),
+              _c("h4", { staticStyle: { padding: "0 15px" } }, [
+                _vm._v("\n            Namespaces:\n        ")
+              ]),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "block", staticStyle: { padding: "0 15px" } },
+                [
+                  _vm._l(_vm.activeTeam.sites, function(site) {
+                    return _c(
+                      "div",
+                      {
+                        key: site.id,
+                        staticStyle: { display: "flex", margin: "15px 0" }
+                      },
+                      [
+                        _c(
+                          "b",
+                          {
+                            staticStyle: {
+                              "font-size": "15px",
+                              flex: "1",
+                              "text-transform": "uppercase",
+                              "align-self": "center"
+                            }
+                          },
+                          [_vm._v(_vm._s(site.host))]
+                        ),
+                        _vm._v(" "),
+                        _vm.activeTeam.is_owner
+                          ? _c(
+                              "ui-popover-menu",
+                              {
+                                scopedSlots: _vm._u(
+                                  [
+                                    {
+                                      key: "trigger",
+                                      fn: function() {
+                                        return [
+                                          _c(
+                                            "ui-icon-button",
+                                            { staticClass: "more-button" },
+                                            [_vm._v("󰇙")]
+                                          )
+                                        ]
+                                      },
+                                      proxy: true
+                                    }
+                                  ],
+                                  null,
+                                  true
+                                )
+                              },
+                              [
+                                _vm._v(" "),
+                                _c(
+                                  "ui-menu-item",
+                                  {
+                                    attrs: { icon: "&#985721;" },
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.openTeamSiteDeleteDialog(
+                                          _vm.activeTeam,
+                                          site
+                                        )
+                                      }
+                                    }
+                                  },
+                                  [_vm._v("Delete Namespace")]
+                                )
+                              ],
+                              1
+                            )
+                          : _vm._e()
+                      ],
+                      1
+                    )
+                  }),
+                  _vm._v(" "),
+                  _vm.activeTeam.is_owner
+                    ? _c(
+                        "ui-button",
+                        {
+                          attrs: { icon: "&#987309;", text: "" },
+                          on: {
+                            click: function($event) {
+                              return _vm.openTeamSiteCreateDialog(
+                                _vm.activeTeam
+                              )
+                            }
+                          }
+                        },
+                        [_vm._v("Add Namespace")]
+                      )
+                    : _vm._e(),
+                  _c("br"),
+                  _c("br")
+                ],
+                2
+              ),
+              _vm._v(" "),
               _vm._l(_vm.invites, function(invite) {
                 return _c(
                   "fieldset",
@@ -51764,11 +51939,7 @@ var render = function() {
                         _c(
                           "ui-button",
                           {
-                            attrs: {
-                              icon: "&#984085;",
-                              "icon-left": "",
-                              text: ""
-                            },
+                            attrs: { icon: "&#983060;", text: "" },
                             on: {
                               click: function($event) {
                                 return _vm.openTeamInviteDialog(team)
@@ -51995,6 +52166,90 @@ var render = function() {
           }
         ])
       }),
+      _vm._v(" "),
+      _c(
+        "ui-option-dialog",
+        {
+          ref: "teamSiteDeleteDialog",
+          on: {
+            close: function($event) {
+              return _vm.resetTeamSiteDelete()
+            }
+          },
+          scopedSlots: _vm._u([
+            {
+              key: "heading",
+              fn: function() {
+                return [
+                  _vm._v("\n            Delete "),
+                  _c("b", [_vm._v(_vm._s(_vm.teamSiteDelete.host))]),
+                  _vm._v(
+                    " from " + _vm._s(_vm.teamSiteDelete.name) + "\n        "
+                  )
+                ]
+              },
+              proxy: true
+            },
+            {
+              key: "button-1",
+              fn: function() {
+                return [
+                  _c(
+                    "ui-button",
+                    {
+                      attrs: {
+                        text: "",
+                        border: "",
+                        "icon-left": "",
+                        icon: "&#983382;"
+                      },
+                      on: {
+                        click: function($event) {
+                          return _vm.resetTeamSiteDelete()
+                        }
+                      }
+                    },
+                    [_vm._v("Cancel")]
+                  )
+                ]
+              },
+              proxy: true
+            },
+            {
+              key: "button-2",
+              fn: function() {
+                return [
+                  _c(
+                    "ui-button",
+                    {
+                      attrs: {
+                        error: "",
+                        icon: "&#985721;",
+                        loading: _vm.teamSiteDelete.loading
+                      },
+                      on: {
+                        click: function($event) {
+                          return _vm.deleteTeamSite()
+                        }
+                      }
+                    },
+                    [_vm._v("Delete Now")]
+                  )
+                ]
+              },
+              proxy: true
+            }
+          ])
+        },
+        [
+          _vm._v(" "),
+          _c("span", [
+            _vm._v("\n            Do you want to delete "),
+            _c("b", [_vm._v(_vm._s(_vm.teamSiteDelete.host))]),
+            _vm._v(" from " + _vm._s(_vm.teamSiteDelete.name) + "?\n        ")
+          ])
+        ]
+      ),
       _vm._v(" "),
       _c(
         "ui-option-dialog",

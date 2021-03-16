@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Dashboard;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\TeamMember;
+use App\Models\TeamSite;
 use App\Models\User;
 use App\Models\UserReport;
 use App\Models\UserReportGroup;
@@ -87,13 +89,26 @@ class ReportController extends Controller
             'device' => ['required', 'array'],
         ]);
 
-        $user = User::find(Auth::id());
+        $host = strtolower(parse_url($request->url, PHP_URL_HOST));
+
+        // TODO: make into middleware
+        if (!TeamMember::where('team_id', Auth::user()->active_team_id)->where('user_id', Auth::id())->exists())
+        {
+            return response('UNAUTHORIZED', 403);
+        }
+
+        $siteNamespaces = TeamSite::where('team_id', Auth::user()->active_team_id)->pluck('host')->toArray();
+
+        if (!in_array($host, $siteNamespaces))
+        {
+            return response('UNKNOWN_SITE_NAMESPACE', 404);
+        }
 
         $reportGroup = UserReportGroup::create([
             'owner_id' => Auth::id(),
-            'team_id' => $user->active_team_id,
+            'team_id' => Auth::user()->active_team_id,
             'url' => $request->url,
-            'host' => parse_url($request->url, PHP_URL_HOST),
+            'host' => $host,
             'mode' => $request->mode,
             'device' => $request->device,
         ]);

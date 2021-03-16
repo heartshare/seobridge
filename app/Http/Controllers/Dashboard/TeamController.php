@@ -19,7 +19,7 @@ class TeamController extends Controller
     {
         $teamIds = array_unique(array_merge(TeamMember::where('user_id', Auth::id())->pluck('team_id')->toArray(), Team::where('owner_id', Auth::id())->pluck('id')->toArray()));
 
-        $teams = Team::whereIn('id', $teamIds)->with('members.user')->get();
+        $teams = Team::whereIn('id', $teamIds)->with('members.user', 'sites')->get();
 
         $teams->each(function($team) {
             $team->is_owner = ($team->owner_id === Auth::id());
@@ -132,6 +132,9 @@ class TeamController extends Controller
 
 
 
+    /**
+     * 
+     */
     public function createTeamSite(Request $request)
     {
         $request->validate([
@@ -140,10 +143,26 @@ class TeamController extends Controller
 
         $teamSite = TeamSite::create([
             'team_id' => $request->team_object->id,
-            'host' => $request->host,
+            'host' => strtolower($request->host),
         ]);
 
         return $teamSite;
+    }
+
+
+
+    /**
+     * 
+     */
+    public function deleteTeamSite(Request $request)
+    {
+        $request->validate([
+            'siteId' => ['required', 'exists:team_sites,id'],
+        ]);
+
+        TeamSite::find($request->siteId)->delete();
+
+        return $request->siteId;
     }
 
 

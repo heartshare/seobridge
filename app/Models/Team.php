@@ -61,4 +61,9 @@ class Team extends Model
     {
         return $this->hasMany(TeamInvite::class, 'team_id', 'id');
     }
+
+    public function sites()
+    {
+        return $this->hasMany(TeamSite::class, 'team_id', 'id');
+    }
 }

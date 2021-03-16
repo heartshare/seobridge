@@ -4,6 +4,26 @@
             <div class="background-image"></div>
 
             <h2 style="text-align: center">{{activeTeam.name}}</h2>
+            <h4 style="padding: 0 15px">
+                Namespaces:
+            </h4>
+
+            <div class="block" style="padding: 0 15px">
+                <div style="display: flex; margin: 15px 0" v-for="site in activeTeam.sites" :key="site.id">
+                    <b style="font-size: 15px; flex: 1; text-transform: uppercase; align-self: center">{{site.host}}</b>
+
+                    <ui-popover-menu v-if="activeTeam.is_owner">
+                        <template v-slot:trigger>
+                            <ui-icon-button class="more-button">&#983513;</ui-icon-button>
+                        </template>
+                        
+                        <ui-menu-item icon="&#985721;" @click="openTeamSiteDeleteDialog(activeTeam, site)">Delete Namespace</ui-menu-item>
+                    </ui-popover-menu>
+                </div>
+
+                <ui-button icon="&#987309;" text v-if="activeTeam.is_owner" @click="openTeamSiteCreateDialog(activeTeam)">Add Namespace</ui-button><br><br>
+            </div>
+
         
             <fieldset v-for="invite in invites" :key="invite.id">
                 <legend>{{invite.team.name}}</legend>
@@ -69,7 +89,7 @@
                     </div>
 
                     <div class="centerer" v-if="team.is_owner">
-                        <ui-button icon="&#984085;" icon-left text @click="openTeamInviteDialog(team)">Add Member</ui-button>
+                        <ui-button icon="&#983060;" text @click="openTeamInviteDialog(team)">Add Member</ui-button>
                     </div>
                 </div>
             </div>
@@ -114,6 +134,23 @@
             </template>
             <template v-slot:button-2>
                 <ui-button icon="&#984085;" @click="createTeamSite()">Add Namespace</ui-button>
+            </template>
+        </ui-option-dialog>
+
+        <ui-option-dialog ref="teamSiteDeleteDialog" @close="resetTeamSiteDelete()">
+            <template v-slot:heading>
+                Delete <b>{{teamSiteDelete.host}}</b> from {{teamSiteDelete.name}}
+            </template>
+
+            <span>
+                Do you want to delete <b>{{teamSiteDelete.host}}</b> from {{teamSiteDelete.name}}?
+            </span>
+
+            <template v-slot:button-1>
+                <ui-button text border icon-left icon="&#983382;" @click="resetTeamSiteDelete()">Cancel</ui-button>
+            </template>
+            <template v-slot:button-2>
+                <ui-button error icon="&#985721;" :loading="teamSiteDelete.loading" @click="deleteTeamSite()">Delete Now</ui-button>
             </template>
         </ui-option-dialog>
 
@@ -221,14 +258,22 @@
                     name: '',
                     description: '',
                     category: '',
-                    loading: true,
+                    loading: false,
                 },
 
                 teamSiteCreate: {
                     id: null,
                     name: '',
                     host: '',
-                    loading: true,
+                    loading: false,
+                },
+
+                teamSiteDelete: {
+                    id: null,
+                    name: '',
+                    siteId: null,
+                    host: '',
+                    loading: false,
                 },
 
                 teamInvite: {
@@ -362,6 +407,41 @@
                 .catch(error => {
                     console.log(error.response)
                     this.teamSiteCreate.loading = false
+                })
+            },
+
+
+
+            openTeamSiteDeleteDialog(team, site) {
+                this.teamSiteDelete.id = team.id
+                this.teamSiteDelete.name = team.name
+                this.teamSiteDelete.siteId = site.id
+                this.teamSiteDelete.host = site.host
+                this.$refs.teamSiteDeleteDialog.open()
+            },
+
+            resetTeamSiteDelete() {
+                this.teamSiteDelete.id = null
+                this.teamSiteDelete.name = ''
+                this.teamSiteDelete.siteId = null
+                this.teamSiteDelete.host = ''
+                this.$refs.teamSiteDeleteDialog.close()
+            },
+
+            deleteTeamSite() {
+                this.teamSiteDelete.loading = true
+                
+                axios.post('/auth/team/delete-team-site', {
+                    teamId: this.teamSiteDelete.id,
+                    siteId: this.teamSiteDelete.siteId,
+                })
+                .then(response => {
+                    this.teamSiteDelete.loading = false
+                    this.resetTeamSiteDelete()
+                })
+                .catch(error => {
+                    console.log(error.response)
+                    this.teamSiteDelete.loading = false
                 })
             },
 
