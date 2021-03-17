@@ -3,36 +3,22 @@
         <div class="header" v-if="activeTeam">
             <div class="background-image"></div>
 
-            <h2 style="text-align: center">{{activeTeam.name}}</h2>
-            <h4 style="padding: 0 15px">
-                Namespaces:
-            </h4>
+            <h2 style="text-align: center; color: var(--primary)">{{activeTeam.name}}</h2>
 
-            <div class="block" style="padding: 0 15px">
-                <div style="display: flex; margin: 15px 0" v-for="site in activeTeam.sites" :key="site.id">
-                    <b style="font-size: 15px; flex: 1; text-transform: uppercase; align-self: center">{{site.host}}</b>
-
-                    <ui-popover-menu v-if="activeTeam.is_owner">
-                        <template v-slot:trigger>
-                            <ui-icon-button class="more-button">&#983513;</ui-icon-button>
-                        </template>
-                        
-                        <ui-menu-item icon="&#985721;" @click="openTeamSiteDeleteDialog(activeTeam, site)">Delete Namespace</ui-menu-item>
-                    </ui-popover-menu>
+            <div class="block" style="padding-bottom: 5px">
+                <div class="heading">
+                    <b>Site Namespaces</b>
+                    <ui-icon-button v-if="activeTeam.is_owner" @click="openTeamSiteCreateDialog(activeTeam)">&#984085;</ui-icon-button>
                 </div>
+                <div class="namespace-container" v-for="site in activeTeam.sites" :key="site.id">
+                    <div class="icon">&#983527;</div>
 
-                <ui-button icon="&#987309;" text v-if="activeTeam.is_owner" @click="openTeamSiteCreateDialog(activeTeam)">Add Namespace</ui-button><br><br>
+                    <b class="namespace">{{site.host}}</b>
+
+                    <!-- <ui-icon-button class="action-button" info>&#984043;</ui-icon-button> -->
+                    <ui-icon-button class="action-button" error @click="openTeamSiteDeleteDialog(activeTeam, site)">&#985721;</ui-icon-button>
+                </div>
             </div>
-
-        
-            <fieldset v-for="invite in invites" :key="invite.id">
-                <legend>{{invite.team.name}}</legend>
-                <p>
-                    You've got invited to join <b>{{invite.team.name}}</b>
-                </p>
-                <ui-button text border icon="&#983213;" icon-left @click="openInviteIgnoreDialog(invite.id, invite.team)">Decline</ui-button>
-                <ui-button icon="&#983340;" @click="handleInvite(invite.id, 'accepted')">Accept</ui-button>
-            </fieldset>
         </div>
         
         <transition-group name="slide" class="block">
@@ -94,6 +80,17 @@
                 </div>
             </div>
         </transition-group>
+
+
+
+        <fieldset v-for="invite in invites" :key="invite.id">
+            <legend>{{invite.team.name}}</legend>
+            <p>
+                You've got invited to join <b>{{invite.team.name}}</b>
+            </p>
+            <ui-button text border icon="&#983213;" icon-left @click="openInviteIgnoreDialog(invite.id, invite.team)">Decline</ui-button>
+            <ui-button icon="&#983340;" @click="handleInvite(invite.id, 'accepted')">Accept</ui-button>
+        </fieldset>
 
 
 
@@ -652,15 +649,47 @@
                 border-radius: 7px 7px 0 0
                 display: block
 
-            .profile-image
-                height: 140px
-                width: 140px
-                object-fit: cover
-                border-radius: 100%
-                margin: -70px auto 25px
-                display: block
-                padding: 5px
-                background: var(--bg)
+            .heading
+                width: 100%
+                display: flex
+                align-items: center
+                text-align: left
+                font-size: var(--text-size)
+                color: var(--heading-gray)
+                padding: 5px 5px 5px 15px
+                border-bottom: var(--border)
+                margin-bottom: 5px
+
+                b
+                    flex: 1
+
+            .namespace-container
+                width: 100%
+                display: flex
+                align-items: center
+                gap: 5px
+                padding: 0px 5px 0px 15px
+
+                .icon
+                    font-size: 20px
+                    color: var(--text-gray)
+                    margin-right: 10px
+                    font-family: 'Material Icons'
+                    user-select: none
+
+                .namespace
+                    flex: 1
+                    font-size: 13px
+                    color: var(--heading-gray)
+                    text-transform: uppercase
+                    font-weight: 600
+
+                .action-button
+                    opacity: 0
+
+                &:hover
+                    .action-button
+                        opacity: 1
 
         .fab
             height: 56px
@@ -696,7 +725,7 @@
             background: white
             border-radius: 7px
             filter: var(--elevation-2)
-            margin: 15px 0
+            margin-top: 15px
             transition: all 300ms
 
             &.slide-enter
@@ -713,11 +742,11 @@
             .team-header
                 display: flex
                 align-items: center
-                padding: 5px
+                padding: 5px 5px 5px 15px
+                gap: 5px
                 border-radius: 7px 7px 0 0
 
                 .tag
-                    margin-left: 15px
                     font-size: 10px
                     color: var(--primary)
                     background: var(--primary-shade)
@@ -734,7 +763,7 @@
                     flex: 1
                     font-size: 16px
                     line-height: 20px
-                    padding: 7px 10px
+                    padding: 7px 0
                     
                     b
                         text-transform: uppercase
@@ -743,7 +772,7 @@
                         display: inline-block
 
                 .more-button
-                    margin: 0 5px
+                    margin: 0
                 
                 .expand-button
                     transition: transform 200ms

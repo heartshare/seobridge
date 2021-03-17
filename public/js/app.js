@@ -5949,9 +5949,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
@@ -6365,16 +6362,12 @@ var app = new Vue({
             progress_max: e.data.progress_max
           }
         });
-
-        console.log(e);
       });
       userReportTaskEventChannel.listen('.page.add', function (e) {
         _this.$store.commit('addReportToPaginatedReportGroup', {
           id: e.jobId,
           report: e.data
         });
-
-        console.log(e);
       });
     }
   },
@@ -7520,7 +7513,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".page-container[data-v-763ff598] {\n  width: 100%;\n}\n.page-container .header[data-v-763ff598] {\n  width: 100%;\n  background: var(--bg);\n  filter: var(--elevation-2);\n  border-radius: 7px;\n  margin-top: 15px;\n}\n.page-container .header .background-image[data-v-763ff598] {\n  height: 250px;\n  width: 100%;\n  background: var(--bg-dark);\n  background-image: url(\"/images/app/dashboard/pattern.svg\");\n  background-size: cover;\n  background-position: center;\n  background-repeat: no-repeat;\n  border-radius: 7px 7px 0 0;\n  display: block;\n}\n.page-container .header .profile-image[data-v-763ff598] {\n  height: 140px;\n  width: 140px;\n  -o-object-fit: cover;\n     object-fit: cover;\n  border-radius: 100%;\n  margin: -70px auto 25px;\n  display: block;\n  padding: 5px;\n  background: var(--bg);\n}\n.page-container .fab[data-v-763ff598] {\n  height: 56px;\n  width: 56px;\n  font-family: \"Material Icons\";\n  color: white;\n  background: var(--primary);\n  display: grid;\n  place-content: center;\n  font-size: 24px;\n  position: fixed;\n  bottom: 30px;\n  right: 30px;\n  border-radius: 100%;\n  border: none;\n  filter: var(--elevation-2);\n  cursor: pointer;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n  transition: all 200ms;\n  z-index: 100;\n}\n.page-container .fab[data-v-763ff598]:hover {\n  filter: var(--elevation-4);\n}\n.page-container .team-description-input[data-v-763ff598] {\n  resize: none;\n  height: 150px;\n}\n.page-container .team-wrapper[data-v-763ff598] {\n  width: 100%;\n  display: inline-flex;\n  flex-direction: column;\n  background: white;\n  border-radius: 7px;\n  filter: var(--elevation-2);\n  margin: 15px 0;\n  transition: all 300ms;\n}\n.page-container .team-wrapper.slide-enter[data-v-763ff598] {\n  transform: translateY(-100px);\n  opacity: 0;\n}\n.page-container .team-wrapper.slide-leave-to[data-v-763ff598] {\n  transform: scale(0);\n  opacity: 0;\n}\n.page-container .team-wrapper.slide-leave-active[data-v-763ff598] {\n  position: absolute;\n}\n.page-container .team-wrapper .team-header[data-v-763ff598] {\n  display: flex;\n  align-items: center;\n  padding: 5px;\n  border-radius: 7px 7px 0 0;\n}\n.page-container .team-wrapper .team-header .tag[data-v-763ff598] {\n  margin-left: 15px;\n  font-size: 10px;\n  color: var(--primary);\n  background: var(--primary-shade);\n  padding: 1px 8px;\n  line-height: 18px;\n  border-radius: 30px;\n  letter-spacing: 1px;\n  font-weight: 600;\n  text-transform: uppercase;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n  vertical-align: top;\n}\n.page-container .team-wrapper .team-header .title[data-v-763ff598] {\n  flex: 1;\n  font-size: 16px;\n  line-height: 20px;\n  padding: 7px 10px;\n}\n.page-container .team-wrapper .team-header .title b[data-v-763ff598] {\n  text-transform: uppercase;\n  font-weight: 600;\n  color: var(--heading-gray);\n  display: inline-block;\n}\n.page-container .team-wrapper .team-header .more-button[data-v-763ff598] {\n  margin: 0 5px;\n}\n.page-container .team-wrapper .team-header .expand-button[data-v-763ff598] {\n  transition: transform 200ms;\n}\n.page-container .team-wrapper .team-header .expand-button.expanded[data-v-763ff598] {\n  transform: rotate(180deg);\n}\n.page-container .team-wrapper .team-content[data-v-763ff598] {\n  display: flex;\n  gap: 15px;\n  padding: 5px 15px 15px;\n  position: relative;\n  flex-wrap: wrap;\n}\n.page-container .team-wrapper .team-content .centerer[data-v-763ff598] {\n  width: 100%;\n  display: grid;\n  place-content: center;\n  height: 50px;\n}\n.page-container .team-wrapper .team-content .member-row[data-v-763ff598] {\n  border-radius: 5px;\n  border: var(--border);\n  width: 100%;\n  display: flex;\n  height: 50px;\n  padding: 5px;\n  gap: 5px;\n}\n.page-container .team-wrapper .team-content .member-row .more-button[data-v-763ff598] {\n  display: block !important;\n  align-self: center;\n}\n.page-container .team-wrapper .team-content .member-row .profile-image[data-v-763ff598] {\n  height: 40px;\n  width: 40px;\n  -o-object-fit: cover;\n     object-fit: cover;\n  border-radius: 100%;\n  background: var(--bg);\n  align-self: center;\n}\n.page-container .team-wrapper .team-content .member-row .name[data-v-763ff598] {\n  flex: 1;\n  font-size: var(--text-size);\n  color: var(--heading-gray);\n  font-weight: 600;\n  align-self: center;\n  padding: 0 5px;\n}\n.page-container .team-wrapper .team-content .member-row .role[data-v-763ff598] {\n  height: 20px;\n  line-height: 20px;\n  font-size: 12px;\n  color: var(--success);\n  background: var(--success-shade);\n  padding: 0 10px;\n  border-radius: 30px;\n  letter-spacing: 1px;\n  font-weight: 600;\n  text-transform: uppercase;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n  align-self: center;\n}\n.page-container .team-wrapper .team-content .member-row .role.owner[data-v-763ff598] {\n  background: var(--success);\n  color: white;\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, ".page-container[data-v-763ff598] {\n  width: 100%;\n}\n.page-container .header[data-v-763ff598] {\n  width: 100%;\n  background: var(--bg);\n  filter: var(--elevation-2);\n  border-radius: 7px;\n  margin-top: 15px;\n}\n.page-container .header .background-image[data-v-763ff598] {\n  height: 250px;\n  width: 100%;\n  background: var(--bg-dark);\n  background-image: url(\"/images/app/dashboard/pattern.svg\");\n  background-size: cover;\n  background-position: center;\n  background-repeat: no-repeat;\n  border-radius: 7px 7px 0 0;\n  display: block;\n}\n.page-container .header .heading[data-v-763ff598] {\n  width: 100%;\n  display: flex;\n  align-items: center;\n  text-align: left;\n  font-size: var(--text-size);\n  color: var(--heading-gray);\n  padding: 5px 5px 5px 15px;\n  border-bottom: var(--border);\n  margin-bottom: 5px;\n}\n.page-container .header .heading b[data-v-763ff598] {\n  flex: 1;\n}\n.page-container .header .namespace-container[data-v-763ff598] {\n  width: 100%;\n  display: flex;\n  align-items: center;\n  gap: 5px;\n  padding: 0px 5px 0px 15px;\n}\n.page-container .header .namespace-container .icon[data-v-763ff598] {\n  font-size: 20px;\n  color: var(--text-gray);\n  margin-right: 10px;\n  font-family: \"Material Icons\";\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n}\n.page-container .header .namespace-container .namespace[data-v-763ff598] {\n  flex: 1;\n  font-size: 13px;\n  color: var(--heading-gray);\n  text-transform: uppercase;\n  font-weight: 600;\n}\n.page-container .header .namespace-container .action-button[data-v-763ff598] {\n  opacity: 0;\n}\n.page-container .header .namespace-container:hover .action-button[data-v-763ff598] {\n  opacity: 1;\n}\n.page-container .fab[data-v-763ff598] {\n  height: 56px;\n  width: 56px;\n  font-family: \"Material Icons\";\n  color: white;\n  background: var(--primary);\n  display: grid;\n  place-content: center;\n  font-size: 24px;\n  position: fixed;\n  bottom: 30px;\n  right: 30px;\n  border-radius: 100%;\n  border: none;\n  filter: var(--elevation-2);\n  cursor: pointer;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n  transition: all 200ms;\n  z-index: 100;\n}\n.page-container .fab[data-v-763ff598]:hover {\n  filter: var(--elevation-4);\n}\n.page-container .team-description-input[data-v-763ff598] {\n  resize: none;\n  height: 150px;\n}\n.page-container .team-wrapper[data-v-763ff598] {\n  width: 100%;\n  display: inline-flex;\n  flex-direction: column;\n  background: white;\n  border-radius: 7px;\n  filter: var(--elevation-2);\n  margin-top: 15px;\n  transition: all 300ms;\n}\n.page-container .team-wrapper.slide-enter[data-v-763ff598] {\n  transform: translateY(-100px);\n  opacity: 0;\n}\n.page-container .team-wrapper.slide-leave-to[data-v-763ff598] {\n  transform: scale(0);\n  opacity: 0;\n}\n.page-container .team-wrapper.slide-leave-active[data-v-763ff598] {\n  position: absolute;\n}\n.page-container .team-wrapper .team-header[data-v-763ff598] {\n  display: flex;\n  align-items: center;\n  padding: 5px 5px 5px 15px;\n  gap: 5px;\n  border-radius: 7px 7px 0 0;\n}\n.page-container .team-wrapper .team-header .tag[data-v-763ff598] {\n  font-size: 10px;\n  color: var(--primary);\n  background: var(--primary-shade);\n  padding: 1px 8px;\n  line-height: 18px;\n  border-radius: 30px;\n  letter-spacing: 1px;\n  font-weight: 600;\n  text-transform: uppercase;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n  vertical-align: top;\n}\n.page-container .team-wrapper .team-header .title[data-v-763ff598] {\n  flex: 1;\n  font-size: 16px;\n  line-height: 20px;\n  padding: 7px 0;\n}\n.page-container .team-wrapper .team-header .title b[data-v-763ff598] {\n  text-transform: uppercase;\n  font-weight: 600;\n  color: var(--heading-gray);\n  display: inline-block;\n}\n.page-container .team-wrapper .team-header .more-button[data-v-763ff598] {\n  margin: 0;\n}\n.page-container .team-wrapper .team-header .expand-button[data-v-763ff598] {\n  transition: transform 200ms;\n}\n.page-container .team-wrapper .team-header .expand-button.expanded[data-v-763ff598] {\n  transform: rotate(180deg);\n}\n.page-container .team-wrapper .team-content[data-v-763ff598] {\n  display: flex;\n  gap: 15px;\n  padding: 5px 15px 15px;\n  position: relative;\n  flex-wrap: wrap;\n}\n.page-container .team-wrapper .team-content .centerer[data-v-763ff598] {\n  width: 100%;\n  display: grid;\n  place-content: center;\n  height: 50px;\n}\n.page-container .team-wrapper .team-content .member-row[data-v-763ff598] {\n  border-radius: 5px;\n  border: var(--border);\n  width: 100%;\n  display: flex;\n  height: 50px;\n  padding: 5px;\n  gap: 5px;\n}\n.page-container .team-wrapper .team-content .member-row .more-button[data-v-763ff598] {\n  display: block !important;\n  align-self: center;\n}\n.page-container .team-wrapper .team-content .member-row .profile-image[data-v-763ff598] {\n  height: 40px;\n  width: 40px;\n  -o-object-fit: cover;\n     object-fit: cover;\n  border-radius: 100%;\n  background: var(--bg);\n  align-self: center;\n}\n.page-container .team-wrapper .team-content .member-row .name[data-v-763ff598] {\n  flex: 1;\n  font-size: var(--text-size);\n  color: var(--heading-gray);\n  font-weight: 600;\n  align-self: center;\n  padding: 0 5px;\n}\n.page-container .team-wrapper .team-content .member-row .role[data-v-763ff598] {\n  height: 20px;\n  line-height: 20px;\n  font-size: 12px;\n  color: var(--success);\n  background: var(--success-shade);\n  padding: 0 10px;\n  border-radius: 30px;\n  letter-spacing: 1px;\n  font-weight: 600;\n  text-transform: uppercase;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n      -ms-user-select: none;\n          user-select: none;\n  align-self: center;\n}\n.page-container .team-wrapper .team-content .member-row .role.owner[data-v-763ff598] {\n  background: var(--success);\n  color: white;\n}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -51616,169 +51609,84 @@ var render = function() {
     { staticClass: "page-container limiter" },
     [
       _vm.activeTeam
-        ? _c(
-            "div",
-            { staticClass: "header" },
-            [
-              _c("div", { staticClass: "background-image" }),
-              _vm._v(" "),
-              _c("h2", { staticStyle: { "text-align": "center" } }, [
-                _vm._v(_vm._s(_vm.activeTeam.name))
-              ]),
-              _vm._v(" "),
-              _c("h4", { staticStyle: { padding: "0 15px" } }, [
-                _vm._v("\n            Namespaces:\n        ")
-              ]),
-              _vm._v(" "),
-              _c(
-                "div",
-                { staticClass: "block", staticStyle: { padding: "0 15px" } },
-                [
-                  _vm._l(_vm.activeTeam.sites, function(site) {
-                    return _c(
-                      "div",
-                      {
-                        key: site.id,
-                        staticStyle: { display: "flex", margin: "15px 0" }
-                      },
-                      [
-                        _c(
-                          "b",
+        ? _c("div", { staticClass: "header" }, [
+            _c("div", { staticClass: "background-image" }),
+            _vm._v(" "),
+            _c(
+              "h2",
+              {
+                staticStyle: { "text-align": "center", color: "var(--primary)" }
+              },
+              [_vm._v(_vm._s(_vm.activeTeam.name))]
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              {
+                staticClass: "block",
+                staticStyle: { "padding-bottom": "5px" }
+              },
+              [
+                _c(
+                  "div",
+                  { staticClass: "heading" },
+                  [
+                    _c("b", [_vm._v("Site Namespaces")]),
+                    _vm._v(" "),
+                    _vm.activeTeam.is_owner
+                      ? _c(
+                          "ui-icon-button",
                           {
-                            staticStyle: {
-                              "font-size": "15px",
-                              flex: "1",
-                              "text-transform": "uppercase",
-                              "align-self": "center"
+                            on: {
+                              click: function($event) {
+                                return _vm.openTeamSiteCreateDialog(
+                                  _vm.activeTeam
+                                )
+                              }
                             }
                           },
-                          [_vm._v(_vm._s(site.host))]
-                        ),
-                        _vm._v(" "),
-                        _vm.activeTeam.is_owner
-                          ? _c(
-                              "ui-popover-menu",
-                              {
-                                scopedSlots: _vm._u(
-                                  [
-                                    {
-                                      key: "trigger",
-                                      fn: function() {
-                                        return [
-                                          _c(
-                                            "ui-icon-button",
-                                            { staticClass: "more-button" },
-                                            [_vm._v("󰇙")]
-                                          )
-                                        ]
-                                      },
-                                      proxy: true
-                                    }
-                                  ],
-                                  null,
-                                  true
-                                )
-                              },
-                              [
-                                _vm._v(" "),
-                                _c(
-                                  "ui-menu-item",
-                                  {
-                                    attrs: { icon: "&#985721;" },
-                                    on: {
-                                      click: function($event) {
-                                        return _vm.openTeamSiteDeleteDialog(
-                                          _vm.activeTeam,
-                                          site
-                                        )
-                                      }
-                                    }
-                                  },
-                                  [_vm._v("Delete Namespace")]
-                                )
-                              ],
-                              1
-                            )
-                          : _vm._e()
-                      ],
-                      1
-                    )
-                  }),
-                  _vm._v(" "),
-                  _vm.activeTeam.is_owner
-                    ? _c(
-                        "ui-button",
+                          [_vm._v("󰐕")]
+                        )
+                      : _vm._e()
+                  ],
+                  1
+                ),
+                _vm._v(" "),
+                _vm._l(_vm.activeTeam.sites, function(site) {
+                  return _c(
+                    "div",
+                    { key: site.id, staticClass: "namespace-container" },
+                    [
+                      _c("div", { staticClass: "icon" }, [_vm._v("󰇧")]),
+                      _vm._v(" "),
+                      _c("b", { staticClass: "namespace" }, [
+                        _vm._v(_vm._s(site.host))
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "ui-icon-button",
                         {
-                          attrs: { icon: "&#987309;", text: "" },
+                          staticClass: "action-button",
+                          attrs: { error: "" },
                           on: {
                             click: function($event) {
-                              return _vm.openTeamSiteCreateDialog(
-                                _vm.activeTeam
+                              return _vm.openTeamSiteDeleteDialog(
+                                _vm.activeTeam,
+                                site
                               )
                             }
                           }
                         },
-                        [_vm._v("Add Namespace")]
+                        [_vm._v("󰩹")]
                       )
-                    : _vm._e(),
-                  _c("br"),
-                  _c("br")
-                ],
-                2
-              ),
-              _vm._v(" "),
-              _vm._l(_vm.invites, function(invite) {
-                return _c(
-                  "fieldset",
-                  { key: invite.id },
-                  [
-                    _c("legend", [_vm._v(_vm._s(invite.team.name))]),
-                    _vm._v(" "),
-                    _c("p", [
-                      _vm._v("\n                You've got invited to join "),
-                      _c("b", [_vm._v(_vm._s(invite.team.name))])
-                    ]),
-                    _vm._v(" "),
-                    _c(
-                      "ui-button",
-                      {
-                        attrs: {
-                          text: "",
-                          border: "",
-                          icon: "&#983213;",
-                          "icon-left": ""
-                        },
-                        on: {
-                          click: function($event) {
-                            return _vm.openInviteIgnoreDialog(
-                              invite.id,
-                              invite.team
-                            )
-                          }
-                        }
-                      },
-                      [_vm._v("Decline")]
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "ui-button",
-                      {
-                        attrs: { icon: "&#983340;" },
-                        on: {
-                          click: function($event) {
-                            return _vm.handleInvite(invite.id, "accepted")
-                          }
-                        }
-                      },
-                      [_vm._v("Accept")]
-                    )
-                  ],
-                  1
-                )
-              })
-            ],
-            2
-          )
+                    ],
+                    1
+                  )
+                })
+              ],
+              2
+            )
+          ])
         : _vm._e(),
       _vm._v(" "),
       _c(
@@ -52078,6 +51986,53 @@ var render = function() {
         }),
         0
       ),
+      _vm._v(" "),
+      _vm._l(_vm.invites, function(invite) {
+        return _c(
+          "fieldset",
+          { key: invite.id },
+          [
+            _c("legend", [_vm._v(_vm._s(invite.team.name))]),
+            _vm._v(" "),
+            _c("p", [
+              _vm._v("\n            You've got invited to join "),
+              _c("b", [_vm._v(_vm._s(invite.team.name))])
+            ]),
+            _vm._v(" "),
+            _c(
+              "ui-button",
+              {
+                attrs: {
+                  text: "",
+                  border: "",
+                  icon: "&#983213;",
+                  "icon-left": ""
+                },
+                on: {
+                  click: function($event) {
+                    return _vm.openInviteIgnoreDialog(invite.id, invite.team)
+                  }
+                }
+              },
+              [_vm._v("Decline")]
+            ),
+            _vm._v(" "),
+            _c(
+              "ui-button",
+              {
+                attrs: { icon: "&#983340;" },
+                on: {
+                  click: function($event) {
+                    return _vm.handleInvite(invite.id, "accepted")
+                  }
+                }
+              },
+              [_vm._v("Accept")]
+            )
+          ],
+          1
+        )
+      }),
       _vm._v(" "),
       _c(
         "button",
@@ -52770,7 +52725,7 @@ var render = function() {
         ])
       })
     ],
-    1
+    2
   )
 }
 var staticRenderFns = []

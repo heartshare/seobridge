@@ -75,7 +75,6 @@ const app = new Vue({
                         progress_max: e.data.progress_max,
                     },
                 })
-                console.log(e)
             })
 
             userReportTaskEventChannel.listen('.page.add', (e) => {
@@ -83,7 +82,6 @@ const app = new Vue({
                     id: e.jobId,
                     report: e.data,
                 })
-                console.log(e)
             })
         },
     },
