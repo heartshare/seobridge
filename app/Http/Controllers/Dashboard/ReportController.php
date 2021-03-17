@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Dashboard;
 
+use App\Events\UserReportTaskUpdated;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\TeamMember;
@@ -72,7 +73,6 @@ class ReportController extends Controller
             else if (in_array($report->id, $ownReportGroupIds))
             {
                 $report->is_own = true;
-                $report->debug1 = $ownReportGroupIds;
             }
         });
 
@@ -124,13 +124,17 @@ class ReportController extends Controller
             'mode' => $reportGroup->mode,
             'device' => $reportGroup->device,
             'job_id' => $reportGroup->id,
+            'owner_id' => Auth::id(),
         ]);
 
         $task->status = ($response->status() > 199 && $response->status() < 300) ? 'request_successful' : 'request_denied';
         $task->save();
 
-        // TODO: send back report group with reports and task
-        return 'OK';
+        $returnReportGroup = UserReportGroup::with(['reports','task'])->find($reportGroup->id);
+        $returnReportGroup->has_been_assigned = false;
+        $returnReportGroup->has_been_shared = false;
+        $returnReportGroup->is_own = true;
+        return $returnReportGroup;
     }
 
 
@@ -139,10 +143,11 @@ class ReportController extends Controller
     {
         $request->validate([
             'type' => ['required', 'in:crawling,crawling_completed,fetching,fetching_completed,completed'],
-            'jobId' => ['required', 'exists:user_report_tasks,id'],
+            'jobId' => ['required', 'exists:user_report_tasks,report_group_id'],
+            'ownerId' => ['required', 'exists:users,id'],
         ]);
 
-        $task = UserReportGroup::find($request->jobId)->task();
+        $task = UserReportTask::firstWhere('report_group_id', $request->jobId);
 
         if (isset($request->progress) && is_int($request->progress))
         {
@@ -156,6 +161,13 @@ class ReportController extends Controller
 
         $task->status = $request->type;
         $task->save();
+
+        UserReportTaskUpdated::dispatch($request->ownerId, $request->jobId, $request->type, [
+            'progress' => $request->progress,
+            'progress_max' => $request->progressMax,
+        ]);
+        
+        return $request->ownerId;
     }
 
 
@@ -207,11 +219,16 @@ class ReportController extends Controller
 
     public function addPage(Request $request)
     {
+        $request->validate([
+            'jobId' => ['required', 'exists:user_report_groups,id'],
+            'ownerId' => ['required', 'exists:users,id'],
+        ]);
+
         $reportJson = $request->data;
 
-        $reportGroup = UserReportGroup::find($request->id);
+        $reportGroup = UserReportGroup::find($request->jobId);
 
-        UserReport::create([
+        $report = UserReport::create([
             'report_group_id' => $reportGroup->id,
             'url' => $reportJson['url']['href'],
             'host' => $reportJson['url']['host'],
@@ -219,6 +236,8 @@ class ReportController extends Controller
             'score' => $reportJson['score']['totalPageScore'],
             'data' => $reportJson,
         ]);
+
+        UserReportTaskUpdated::dispatch($request->ownerId, $request->jobId, 'page_added', $report);
     }
 
 

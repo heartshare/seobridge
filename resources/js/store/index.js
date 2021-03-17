@@ -225,6 +225,31 @@ module.exports = {
             state.paginatedReportGroups = data
         },
 
+        addReportGroup(state, data) {
+            state.paginatedReportGroups.data.unshift(data)
+        },
+
+        setPaginatedReportGroupTask(state, data) {
+            let index = state.paginatedReportGroups.data.findIndex(e => e.id === data.id)
+
+            if (index >= 0)
+            {
+                state.paginatedReportGroups.data[index].task = {
+                    ...state.paginatedReportGroups.data[index].task,
+                    ...data.task,
+                }
+            }
+        },
+
+        addReportToPaginatedReportGroup(state, data) {
+            let index = state.paginatedReportGroups.data.findIndex(e => e.id === data.id)
+
+            if (index >= 0)
+            {
+                state.paginatedReportGroups.data[index].reports.unshift(data.report)
+            }
+        },
+
         deleteReportGroup(state, data) {
             let index = state.paginatedReportGroups.data.findIndex(e => e.id === data)
 

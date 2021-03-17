@@ -59,6 +59,6 @@ class UserReportGroup extends Model
 
     public function task()
     {
-        return $this->hasOne(UserReport::class, 'report_group_id', 'id');
+        return $this->hasOne(UserReportTask::class, 'report_group_id', 'id');
     }
 }

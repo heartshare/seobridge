@@ -22,18 +22,16 @@ module.exports = class FetchQueue extends EventEmitter
                 let item = this.queue.shift()
 
                 this.emit('status.fetching.started', {
-                    id: item.id
+                    item
                 })
                 
                 this.workers.push(new FetchQueueWorker(item).on('fetch-complete', (fetchedItem) => {
                     this.emit('status.fetching.completed', {
-                        id: fetchedItem.id,
                         item: fetchedItem.item,
                         page: fetchedItem.page,
                     })
                 }).on('complete', (fetchedItem) => {
                     this.emit('status.completed', {
-                        id: fetchedItem.id,
                         item: fetchedItem.item
                     })
                     

@@ -49,6 +49,21 @@
                         </div>
 
                         <div class="job-pages">
+                            <div class="status" v-if="reportGroup.task && reportGroup.task.status !== 'completed'">
+                                <div class="label">Status:</div>
+                                
+                                <div class="status-text warning" v-if="reportGroup.task.status === 'crawling'">Crawling for links</div>
+                                <div class="status-text warning" v-else-if="reportGroup.task.status === 'crawling_completed'">Links crawled</div>
+                                <div class="status-text warning" v-else-if="reportGroup.task.status === 'fetching'">Analysing pages</div>
+                                <div class="status-text success" v-else-if="reportGroup.task.status === 'completed'">Scan complete</div>
+
+                                <ui-spinner class="status-spinner"></ui-spinner>
+
+                                <div class="spacer"></div>
+
+                                <ui-button small text>Cancel</ui-button>
+                            </div>
+
                             <page-row v-for="report in reportGroup.reports" :key="'report_'+report.id" :report="report" @details="openDetails($event)"></page-row>
                             <div class="blend" v-if="reportGroup.reports.length > 4">
                                 <ui-button text>Show more</ui-button>
@@ -655,9 +670,9 @@
                 this.$refs.reportCreateDialog.close()
             },
 
-            requestReport(url = null) {
+            requestReport(url = this.reportCreate.url) {
                 axios.post('/auth/reports/request-site-analysis', {
-                    url: url || this.reportCreate.url,
+                    url,
                     // mode: this.reportCreate.mode || 'single',
                     mode: 'single',
                     device: {
@@ -665,6 +680,7 @@
                     },
                 })
                 .then(response => {
+                    this.$store.commit('addReportGroup', response.data)
                     this.resetReportCreate()
                     console.log(response.data)
                 })
@@ -939,6 +955,41 @@
                     gap: 15px
                     padding: 0 15px 15px
                     position: relative
+
+                    .status
+                        display: flex
+                        height: 50px
+                        align-items: center
+                        padding: 10px
+                        gap: 10px
+                        border: var(--border)
+                        border-radius: 5px
+
+                        .label
+                            font-size: var(--text-size)
+                            color: var(--text-gray)
+                            width: min-content
+
+                        .status-text
+                            font-size: var(--text-size)
+                            font-weight: 600
+                            text-transform: uppercase
+                            color: var(--heading-gray)
+
+                            &.warning
+                                color: var(--warning)
+
+                            &.error
+                                color: var(--error)
+
+                            &.success
+                                color: var(--success)
+
+                        .spacer
+                            flex: 1
+
+                        .cancel-button
+                            width: min-content
 
                     .blend
                         width: 100%

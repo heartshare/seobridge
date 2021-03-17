@@ -1,6 +1,6 @@
 <template>
     <svg class="circular" viewBox="25 25 50 50" :style="'height: '+size+'px; width: '+size+'px; margin: '+margin+'px;'">
-        <circle class="path" cx="50" cy="50" r="20" fill="none" :stroke="color" :stroke-width="stroke || 5" stroke-miterlimit="10"/>
+        <circle class="path" cx="50" cy="50" r="20" fill="none" :stroke="color || 'var(--text-gray)'" :stroke-width="stroke || 5" stroke-miterlimit="10"/>
     </svg>
 </template>
 <script>

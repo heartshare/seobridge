@@ -27533,7 +27533,7 @@ var render = function() {
           cy: "50",
           r: "20",
           fill: "none",
-          stroke: _vm.color,
+          stroke: _vm.color || "var(--text-gray)",
           "stroke-width": _vm.stroke || 5,
           "stroke-miterlimit": "10"
         }

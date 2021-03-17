@@ -22,12 +22,11 @@ module.exports = class CrawlQueue extends EventEmitter
                 let item = this.queue.shift()
 
                 this.emit('status.crawling.started', {
-                    id: item.id
+                    item
                 })
                 
                 this.workers.push(new CrawlQueueWorker(item).on('complete', (crawledItem) => {
                     this.emit('status.crawling.completed', {
-                        id: crawledItem.id,
                         item: crawledItem
                     })
 

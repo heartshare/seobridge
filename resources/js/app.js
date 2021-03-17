@@ -64,7 +64,25 @@ const app = new Vue({
             if (history.state) this.$store.commit('page', history.state)
         },
         subscribeToUserReportTask(userId) {
-            Echo.private(`App.Model.UserReportTask.${userId}`).listen('status.update', (e) => {
+            let userReportTaskEventChannel = window.Echo.private(`App.Models.UserReportTask.${userId}`)
+
+            userReportTaskEventChannel.listen('.status.update', (e) => {
+                this.$store.commit('setPaginatedReportGroupTask', {
+                    id: e.jobId,
+                    task: {
+                        status: e.status,
+                        progress: e.data.progress,
+                        progress_max: e.data.progress_max,
+                    },
+                })
+                console.log(e)
+            })
+
+            userReportTaskEventChannel.listen('.page.add', (e) => {
+                this.$store.commit('addReportToPaginatedReportGroup', {
+                    id: e.jobId,
+                    report: e.data,
+                })
                 console.log(e)
             })
         },

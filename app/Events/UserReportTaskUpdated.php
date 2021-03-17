@@ -11,11 +11,11 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class UserReportTaskUpdated
+class UserReportTaskUpdated implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $user;
+    public $userId;
     public $status;
     public $jobId;
     public $data;
@@ -25,9 +25,9 @@ class UserReportTaskUpdated
      *
      * @return void
      */
-    public function __construct(User $user, $jobId, $status, $data = [])
+    public function __construct($userId, $jobId, $status, $data = [])
     {
-        $this->user = $user;
+        $this->userId = $userId;
         $this->jobId = $jobId;
         $this->status = $status;
         $this->data = $data;
@@ -41,7 +41,7 @@ class UserReportTaskUpdated
     public function broadcastWith()
     {
         return [
-            'id' => $this->user->id,
+            'userId' => $this->userId,
             'jobId' => $this->jobId,
             'status' => $this->status,
             'data' => $this->data,
@@ -55,7 +55,7 @@ class UserReportTaskUpdated
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('App.Model.UserReportTask.'.$this->user->id);
+        return new PrivateChannel('App.Models.UserReportTask.'.$this->userId);
     }
 
     /**
@@ -65,6 +65,6 @@ class UserReportTaskUpdated
      */
     public function broadcastAs()
     {
-        return 'status.update';
+        return ($this->status == 'page_added') ? 'page.add' : 'status.update';
     }
 }

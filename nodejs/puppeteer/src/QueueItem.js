@@ -1,8 +1,9 @@
 module.exports = class CrawlQueueItem
 {
-    constructor (id, url, mode = 'single')
+    constructor (id, ownerId, url, mode = 'single')
     {
         this.id = id
+        this.ownerId = ownerId
         this.url = url
         this.mode = mode
         this.status = null

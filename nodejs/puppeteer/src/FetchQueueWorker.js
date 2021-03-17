@@ -357,7 +357,6 @@ module.exports = class FetchWorker extends EventEmitter
         this.item.addPage(pageData)
 
         this.emit('fetch-complete', {
-            id: this.item.id,
             item: this.item,
             page: pageData,
         })
