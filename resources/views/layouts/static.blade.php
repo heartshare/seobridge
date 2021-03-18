@@ -4,17 +4,33 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" href="/images/app/favicon.ico" type="image/x-icon">
-
+    
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
-
+    
     <link rel="stylesheet" href="https://use.typekit.net/mpl5hxh.css">
-
+    
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    
+    <!-- Page Meta -->
+    <title>@yield('title')</title>
+    <meta name="description" content="@yield('description')">
 
-    <title>{{ config('app.name') }}</title>
+    <!-- Twitter Meta -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="">
+    <meta name="twitter:title" content="Search engine optimisation with SEO Bridge">
+    <meta name="twitter:description" content="Check your site's page ranking and optimize it for search engines">
+    <meta name="twitter:image" content="https://seobridge.net/images/static/og_banner.png">
+
+    <!-- OG Meta -->
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Search engine optimisation with SEO Bridge">
+    <meta property="og:site_name" content="SEO Bridge">
+    <meta property="og:url" content="seobridge.net">
+    <meta property="og:image" content="https://seobridge.net/images/static/og_banner.png">
 
     <!-- Scripts -->
     <script src="{{ asset('js/static.js') }}" defer></script>
@@ -27,15 +43,15 @@
         <nav id="navbar">
             <div class="limiter">
                 <a id="logo" href="{{ url('/') }}">
-                    <img src="/images/app/logo.svg" alt="SEO Bridge logo">
+                    <img src="/images/app/logo_white.svg" alt="SEO Bridge logo">
                 </a>
 
                 <ul class="center-nav-container">
                     <li>
-                        <a class="underline @if (Route::currentRouteName() == 'home') active @endif" href="{{url('/')}}">Home</a>
+                        <a class="underline @if (Route::currentRouteName() == 'home') active @endif" href="{{url('/')}}">Products</a>
                     </li>
                     <li>
-                        <a class="underline @if (Route::currentRouteName() == 'blog') active @endif" href="{{url('/blog')}}">Blog</a>
+                        <a class="underline @if (Route::currentRouteName() == 'blog') active @endif" href="{{url('/blog')}}">Resources</a>
                     </li>
                     <li>
                         <a class="underline @if (Route::currentRouteName() == 'pricing') active @endif" href="{{url('/pricing')}}">Pricing</a>
@@ -44,15 +60,9 @@
 
                 <ul class="side-nav-container">
                     @guest
-                        @if (Route::has('register'))
-                            <li>
-                                <a class="solid" href="{{ route('register') }}">{{ __('Register') }}</a>
-                            </li>
-                        @endif
-
                         @if (Route::has('login'))
                             <li>
-                                <a class="light" href="{{ route('login') }}">{{ __('Login') }}</a>
+                                <a class="solid" href="{{ route('login') }}">{{ __('Login') }}</a>
                             </li>
                         @endif
                     @else
@@ -62,7 +72,7 @@
                             </a>
                         </li>
 
-                        <ui-icon-button title="{{ __('Logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">&#984573;</ui-icon-button>
+                        <ui-icon-button class="logout-button" title="{{ __('Logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">&#984573;</ui-icon-button>
 
                         <form id="logout-form" action="{{ route('logout') }}" method="POST">
                             @csrf

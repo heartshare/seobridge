@@ -1,6 +1,4 @@
 #app.static
-    padding-top: 60px
-
     #navbar
         position: fixed
         top: 0
@@ -8,14 +6,12 @@
         height: 60px
         color: var(--text-gray)
         font-size: var(--text-size)
-        background: var(--bg)
         width: 100%
         z-index: 1000
-        transition: filter 200ms
-        will-change: filter
+        transition: all 200ms
 
         &.scrolled
-            filter: var(--elevation-4)
+            background: var(--primary)
 
         .limiter
             display: flex
@@ -49,22 +45,22 @@
                         font-weight: 500
                         letter-spacing: 1px
                         border-radius: 5px
-                        color: var(--text-gray)
+                        color: #ffffffdd
                         padding: 0 20px
                         position: relative
-                        transition: color 100ms
+                        transition: color 100ms, background 100ms
                         white-space: nowrap
                         text-overflow: ellipsis
                         overflow: hidden
 
                         &.underline::after
                             content: ''
-                            height: 3px
+                            height: 2px
                             width: calc(100% - 40px)
                             position: absolute
                             left: 20px
                             bottom: 5px
-                            background: var(--secondary)
+                            background: white
                             border-radius: 10px
                             transform: scaleX(0)
                             transition: transform 100ms, color 100ms
@@ -72,17 +68,17 @@
 
                         &:hover::after
                             transform: scaleX(1)
-                            background: var(--secondary)
+                            background: white
 
                         &:hover
-                            color: var(--primary)
+                            color: white
 
                         &.active
-                            color: var(--primary)
+                            color: white
 
                         &.active::after
                             transform: scaleX(1)
-                            background: var(--secondary)
+                            background: white
 
             .center-nav-container
                 flex: 1
@@ -90,22 +86,29 @@
             .side-nav-container
                 width: 240px
                 justify-content: flex-end
-                gap: 15px
+                gap: 5px
+
+                .logout-button
+                    color: white
 
                 form
                     display: none
 
                 li a
-                    height: 34px
-                    line-height: 34px
+                    height: 32px
+                    line-height: 32px
+                    font-weight: 600
 
-                    &.solid
-                        background: var(--primary)
+                    &:hover
                         color: white
 
-                    &.light
-                        background: var(--primary-shade)
-                        color: var(--primary)
+                    &.solid
+                        background: #ffffff30
+                        color: white
+
+                        &:hover
+                            color: var(--primary)
+                            background: white
 
     header
         display: block
@@ -117,14 +120,21 @@
     main
         display: block
 
+        .flex-50-50
+            display: flex
+            gap: 50px
+            align-items: center
+            margin: 90px 0
+
+            .item
+                flex: 1
+                font-size: var(--text-size)
+
         .centered-dialog
             width: 100%
             display: block
-            height: calc(100vh - 120px)
-            background-image: url('/images/static/banner.png')
-            background-repeat: no-repeat
-            background-position: center
-            background-size: cover
+            height: 100vh
+            background: linear-gradient(135deg, var(--secondary), var(--primary))
 
             .dialog
                 position: absolute
@@ -137,6 +147,7 @@
                 background: white
                 border-radius: 10px
                 text-align: left
+                filter: var(--elevation-4)
 
                 .headline
                     text-align: center
@@ -180,3 +191,42 @@
 
                             &:hover
                                 color: white
+
+
+
+// SCOPED
+header[data-cs-00001]
+    height: 60vh
+    display: grid !important
+    place-content: center
+    color: white
+    background: linear-gradient(135deg, var(--secondary), var(--primary))
+
+    h3
+        color: inherit
+
+    .url-input-wrapper
+        max-width: calc(100% - 40px)
+        width: 600px
+        height: 50px
+        position: relative
+
+        .submit-button
+            position: absolute
+            top: 5px
+            right: 5px
+            width: 130px
+
+        .input
+            background: white
+            border: none
+            border-radius: 5px
+            padding: 0 150px 0 15px
+            height: 100%
+            width: 100%
+            font-family: var(--text-font)
+            font-size: var(--button-size)
+            filter: var(--elevation-4)
+
+article[data-cs-00002]
+    padding: 100px 0

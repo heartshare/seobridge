@@ -1,5 +1,7 @@
 @extends('layouts.static')
 
+@section('title', 'Login - SEO Bridge')
+
 @section('content')
 <div class="centered-dialog font-size">
     <div class="dialog font-size">
