@@ -119,7 +119,7 @@ class ReportController extends Controller
             'status' => 'request_pending',
         ]);
 
-        $response = Http::post('http://localhost:999/request-site-analysis', [
+        $response = Http::post('http://localhost:1999/request-site-analysis', [
             'url' => $reportGroup->url,
             'mode' => $reportGroup->mode,
             'device' => $reportGroup->device,
