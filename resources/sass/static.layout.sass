@@ -12,6 +12,7 @@
 
         &.scrolled
             background: var(--primary)
+            box-shadow: 0 5px 10px #00000020
 
         .limiter
             display: flex
@@ -124,17 +125,21 @@
             display: flex
             gap: 50px
             align-items: center
-            margin: 90px 0
+            margin: 50px 0
 
             .item
                 flex: 1
                 font-size: var(--text-size)
 
+                img
+                    max-width: 100%
+                    widthh: 100%
+
         .centered-dialog
             width: 100%
             display: block
-            height: 100vh
-            background: linear-gradient(135deg, var(--secondary), var(--primary))
+            height: calc(100vh - 60px)
+            background: var(--primary)
 
             .dialog
                 position: absolute
@@ -195,12 +200,17 @@
 
 
 // SCOPED
+header[data-cs-00003]
+    height: 60px
+    display: block
+    background: var(--primary)
+
 header[data-cs-00001]
     height: 60vh
     display: grid !important
     place-content: center
     color: white
-    background: linear-gradient(135deg, var(--secondary), var(--primary))
+    background: var(--primary)
 
     h3
         color: inherit
@@ -230,3 +240,127 @@ header[data-cs-00001]
 
 article[data-cs-00002]
     padding: 100px 0
+    display: block
+    width: 100%
+
+    .gray-polygon
+        display: block
+        width: 100%
+        background: var(--bg-dark)
+        padding: 30px 0 50px
+        clip-path: polygon(0% 0%, 100% 6%, 100% 86%, 0% 100%)
+
+.limiter.pricing[data-cs-00004]
+    display: flex !important
+    gap: 50px
+    padding-top: 100px
+
+    .price-plan
+        flex: 1
+        border-radius: 10px
+        box-shadow: 0 12px 20px #00003020
+        border: 1px solid #00000020
+
+        .header
+            width: 100%
+            border-radius: 10px 10px 0 0
+            background: var(--bg-dark)
+            padding: 20px 15px
+            display: flex
+            flex-direction: column
+            margin-bottom: 5px
+
+            h2, h4
+                margin: 0
+                color: var(--heading-gray)
+
+            h2, h4, span
+                display: inline-block
+                width: 100%
+                line-height: 100%
+
+            h4
+                margin-top: 25px
+
+            span
+                margin-top: 6px
+                font-size: var(--text-size)
+                color: var(--text-gray)
+
+        .features
+            min-height: 200px
+            display: block
+
+        .feature-point
+            height: 40px
+            display: flex
+            align-items: center
+
+            .icon
+                width: 60px
+                text-align: center
+                font-size: 20px
+                font-family: 'Material Icons'
+                color: var(--text-gray)
+
+            .text
+                font-size: var(--text-size)
+                color: var(--heading-gray)
+
+        .divider
+            width: 100%
+            display: block
+            margin: 10px 0
+            border-bottom: var(--border)
+
+        .button
+            height: 42px
+            width: calc(100% - 30px)
+            margin: 15px
+            display: grid
+            place-content: center
+            border: 1px solid var(--primary)
+            border-radius: 5px
+            font-size: var(--button-size)
+            font-weight: 600
+            letter-spacing: 1px
+            color: var(--primary)
+            text-transform: uppercase
+            text-decoration: none !important
+            transition: all 100ms
+
+            &:hover
+                background: var(--primary)
+                color: white
+
+        &.featured
+            background: var(--primary)
+            border: transparent
+            box-shadow: 0 20px 40px #00003060
+
+            .header
+                background: #ffffff15
+
+                h2, h4
+                    color: white
+
+                span
+                    color: #ffffffaa
+
+            .feature-point
+                .icon
+                    color: #ffffffaa
+                .text
+                    color: white
+
+            .divider
+                border-color: #ffffff60
+
+            .button
+                color: white
+                background: #ffffff30
+                border-color: white
+
+                &:hover
+                    color: var(--primary)
+                    background: white

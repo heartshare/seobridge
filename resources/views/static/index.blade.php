@@ -13,19 +13,32 @@
         </div>
     </div>
 </header>
-<div class="limiter">
-    <article data-cs-00002>
-        <h1 style="text-align: center">SEO and semantic structure analysis</h1>
+<article data-cs-00002>
+    <div class="limiter">
+        <h1 style="text-align: center">The SEO analysis tool for you, your startup or agency!</h1>
+        <p>
+            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Vero cumque voluptates perferendis id?
+            Voluptatibus dicta at, commodi quae egeniet obcaecati
+            saepe quidem voluptates ut deserunt ea nostrum ullam quisquam magnam!
+            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Vero cumque voluptates perferendis id?
+            Voluptatibus dicta at, commodi quae egeniet obcaecati
+            saepe quidem voluptates ut deserunt ea nostrum ullam quisquam magnam!
+            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Vero cumque voluptates perferendis id?
+            Voluptatibus dicta at, commodi quae egeniet obcaecati
+            saepe quidem voluptates ut.
+        </p>
+    </div>
 
+    <div class="limiter">
         <div class="flex-50-50">
             <div class="item">
-                <img src="/images/static/dashboard.svg" width="500" alt="Man in front of a complex dashboard">
+                <img src="/images/static/checklist.svg" alt="A checklist of SEO tips">
             </div>
             <div class="item">
-                <h2>SEO and semantic structure analysis</h2>
+                <h2>Get a personalized SEO checklist</h2>
                 <p>
                     Lorem ipsum dolor sit, amet consectetur adipisicing elit. Vero cumque voluptates perferendis id?
-                    Voluptatibus dicta at, commodi quae <a href="http://google.com" target="_blank" rel="noopener noreferrer">egeniet obcaecati</a>
+                    Voluptatibus dicta at, commodi quae egeniet obcaecati
                     saepe quidem voluptates ut deserunt ea nostrum ullam quisquam magnam!
                     Lorem ipsum dolor sit, amet consectetur adipisicing elit. Vero cumque voluptates perferendis id?
                     Voluptatibus dicta at, commodi quae egeniet obcaecati
@@ -36,13 +49,43 @@
                 </p>
             </div>
         </div>
+    </div>
 
+    <div class="gray-polygon">
+        <div class="limiter">
+            <div class="flex-50-50">
+                <div class="item">
+                    <h2>Analyse together with your team</h2>
+                    <p>
+                        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Vero cumque voluptates perferendis id?
+                        Voluptatibus dicta at, commodi quae egeniet obcaecati
+                        saepe quidem voluptates ut deserunt ea nostrum ullam quisquam magnam!
+                        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Vero cumque voluptates perferendis id?
+                        Voluptatibus dicta at, commodi quae egeniet obcaecati
+                        saepe quidem voluptates ut deserunt ea nostrum ullam quisquam magnam!
+                        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Vero cumque voluptates perferendis id?
+                        Voluptatibus dicta at, commodi quae egeniet obcaecati
+                        saepe quidem voluptates ut.
+                    </p>
+                </div>
+                <div class="item">
+                    <img src="/images/static/collaboration.svg" alt="A team checing datapoints">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="limiter">
         <div class="flex-50-50">
             <div class="item">
-                <h2>SEO and semantic structure analysis</h2>
+                <img src="/images/static/collaboration.svg" alt="A team checing datapoints">
+            </div>
+    
+            <div class="item">
+                <h2>Scan your site for technical errors</h2>
                 <p>
                     Lorem ipsum dolor sit, amet consectetur adipisicing elit. Vero cumque voluptates perferendis id?
-                    Voluptatibus dicta at, commodi quae <a href="http://google.com" target="_blank" rel="noopener noreferrer">egeniet obcaecati</a>
+                    Voluptatibus dicta at, commodi quae egeniet obcaecati
                     saepe quidem voluptates ut deserunt ea nostrum ullam quisquam magnam!
                     Lorem ipsum dolor sit, amet consectetur adipisicing elit. Vero cumque voluptates perferendis id?
                     Voluptatibus dicta at, commodi quae egeniet obcaecati
@@ -52,10 +95,7 @@
                     saepe quidem voluptates ut.
                 </p>
             </div>
-            <div class="item">
-                <img src="/images/static/dashboard.svg" width="500" alt="Man in front of a complex dashboard">
-            </div>
         </div>
-    </article>
-</div>
+    </div>
+</article>
 @endsection

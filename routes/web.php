@@ -26,7 +26,7 @@ Route::get('/blog', function() {
 })->name('blog');
 
 Route::get('/pricing', function() {
-    return view('static.index');
+    return view('static.pricing');
 })->name('pricing');
 
 Route::get('/privacy-policy', function() {

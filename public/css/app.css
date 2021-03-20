@@ -19,6 +19,7 @@
 }
 #app.static #navbar.scrolled {
   background: var(--primary);
+  box-shadow: 0 5px 10px #00000020;
 }
 #app.static #navbar .limiter {
   display: flex;
@@ -140,17 +141,21 @@
   display: flex;
   gap: 50px;
   align-items: center;
-  margin: 90px 0;
+  margin: 50px 0;
 }
 #app.static main .flex-50-50 .item {
   flex: 1;
   font-size: var(--text-size);
 }
+#app.static main .flex-50-50 .item img {
+  max-width: 100%;
+  widthh: 100%;
+}
 #app.static main .centered-dialog {
   width: 100%;
   display: block;
-  height: 100vh;
-  background: linear-gradient(135deg, var(--secondary), var(--primary));
+  height: calc(100vh - 60px);
+  background: var(--primary);
 }
 #app.static main .centered-dialog .dialog {
   position: absolute;
@@ -208,12 +213,18 @@
   color: white;
 }
 
+header[data-cs-00003] {
+  height: 60px;
+  display: block;
+  background: var(--primary);
+}
+
 header[data-cs-00001] {
   height: 60vh;
   display: grid !important;
   place-content: center;
   color: white;
-  background: linear-gradient(135deg, var(--secondary), var(--primary));
+  background: var(--primary);
 }
 header[data-cs-00001] h3 {
   color: inherit;
@@ -244,6 +255,132 @@ header[data-cs-00001] .url-input-wrapper .input {
 
 article[data-cs-00002] {
   padding: 100px 0;
+  display: block;
+  width: 100%;
+}
+article[data-cs-00002] .gray-polygon {
+  display: block;
+  width: 100%;
+  background: var(--bg-dark);
+  padding: 30px 0 50px;
+  -webkit-clip-path: polygon(0% 0%, 100% 6%, 100% 86%, 0% 100%);
+          clip-path: polygon(0% 0%, 100% 6%, 100% 86%, 0% 100%);
+}
+
+.limiter.pricing[data-cs-00004] {
+  display: flex !important;
+  gap: 50px;
+  padding-top: 100px;
+}
+.limiter.pricing[data-cs-00004] .price-plan {
+  flex: 1;
+  border-radius: 10px;
+  box-shadow: 0 12px 20px #00003020;
+  border: 1px solid #00000020;
+}
+.limiter.pricing[data-cs-00004] .price-plan .header {
+  width: 100%;
+  border-radius: 10px 10px 0 0;
+  background: var(--bg-dark);
+  padding: 20px 15px;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 5px;
+}
+.limiter.pricing[data-cs-00004] .price-plan .header h2, .limiter.pricing[data-cs-00004] .price-plan .header h4 {
+  margin: 0;
+  color: var(--heading-gray);
+}
+.limiter.pricing[data-cs-00004] .price-plan .header h2, .limiter.pricing[data-cs-00004] .price-plan .header h4, .limiter.pricing[data-cs-00004] .price-plan .header span {
+  display: inline-block;
+  width: 100%;
+  line-height: 100%;
+}
+.limiter.pricing[data-cs-00004] .price-plan .header h4 {
+  margin-top: 25px;
+}
+.limiter.pricing[data-cs-00004] .price-plan .header span {
+  margin-top: 6px;
+  font-size: var(--text-size);
+  color: var(--text-gray);
+}
+.limiter.pricing[data-cs-00004] .price-plan .features {
+  min-height: 200px;
+  display: block;
+}
+.limiter.pricing[data-cs-00004] .price-plan .feature-point {
+  height: 40px;
+  display: flex;
+  align-items: center;
+}
+.limiter.pricing[data-cs-00004] .price-plan .feature-point .icon {
+  width: 60px;
+  text-align: center;
+  font-size: 20px;
+  font-family: "Material Icons";
+  color: var(--text-gray);
+}
+.limiter.pricing[data-cs-00004] .price-plan .feature-point .text {
+  font-size: var(--text-size);
+  color: var(--heading-gray);
+}
+.limiter.pricing[data-cs-00004] .price-plan .divider {
+  width: 100%;
+  display: block;
+  margin: 10px 0;
+  border-bottom: var(--border);
+}
+.limiter.pricing[data-cs-00004] .price-plan .button {
+  height: 42px;
+  width: calc(100% - 30px);
+  margin: 15px;
+  display: grid;
+  place-content: center;
+  border: 1px solid var(--primary);
+  border-radius: 5px;
+  font-size: var(--button-size);
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: var(--primary);
+  text-transform: uppercase;
+  text-decoration: none !important;
+  transition: all 100ms;
+}
+.limiter.pricing[data-cs-00004] .price-plan .button:hover {
+  background: var(--primary);
+  color: white;
+}
+.limiter.pricing[data-cs-00004] .price-plan.featured {
+  background: var(--primary);
+  border: transparent;
+  box-shadow: 0 20px 40px #00003060;
+}
+.limiter.pricing[data-cs-00004] .price-plan.featured .header {
+  background: #ffffff15;
+}
+.limiter.pricing[data-cs-00004] .price-plan.featured .header h2, .limiter.pricing[data-cs-00004] .price-plan.featured .header h4 {
+  color: white;
+}
+.limiter.pricing[data-cs-00004] .price-plan.featured .header span {
+  color: #ffffffaa;
+}
+.limiter.pricing[data-cs-00004] .price-plan.featured .feature-point .icon {
+  color: #ffffffaa;
+}
+.limiter.pricing[data-cs-00004] .price-plan.featured .feature-point .text {
+  color: white;
+}
+.limiter.pricing[data-cs-00004] .price-plan.featured .divider {
+  border-color: #ffffff60;
+}
+.limiter.pricing[data-cs-00004] .price-plan.featured .button {
+  color: white;
+  background: #ffffff30;
+  border-color: white;
+}
+.limiter.pricing[data-cs-00004] .price-plan.featured .button:hover {
+  color: var(--primary);
+  background: white;
 }
 
 :root {
