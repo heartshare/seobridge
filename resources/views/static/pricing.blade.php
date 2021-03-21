@@ -7,8 +7,8 @@
 @section('content')
 <article data-cs-00002>
     <div class="limiter">
-        <h4 style="text-align: center">Fed up with sky high prices and complex models?</h4>
-        <h1 style="text-align: center">Our pricing is simple, fair and scalable!</h1>
+        <h4>Fed up with sky high prices and complex models?</h4>
+        <h1>Our pricing is simple, fair and scalable!</h1>
         <p>
             Lorem ipsum dolor sit, amet consectetur adipisicing elit. Vero cumque voluptates perferendis id?
             Voluptatibus dicta at, commodi quae egeniet obcaecati

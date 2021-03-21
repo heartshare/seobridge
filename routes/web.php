@@ -21,9 +21,12 @@ Route::get('/', function() {
     return view('static.index');
 })->name('home');
 
-Route::get('/resources', function() {
-    return view('static.resources');
-})->name('resources');
+Route::get('/resources/category', [App\Http\Controllers\BlogController::class, 'allCategories']);
+Route::get('/resources/category/{category}', [App\Http\Controllers\BlogController::class, 'category']);
+Route::get('/resources/author', [App\Http\Controllers\BlogController::class, 'allAuthors']);
+Route::get('/resources/author/{author}', [App\Http\Controllers\BlogController::class, 'author']);
+Route::get('/resources', [App\Http\Controllers\BlogController::class, 'allArticles']);
+Route::get('/resources/{article}', [App\Http\Controllers\BlogController::class, 'article']);
 
 Route::get('/pricing', function() {
     return view('static.pricing');

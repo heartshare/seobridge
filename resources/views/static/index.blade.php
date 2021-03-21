@@ -15,7 +15,7 @@
 </header>
 <article data-cs-00002>
     <div class="limiter">
-        <h1 style="text-align: center">The perfect SEO analysis tool for you!</h1>
+        <h1>The perfect SEO analysis tool for you!</h1>
         <p>
             Lorem ipsum dolor sit, amet consectetur adipisicing elit. Vero cumque voluptates perferendis id?
             Voluptatibus dicta at, commodi quae egeniet obcaecati

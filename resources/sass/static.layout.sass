@@ -205,11 +205,6 @@
 
 
 // SCOPED
-header[data-cs-00003]
-    height: 60px
-    display: block
-    background: var(--primary)
-
 header[data-cs-00001]
     height: 60vh
     display: grid !important
@@ -242,6 +237,17 @@ header[data-cs-00001]
             font-family: var(--text-font)
             font-size: var(--button-size)
             filter: var(--elevation-4)
+
+header[data-cs-00005]
+    height: 300px
+    display: block
+    background: var(--primary)
+    color: white
+    display: grid !important
+    place-content: center
+
+    h1, h2, h3, h4
+        color: inherit
 
 article[data-cs-00002]
     padding: 100px 0
@@ -367,3 +373,101 @@ article[data-cs-00002]
                 &:hover
                     color: var(--primary)
                     background: white
+
+article[data-cs-01001],
+article[data-cs-01002]
+    padding: 70px 0
+    display: block
+    width: 100%
+
+    .limiter
+        display: flex !important
+        gap: 30px
+
+        .article-preview-image-wrapper
+            flex: 1
+
+            .article-preview-image
+                width: 100%
+                border-radius: 5px
+                height: 100%
+                object-fit: cover
+
+        .article-preview-wrapper
+            flex: 1
+            display: flex
+            flex-direction: column
+            gap: 10px
+
+            .article-headline
+                margin: 0
+
+            .article-info
+                display: flex
+                align-items: center
+                gap: 15px
+                margin-top: 10px
+
+                .text
+                    font-size: 14px
+
+                .divider
+                    opacity: 0.5
+
+                .author
+                    display: flex
+                    align-items: center
+                    gap: 15px
+
+                    .author-image
+                        height: 38px
+                        width: 38px
+                        object-fit: cover
+                        border-radius: 100%
+
+                .author-link,
+                .category-link
+                    font-size: 17px
+                    font-weight: 500
+                    color: var(--text-gray)
+                    
+                    &:hover
+                        color: var(--primary)
+                        text-decoration: none
+
+                .category-link
+                    text-transform: uppercase
+                    font-size: 14px
+
+            .article-preview-text
+                font-size: var(--text-size)
+                margin: 0 0 15px
+
+            .read-more-button
+                height: 40px
+                line-height: 30px
+                font-size: 14px
+                padding: 5px 20px
+                text-align: center
+                letter-spacing: 1.5px
+                font-family: var(--text-font)
+                font-weight: 500
+                text-transform: uppercase
+                text-decoration: none !important
+                border-radius: 5px
+                border: none
+                cursor: pointer
+                user-select: none
+                transition: background 100ms, color 100ms
+                position: relative
+                background: var(--primary)
+                color: white
+                width: min-content
+                white-space: nowrap
+
+                &:hover
+                    box-shadow: 0 5px 7px #00000020
+
+article[data-cs-01002]
+    .limiter .article-preview-wrapper
+        flex: 2
