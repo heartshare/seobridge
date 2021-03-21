@@ -15,7 +15,7 @@
 </header>
 <article data-cs-00002>
     <div class="limiter">
-        <h1 style="text-align: center">The SEO analysis tool for you, your startup or agency!</h1>
+        <h1 style="text-align: center">The perfect SEO analysis tool for you!</h1>
         <p>
             Lorem ipsum dolor sit, amet consectetur adipisicing elit. Vero cumque voluptates perferendis id?
             Voluptatibus dicta at, commodi quae egeniet obcaecati
@@ -78,7 +78,7 @@
     <div class="limiter">
         <div class="flex-50-50">
             <div class="item">
-                <img src="/images/static/collaboration.svg" alt="A team checing datapoints">
+                <img src="/images/static/bug_tracking.svg" alt="Man tracking bugs">
             </div>
     
             <div class="item">

@@ -39,7 +39,7 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
 <body>
-    <div class="static font-size" id="app">
+    <div class="static font-size @yield('page-classes')" id="app">
         <nav id="navbar">
             <div class="limiter">
                 <a id="logo" href="{{ url('/') }}">
@@ -51,7 +51,7 @@
                         <a class="underline @if (Route::currentRouteName() == 'home') active @endif" href="{{url('/')}}">Products</a>
                     </li>
                     <li>
-                        <a class="underline @if (Route::currentRouteName() == 'blog') active @endif" href="{{url('/blog')}}">Resources</a>
+                        <a class="underline @if (Route::currentRouteName() == 'resources') active @endif" href="{{url('/resources')}}">Resources</a>
                     </li>
                     <li>
                         <a class="underline @if (Route::currentRouteName() == 'pricing') active @endif" href="{{url('/pricing')}}">Pricing</a>
@@ -93,9 +93,9 @@
                         <li>
                             <a href="{{url('/privacy-policy')}}">Privacy Policy</a>
                         </li>
-                        <li>
+                        {{-- <li>
                             <a href="{{url('/terms-of-service')}}">Terms of Service</a>
-                        </li>
+                        </li> --}}
                         <li>
                             <a href="{{url('/legal-disclosures')}}">Legal Disclosures</a>
                         </li>

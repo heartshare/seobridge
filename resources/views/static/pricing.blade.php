@@ -1,10 +1,10 @@
 @extends('layouts.static')
 
 @section('title', 'Our pricing model: simple & fair - SEO Bridge')
-@section('description', 'In a market of sky high prices and complex pricing model we offer simple and fair pricing for our SEO tools.')
+@section('description', 'SEO Bridge offers simple and fair pricing for your SEO needs.')
+@section('page-classes', 'no-header')
 
 @section('content')
-<header data-cs-00003></header>
 <article data-cs-00002>
     <div class="limiter">
         <h4 style="text-align: center">Fed up with sky high prices and complex models?</h4>
@@ -41,12 +41,12 @@
                 </div>
                 <div class="feature-point">
                     <div class="icon">&#984544;</div>
-                    <div class="text">200 URLs / Website</div>
+                    <div class="text">100 URLs / Website</div>
                 </div>
                 <div class="divider"></div>
                 <div class="feature-point">
                     <div class="icon">&#983385;</div>
-                    <div class="text">No Additional Websites</div>
+                    <div class="text"><b>No Additional Websites</b></div>
                 </div>
             </div>
 
@@ -71,7 +71,7 @@
                 </div>
                 <div class="feature-point">
                     <div class="icon">&#984544;</div>
-                    <div class="text">1000 URLs / Website</div>
+                    <div class="text">500 URLs / Website</div>
                 </div>
                 <div class="feature-point">
                     <div class="icon">&#984544;</div>
@@ -100,7 +100,7 @@
                 </div>
                 <div class="feature-point">
                     <div class="icon">&#984544;</div>
-                    <div class="text">2500 URLs / Website</div>
+                    <div class="text">1000 URLs / Website</div>
                 </div>
                 <div class="feature-point">
                     <div class="icon">&#984544;</div>

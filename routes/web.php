@@ -21,24 +21,24 @@ Route::get('/', function() {
     return view('static.index');
 })->name('home');
 
-Route::get('/blog', function() {
-    return view('static.index');
-})->name('blog');
+Route::get('/resources', function() {
+    return view('static.resources');
+})->name('resources');
 
 Route::get('/pricing', function() {
     return view('static.pricing');
 })->name('pricing');
 
 Route::get('/privacy-policy', function() {
-    return view('static.index');
+    return view('static.privacy-policy');
 })->name('privacy-policy');
 
 Route::get('/terms-of-service', function() {
-    return view('static.index');
+    return view('static.terms-of-service');
 })->name('terms-of-service');
 
 Route::get('/legal-disclosures', function() {
-    return view('static.index');
+    return view('static.legal-disclosures');
 })->name('legal-disclosures');
 
 Auth::routes();

@@ -212,6 +212,12 @@
 #app.static footer .limiter nav ul li a:hover {
   color: white;
 }
+#app.static.no-header {
+  padding-top: 60px;
+}
+#app.static.no-header #navbar {
+  background: var(--primary);
+}
 
 header[data-cs-00003] {
   height: 60px;
@@ -276,7 +282,6 @@ article[data-cs-00002] .gray-polygon {
   flex: 1;
   border-radius: 10px;
   box-shadow: 0 12px 20px #00003020;
-  border: 1px solid #00000020;
 }
 .limiter.pricing[data-cs-00004] .price-plan .header {
   width: 100%;
@@ -352,7 +357,6 @@ article[data-cs-00002] .gray-polygon {
 }
 .limiter.pricing[data-cs-00004] .price-plan.featured {
   background: var(--primary);
-  border: transparent;
   box-shadow: 0 20px 40px #00003060;
 }
 .limiter.pricing[data-cs-00004] .price-plan.featured .header {
