@@ -26,7 +26,7 @@
         </p>
         <h3>Photo Credit:</h3>
         <p>
-            ©Theus - <a href="https://stock.adobe.com/" target="_blank">https://stock.adobe.com/</a>
+            ©Theus - <a href="https://stock.adobe.com/" target="_blank">stock.adobe.com</a>
         </p>
         <p>&nbsp;</p>
     </div>

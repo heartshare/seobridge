@@ -106,13 +106,47 @@
     </div>
 
     <div class="limiter point-wrapper">
-        <h3 style="text-align: center">Included in the package</h3>
-        <h4 class="poligon-point">Unlimited scans</h4>
-        <h4 class="poligon-point">Daily page audits</h4>
-        <h4 class="poligon-point">Report sharing</h4>
-        <h4 class="poligon-point">Structure analysis tool</h4>
-        <h4 class="poligon-point">Open Graph preview</h4>
-        <h4 class="poligon-point">Twitter card preview</h4>
+        <h2 style="text-align: center">Included in the package</h2>
+        <div class="card-point">
+            <h4>Personalized SEO Checklists</h4>
+            <p>Get relevant information about your website and tips on how to improve it.</p>
+        </div>
+        <div class="card-point">
+            <h4>Mass Analysis</h4>
+            <p>Check not just one but up to 50 URLs at a time.</p>
+        </div>
+        <div class="card-point">
+            <h4>Report Sharing</h4>
+            <p>Share and assign your page reports with your team.</p>
+        </div>
+        <div class="card-point">
+            <h4>Unlimited Scans</h4>
+            <p>Scan your site as often as you like − anytime you like.</p>
+        </div>
+        <div class="card-point">
+            <h4>Open Graph Preview</h4>
+            <p>Get a preview of your open graph integration usually hidden in the source code.</p>
+        </div>
+        <div class="card-point">
+            <h4>Twitter Card Preview</h4>
+            <p>Preview and validate your Twitter card integration usually hidden in the source code.</p>
+        </div>
+    </div>
+
+    <div class="limiter point-wrapper">
+        <h3 style="text-align: center">Even more coming in the future</h3>
+        <div class="card-point">
+            <h4>AI Text Analysis</h4>
+            <p>Let our AI check your texts for its expressiveness and see if your brand message is coming across.</p>
+        </div>
+        <div class="card-point">
+            <h4>Generate Open Graph Cards</h4>
+            <p>Quickly generate your open graph tags uncluding a live preview.</p>
+        </div>
+        <div class="card-point">
+            <h4>Generate Twitter Cards</h4>
+            <p>Easily generate your Twitter card tags uncluding a live preview.</p>
+        </div>
     </div>
 </article>
 @endsection

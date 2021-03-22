@@ -293,15 +293,14 @@ article[data-cs-00002]
         gap: 30px
         padding-bottom: 100px
 
-        h3
+        h2, h3
             display: block
             width: 100%
 
-        .poligon-point
-            margin: 0
+        .card-point
             min-width: 400px
             flex: 1
-            padding: 30px 0
+            padding: 30px
             text-align: center
             background: white
             color: var(--text-gray)
@@ -310,10 +309,19 @@ article[data-cs-00002]
             transition: all 100ms
             background-image: url('/images/static/assets/terrain.svg')
             background-size: 800px
+            will-change: filter
 
             &:hover
                 filter: var(--elevation-4)
                 color: var(--heading-gray)
+
+            h4
+                color: var(--primary)
+                margin: 0
+
+            p
+                font-size: var(--text-size)
+                color: inherit
 
 article[data-cs-00007]
     padding: 100px 0
