@@ -1,7 +1,9 @@
 <?php
 
+use App\Mail\TestEmail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Broadcast;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,36 +17,28 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+// Route::get('/mail', function() {
+//     Mail::to('maurice.freuwoert@gmail.com')->send(new TestEmail());
+// });
+
 Broadcast::routes();
 
-Route::get('/', function() {
-    return view('static.index');
-})->name('home');
+Route::view('/', 'static.index')->name('home');
+Route::view('/pricing', 'static.pricing')->name('pricing');
+Route::get('/resources/category', [App\Http\Controllers\BlogController::class, 'allCategories'])->name('categories');
+Route::get('/resources/category/{category}', [App\Http\Controllers\BlogController::class, 'category'])->name('category');
+Route::get('/resources/author', [App\Http\Controllers\BlogController::class, 'allAuthors'])->name('authors');
+Route::get('/resources/author/{author}', [App\Http\Controllers\BlogController::class, 'author'])->name('author');
+Route::get('/resources', [App\Http\Controllers\BlogController::class, 'allArticles'])->name('resources');
+Route::get('/resources/{article}', [App\Http\Controllers\BlogController::class, 'article'])->name('article');
 
-Route::get('/resources/category', [App\Http\Controllers\BlogController::class, 'allCategories']);
-Route::get('/resources/category/{category}', [App\Http\Controllers\BlogController::class, 'category']);
-Route::get('/resources/author', [App\Http\Controllers\BlogController::class, 'allAuthors']);
-Route::get('/resources/author/{author}', [App\Http\Controllers\BlogController::class, 'author']);
-Route::get('/resources', [App\Http\Controllers\BlogController::class, 'allArticles']);
-Route::get('/resources/{article}', [App\Http\Controllers\BlogController::class, 'article']);
 
-Route::get('/pricing', function() {
-    return view('static.pricing');
-})->name('pricing');
+// Legal Stuff
+Route::view('/privacy-policy', 'static.privacy-policy')->name('privacy-policy');
+Route::view('/terms-of-service', 'static.terms-of-service')->name('terms-of-service');
+Route::view('/legal-disclosures', 'static.legal-disclosures')->name('legal-disclosures');
 
-Route::get('/privacy-policy', function() {
-    return view('static.privacy-policy');
-})->name('privacy-policy');
-
-Route::get('/terms-of-service', function() {
-    return view('static.terms-of-service');
-})->name('terms-of-service');
-
-Route::get('/legal-disclosures', function() {
-    return view('static.legal-disclosures');
-})->name('legal-disclosures');
-
-Auth::routes();
+Auth::routes(['verify' => true]);
 
 Route::get('/dashboard', function() {
     return redirect('/dashboard/overview');

@@ -140,6 +140,8 @@
             display: block
             height: calc(100vh - 60px)
             background: var(--primary)
+            background-image: url('/images/static/assets/terrain_white.svg')
+            background-size: cover
 
             .dialog
                 position: absolute
@@ -211,6 +213,8 @@ header[data-cs-00001]
     place-content: center
     color: white
     background: var(--primary)
+    background-image: url('/images/static/assets/terrain_white.svg')
+    background-size: cover
 
     h3
         color: inherit
@@ -245,11 +249,73 @@ header[data-cs-00005]
     color: white
     display: grid !important
     place-content: center
+    background-image: url('/images/static/assets/terrain_white.svg')
+    background-size: cover
+
+    h1, h2, h3, h4
+        color: inherit
+
+header[data-cs-00008]
+    height: 370px
+    padding-bottom: 30px
+    margin-bottom: 70px
+    display: block
+    background: var(--primary)
+    color: white
+    display: grid !important
+    place-content: center
+    background-image: url('/images/static/assets/terrain_white.svg')
+    background-size: cover
+    position: relative
+
+    .author-image
+        height: 140px
+        width: 140px !important
+        border-radius: 100%
+        object-fit: cover
+        position: absolute
+        bottom: 0px
+        left: 50%
+        border: 5px solid white
+        background: white
+        transform: translate(-50%, 50%)
 
     h1, h2, h3, h4
         color: inherit
 
 article[data-cs-00002]
+    display: block
+    width: 100%
+
+    .limiter.point-wrapper
+        display: flex !important
+        flex-wrap: wrap
+        gap: 30px
+        padding-bottom: 100px
+
+        h3
+            display: block
+            width: 100%
+
+        .poligon-point
+            margin: 0
+            min-width: 400px
+            flex: 1
+            padding: 30px 0
+            text-align: center
+            background: white
+            color: var(--text-gray)
+            border-radius: 10px
+            filter: var(--elevation-1)
+            transition: all 100ms
+            background-image: url('/images/static/assets/terrain.svg')
+            background-size: 800px
+
+            &:hover
+                filter: var(--elevation-4)
+                color: var(--heading-gray)
+
+article[data-cs-00007]
     padding: 100px 0
     display: block
     width: 100%
@@ -261,10 +327,17 @@ article[data-cs-00002]
         padding: 30px 0 50px
         clip-path: polygon(0% 0%, 100% 6%, 100% 86%, 0% 100%)
 
+div[data-cs-02001]
+    background: var(--bg-dark)
+    padding: 40px 0 100px
+    background-image: url('/images/static/assets/terrain.svg')
+    background-size: cover
+    clip-path: polygon(0% 0%, 100% 0%, 100% calc(100% - 80px), 50% 100%, 0% calc(100% - 80px))
+
 .limiter.pricing[data-cs-00004]
     display: flex !important
     gap: 50px
-    padding-top: 100px
+    padding: 100px 0
 
     .price-plan
         flex: 1
@@ -366,13 +439,12 @@ article[data-cs-00002]
                 border-color: #ffffff60
 
             .button
-                color: white
-                background: #ffffff30
-                border-color: white
+                color: var(--primary)
+                background: white
+                border-color: transparent
 
                 &:hover
-                    color: var(--primary)
-                    background: white
+                    background: #ffffffdd
 
 article[data-cs-01001],
 article[data-cs-01002]
@@ -471,3 +543,62 @@ article[data-cs-01002]
 article[data-cs-01002]
     .limiter .article-preview-wrapper
         flex: 2
+
+article[data-cs-01101]
+    padding: 20px 0 100px
+
+    .limiter
+        display: flex !important
+
+        .info-side
+            width: 250px
+
+        .annotations
+            width: 250px
+
+        .article-limiter
+            flex: 1
+            display: flex
+            flex-direction: column
+            gap: 10px
+
+            .article-preview-image
+                width: 100%
+                border-radius: 5px
+
+            .article-info
+                display: flex
+                align-items: center
+                gap: 15px
+                margin-bottom: 10px
+
+                .text
+                    font-size: 14px
+
+                .divider
+                    opacity: 0.5
+
+                .author
+                    display: flex
+                    align-items: center
+                    gap: 15px
+
+                    .author-image
+                        height: 38px
+                        width: 38px
+                        object-fit: cover
+                        border-radius: 100%
+
+                .author-link,
+                .category-link
+                    font-size: 17px
+                    font-weight: 500
+                    color: var(--text-gray)
+                    
+                    &:hover
+                        color: var(--primary)
+                        text-decoration: none
+
+                .category-link
+                    text-transform: uppercase
+                    font-size: 14px

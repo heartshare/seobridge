@@ -642,7 +642,7 @@
                 height: 250px
                 width: 100%
                 background: var(--bg-dark)
-                background-image: url('/images/app/dashboard/pattern.svg')
+                background-image: url('/images/static/assets/terrain.svg')
                 background-size: cover
                 background-position: center
                 background-repeat: no-repeat

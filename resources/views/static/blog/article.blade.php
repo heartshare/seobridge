@@ -2,19 +2,16 @@
 
 @section('title', $article->title)
 @section('description', $article->intro_text)
+@section('page-classes', 'no-header')
 
 @section('content')
-<header data-cs-00005>
-    <h1>{{$article->title}}</h1>
-</header>
 
-<article data-cs-01002>
-    <div class="limiter">
-        <div class="article-preview-image-wrapper">
-            <img class="article-preview-image" src="{{$article->intro_image}}" alt="">
-        </div>
-        
-        <div class="article-preview-wrapper">
+<article data-cs-01101>
+    <div class="limiter font-size">
+        <div class="info-side"></div>
+        <div class="article-limiter font-size">
+            <h1 class="article-headline">{{$article->title}}</h1>
+            
             <div class="article-info">
                 <div class="author">
                     <img class="author-image" src="{{$article->author->image}}" alt="{{$article->author->display_name}} profile image">
@@ -23,12 +20,15 @@
                 <span class="divider text">•</span>
                 <a class="category-link" href="/resources/category/{{$article->category->url}}">{{$article->category->name}}</a>
                 <span class="divider text">•</span>
-                <span class="text">{{$article->published_at}}</span>
+                <span class="text">{{$article->published_at->format('F d, Y')}}</span>
             </div>
+
+            <img class="article-preview-image" src="{{$article->intro_image}}" alt="">
     
-            <div class="article-preview-text">{{$article->intro_text}}</div>
-            <div class="article-preview-text">{{$article->full_text}}</div>
+            <p>{{$article->intro_text}}</p>
+            <p>{{$article->full_text}}</p>
         </div>
+        <div class="annotations"></div>
     </div>
 </article>
 

@@ -1,11 +1,11 @@
 @extends('layouts.static')
 
-@section('title', 'SEO knowledge base - SEO Bridge')
-@section('description', 'Helpfull tips, tricks and general knowledge about search engine optimizing. Learn about the ins and outs of SEO.')
+@section('title', 'All articles in: '.$category->description.' — SEO Bridge')
+@section('description', $category->description)
 
 @section('content')
 <header data-cs-00005>
-    <h1>SEO resources and knowledge</h1>
+    <h1>Articles in: {{$category->name}}</h1>
 </header>
 
 @foreach ($articles as $article)
@@ -24,7 +24,7 @@
                     <span class="divider text">•</span>
                     <a class="category-link" href="/resources/category/{{$article->category->url}}">{{$article->category->name}}</a>
                     <span class="divider text">•</span>
-                    <span class="text">{{$article->published_at}}</span>
+                    <span class="text">{{$article->published_at->format('F d, Y')}}</span>
                 </div>
         
                 <h2 class="article-headline">{{$article->title}}</h2>

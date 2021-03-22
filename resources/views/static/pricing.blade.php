@@ -1,25 +1,18 @@
 @extends('layouts.static')
 
-@section('title', 'Our pricing model: simple & fair - SEO Bridge')
-@section('description', 'SEO Bridge offers simple and fair pricing for your SEO needs.')
+@section('title', 'Our pricing: simple, fair and scalable — SEO Bridge')
+@section('description', 'We offer SEO tools for businesses of all sizes. Choose your payment plan today!')
 @section('page-classes', 'no-header')
 
 @section('content')
 <article data-cs-00002>
-    <div class="limiter">
-        <h4>Fed up with sky high prices and complex models?</h4>
-        <h1>Our pricing is simple, fair and scalable!</h1>
-        <p>
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Vero cumque voluptates perferendis id?
-            Voluptatibus dicta at, commodi quae egeniet obcaecati
-            saepe quidem voluptates ut deserunt ea nostrum ullam quisquam magnam!
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Vero cumque voluptates perferendis id?
-            Voluptatibus dicta at, commodi quae egeniet obcaecati
-            saepe quidem voluptates ut deserunt ea nostrum ullam quisquam magnam!
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Vero cumque voluptates perferendis id?
-            Voluptatibus dicta at, commodi quae egeniet obcaecati
-            saepe quidem voluptates ut.
-        </p>
+    <div class="block font-size" data-cs-02001>
+        <div class="limiter">
+            <h1 style="text-align: center">Pricing that's fair, simple and scalable!</h1>
+            <p style="text-align: center">
+                No matter if you're a freelencer, startup-founder or agency marketer <b>— we have the SEO tools you need!</b>
+            </p>
+        </div>
     </div>
 
     <div class="limiter pricing" data-cs-00004>
@@ -110,6 +103,16 @@
 
             <a href="#" class="button">Get SEO Bridge Agency</a>
         </div>
+    </div>
+
+    <div class="limiter point-wrapper">
+        <h3 style="text-align: center">Included in the package</h3>
+        <h4 class="poligon-point">Unlimited scans</h4>
+        <h4 class="poligon-point">Daily page audits</h4>
+        <h4 class="poligon-point">Report sharing</h4>
+        <h4 class="poligon-point">Structure analysis tool</h4>
+        <h4 class="poligon-point">Open Graph preview</h4>
+        <h4 class="poligon-point">Twitter card preview</h4>
     </div>
 </article>
 @endsection

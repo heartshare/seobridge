@@ -1,7 +1,7 @@
 @extends('layouts.static')
 
-@section('title', 'Page Structure and SEO Checker Tool - SEO Bridge')
-@section('description', 'Page Structure and SEO Checker Tool - SEO Bridge')
+@section('title', 'Page Structure and SEO Checker Tool — SEO Bridge')
+@section('description', 'Analyse your website for free with SEO Bridge and get a personal SEO checklist')
 
 @section('content')
 <header data-cs-00001>
@@ -13,7 +13,7 @@
         </div>
     </div>
 </header>
-<article data-cs-00002>
+<article data-cs-00007>
     <div class="limiter">
         <h1>The perfect SEO analysis tool for you!</h1>
         <p>

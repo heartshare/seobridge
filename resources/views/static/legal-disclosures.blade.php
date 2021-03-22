@@ -1,7 +1,7 @@
 @extends('layouts.static')
 
-@section('title', 'Legal Disclosures - SEO Bridge')
-@section('description', 'Legal disclosures of SEO Bridge - a service by Maurice Freuwört.')
+@section('title', 'Legal Disclosures — SEO Bridge')
+@section('description', 'Legal disclosures of SEO Bridge — a service by Maurice Freuwört.')
 @section('page-classes', 'no-header')
 
 @section('content')
@@ -24,6 +24,11 @@
         <p>
             We are neither obliged nor willing to participate in a dispute settlement procedure before a consumer arbitration board.
         </p>
+        <h3>Photo Credit:</h3>
+        <p>
+            ©Theus - <a href="https://stock.adobe.com/" target="_blank">https://stock.adobe.com/</a>
+        </p>
+        <p>&nbsp;</p>
     </div>
 </article>
 @endsection

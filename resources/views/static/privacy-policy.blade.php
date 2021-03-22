@@ -1,7 +1,7 @@
 @extends('layouts.static')
 
-@section('title', 'Privacy Policy - SEO Bridge')
-@section('description', 'Privacy policy of SEO Bridge - a service by Maurice Freuwört.')
+@section('title', 'Privacy Policy — SEO Bridge')
+@section('description', 'Privacy policy of SEO Bridge — a service by Maurice Freuwört.')
 @section('page-classes', 'no-header')
 
 @section('content')
@@ -137,6 +137,7 @@
         <p>Bei der Verarbeitung von personenbezogenen Daten zum Zwecke der Direktwerbung auf Grundlage von Art. 6 Abs. 1 lit. f DSGVO werden diese Daten so lange gespeichert, bis der Betroffene sein Widerspruchsrecht nach Art. 21 Abs. 2 DSGVO ausübt.</p>
 
         <p>Sofern sich aus den sonstigen Informationen dieser Erklärung über spezifische Verarbeitungssituationen nichts anderes ergibt, werden gespeicherte personenbezogene Daten im Übrigen dann gelöscht, wenn sie für die Zwecke, für die sie erhoben oder auf sonstige Weise verarbeitet wurden, nicht mehr notwendig sind.</p>
+        <p>&nbsp;</p>
     </div>
 </article>
 @endsection

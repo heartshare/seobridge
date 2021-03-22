@@ -1,7 +1,7 @@
 @extends('layouts.static')
 
-@section('title', 'Terms of Service - SEO Bridge')
-@section('description', 'Terms of service of SEO Bridge - a service by Maurice Freuwört.')
+@section('title', 'Terms of Service — SEO Bridge')
+@section('description', 'Terms of service of SEO Bridge — a service by Maurice Freuwört.')
 @section('page-classes', 'no-header')
 
 @section('content')
