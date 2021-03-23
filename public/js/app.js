@@ -46145,7 +46145,7 @@ var render = function() {
           _c("input", {
             staticClass: "input",
             attrs: { type: "checkbox", name: _vm.name },
-            domProps: { value: _vm.value_ }
+            domProps: { value: _vm.value_, checked: _vm.value_ }
           })
         ],
         1

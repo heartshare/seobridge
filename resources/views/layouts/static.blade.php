@@ -34,6 +34,16 @@
 
     <!-- Scripts -->
     <script src="{{ asset('js/static.js') }}" defer></script>
+    <script src="https://js.stripe.com/v3/"></script>
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-TGPZX3YS70"></script>
+    <script>
+        window.dataLayer = window.dataLayer || []
+        function gtag(){dataLayer.push(arguments)}
+        gtag('js', new Date())
+        gtag('config', 'G-TGPZX3YS70')
+    </script>
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">

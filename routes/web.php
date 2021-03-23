@@ -32,6 +32,7 @@ Route::get('/resources/author/{author}', [App\Http\Controllers\BlogController::c
 Route::get('/resources', [App\Http\Controllers\BlogController::class, 'allArticles'])->name('resources');
 Route::get('/resources/{article}', [App\Http\Controllers\BlogController::class, 'article'])->name('article');
 
+Route::get('/go-pro/{plan}', [App\Http\Controllers\SubscriptionController::class, 'goPro'])->name('go-pro');
 
 // Legal Stuff
 Route::view('/privacy-policy', 'static.privacy-policy')->name('privacy-policy');
@@ -49,6 +50,8 @@ Route::get('/dashboard/{page}', [App\Http\Controllers\Dashboard\DashboardControl
 
 
 Route::middleware('auth')->prefix('auth')->group(function() {
+
+    Route::post('/go-pro/complete', [App\Http\Controllers\SubscriptionController::class, 'complete']);
 
     Route::prefix('reports')->group(function() {
         Route::post('/get-paginated-report-groups', [App\Http\Controllers\Dashboard\ReportController::class, 'getPaginatedReportGroups']);

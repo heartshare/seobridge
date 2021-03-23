@@ -4,7 +4,7 @@
             <transition name="slide">
                 <div class="checkmark" v-show="value_">&#983340;</div>
             </transition>
-            <input class="input" type="checkbox" :name="name" :value="value_">
+            <input class="input" type="checkbox" :name="name" :value="value_" :checked="value_">
         </div>
 
         <div class="label" v-if="this.$slots.default">

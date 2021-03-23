@@ -10,4 +10,10 @@ files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(
 
 const app = new Vue({
     el: '#app',
+
+    // Idealy we dont have any specific components in here...
+    // TODO: put component out of static.js
+    components: {
+        GoProForm: require('./components/views/go-pro/components/GoProForm.vue').default,
+    }
 })

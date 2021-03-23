@@ -18,7 +18,7 @@
     <div class="limiter pricing" data-cs-00004>
         <div class="price-plan">
             <div class="header">
-                <h2>Freelencer</h2>
+                <h2>Freelancer</h2>
                 <h4>5€</h4>
                 <span>per month</span>
             </div>
@@ -43,7 +43,7 @@
                 </div>
             </div>
 
-            <a href="#" class="button">Get SEO Bridge Freelencer</a>
+            <a href="/go-pro/freelancer" class="button">Get SEO Bridge Freelancer</a>
         </div>
 
         <div class="price-plan featured">
@@ -72,7 +72,7 @@
                 </div>
             </div>
 
-            <a href="#" class="button">Get SEO Bridge Startup</a>
+            <a href="/go-pro/startup" class="button">Get SEO Bridge Startup</a>
         </div>
 
         <div class="price-plan">
@@ -101,7 +101,7 @@
                 </div>
             </div>
 
-            <a href="#" class="button">Get SEO Bridge Agency</a>
+            <a href="/go-pro/agency" class="button">Get SEO Bridge Agency</a>
         </div>
     </div>
 
