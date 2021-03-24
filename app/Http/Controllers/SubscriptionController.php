@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\SubscriptionPlan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -9,8 +10,15 @@ class SubscriptionController extends Controller
 {
     public function goPro(Request $request)
     {
+        $plan = SubscriptionPlan::firstWhere('url', $request->plan);
+
+        if (!$plan)
+        {
+            return abort(404);
+        }
+
         $data = [
-            'plan' => $request->plan,
+            'plan' => $plan,
             'intent' => null,
         ];
 
@@ -24,7 +32,14 @@ class SubscriptionController extends Controller
 
     public function complete(Request $request)
     {
-        $request->user()->newSubscription('Pro-Plan', 'price_1IQFunDa1TGHitv5WZXTvjF7')->quantity(null)->create($request->paymentMethodId);
+        $request->validate([
+            'paymentMethodId' => ['required'],
+            'planId' => ['required', 'exists:subscription_plans,id'],
+        ]);
+
+        $plan = SubscriptionPlan::find($request->planId);
+
+        $request->user()->newSubscription($plan->name, $plan->stripe_price_id)->quantity(null)->create($request->paymentMethodId);
         return 'OK';
     }
 }

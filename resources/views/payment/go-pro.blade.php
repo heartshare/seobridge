@@ -8,7 +8,7 @@
 <article data-cs-00002>
     <div class="block font-size" data-cs-02001>
         <div class="limiter">
-            <h1 style="text-align: center">SEO Bridge {{$plan}}</h1>
+            <h1 style="text-align: center">{{$plan->name}}</h1>
         </div>
     </div>
 
@@ -16,7 +16,7 @@
         @guest
             <form method="POST" action="{{ route('register') }}">
                 @csrf
-                <input type="hidden" name="returnUrl" value="/go-pro/{{$plan}}">
+                <input type="hidden" name="returnUrl" value="/go-pro/{{$plan->url}}">
                 <p>
                     <ui-text-input label="Username" name="username" ac="username"></ui-text-input>
                 </p>
@@ -35,7 +35,7 @@
 
             <form method="POST" action="{{ route('login') }}">
                 @csrf
-                <input type="hidden" name="returnUrl" value="/go-pro/{{$plan}}">
+                <input type="hidden" name="returnUrl" value="/go-pro/{{$plan->url}}">
                 <p>
                     <ui-email-input label="Email" name="email"></ui-email-input>
                 </p>
@@ -49,7 +49,7 @@
         @endguest
 
         @auth
-            <go-pro-form secret="{{ $intent->client_secret }}"></go-pro-form>
+            <go-pro-form :plan="{{$plan}}" secret="{{$intent->client_secret}}"></go-pro-form>
         @endauth
     </div>
 </article>

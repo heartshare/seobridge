@@ -4390,6 +4390,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
 var stripe = Stripe('pk_test_51IPwiCDa1TGHitv5NwiZUsCe9Yy28YRgBjzXUVoFSs5eqQnRgUeXoUNO6hEl3CXWWq63E954U8Cw3nt0vSo3Yx8C0089OD4j7Z');
 var elements = stripe.elements();
 var cardElement = elements.create('card', {
@@ -4406,10 +4407,40 @@ var cardElement = elements.create('card', {
 });
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   props: {
-    secret: String
+    secret: String,
+    plan: Object
+  },
+  data: function data() {
+    return {
+      countryOptions: [{
+        value: 'DE',
+        label: 'Germany'
+      }, {
+        value: 'UK',
+        label: 'United Kingdom'
+      }, {
+        value: 'US',
+        label: 'United States of America'
+      }],
+      subscriptionCreate: {
+        loading: false
+      }
+    };
   },
   mounted: function mounted() {
-    cardElement.mount('#card-element');
+    cardElement.mount('#card-input');
+  },
+  filters: {
+    price: function price(_price) {
+      if (!_price) {
+        return null;
+      }
+
+      return new Intl.NumberFormat(undefined, {
+        style: 'currency',
+        currency: 'EUR'
+      }).format(_price / 100);
+    }
   },
   methods: {
     addCreditCard: function addCreditCard() {
@@ -4422,7 +4453,8 @@ var cardElement = elements.create('card', {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                _context.next = 2;
+                _this.subscriptionCreate.loading = true;
+                _context.next = 3;
                 return stripe.confirmCardSetup(_this.secret, {
                   payment_method: {
                     card: cardElement,
@@ -4432,7 +4464,7 @@ var cardElement = elements.create('card', {
                   }
                 });
 
-              case 2:
+              case 3:
                 _yield$stripe$confirm = _context.sent;
                 setupIntent = _yield$stripe$confirm.setupIntent;
                 error = _yield$stripe$confirm.error;
@@ -4440,18 +4472,19 @@ var cardElement = elements.create('card', {
                 if (error) {
                   console.log(error.message);
                 } else {
-                  console.log('CARD ADDED!');
-                  console.log(setupIntent);
                   axios.post('/auth/go-pro/complete', {
-                    paymentMethodId: setupIntent.payment_method
+                    paymentMethodId: setupIntent.payment_method,
+                    planId: _this.plan.id
                   }).then(function (response) {
                     console.log(response.data);
+                    _this.subscriptionCreate.loading = false;
                   })["catch"](function (error) {
                     console.log(error.response);
+                    _this.subscriptionCreate.loading = false;
                   });
                 }
 
-              case 6:
+              case 7:
               case "end":
                 return _context.stop();
             }
@@ -5129,7 +5162,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "#card-element[data-v-0c884a8a] {\n  border: var(--border);\n  border-radius: 5px;\n  padding: 15px;\n  width: 100%;\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, ".subscription-plan-wrapper[data-v-0c884a8a] {\n  width: 100%;\n  display: flex;\n  gap: 30px;\n  padding: 100px 0;\n}\n.subscription-plan-wrapper .subscription-form[data-v-0c884a8a] {\n  display: grid;\n  flex: 2;\n  gap: 20px 15px;\n  grid-template-columns: repeat(10, 1fr);\n  grid-template-rows: 50px 50px 50px 20px 50px 50px;\n}\n.subscription-plan-wrapper .subscription-form #name-input[data-v-0c884a8a] {\n  grid-column: 10 span;\n  grid-row: 1;\n}\n.subscription-plan-wrapper .subscription-form #street-input[data-v-0c884a8a] {\n  grid-column: 6 span;\n  grid-row: 2;\n}\n.subscription-plan-wrapper .subscription-form #apt-input[data-v-0c884a8a] {\n  grid-column: 4 span;\n  grid-row: 2;\n}\n.subscription-plan-wrapper .subscription-form #city-input[data-v-0c884a8a] {\n  grid-column: 4 span;\n  grid-row: 3;\n}\n.subscription-plan-wrapper .subscription-form #country-input[data-v-0c884a8a] {\n  grid-column: 4 span;\n  grid-row: 3;\n}\n.subscription-plan-wrapper .subscription-form #zip-input[data-v-0c884a8a] {\n  grid-column: 2 span;\n  grid-row: 3;\n}\n.subscription-plan-wrapper .subscription-form #card-holder-name-input[data-v-0c884a8a] {\n  grid-column: 10 span;\n  grid-row: 5;\n}\n.subscription-plan-wrapper .subscription-form #card-input[data-v-0c884a8a] {\n  grid-column: 10 span;\n  grid-row: 6;\n  border: var(--border);\n  border-radius: 5px;\n  padding: 15px;\n  width: 100%;\n  height: 50px;\n}\n.subscription-plan-wrapper .subscription-info[data-v-0c884a8a] {\n  flex: 1;\n  display: flex;\n  flex-direction: column;\n  background: white;\n  filter: var(--elevation-1);\n  border-radius: 10px;\n}\n.subscription-plan-wrapper .subscription-info .plan-header[data-v-0c884a8a] {\n  width: 100%;\n  border-radius: 10px 10px 0 0;\n  background: var(--primary);\n  height: 100px;\n  position: relative;\n  background-image: url(\"/images/static/assets/terrain_white.svg\");\n  background-size: 1200px;\n  background-position: center;\n  margin-bottom: 40px;\n}\n.subscription-plan-wrapper .subscription-info .plan-header .plan-image[data-v-0c884a8a] {\n  height: 80px;\n  width: 80px;\n  -o-object-fit: cover;\n     object-fit: cover;\n  border-radius: 100%;\n  border: 3px solid white;\n  background: white;\n  position: absolute;\n  bottom: 0;\n  left: 50%;\n  transform: translate(-50%, 50%);\n}\n.subscription-plan-wrapper .subscription-info .plan-details[data-v-0c884a8a] {\n  padding: 15px;\n  display: flex;\n  gap: 15px;\n  flex-direction: column;\n  font-size: var(--text-size);\n}\n.subscription-plan-wrapper .subscription-info .plan-details h4[data-v-0c884a8a] {\n  margin: 0;\n  text-align: center;\n}\n.subscription-plan-wrapper .subscription-info .plan-details p[data-v-0c884a8a] {\n  margin: 0;\n}\n.subscription-plan-wrapper .subscription-info .plan-button[data-v-0c884a8a] {\n  padding: 15px;\n  border-top: var(--border);\n  text-align: right;\n}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -29410,81 +29443,114 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "form",
-    {
-      attrs: { method: "POST", action: "/go-pro/complete" },
-      on: {
-        submit: function($event) {
-          $event.preventDefault()
+  return _c("div", { staticClass: "subscription-plan-wrapper" }, [
+    _c(
+      "form",
+      {
+        staticClass: "subscription-form",
+        attrs: { method: "POST", action: "/go-pro/complete" },
+        on: {
+          submit: function($event) {
+            $event.preventDefault()
+          }
         }
-      }
-    },
-    [
-      _c(
-        "p",
-        [_c("ui-text-input", { attrs: { label: "Street", ac: "street" } })],
-        1
-      ),
+      },
+      [
+        _c("ui-text-input", {
+          attrs: { id: "name-input", label: "Full name", ac: "full name" }
+        }),
+        _vm._v(" "),
+        _c("ui-text-input", {
+          attrs: { id: "street-input", label: "Street", ac: "street" }
+        }),
+        _vm._v(" "),
+        _c("ui-text-input", {
+          attrs: {
+            id: "apt-input",
+            label: "Apt / Suite / Other",
+            ac: "street 2"
+          }
+        }),
+        _vm._v(" "),
+        _c("ui-text-input", {
+          attrs: { id: "city-input", label: "City", ac: "city" }
+        }),
+        _vm._v(" "),
+        _c("ui-select-input", {
+          attrs: {
+            id: "country-input",
+            label: "Country",
+            ac: "country",
+            options: _vm.countryOptions
+          }
+        }),
+        _vm._v(" "),
+        _c("ui-text-input", {
+          attrs: { id: "zip-input", label: "Zip code", ac: "zip" }
+        }),
+        _vm._v(" "),
+        _c("ui-text-input", {
+          attrs: { id: "card-holder-name-input", label: "Card holder name" }
+        }),
+        _vm._v(" "),
+        _c("span", { staticClass: "block", attrs: { id: "card-input" } })
+      ],
+      1
+    ),
+    _vm._v(" "),
+    _c("div", { staticClass: "subscription-info" }, [
+      _c("div", { staticClass: "plan-header" }, [
+        _c("img", {
+          staticClass: "plan-image",
+          attrs: {
+            src: _vm.plan.image,
+            alt: _vm.plan.name + " subscription plan image"
+          }
+        })
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "plan-details" }, [
+        _c("h4", [_vm._v(_vm._s(_vm.plan.name))]),
+        _vm._v(" "),
+        _c("p", [_vm._v(_vm._s(_vm.plan.description))]),
+        _vm._v(" "),
+        _c("p", [
+          _vm._v("Price: "),
+          _c("b", [
+            _vm._v(_vm._s(_vm._f("price")(_vm.plan.cost)) + " per month")
+          ])
+        ])
+      ]),
       _vm._v(" "),
       _c(
-        "p",
-        [_c("ui-text-input", { attrs: { label: "City", ac: "city" } })],
-        1
-      ),
-      _vm._v(" "),
-      _c(
-        "p",
-        [_c("ui-text-input", { attrs: { label: "Country", ac: "country" } })],
-        1
-      ),
-      _vm._v(" "),
-      _c(
-        "p",
-        [_c("ui-text-input", { attrs: { label: "Zip code", ac: "zip" } })],
-        1
-      ),
-      _vm._v(" "),
-      _c("p", [_vm._v(" ")]),
-      _vm._v(" "),
-      _c(
-        "p",
-        [_c("ui-text-input", { attrs: { label: "Card holder name" } })],
-        1
-      ),
-      _vm._v(" "),
-      _vm._m(0),
-      _vm._v(" "),
-      _c(
-        "p",
+        "div",
+        { staticClass: "plan-button" },
         [
           _c(
             "ui-button",
             {
+              attrs: { loading: _vm.subscriptionCreate.loading },
               on: {
                 click: function($event) {
                   return _vm.addCreditCard()
                 }
               }
             },
-            [_vm._v("Subscribe")]
+            [
+              _vm._v(
+                "Subscribe for " +
+                  _vm._s(_vm._f("price")(_vm.plan.cost)) +
+                  " / month"
+              )
+            ]
           )
         ],
         1
       )
-    ]
-  )
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("p", [
-      _c("span", { staticClass: "block", attrs: { id: "card-element" } })
     ])
-  }
-]
+  ])
+}
+var staticRenderFns = []
 render._withStripped = true
 
 
