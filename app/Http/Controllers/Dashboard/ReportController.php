@@ -119,7 +119,11 @@ class ReportController extends Controller
             'status' => 'request_pending',
         ]);
 
-        $response = Http::post('http://localhost:1999/request-site-analysis', [
+        // return config('puppeteer.endpoint');
+        $endpoint = config('puppeteer.endpoint').'/request-site-analysis';
+
+        // return $endpoint;
+        $response = Http::post($endpoint, [
             'url' => $reportGroup->url,
             'mode' => $reportGroup->mode,
             'device' => $reportGroup->device,
