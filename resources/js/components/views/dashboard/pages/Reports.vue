@@ -678,6 +678,7 @@
                     device: {
                         viewport: this.reportCreate.viewport || '1080p'
                     },
+                    teamId: this.user.active_team_id,
                 })
                 .then(response => {
                     this.$store.commit('addReportGroup', response.data)

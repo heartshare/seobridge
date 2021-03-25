@@ -13,6 +13,7 @@ use App\Models\UserReportGroup;
 use App\Models\UserReportGroupShare;
 use App\Models\UserReportTask;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 
@@ -91,12 +92,6 @@ class ReportController extends Controller
 
         $host = strtolower(parse_url($request->url, PHP_URL_HOST));
 
-        // TODO: make into middleware
-        if (!TeamMember::where('team_id', Auth::user()->active_team_id)->where('user_id', Auth::id())->exists())
-        {
-            return response('UNAUTHORIZED', 403);
-        }
-
         $siteNamespaces = TeamSite::where('team_id', Auth::user()->active_team_id)->pluck('host')->toArray();
 
         if (!in_array($host, $siteNamespaces))
@@ -148,7 +143,7 @@ class ReportController extends Controller
         $request->validate([
             'type' => ['required', 'in:crawling,crawling_completed,fetching,fetching_completed,completed'],
             'jobId' => ['required', 'exists:user_report_tasks,report_group_id'],
-            'ownerId' => ['required', 'exists:users,id'],
+            'ownerId' => ['required', 'exists:user_report_groups,owner_id'],
         ]);
 
         $task = UserReportTask::firstWhere('report_group_id', $request->jobId);
@@ -225,7 +220,7 @@ class ReportController extends Controller
     {
         $request->validate([
             'jobId' => ['required', 'exists:user_report_groups,id'],
-            'ownerId' => ['required', 'exists:users,id'],
+            'ownerId' => ['required', 'exists:user_report_groups,owner_id'],
         ]);
 
         $reportJson = $request->data;
@@ -264,5 +259,60 @@ class ReportController extends Controller
         $reportGroup->delete();
 
         return $id;
+    }
+
+
+
+    public function requestGuestSiteAnalysis(Request $request)
+    {
+        $request->validate([
+            'url' => ['required', 'url'],
+        ]);
+
+        $host = strtolower(parse_url($request->url, PHP_URL_HOST));
+
+        $userId = 'guest_'.Str::uuid();
+
+        $reportGroup = UserReportGroup::create([
+            'owner_id' => $userId,
+            'team_id' => null,
+            'url' => $request->url,
+            'host' => $host,
+            'mode' => 'single',
+            'device' => [],
+        ]);
+
+        $task = UserReportTask::create([
+            'report_group_id' => $reportGroup->id,
+            'url' => $reportGroup->url,
+            'status' => 'request_pending',
+        ]);
+
+        // return config('puppeteer.endpoint');
+        $endpoint = config('puppeteer.endpoint').'/request-site-analysis';
+
+        // return $endpoint;
+        $response = Http::post($endpoint, [
+            'url' => $reportGroup->url,
+            'mode' => $reportGroup->mode,
+            'device' => $reportGroup->device,
+            'job_id' => $reportGroup->id,
+            'owner_id' => $userId,
+        ]);
+
+        $task->status = ($response->status() > 199 && $response->status() < 300) ? 'request_successful' : 'request_denied';
+        $task->save();
+
+        $cookie = Cookie::forever('_sbgs', $userId); // sbgs: Seo Bridge Guest Session
+        return redirect('/report/'.$reportGroup->id)->cookie($cookie);
+    }
+
+
+
+    public function showGuestReport(Request $request)
+    {
+        $reportGroup = UserReportGroup::with(['task', 'reports'])->find($request->reportGroupId);
+
+        return $reportGroup;
     }
 }

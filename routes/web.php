@@ -41,6 +41,10 @@ Route::view('/legal-disclosures', 'static.legal-disclosures')->name('legal-discl
 
 Auth::routes(['verify' => true]);
 
+// Guest Analysis
+Route::post('/request-guest-site-analysis', [App\Http\Controllers\Dashboard\ReportController::class, 'requestGuestSiteAnalysis']);
+Route::get('/report/{reportGroupId}', [App\Http\Controllers\Dashboard\ReportController::class, 'showGuestReport']);
+
 Route::get('/dashboard', function() {
     return redirect('/dashboard/overview');
 })->name('dashboard');
@@ -55,9 +59,12 @@ Route::middleware('auth')->prefix('auth')->group(function() {
 
     Route::prefix('reports')->group(function() {
         Route::post('/get-paginated-report-groups', [App\Http\Controllers\Dashboard\ReportController::class, 'getPaginatedReportGroups']);
-        Route::post('/request-site-analysis', [App\Http\Controllers\Dashboard\ReportController::class, 'requestSiteAnalysis']);
         Route::post('/delete-report', [App\Http\Controllers\Dashboard\ReportController::class, 'deleteReport']);
         Route::post('/share-report', [App\Http\Controllers\Dashboard\ReportController::class, 'shareReport']);
+        
+        Route::group(['middleware' => 'team.auth:member'], function() {
+            Route::post('/request-site-analysis', [App\Http\Controllers\Dashboard\ReportController::class, 'requestSiteAnalysis']);
+        });
     });
 
     Route::prefix('user')->group(function() {

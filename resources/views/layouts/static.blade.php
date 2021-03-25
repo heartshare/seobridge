@@ -29,7 +29,7 @@
     <meta property="og:type" content="article">
     <meta property="og:title" content="Search engine optimisation with SEO Bridge">
     <meta property="og:site_name" content="SEO Bridge">
-    <meta property="og:url" content="seobridge.net">
+    <meta property="og:url" content="https://seobridge.net">
     <meta property="og:image" content="https://seobridge.net/images/static/og_banner.png">
 
     <!-- Scripts -->

@@ -5355,7 +5355,8 @@ var relativeTime = __webpack_require__(/*! dayjs/plugin/relativeTime */ "./node_
         mode: 'single',
         device: {
           viewport: this.reportCreate.viewport || '1080p'
-        }
+        },
+        teamId: this.user.active_team_id
       }).then(function (response) {
         _this2.$store.commit('addReportGroup', response.data);
 
