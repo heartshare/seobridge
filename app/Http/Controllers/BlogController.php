@@ -69,5 +69,9 @@ class BlogController extends Controller
     }
 
     public function allAuthors(Request $request)
-    {}
+    {
+        return view('static.blog.authors', [
+            'authors' => AuthorProfile::get(),
+        ]);
+    }
 }

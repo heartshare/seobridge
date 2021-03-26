@@ -74,6 +74,11 @@ Route::middleware('auth')->prefix('auth')->group(function() {
         Route::post('/close-account', [App\Http\Controllers\Dashboard\UserController::class, 'closeAccount']);
     });
 
+    Route::prefix('author')->group(function() {
+        Route::post('/create-article', [App\Http\Controllers\Dashboard\BlogController::class, 'createArticle']);
+        Route::post('/update-article', [App\Http\Controllers\Dashboard\BlogController::class, 'updateArticle']);
+    });
+
     Route::prefix('team')->group(function() {
         Route::post('/get-all-teams', [App\Http\Controllers\Dashboard\TeamController::class, 'getAllTeams']);
         Route::post('/create-team', [App\Http\Controllers\Dashboard\TeamController::class, 'createTeam']);

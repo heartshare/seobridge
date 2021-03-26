@@ -48,4 +48,11 @@ class AuthorProfile extends Model
     {
         return 'author_'.Str::uuid();
     }
+
+
+
+    public function articles()
+    {
+        return $this->hasMany(Articles::class, 'author_id', 'id');
+    }
 }

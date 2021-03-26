@@ -12,6 +12,8 @@ module.exports = {
         pageTransitionDirection: 'down',
         navbar: 'open',
         user: {},
+        authorProfile: {},
+        authorArticles: [],
         teams: [],
         invites: [],
         reports: [],

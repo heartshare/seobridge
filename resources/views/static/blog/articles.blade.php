@@ -21,8 +21,10 @@
                         <img class="author-image" src="{{$article->author->image}}" alt="{{$article->author->display_name}} profile image">
                         <a class="author-link" href="/resources/author/{{$article->author->url}}" rel="author">{{$article->author->display_name}}</a>
                     </div>
-                    <span class="divider text">•</span>
-                    <a class="category-link" href="/resources/category/{{$article->category->url}}">{{$article->category->name}}</a>
+                    @if ($article->category)
+                        <span class="divider text">•</span>
+                        <a class="category-link" href="/resources/category/{{$article->category->url}}">{{$article->category->name}}</a>
+                    @endif
                     <span class="divider text">•</span>
                     <span class="text">{{$article->published_at->format('F d, Y')}}</span>
                 </div>

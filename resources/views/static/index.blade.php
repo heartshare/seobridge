@@ -80,7 +80,7 @@
             <div class="item">
                 <h2>Scan your site for technical errors</h2>
                 <p>
-                    Quickly iron out event the last technical errors holding you back from reaching #1 in the search results.
+                    Quickly iron out even the last technical errors holding you back from reaching #1 in the search results.
                     It's easy to miss small things like adding "alt"-tags to your images or forgetting to scale stock images
                     down to an appropriate resolution. Just scan your page with SEO Bridge and see all the things you might have missed.
                 </p>

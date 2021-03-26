@@ -720,10 +720,6 @@ article[data-cs-01101] .limiter .article-limiter .article-info .category-link {
   outline: none;
 }
 
-div:not(.font-size):not(.limiter) {
-  font-size: 0;
-}
-
 i, b {
   display: inline;
 }
@@ -750,6 +746,10 @@ h1, h2, h3, h4, h5, h6 {
   line-height: 150%;
   color: var(--heading-gray);
   font-family: var(--heading-font);
+}
+
+blockquote, ul, ol, li {
+  display: block;
 }
 
 h1 {
@@ -833,6 +833,10 @@ body {
   max-width: 1300px;
   text-align: left;
   display: block;
+}
+
+.ProseMirror {
+  display: block !important;
 }
 
 .tooltip {

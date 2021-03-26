@@ -31,6 +31,11 @@
                 <div class="text">My Team</div>
             </a>
 
+            <a href="/dashboard/author" class="button" :class="{'active': $store.getters.page === 'author'}" @click.prevent="$store.dispatch('setPage', 'author')">
+                <div class="icon">&#984787;</div>
+                <div class="text">Author</div>
+            </a>
+
             <!-- <a href="/dashboard/notifications" class="button" :class="{'active': $store.getters.page === 'notifications'}" @click.prevent="$store.dispatch('setPage', 'notifications')">
                 <div class="icon">&#986458;</div>
                 <div class="text">Notifications</div>
@@ -59,6 +64,7 @@
                 <!-- <notifications-page class="page" key="notifications-page" v-if="$store.getters.page === 'notifications'"></notifications-page> -->
                 <settings-page class="page" key="settings-page" v-if="$store.getters.page === 'settings'"></settings-page>
                 <profile-page class="page" key="profile-page" v-if="$store.getters.page === 'profile'"></profile-page>
+                <author-page class="page" key="author-page" v-if="$store.getters.page === 'author'"></author-page>
             </transition>
         </main>
     </div>
@@ -87,6 +93,7 @@
             NotificationsPage: require('./pages/Notifications.vue').default,
             SettingsPage: require('./pages/Settings.vue').default,
             ProfilePage: require('./pages/Profile.vue').default,
+            AuthorPage: require('./pages/Author.vue').default,
         },
     }
 </script>
