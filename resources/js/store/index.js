@@ -14,6 +14,7 @@ module.exports = {
         user: {},
         authorProfile: {},
         authorArticles: [],
+        articleCategories: [],
         teams: [],
         invites: [],
         reports: [],
@@ -44,6 +45,18 @@ module.exports = {
 
         invites(state) {
             return state.invites
+        },
+
+        authorProfile(state) {
+            return state.authorProfile
+        },
+
+        authorArticles(state) {
+            return state.authorArticles
+        },
+
+        articleCategories(state) {
+            return state.articleCategories
         },
 
         reports(state) {
@@ -105,6 +118,37 @@ module.exports = {
             })
         },
 
+        fetchOwnAuthorProfile(store) {
+            axios.post('/auth/author/get-own-profile')
+            .then(response => {
+                store.commit('authorProfile', response.data.data)
+            })
+            .catch(error => {
+                console.log(error.response)
+            })
+        },
+        
+        fetchAllOwnArticles(store) {
+            axios.post('/auth/author/get-all-own-articles')
+            .then(response => {
+                store.commit('authorArticles', response.data.data)
+            })
+            .catch(error => {
+                console.log(error.response)
+            })
+        },
+
+        fetchAllArticleCategories(store) {
+            axios.post('/auth/author/get-all-categories')
+            .then(response => {
+                console.log(response.data)
+                store.commit('articleCategories', response.data.data)
+            })
+            .catch(error => {
+                console.log(error.response)
+            })
+        },
+
         fetchPaginatedReportGroups(store, data = {}) {
             axios.post(`/auth/reports/get-paginated-report-groups`, {
                 order: data.order || 'DESC',
@@ -132,9 +176,17 @@ module.exports = {
 
         initialFetch(store) {
             store.dispatch('fetchUser')
+
             store.dispatch('fetchAllTeams')
+
             store.dispatch('fetchAllInvites')
+
+            store.dispatch('fetchOwnAuthorProfile')
+            store.dispatch('fetchAllOwnArticles')
+            store.dispatch('fetchAllArticleCategories')
+
             store.dispatch('fetchPaginatedReportGroups')
+
             store.dispatch('fetchAllNotifications')
         },
     },
@@ -204,6 +256,37 @@ module.exports = {
 
         invites(state, data) {
             state.invites = data
+        },
+
+
+
+        authorProfile(state, data) {
+            state.authorProfile = data
+        },
+
+
+
+        authorArticles(state, data) {
+            state.authorArticles = data
+        },
+        
+        addAuthorArticle(state, data) {
+            state.authorArticles.unshift(data)
+        },
+
+        deleteAuthorArticle(state, data) {
+            let index = state.authorArticles.findIndex(e => e.id === data)
+
+            if (index >= 0)
+            {
+                state.authorArticles.splice(index, 1)
+            }
+        },
+
+
+
+        articleCategories(state, data) {
+            state.articleCategories = data
         },
 
 

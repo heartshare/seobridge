@@ -25,8 +25,10 @@
                         <span class="divider text">•</span>
                         <a class="category-link" href="/resources/category/{{$article->category->url}}">{{$article->category->name}}</a>
                     @endif
-                    <span class="divider text">•</span>
-                    <span class="text">{{$article->published_at->format('F d, Y')}}</span>
+                    @if ($article->published_at)
+                        <span class="divider text">•</span>
+                        <span class="text">{{$article->published_at->format('F d, Y')}}</span>
+                    @endif
                 </div>
         
                 <h2 class="article-headline">{{$article->title}}</h2>

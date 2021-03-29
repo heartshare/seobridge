@@ -77,4 +77,9 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasOne(Team::class, 'id', 'active_team_id');
     }
+
+    public function author_profile()
+    {
+        return $this->hasOne(AuthorProfile::class, 'user_id', 'id');
+    }
 }

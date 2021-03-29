@@ -75,8 +75,12 @@ Route::middleware('auth')->prefix('auth')->group(function() {
     });
 
     Route::prefix('author')->group(function() {
+        Route::post('/get-own-profile', [App\Http\Controllers\Dashboard\BlogController::class, 'getProfileOfUser']);
+        Route::post('/get-all-own-articles', [App\Http\Controllers\Dashboard\BlogController::class, 'getAllArticlesOfUser']);
+        Route::post('/get-all-categories', [App\Http\Controllers\Dashboard\BlogController::class, 'getAllArticleCategories']);
         Route::post('/create-article', [App\Http\Controllers\Dashboard\BlogController::class, 'createArticle']);
         Route::post('/update-article', [App\Http\Controllers\Dashboard\BlogController::class, 'updateArticle']);
+        Route::post('/delete-article', [App\Http\Controllers\Dashboard\BlogController::class, 'deleteArticle']);
     });
 
     Route::prefix('team')->group(function() {

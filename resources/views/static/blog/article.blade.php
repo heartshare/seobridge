@@ -17,16 +17,20 @@
                     <img class="author-image" src="{{$article->author->image}}" alt="{{$article->author->display_name}} profile image">
                     <a class="author-link" href="/resources/author/{{$article->author->url}}" rel="author">{{$article->author->display_name}}</a>
                 </div>
-                <span class="divider text">•</span>
-                <a class="category-link" href="/resources/category/{{$article->category->url}}">{{$article->category->name}}</a>
-                <span class="divider text">•</span>
-                <span class="text">{{$article->published_at->format('F d, Y')}}</span>
+                @if ($article->category)
+                    <span class="divider text">•</span>
+                    <a class="category-link" href="/resources/category/{{$article->category->url}}">{{$article->category->name}}</a>
+                @endif
+                @if ($article->published_at)
+                    <span class="divider text">•</span>
+                    <span class="text">{{$article->published_at->format('F d, Y')}}</span>
+                @endif
             </div>
 
             <img class="article-preview-image" src="{{$article->intro_image}}" alt="">
     
             <p>{{$article->intro_text}}</p>
-            <p>{{$article->full_text}}</p>
+            <div>{!!$article->full_text!!}</div>
         </div>
         <div class="annotations"></div>
     </div>
