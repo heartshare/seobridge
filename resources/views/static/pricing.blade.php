@@ -19,7 +19,7 @@
         <div class="price-plan">
             <div class="header">
                 <h2>Freelancer</h2>
-                <h4>5€</h4>
+                <h4>9.90€</h4>
                 <span>per month</span>
             </div>
 
@@ -49,7 +49,7 @@
         <div class="price-plan featured">
             <div class="header">
                 <h2>Startup</h2>
-                <h4>15€</h4>
+                <h4>19.90€</h4>
                 <span>per month</span>
             </div>
 
@@ -78,7 +78,7 @@
         <div class="price-plan">
             <div class="header">
                 <h2>Agency</h2>
-                <h4>25€</h4>
+                <h4>29.90€</h4>
                 <span>per month</span>
             </div>
 

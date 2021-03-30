@@ -835,6 +835,23 @@ body {
   display: block;
 }
 
+.sheet {
+  display: block;
+  background: var(--bg);
+  filter: var(--elevation-2);
+  width: 100%;
+  border-radius: 7px;
+}
+
+.sheet.padding {
+  padding: 15px;
+}
+
+.grid-centered {
+  display: grid;
+  place-content: center;
+}
+
 .ProseMirror {
   display: block !important;
 }

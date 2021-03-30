@@ -76,11 +76,17 @@ Route::middleware('auth')->prefix('auth')->group(function() {
 
     Route::prefix('author')->group(function() {
         Route::post('/get-own-profile', [App\Http\Controllers\Dashboard\BlogController::class, 'getProfileOfUser']);
+
         Route::post('/get-all-own-articles', [App\Http\Controllers\Dashboard\BlogController::class, 'getAllArticlesOfUser']);
-        Route::post('/get-all-categories', [App\Http\Controllers\Dashboard\BlogController::class, 'getAllArticleCategories']);
         Route::post('/create-article', [App\Http\Controllers\Dashboard\BlogController::class, 'createArticle']);
         Route::post('/update-article', [App\Http\Controllers\Dashboard\BlogController::class, 'updateArticle']);
+        Route::post('/set-article-publish-date', [App\Http\Controllers\Dashboard\BlogController::class, 'setPublishDate']);
         Route::post('/delete-article', [App\Http\Controllers\Dashboard\BlogController::class, 'deleteArticle']);
+        
+        Route::post('/get-all-categories', [App\Http\Controllers\Dashboard\BlogController::class, 'getAllArticleCategories']);
+        Route::post('/create-article-category', [App\Http\Controllers\Dashboard\BlogController::class, 'createArticleCategory']);
+        Route::post('/update-article-category', [App\Http\Controllers\Dashboard\BlogController::class, 'updateArticleCategory']);
+        Route::post('/delete-article-category', [App\Http\Controllers\Dashboard\BlogController::class, 'deleteArticleCategory']);
     });
 
     Route::prefix('team')->group(function() {

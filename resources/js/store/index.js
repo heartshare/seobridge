@@ -274,6 +274,18 @@ module.exports = {
             state.authorArticles.unshift(data)
         },
 
+        setAuthorArticle(state, data) {
+            let index = state.authorArticles.findIndex(e => e.id === data.id)
+
+            if (index >= 0)
+            {
+                state.authorArticles[index] = {
+                    ...state.authorArticles[index],
+                    ...data.article,
+                }
+            }
+        },
+
         deleteAuthorArticle(state, data) {
             let index = state.authorArticles.findIndex(e => e.id === data)
 
