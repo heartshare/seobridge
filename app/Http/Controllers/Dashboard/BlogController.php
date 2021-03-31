@@ -77,7 +77,7 @@ class BlogController extends Controller
         $article->title = $request->title;
         $article->intro_image = $request->introImage;
         $article->intro_text = $request->introText;
-        $article->full_text = strip_tags($request->fullText, '<h1><h2><h3><h4><h5><h6><a><img><br><p><strong><i><b><blockquote><div><li><ul><ol><span>');
+        $article->full_text = strip_tags($request->fullText, '<h1><h2><h3><h4><h5><h6><a><img><br><p><strong><i><b><blockquote><div><li><ul><ol><span><del><ins><s><u><em>');
         $article->category_id = $request->categoryId;
 
         $article->save();
