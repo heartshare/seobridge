@@ -383,7 +383,7 @@
     &.no-header
         padding-top: 60px
         
-        #navbar
+        .navbar
             background: var(--primary)
 
 
@@ -805,3 +805,54 @@ article[data-cs-01101]
         footer
             .limiter
                 justify-content: center
+
+        main
+            .flex-50-50
+                flex-direction: column
+                gap: 0
+
+                .item
+                    flex: 1
+
+        div[data-cs-02001]
+            padding: 10px 0 60px
+            clip-path: polygon(0% 0%, 100% 0%, 100% calc(100% - 30px), 50% 100%, 0% calc(100% - 30px))
+
+        article[data-cs-00007]
+            padding: 70px 0 0
+
+            .gray-polygon
+                padding-top: 10px
+                padding-bottom: 10px
+                clip-path: polygon(0% 0%, 100% 4%, 100% 96%, 0% 100%)
+
+        article[data-cs-01001],
+        article[data-cs-01002]
+            .limiter
+                flex-direction: column
+                gap: 10px
+
+        article[data-cs-00002]
+            .limiter.point-wrapper
+                margin-bottom: 60px
+                gap: 20px
+
+                .card-point
+                    min-width: 200px
+
+        article[data-cs-01101]
+            padding: 0 0 70px
+
+            .limiter
+                display: flex !important
+
+                .info-side,
+                .annotations
+                    width: 0px
+
+        .limiter.pricing[data-cs-00004]
+            flex-direction: column
+            padding: 60px 15px
+
+            .price-plan
+                box-shadow: 0 6px 10px #00003020

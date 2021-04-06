@@ -412,7 +412,7 @@
 #app.static.no-header {
   padding-top: 60px;
 }
-#app.static.no-header #navbar {
+#app.static.no-header .navbar {
   background: var(--primary);
 }
 
@@ -869,6 +869,56 @@ article[data-cs-01101] .limiter .article-limiter .article-info .category-link {
   }
   #app.static footer .limiter {
     justify-content: center;
+  }
+  #app.static main .flex-50-50 {
+    flex-direction: column;
+    gap: 0;
+  }
+  #app.static main .flex-50-50 .item {
+    flex: 1;
+  }
+  #app.static div[data-cs-02001] {
+    padding: 10px 0 60px;
+    -webkit-clip-path: polygon(0% 0%, 100% 0%, 100% calc(100% - 30px), 50% 100%, 0% calc(100% - 30px));
+            clip-path: polygon(0% 0%, 100% 0%, 100% calc(100% - 30px), 50% 100%, 0% calc(100% - 30px));
+  }
+  #app.static article[data-cs-00007] {
+    padding: 70px 0 0;
+  }
+  #app.static article[data-cs-00007] .gray-polygon {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    -webkit-clip-path: polygon(0% 0%, 100% 4%, 100% 96%, 0% 100%);
+            clip-path: polygon(0% 0%, 100% 4%, 100% 96%, 0% 100%);
+  }
+  #app.static article[data-cs-01001] .limiter,
+#app.static article[data-cs-01002] .limiter {
+    flex-direction: column;
+    gap: 10px;
+  }
+  #app.static article[data-cs-00002] .limiter.point-wrapper {
+    margin-bottom: 60px;
+    gap: 20px;
+  }
+  #app.static article[data-cs-00002] .limiter.point-wrapper .card-point {
+    min-width: 200px;
+  }
+  #app.static article[data-cs-01101] {
+    padding: 0 0 70px;
+  }
+  #app.static article[data-cs-01101] .limiter {
+    display: flex !important;
+  }
+  #app.static article[data-cs-01101] .limiter .info-side,
+#app.static article[data-cs-01101] .limiter .annotations {
+    width: 0px;
+  }
+  #app.static .limiter.pricing[data-cs-00004] {
+    flex-direction: column;
+    padding: 60px 15px;
+  }
+  #app.static .limiter.pricing[data-cs-00004] .price-plan {
+    box-shadow: 0 6px 10px #00003020;
   }
 }
 :root {

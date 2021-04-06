@@ -46,7 +46,7 @@
 
         <p>Internet Explorer: https://support.microsoft.com/de-de/help/17442/windows-internet-explorer-delete-manage-cookies<br>
         Firefox: https://support.mozilla.org/de/kb/cookies-erlauben-und-ablehnen<br>
-        Chrome: https://support.google.com/chrome/answer/95647?hl=de&amp;hlrm=en<br>
+        Chrome: https://support.google.com/chrome/<wbr>answer/95647?hl=de&amp;hlrm=en<br>
         Safari: https://support.apple.com/de-de/guide/safari/sfri11471/mac<br>
         Opera: https://help.opera.com/de/latest/web-preferences/#cookies</p>
 

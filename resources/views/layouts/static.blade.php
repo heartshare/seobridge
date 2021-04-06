@@ -145,7 +145,7 @@
                             <img width="50" src="/images/defaults/default_profile_image.svg" alt="{{ Auth::user()->username }}'s profile image">
 
                             <span>{{ Auth::user()->username }}</span>
-                            <a href="{{ route('dashboard') }}">Dashboard ↗</a>
+                            <a href="{{ route('dashboard') }}">Dashboard</a>
 
                             <ui-icon-button class="logout-button" title="{{ __('Logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">&#984573;</ui-icon-button>
                         </li>
