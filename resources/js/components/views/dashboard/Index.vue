@@ -31,7 +31,7 @@
                 <div class="text">My Team</div>
             </a>
 
-            <a href="/dashboard/author" class="button" :class="{'active': $store.getters.page === 'author'}" @click.prevent="$store.dispatch('setPage', 'author')">
+            <a href="/dashboard/author" class="button" :class="{'active': $store.getters.page === 'author'}" v-if="authorProfile" @click.prevent="$store.dispatch('setPage', 'author')">
                 <div class="icon">&#984787;</div>
                 <div class="text">Author</div>
             </a>
@@ -64,7 +64,7 @@
                 <!-- <notifications-page class="page" key="notifications-page" v-if="$store.getters.page === 'notifications'"></notifications-page> -->
                 <settings-page class="page" key="settings-page" v-if="$store.getters.page === 'settings'"></settings-page>
                 <profile-page class="page" key="profile-page" v-if="$store.getters.page === 'profile'"></profile-page>
-                <author-page class="page" key="author-page" v-if="$store.getters.page === 'author'"></author-page>
+                <author-page class="page" key="author-page" v-if="$store.getters.page === 'author' && authorProfile"></author-page>
             </transition>
         </main>
     </div>
@@ -75,6 +75,10 @@
         computed: {
             user() {
                 return this.$store.getters.user
+            },
+
+            authorProfile() {
+                return this.$store.getters.authorProfile
             },
         },
 

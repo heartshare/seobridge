@@ -5,11 +5,12 @@
         <fieldset>
             <legend>Account settings</legend>
 
-            <ui-button icon="&#984421;" :loading="passwordChange.loading" @click="openPasswordChangeDialog()">Change Password</ui-button><br><br>
-            <ui-button icon="&#983394;" text border>Request Data (WIP)</ui-button>
+            <ui-button icon="&#984421;" :loading="passwordChange.loading" @click="openPasswordChangeDialog()">Change Password</ui-button>
+            <!-- <br><br> -->
+            <!-- <ui-button icon="&#983394;" text border>Request Data (WIP)</ui-button> -->
         </fieldset><br>
 
-        <fieldset>
+        <!-- <fieldset>
             <legend>Subscriptions</legend>
             <ui-button icon="&#984694;" text border :loading="setupIntent.loading" @click="getSetupIntent()">Add Credit Card</ui-button>
             <ui-button href="/auth/subscriptions/billing-portal" icon="&#984012;" text>Billing Portal</ui-button>
@@ -26,7 +27,7 @@
             <p>
                 <ui-button @click="createSubscription()">Test Subscription</ui-button>
             </p>
-        </fieldset><br>
+        </fieldset><br> -->
 
         <fieldset>
             <legend>Close Account</legend>
@@ -75,21 +76,21 @@
 </template>
 
 <script>
-    const stripe = Stripe('pk_test_51IPwiCDa1TGHitv5NwiZUsCe9Yy28YRgBjzXUVoFSs5eqQnRgUeXoUNO6hEl3CXWWq63E954U8Cw3nt0vSo3Yx8C0089OD4j7Z')
+    // const stripe = Stripe('pk_test_51IPwiCDa1TGHitv5NwiZUsCe9Yy28YRgBjzXUVoFSs5eqQnRgUeXoUNO6hEl3CXWWq63E954U8Cw3nt0vSo3Yx8C0089OD4j7Z')
 
-    const elements = stripe.elements()
-    const cardElement = elements.create('card', {
-        style: {
-            base: {
-                fontFamily: 'Roboto, Open Sans, Segoe UI, sans-serif',
-                fontSize: '15px',
-                color: '#2F3542',
-                '::placeholder': {
-                    color: '#666F79',
-                },
-            },
-        },
-    })
+    // const elements = stripe.elements()
+    // const cardElement = elements.create('card', {
+    //     style: {
+    //         base: {
+    //             fontFamily: 'Roboto, Open Sans, Segoe UI, sans-serif',
+    //             fontSize: '15px',
+    //             color: '#2F3542',
+    //             '::placeholder': {
+    //                 color: '#666F79',
+    //             },
+    //         },
+    //     },
+    // })
     
     export default {
         data() {
@@ -114,7 +115,7 @@
         },
 
         mounted() {
-            cardElement.mount('#card-element')
+            // cardElement.mount('#card-element')
         },
 
         computed: {

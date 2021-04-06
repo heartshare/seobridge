@@ -7,13 +7,13 @@
 <header data-cs-00001>
     <div>
         <h3>Check your site's SEO score for free</h3>
-        <div class="url-input-wrapper">
+        {{-- <div class="url-input-wrapper">
             <form method="POST" action="/request-guest-site-analysis">
                 @csrf
                 <input class="input" name="url" type="text" placeholder="Enter your site's URL">
                 <ui-button class="submit-button" icon="&#983881;">Analyse</ui-button>
             </form>
-        </div>
+        </div> --}}
     </div>
 </header>
 <article data-cs-00007>
@@ -32,9 +32,9 @@
             Perhaps you work in a team and want to share your reports with your peers; no problem for SEO Bridge.
             You can easily create your team, invite your colleagues and share your findings with them.
         </p>
-        <p>
+        {{-- <p>
             <b>Want to try it?</b> Just give our free demo above a spin!
-        </p>
+        </p> --}}
     </div>
 
     <div class="limiter">

@@ -12,7 +12,7 @@ module.exports = {
         pageTransitionDirection: 'down',
         navbar: 'open',
         user: {},
-        authorProfile: {},
+        authorProfile: null,
         authorArticles: [],
         articleCategories: [],
         teams: [],
