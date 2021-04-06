@@ -6,7 +6,8 @@
   font-weight: normal;
   font-style: normal;
 }
-#app.static #navbar {
+#app.static #desktop-navbar,
+#app.static #mobile-navbar {
   position: fixed;
   top: 0;
   left: 0;
@@ -17,37 +18,52 @@
   z-index: 1000;
   transition: all 200ms;
 }
-#app.static #navbar.scrolled {
+#app.static #desktop-navbar.scrolled,
+#app.static #mobile-navbar.scrolled {
   background: var(--primary);
   box-shadow: 0 5px 10px #00000020;
 }
-#app.static #navbar .limiter {
+#app.static #desktop-navbar .limiter,
+#app.static #mobile-navbar .limiter {
   display: flex;
-}
-#app.static #navbar .limiter #logo {
-  height: 46px;
-  width: 240px;
-  margin: 7px 0;
-}
-#app.static #navbar .limiter #logo img {
   height: 100%;
+  align-items: center;
 }
-#app.static #navbar .limiter .center-nav-container,
-#app.static #navbar .limiter .side-nav-container {
-  align-self: center;
+#app.static #desktop-navbar .limiter .navbar-wrapper,
+#app.static #mobile-navbar .limiter .navbar-wrapper {
   padding: 0;
-  justify-content: center;
   align-items: center;
   display: flex;
+  flex: 1;
   text-transform: uppercase;
 }
-#app.static #navbar .limiter .center-nav-container li,
-#app.static #navbar .limiter .side-nav-container li {
+#app.static #desktop-navbar .limiter .navbar-wrapper.left,
+#app.static #mobile-navbar .limiter .navbar-wrapper.left {
+  justify-content: flex-start;
+}
+#app.static #desktop-navbar .limiter .navbar-wrapper.center,
+#app.static #mobile-navbar .limiter .navbar-wrapper.center {
+  justify-content: center;
+}
+#app.static #desktop-navbar .limiter .navbar-wrapper.right,
+#app.static #mobile-navbar .limiter .navbar-wrapper.right {
+  justify-content: flex-end;
+}
+#app.static #desktop-navbar .limiter .navbar-wrapper #logo,
+#app.static #mobile-navbar .limiter .navbar-wrapper #logo {
+  height: 46px;
+}
+#app.static #desktop-navbar .limiter .navbar-wrapper #logo img,
+#app.static #mobile-navbar .limiter .navbar-wrapper #logo img {
+  height: 100%;
+}
+#app.static #desktop-navbar .limiter .navbar-wrapper li,
+#app.static #mobile-navbar .limiter .navbar-wrapper li {
   height: 100%;
   display: contents;
 }
-#app.static #navbar .limiter .center-nav-container li a,
-#app.static #navbar .limiter .side-nav-container li a {
+#app.static #desktop-navbar .limiter .navbar-wrapper li a,
+#app.static #mobile-navbar .limiter .navbar-wrapper li a {
   font-size: var(--button-size);
   text-decoration: none;
   height: 40px;
@@ -63,8 +79,8 @@
   text-overflow: ellipsis;
   overflow: hidden;
 }
-#app.static #navbar .limiter .center-nav-container li a.underline::after,
-#app.static #navbar .limiter .side-nav-container li a.underline::after {
+#app.static #desktop-navbar .limiter .navbar-wrapper li a.underline::after,
+#app.static #mobile-navbar .limiter .navbar-wrapper li a.underline::after {
   content: "";
   height: 2px;
   width: calc(100% - 40px);
@@ -77,53 +93,232 @@
   transition: transform 100ms, color 100ms;
   will-change: transform;
 }
-#app.static #navbar .limiter .center-nav-container li a:hover::after,
-#app.static #navbar .limiter .side-nav-container li a:hover::after {
+#app.static #desktop-navbar .limiter .navbar-wrapper li a:hover::after,
+#app.static #mobile-navbar .limiter .navbar-wrapper li a:hover::after {
   transform: scaleX(1);
   background: white;
 }
-#app.static #navbar .limiter .center-nav-container li a:hover,
-#app.static #navbar .limiter .side-nav-container li a:hover {
+#app.static #desktop-navbar .limiter .navbar-wrapper li a:hover,
+#app.static #mobile-navbar .limiter .navbar-wrapper li a:hover {
   color: white;
 }
-#app.static #navbar .limiter .center-nav-container li a.active,
-#app.static #navbar .limiter .side-nav-container li a.active {
+#app.static #desktop-navbar .limiter .navbar-wrapper li a.active,
+#app.static #mobile-navbar .limiter .navbar-wrapper li a.active {
   color: white;
 }
-#app.static #navbar .limiter .center-nav-container li a.active::after,
-#app.static #navbar .limiter .side-nav-container li a.active::after {
+#app.static #desktop-navbar .limiter .navbar-wrapper li a.active::after,
+#app.static #mobile-navbar .limiter .navbar-wrapper li a.active::after {
   transform: scaleX(1);
   background: white;
 }
-#app.static #navbar .limiter .center-nav-container {
-  flex: 1;
-}
-#app.static #navbar .limiter .side-nav-container {
-  width: 240px;
-  justify-content: flex-end;
+#app.static #desktop-navbar .limiter .navbar-wrapper.right,
+#app.static #mobile-navbar .limiter .navbar-wrapper.right {
   gap: 5px;
 }
-#app.static #navbar .limiter .side-nav-container .logout-button {
+#app.static #desktop-navbar .limiter .navbar-wrapper.right .logout-button,
+#app.static #mobile-navbar .limiter .navbar-wrapper.right .logout-button {
   color: white;
 }
-#app.static #navbar .limiter .side-nav-container form {
+#app.static #desktop-navbar .limiter .navbar-wrapper.right form,
+#app.static #mobile-navbar .limiter .navbar-wrapper.right form {
   display: none;
 }
-#app.static #navbar .limiter .side-nav-container li a {
+#app.static #desktop-navbar .limiter .navbar-wrapper.right li a,
+#app.static #mobile-navbar .limiter .navbar-wrapper.right li a {
   height: 32px;
   line-height: 32px;
   font-weight: 600;
 }
-#app.static #navbar .limiter .side-nav-container li a:hover {
+#app.static #desktop-navbar .limiter .navbar-wrapper.right li a:hover,
+#app.static #mobile-navbar .limiter .navbar-wrapper.right li a:hover {
   color: white;
 }
-#app.static #navbar .limiter .side-nav-container li a.solid {
+#app.static #desktop-navbar .limiter .navbar-wrapper.right li a.solid,
+#app.static #mobile-navbar .limiter .navbar-wrapper.right li a.solid {
   background: #ffffff30;
   color: white;
 }
-#app.static #navbar .limiter .side-nav-container li a.solid:hover {
+#app.static #desktop-navbar .limiter .navbar-wrapper.right li a.solid:hover,
+#app.static #mobile-navbar .limiter .navbar-wrapper.right li a.solid:hover {
   color: var(--primary);
   background: white;
+}
+#app.static #mobile-navbar {
+  display: none;
+}
+#app.static #mobile-navbar .limiter #logo {
+  height: 40px !important;
+}
+#app.static #mobile-navbar .limiter #toggle-menu-button {
+  height: 50px;
+  width: 50px;
+  font-family: "Material Icons";
+  font-size: 25px;
+  display: grid;
+  place-content: center;
+  border-radius: 5px;
+  color: white;
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+#app.static #mobile-navbar #mobile-menu {
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  width: calc(100% - 30px);
+  z-index: 1000;
+  background: white;
+  border-radius: 10px;
+  filter: var(--elevation-4);
+  pointer-events: none;
+  -webkit-clip-path: circle(0 at 50% 0%);
+          clip-path: circle(0 at 50% 0%);
+  transform: translateY(-40px);
+  transition: all 300ms;
+  opacity: 0;
+}
+#app.static #mobile-navbar #mobile-menu.open {
+  pointer-events: all;
+  opacity: 1;
+  -webkit-clip-path: circle(150% at 50% 0%);
+          clip-path: circle(150% at 50% 0%);
+  transform: translateY(0px);
+}
+#app.static #mobile-navbar #mobile-menu .menu-head {
+  display: flex;
+  padding: 10px 10px 20px;
+  align-items: center;
+}
+#app.static #mobile-navbar #mobile-menu .menu-head h5 {
+  margin: 0;
+  flex: 1;
+  text-align: left;
+  color: var(--primary);
+  font-weight: 700;
+  padding-left: 5px;
+}
+#app.static #mobile-navbar #mobile-menu .menu-head h5 a {
+  text-decoration: none !important;
+}
+#app.static #mobile-navbar #mobile-menu .menu-head #close-menu-button {
+  height: 40px;
+  width: 40px;
+  font-family: "Material Icons";
+  font-size: 20px;
+  display: grid;
+  place-content: center;
+  border-radius: 5px;
+  color: var(--text-gray);
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+#app.static #mobile-navbar #mobile-menu ul {
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+#app.static #mobile-navbar #mobile-menu ul.group {
+  background: #f4f4f4;
+  border-radius: 7px;
+  margin: 0 10px 10px;
+}
+#app.static #mobile-navbar #mobile-menu ul li {
+  border-bottom: 1px solid #ddd;
+}
+#app.static #mobile-navbar #mobile-menu ul li:last-child {
+  border: none;
+}
+#app.static #mobile-navbar #mobile-menu ul li a {
+  display: flex;
+  align-items: center;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-weight: 600;
+  text-decoration: none !important;
+}
+#app.static #mobile-navbar #mobile-menu ul li a .text {
+  font-size: 13px;
+  flex: 1;
+  color: var(--heading-gray);
+  text-align: left;
+}
+#app.static #mobile-navbar #mobile-menu ul li a .icon {
+  height: 46px;
+  width: 50px;
+  font-family: "Material Icons";
+  font-size: 23px;
+  display: grid;
+  place-content: center;
+  font-weight: 300;
+  color: var(--primary);
+}
+#app.static #mobile-navbar #mobile-menu ul.bottom-wrapper {
+  background: #f4f4f4;
+  border-radius: 0 0 10px 10px;
+  width: 100%;
+  margin-top: 20px;
+}
+#app.static #mobile-navbar #mobile-menu ul.bottom-wrapper.center {
+  display: grid;
+  height: 100px;
+  place-content: center;
+}
+#app.static #mobile-navbar #mobile-menu ul.bottom-wrapper li {
+  border: none !important;
+}
+#app.static #mobile-navbar #mobile-menu ul.bottom-wrapper li:not(.profile-li) a {
+  background: var(--primary);
+  color: white;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-weight: 600;
+  border-radius: 80px;
+  filter: var(--elevation-4);
+  height: 36px;
+  width: 100%;
+  padding: 0 20px;
+}
+#app.static #mobile-navbar #mobile-menu ul.bottom-wrapper .profile-li {
+  display: grid;
+  grid-template-columns: 50px auto 50px;
+  grid-template-rows: 25px 25px;
+  grid-template-areas: "image name logout" "image link logout";
+  margin: 10px;
+  gap: 0 10px;
+}
+#app.static #mobile-navbar #mobile-menu ul.bottom-wrapper .profile-li img {
+  grid-area: image;
+  border-radius: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+  height: 44px;
+  width: 44px;
+  align-self: center;
+  justify-self: center;
+}
+#app.static #mobile-navbar #mobile-menu ul.bottom-wrapper .profile-li span {
+  grid-area: name;
+  align-self: self-end;
+  text-align: left;
+  color: var(--heading-gray);
+  line-height: 20px;
+  font-weight: 500;
+}
+#app.static #mobile-navbar #mobile-menu ul.bottom-wrapper .profile-li a {
+  grid-area: link;
+  align-self: self-start;
+  text-transform: initial;
+  color: var(--text-gray);
+  letter-spacing: 0px;
+  font-weight: 400;
+  line-height: 20px;
+}
+#app.static #mobile-navbar #mobile-menu ul.bottom-wrapper .profile-li .logout-button {
+  grid-area: logout;
+  align-self: center;
+  justify-self: center;
 }
 #app.static header {
   display: block;
@@ -665,6 +860,17 @@ article[data-cs-01101] .limiter .article-limiter .article-info .category-link {
   font-size: 14px;
 }
 
+@media (max-width: 900px) {
+  #app.static #desktop-navbar {
+    display: none;
+  }
+  #app.static #mobile-navbar {
+    display: block;
+  }
+  #app.static footer .limiter {
+    justify-content: center;
+  }
+}
 :root {
   --border-color: #ccc;
   --border: 1px solid var(--border-color);
@@ -833,6 +1039,7 @@ body {
   max-width: 1300px;
   text-align: left;
   display: block;
+  padding: 0 15px;
 }
 
 .sheet {
@@ -957,4 +1164,30 @@ body {
   visibility: visible;
   opacity: 1;
   transition: opacity 0.15s;
+}
+
+@media (max-width: 900px) {
+  h1 {
+    font-size: 35px;
+  }
+
+  h2 {
+    font-size: 30px;
+  }
+
+  h3 {
+    font-size: 25px;
+  }
+
+  h4 {
+    font-size: 20px;
+  }
+
+  h5 {
+    font-size: 17px;
+  }
+
+  h6 {
+    font-size: var(--text-size);
+  }
 }

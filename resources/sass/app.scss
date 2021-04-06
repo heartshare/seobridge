@@ -215,6 +215,7 @@ body
     max-width: 1300px;
     text-align: left;
     display: block;
+    padding: 0 15px;
 }
 
 .sheet
@@ -362,5 +363,42 @@ body
         visibility: visible;
         opacity: 1;
         transition: opacity .15s;
+    }
+}
+
+
+
+
+
+@media (max-width: 900px)
+{
+    h1
+    {
+        font-size: 35px;
+    }
+
+    h2
+    {
+        font-size: 30px;
+    }
+
+    h3
+    {
+        font-size: 25px;
+    }
+
+    h4
+    {
+        font-size: 20px;
+    }
+
+    h5
+    {
+        font-size: 17px;
+    }
+
+    h6
+    {
+        font-size: var(--text-size);
     }
 }
