@@ -18,6 +18,14 @@
                     <!-- <ui-icon-button class="action-button" info>&#984043;</ui-icon-button> -->
                     <ui-icon-button class="action-button" error @click="openTeamSiteDeleteDialog(activeTeam, site)">&#985721;</ui-icon-button>
                 </div>
+
+                <div class="grid-centered" style="height: 200px; text-align: center" v-if="activeTeam.sites.length === 0 && activeTeam.is_owner">
+                    <p style="margin-top: 0px">Add a Site Namespace to<br>analyse it in your reports tab</p>
+                    <ui-button @click="openTeamSiteCreateDialog(activeTeam)">Add Namespace</ui-button>
+                </div>
+                <div class="grid-centered" style="height: 100px;" v-else-if="activeTeam.sites.length === 0">
+                    <p>Your team doesn't have any Site Namespaces added yet</p>
+                </div>
             </div>
         </div>
         
@@ -47,19 +55,22 @@
                     </ui-popover-menu>
 
                     <ui-icon-button class="expand-button" :class="{'expanded': team.id === openedTeamSheet}" @click="openedTeamSheet = team.id">&#983360;</ui-icon-button>
+
+                    <ui-button style="margin: 0 10px 0 5px" small v-if="!activeTeam" @click="setActiveTeamId(team)">Join</ui-button>
                 </div>
 
                 <div class="team-content" v-show="team.id === openedTeamSheet">
                     <div class="member-row" v-for="member in team.members" :key="member.id">
                         <img src="/images/defaults/default_profile_image.svg" class="profile-image">
 
-                        <div class="name" v-if="member.user_id === user.id"><i>You</i></div>
-                        <div class="name" v-else-if="member.user.firstname || member.user.lastname">
+                        <div class="name" v-if="member.user.firstname || member.user.lastname">
                             {{member.user.firstname}}
                             {{member.user.lastname}}
+                            <span v-if="member.user_id === user.id">(you)</span>
                         </div>
                         <div class="name" v-else>
                             {{member.user.username}}
+                            <span v-if="member.user_id === user.id">(you)</span>
                         </div>
 
                         <div class="role" v-for="(role, i) in member.roles" :key="i" :class="[{'owner': role == 'owner'}]">{{role}}</div>    
@@ -83,14 +94,25 @@
 
 
 
-        <fieldset v-for="invite in invites" :key="invite.id">
-            <legend>{{invite.team.name}}</legend>
-            <p>
-                You've got invited to join <b>{{invite.team.name}}</b>
-            </p>
+        <div class="sheet padding" v-for="invite in invites" :key="invite.id">
+            <p style="margin-top: 0px">You've got invited to join <b>{{invite.team.name}}</b></p>
             <ui-button text border icon="&#983213;" icon-left @click="openInviteIgnoreDialog(invite.id, invite.team)">Decline</ui-button>
             <ui-button icon="&#983340;" @click="handleInvite(invite.id, 'accepted')">Accept</ui-button>
-        </fieldset>
+        </div>
+
+
+
+        <div class="grid-centered" style="height: 200px; text-align: center" v-if="!activeTeam && teams.length > 0">
+            <p>
+                You don't have an active team!<br>
+                Join one to get started!
+            </p>
+        </div>
+
+        <div class="placeholder grid-centered" v-if="teams.length === 0">
+            <p>Create a team to get started</p>
+            <ui-button @click="openTeamEditor()">Create a team</ui-button>
+        </div>
 
 
 
@@ -630,6 +652,11 @@
 <style lang="sass" scoped>
     .page-container
         width: 100%
+        height: 100%
+
+        .placeholder
+            height: 100%
+            width: 100%
 
         .header
             width: 100%

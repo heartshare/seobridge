@@ -76,7 +76,7 @@
                             <button class="menubar-button" :class="{ 'is-active': isActive.heading({ level: 3 }) }" @click="commands.heading({ level: 3 })">&#983661;</button>
                             <button class="menubar-button" :class="{ 'is-active': isActive.heading({ level: 4 }) }" @click="commands.heading({ level: 4 })">&#983662;</button>
                             <button class="menubar-button" :class="{ 'is-active': isActive.heading({ level: 5 }) }" @click="commands.heading({ level: 5 })">&#983663;</button>
-                            <button class="menubar-button" :class="{ 'is-active': isActive.heading({ level: 5 }) }" @click="commands.heading({ level: 6 })">&#983664;</button>
+                            <button class="menubar-button" :class="{ 'is-active': isActive.heading({ level: 6 }) }" @click="commands.heading({ level: 6 })">&#983664;</button>
                         </div>
                         <!-- <div class="group">
                             <button class="menubar-button" :class="{ 'is-active': isActive.bullet_list() }" @click="commands.bullet_list">&#983673;</button>
@@ -149,7 +149,7 @@
                 <ui-button text border icon-left icon="&#983382;" @click="resetArticleCategoryCreate()">Cancel</ui-button>
             </template>
             <template v-slot:button-2>
-                <ui-button icon="&#984085;" :loading="articleCategoryCreate.loading" @click="createArticleCategory()">Create Article</ui-button>
+                <ui-button icon="&#984085;" :loading="articleCategoryCreate.loading" @click="createArticleCategory()">Create Category</ui-button>
             </template>
         </ui-option-dialog>
     </div>

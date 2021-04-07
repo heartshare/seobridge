@@ -5,6 +5,7 @@ module.exports = {
             'overview',
             'reports',
             'teams',
+            'author',
             'notifications',
             'settings',
             'profile',

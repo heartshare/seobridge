@@ -504,7 +504,7 @@ article[data-cs-00002] .limiter.point-wrapper {
   display: flex !important;
   flex-wrap: wrap;
   gap: 30px;
-  padding-bottom: 100px;
+  padding-bottom: 100px !important;
 }
 article[data-cs-00002] .limiter.point-wrapper h2, article[data-cs-00002] .limiter.point-wrapper h3 {
   display: block;
@@ -563,7 +563,7 @@ div[data-cs-02001] {
 .limiter.pricing[data-cs-00004] {
   display: flex !important;
   gap: 50px;
-  padding: 100px 0;
+  padding: 100px 0 !important;
 }
 .limiter.pricing[data-cs-00004] .price-plan {
   flex: 1;
@@ -897,7 +897,7 @@ article[data-cs-01101] .limiter .article-limiter .article-info .category-link {
     gap: 10px;
   }
   #app.static article[data-cs-00002] .limiter.point-wrapper {
-    margin-bottom: 60px;
+    padding-bottom: 60px !important;
     gap: 20px;
   }
   #app.static article[data-cs-00002] .limiter.point-wrapper .card-point {
@@ -915,7 +915,7 @@ article[data-cs-01101] .limiter .article-limiter .article-info .category-link {
   }
   #app.static .limiter.pricing[data-cs-00004] {
     flex-direction: column;
-    padding: 60px 15px;
+    padding: 60px 15px !important;
   }
   #app.static .limiter.pricing[data-cs-00004] .price-plan {
     box-shadow: 0 6px 10px #00003020;

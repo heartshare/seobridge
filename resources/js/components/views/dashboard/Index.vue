@@ -282,6 +282,7 @@
 
 
         main
+            height: 100%
             display: block
             margin-left: var(--menu-width)
             

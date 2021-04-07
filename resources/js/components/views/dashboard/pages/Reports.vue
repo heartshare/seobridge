@@ -2,7 +2,7 @@
     <div class="page-container">
         <div class="header-wrapper">
             <div class="limiter">
-                <div class="filter-bar" v-if="details === null">
+                <div class="filter-bar" v-if="details === null && activeTeam && activeTeam.sites.length > 0">
                     <ui-select-input class="sort-input" v-model="reportSearch.sort" :options="[{'DESC':'Newest first'}, {'ASC':'Oldest first'}]"></ui-select-input>
 
                     <div class="spacer"></div>
@@ -17,7 +17,7 @@
             </div>
         </div>
 
-        <div class="limiter">
+        <div class="limiter" v-if="activeTeam && activeTeam.sites.length > 0">
             <div class="reports-timeline" v-if="details === null">
                 <transition-group name="slide" class="block">
                     <div class="job-wrapper" :class="{'has-indicator': !reportGroup.is_own}" v-for="reportGroup in paginatedReportGroups.data" :key="'report_group_'+reportGroup.id">
@@ -396,7 +396,24 @@
             </div>
         </div>
 
-        <button class="fab" v-if="details === null" @click="openReportCreateDialog()">&#984085;</button>
+        <button class="fab" v-if="details === null && activeTeam && activeTeam.sites.length > 0" @click="openReportCreateDialog()">&#984085;</button>
+
+
+
+        <div class="placeholder grid-centered" v-if="teams.length === 0">
+            <p>To analyse a website you<br>need to create a team first</p>
+            <ui-button @click="$store.dispatch('setPage', 'teams')">Create a team</ui-button>
+        </div>
+
+        <div class="placeholder grid-centered" v-if="!activeTeam && teams.length > 0">
+            <p>To analyse a website you<br>need to join a team first</p>
+            <ui-button @click="$store.dispatch('setPage', 'teams')">Join now</ui-button>
+        </div>
+
+        <div class="placeholder grid-centered" v-if="activeTeam && activeTeam.sites.length === 0">
+            <p>To analyse a website your team has to <br> have at least one Namespace added</p>
+            <ui-button v-if="activeTeam.is_owner" @click="$store.dispatch('setPage', 'teams')">Add Site Namespace now</ui-button>
+        </div>
 
 
 
@@ -533,8 +550,8 @@
                 },
 
                 reportCreate: {
-                    // url: '',
-                    url: 'https://freuwort.com',
+                    url: '',
+                    // url: 'https://freuwort.com',
                     mode: null,
                     viewport: null,
                     loading: false,
@@ -582,6 +599,11 @@
 
             teams() {
                 return this.$store.getters.teams
+            },
+
+            activeTeam() {
+                let activeTeam = this.teams.find(e => e.id === this.user.active_team_id)
+                return activeTeam || false
             },
 
             user() {
@@ -775,7 +797,11 @@
 <style lang="sass" scoped>
     .page-container
         width: 100%
-        padding-top: 85px
+        height: 100%
+
+        .placeholder
+            height: 100%
+            width: 100%
 
         .header-wrapper
             width: calc(100% - var(--menu-width))
@@ -876,6 +902,7 @@
 
         .reports-timeline
             display: block
+            padding-top: 85px
 
             .job-wrapper
                 width: 100%

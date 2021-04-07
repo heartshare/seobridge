@@ -2,13 +2,15 @@
     <div class="page-container limiter">
         <h1>Settings</h1>
 
-        <fieldset>
-            <legend>Account settings</legend>
-
+        <div class="sheet padding">
+            <p style="margin-top: 0px"><b>Account settings</b></p>
             <ui-button icon="&#984421;" :loading="passwordChange.loading" @click="openPasswordChangeDialog()">Change Password</ui-button>
-            <!-- <br><br> -->
-            <!-- <ui-button icon="&#983394;" text border>Request Data (WIP)</ui-button> -->
-        </fieldset><br>
+        </div><br>
+
+        <div class="sheet padding">
+            <p style="margin-top: 0px"><b>Close Account</b></p>
+            <ui-button error :loading="accountClose.loading" @click="openAccountCloseDialog()">Close your account</ui-button>
+        </div>
 
         <!-- <fieldset>
             <legend>Subscriptions</legend>
@@ -28,11 +30,6 @@
                 <ui-button @click="createSubscription()">Test Subscription</ui-button>
             </p>
         </fieldset><br> -->
-
-        <fieldset>
-            <legend>Close Account</legend>
-            <ui-button error :loading="accountClose.loading" @click="openAccountCloseDialog()">Close your account</ui-button>
-        </fieldset>
 
         <ui-option-dialog ref="passwordChangeDialog" @close="resetPasswordChange()">
             <template v-slot:heading>
