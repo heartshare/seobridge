@@ -79,12 +79,12 @@
                 </div>
 
                 <div class="detail-row">
-                    <div class="card span-3">
+                    <div class="card span-4">
                         <h4 class="info"><div class="icon">&#984376;</div>Page Score</h4>
                         <apexchart style="display: inherit;" type="radialBar" height="250" :options="chartOptions" :series="[details.score.totalPageScore] || [0]"></apexchart>
                     </div>
 
-                    <div class="card span-3">
+                    <div class="card span-4">
                         <h4 class="info"><div class="icon">&#983341;</div>Checklist</h4>
 
                         <div class="metric-card-wrapper">
@@ -185,7 +185,7 @@
                         </div>
                     </div>
 
-                    <div class="card span-6">
+                    <div class="card span-4">
                         <h4 class="info"><div class="icon">&#984261;</div>Metrics</h4>
 
                         <div class="metric-card-wrapper">
@@ -1035,23 +1035,24 @@
             width: 100%
             display: flex
             flex-direction: column
-            gap: 30px
+            gap: 15px
 
             .nav-row
                 height: 40px
-                margin-top: 30px
+                margin-top: 15px
 
             .detail-row
                 display: grid
                 grid-template-columns: repeat(12, 1fr)
                 grid-template-rows: 1fr
-                gap: 30px
+                gap: 15px
 
             .card
                 background: var(--bg)
                 border-radius: 5px
                 font-size: var(--text-size)
                 overflow: hidden
+                filter: var(--elevation-2)
 
                 h1, h2, h3, h4, h5, h6
                     margin: 0
@@ -1066,20 +1067,16 @@
                     text-transform: uppercase
                     position: relative
                     font-family: var(--text-font)
-                    padding: 7px 15px 7px 10px
-                    border-bottom: 2px solid var(--border-color)
+                    padding: 15px 15px 10px
 
                     &.error
                         color: var(--error)
-                        border-color: var(--error)
 
                     &.warning
                         color: var(--warning)
-                        border-color: var(--warning)
 
                     &.info
                         color: var(--primary)
-                        border-color: var(--primary)
 
                     .icon
                         font-size: 20px
@@ -1157,20 +1154,17 @@
 
                 .metric-card-wrapper
                     width: 100%
-                    padding: 7.5px
+                    padding: 7.5px 0
+                    padding-top: 0
 
                 .metric-card
-                    background: linear-gradient(90deg, var(--bg-dark) 0%, var(--bg) 70%)
+                    // background: linear-gradient(90deg, var(--bg-dark) 0%, var(--bg) 70%)
                     border-radius: 5px
                     display: inline-grid
-                    width: calc(100% - 15px)
-                    margin: 7.5px
-                    padding: 5px 0
+                    width: 100%
+                    padding: 8px 10px 8px 0
                     grid-template: auto 1fr / 50px 1fr auto
                     grid-template-areas: "icon label info" "icon value info"
-
-                    &.half
-                        width: calc(50% - 15px)
 
                     .icon
                         grid-area: icon
