@@ -712,11 +712,7 @@
                     font-weight: 600
 
                 .action-button
-                    opacity: 0
-
-                &:hover
-                    .action-button
-                        opacity: 1
+                    opacity: 1
 
         .fab
             height: 56px
