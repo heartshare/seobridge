@@ -238,6 +238,7 @@
 <style lang="sass" scoped>
     .page-container
         width: 100%
+        display: inline-block !important
 
         #card-element
             border: var(--border)

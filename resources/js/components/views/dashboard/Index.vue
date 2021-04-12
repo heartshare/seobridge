@@ -16,20 +16,30 @@
                 <div class="text">Overview</div>
             </a>
 
-            <a href="/dashboard/reports" class="button" :class="{'active': $store.getters.page === 'reports'}" @click.prevent="$store.dispatch('setPage', 'reports')">
-                <div class="icon">&#988493;</div>
-                <div class="text">Reports</div>
+            <a href="/dashboard/teams" class="button" :class="{'active': $store.getters.page === 'teams'}" @click.prevent="$store.dispatch('setPage', 'teams')">
+                <div class="icon">&#985740;</div>
+                <div class="text">My Team</div>
             </a>
+
+            <a href="/dashboard/reports" class="button" :class="{'active': $store.getters.page === 'reports'}" @click.prevent="$store.dispatch('setPage', 'reports')">
+                <div class="icon">&#988494;</div>
+                <div class="text">SEO Reports</div>
+            </a>
+
+            <!-- <a href="/dashboard/reports" class="button" :class="{'active': $store.getters.page === 'reports'}" @click.prevent="$store.dispatch('setPage', 'reports')">
+                <div class="icon">&#983881;</div>
+                <div class="text">Keyword Generator</div>
+            </a> -->
+
+            <!-- <a href="/dashboard/reports" class="button" :class="{'active': $store.getters.page === 'reports'}" @click.prevent="$store.dispatch('setPage', 'reports')">
+                <div class="icon">&#987766;</div>
+                <div class="text">Keyword Analyzer</div>
+            </a> -->
 
             <!-- <a href="/dashboard/social-media" class="button" :class="{'active': $store.getters.page === 'social-media'}" @click.prevent="$store.dispatch('setPage', 'social-media')">
                 <div class="icon">&#985161;</div>
                 <div class="text">Social Media</div>
             </a> -->
-
-            <a href="/dashboard/teams" class="button" :class="{'active': $store.getters.page === 'teams'}" @click.prevent="$store.dispatch('setPage', 'teams')">
-                <div class="icon">&#985740;</div>
-                <div class="text">My Team</div>
-            </a>
 
             <a href="/dashboard/author" class="button" :class="{'active': $store.getters.page === 'author'}" v-if="authorProfile" @click.prevent="$store.dispatch('setPage', 'author')">
                 <div class="icon">&#984787;</div>

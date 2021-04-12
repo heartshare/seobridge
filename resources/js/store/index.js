@@ -3,8 +3,8 @@ module.exports = {
         page: null,
         validPages: [
             'overview',
-            'reports',
             'teams',
+            'reports',
             'author',
             'notifications',
             'settings',
