@@ -87,5 +87,10 @@
             </div>
         </div>
     </div>
+
+    {{-- <div class="limiter">
+        <h2>Get a feel for how it looks</h2>
+        <silent-box :gallery="[{'src':'/images/static/bug_tracking.svg'}, {'src':'/images/static/bug_tracking.svg'}, {'src':'/images/static/bug_tracking.svg'}, {'src':'/images/static/bug_tracking.svg'}, {'src':'/images/static/bug_tracking.svg'}, {'src':'/images/static/bug_tracking.svg'}]"></silent-box>
+    </div> --}}
 </article>
 @endsection

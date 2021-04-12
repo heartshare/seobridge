@@ -537,6 +537,22 @@ article[data-cs-00002] .limiter.point-wrapper .card-point p {
   color: inherit;
 }
 
+#silentbox-gallery {
+  z-index: 10000;
+  position: relative;
+}
+#silentbox-gallery a > img {
+  height: 180px;
+  border-radius: 5px;
+  filter: var(--elevation-4);
+  transition: all 100ms;
+  filter: grayscale(100%);
+}
+#silentbox-gallery a > img:hover {
+  transform: scale(1.05);
+  filter: grayscale(0%);
+}
+
 article[data-cs-00007] {
   padding: 100px 0;
   display: block;

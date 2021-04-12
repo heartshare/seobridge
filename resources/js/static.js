@@ -8,6 +8,8 @@ window.Vue = require('vue').default
 const files = require.context('./components/ui/', true, /\.vue$/i)
 files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
+Vue.use(require('vue-silentbox').default)
+
 const app = new Vue({
     el: '#app',
 

@@ -504,6 +504,21 @@ article[data-cs-00002]
                 font-size: var(--text-size)
                 color: inherit
 
+#silentbox-gallery
+    z-index: 10000
+    position: relative
+
+    a > img
+        height: 180px
+        border-radius: 5px
+        filter: var(--elevation-4)
+        transition: all 100ms
+        filter: grayscale(100%)
+
+    a > img:hover
+        transform: scale(1.05)
+        filter: grayscale(0%)
+
 article[data-cs-00007]
     padding: 100px 0
     display: block

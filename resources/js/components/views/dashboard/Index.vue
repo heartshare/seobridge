@@ -146,6 +146,7 @@
             font-size: var(--text-size)
             background: var(--bg)
             border-right: var(--border)
+            border-color: #e1e1e1
 
             #logo
                 height: 60px

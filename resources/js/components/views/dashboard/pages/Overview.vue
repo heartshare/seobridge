@@ -37,6 +37,15 @@
                 <span style="color: var(--success)">available now</span><br>
                 <ui-button style="margin: 5px 0" text border @click="$store.dispatch('setPage', 'reports')">Reports Tool</ui-button>
             </p>
+            <h4>Additional tooling</h4>
+            <p>
+                As SEO Bridge's development is heavily insprired by the workflows of marketing agencies,<br>
+                we plan on bringing some usefull but less SEO relevant tools to this platform as well.
+            </p>
+            <p>
+                <b>Social Media Management</b><br>
+                <span style="color: var(--warning)">planned</span>
+            </p>
         </div>
 
     </div>
