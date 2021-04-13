@@ -27,9 +27,14 @@
                 @endif
             </div>
 
-            <img class="article-preview-image" src="{{$article->intro_image}}" alt="">
+            @if ($article->intro_image)
+                <img class="article-preview-image" src="{{$article->intro_image}}" alt="">
+            @endif
+
+            @if ($article->intro_text)
+                <p>{{$article->intro_text}}</p>
+            @endif
     
-            <p>{{$article->intro_text}}</p>
             <div>{!!$article->full_text!!}</div>
         </div>
         <div class="annotations"></div>
