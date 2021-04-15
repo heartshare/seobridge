@@ -19,14 +19,8 @@
                     <p class="intro-text">{{article.intro_text || 'No intro text!'}}</p>
 
                     <div class="buttons">
-                        <ui-popover-menu>
-                            <template v-slot:trigger>
-                                <ui-icon-button class="more-button">&#983513;</ui-icon-button>
-                            </template>
-
-                            <ui-menu-item icon="&#984043;" @click="openArticleEditForm(article)">Edit Article</ui-menu-item>
-                            <ui-menu-item icon="&#985721;" @click="openArticleDeleteDialog(article)">Delete Article</ui-menu-item>
-                        </ui-popover-menu>
+                        <ui-button small @click="openArticleEditForm(article)">Edit</ui-button>
+                        <ui-icon-button error @click="openArticleDeleteDialog(article)">&#985721;</ui-icon-button>
                     </div>
                 </div>
             </div>
@@ -34,64 +28,70 @@
 
         <div class="category-list sheet padding">
             <div class="block category" v-for="category in articleCategories" :key="category.id">
-                <p><b>{{category.name}}</b></p>
-                <p>{{category.description}}</p>
+                <div class="category-text">
+                    <p><b>{{category.name}}</b></p>
+                    <p>{{category.description}}</p>
+                </div>
                 <ui-icon-button>&#985721;</ui-icon-button>
             </div>
             <div class="grid-centered">
-                <ui-button icon="&#984876;" @click="openArticleCategoryCreateDialog()">Create category</ui-button>
+                <ui-button icon="&#984866;" text @click="openArticleCategoryCreateDialog()">Create category</ui-button>
             </div>
         </div>
 
-        <div class="article-editor">
-            <div class="flex-bar">
-                <ui-button text :loading="articleEdit.loading || articlePublish.loading">Close</ui-button>
-                <div class="spacer"></div>
-                <ui-button :loading="articleEdit.loading" text border @click="saveArticle()">Save</ui-button>
-                <ui-button v-if="!articleEdit.publishedAt" icon="&#984743;" :loading="articlePublish.loading" @click="setPublishDate(true)">Publish</ui-button>
-                <ui-button v-else icon="&#983561;" :loading="articlePublish.loading" @click="setPublishDate(false)">Unpublish</ui-button>
-            </div>
+        <div class="article-editor-popup" v-show="articleEdit.isOpen">
+            <div class="article-editor-background" @click="articleEdit.isOpen = false"></div>
 
-            <div class="flex-bar">
-                <ui-text-input label="Article Title" v-model="articleEdit.title"></ui-text-input>
-                <ui-text-input label="Article URL (optional)" v-model="articleEdit.url"></ui-text-input>
-                <ui-select-input label="Category" v-model="articleEdit.categoryId" :options="articleCategoryOptions"></ui-select-input>
-            </div>
+            <div class="article-editor">
+                <div class="flex-bar">
+                    <ui-button text :loading="articleEdit.loading || articlePublish.loading" @click="articleEdit.isOpen = false">Close</ui-button>
+                    <div class="spacer"></div>
+                    <ui-button :loading="articleEdit.loading" text border @click="saveArticle()">Save</ui-button>
+                    <ui-button v-if="!articleEdit.publishedAt" icon="&#984743;" :loading="articlePublish.loading" @click="setPublishDate(true)">Publish</ui-button>
+                    <ui-button v-else icon="&#983561;" :loading="articlePublish.loading" @click="setPublishDate(false)">Unpublish</ui-button>
+                </div>
 
-            <ui-text-input label="Intro Image URL" v-model="articleEdit.introImage"></ui-text-input>
-            <ui-textarea class="intro-text-input" label="Intro text" :max="500" show-max v-model="articleEdit.introText"></ui-textarea>
+                <div class="flex-bar">
+                    <ui-text-input label="Article Title" v-model="articleEdit.title"></ui-text-input>
+                    <ui-text-input label="Article URL (optional)" v-model="articleEdit.url"></ui-text-input>
+                    <ui-select-input label="Category" v-model="articleEdit.categoryId" :options="articleCategoryOptions"></ui-select-input>
+                </div>
 
-            <div class="editor">
-                <editor-menu-bar :editor="editor" v-slot="{ commands, isActive }">
-                    <div class="editor-menubar">
-                        <div class="group">
-                            <button class="menubar-button" :class="{ 'is-active': isActive.paragraph() }" @click="commands.paragraph">&#983677;</button>
-                            <button class="menubar-button" :class="{ 'is-active': isActive.bold() }" @click="commands.bold">&#983652;</button>
-                            <button class="menubar-button" :class="{ 'is-active': isActive.italic() }" @click="commands.italic">&#983671;</button>
-                            <button class="menubar-button" :class="{ 'is-active': isActive.strike() }" @click="commands.strike">&#983680;</button>
-                            <button class="menubar-button" :class="{ 'is-active': isActive.underline() }" @click="commands.underline">&#983687;</button>
+                <ui-text-input label="Intro Image URL" v-model="articleEdit.introImage"></ui-text-input>
+                <ui-textarea class="intro-text-input" label="Intro text" :max="500" show-max v-model="articleEdit.introText"></ui-textarea>
+
+                <div class="editor">
+                    <editor-menu-bar :editor="editor" v-slot="{ commands, isActive }">
+                        <div class="editor-menubar">
+                            <div class="group">
+                                <button class="menubar-button" :class="{ 'is-active': isActive.paragraph() }" @click="commands.paragraph">&#983677;</button>
+                                <button class="menubar-button" :class="{ 'is-active': isActive.bold() }" @click="commands.bold">&#983652;</button>
+                                <button class="menubar-button" :class="{ 'is-active': isActive.italic() }" @click="commands.italic">&#983671;</button>
+                                <button class="menubar-button" :class="{ 'is-active': isActive.strike() }" @click="commands.strike">&#983680;</button>
+                                <button class="menubar-button" :class="{ 'is-active': isActive.underline() }" @click="commands.underline">&#983687;</button>
+                            </div>
+                            <div class="group">
+                                <button class="menubar-button" :class="{ 'is-active': isActive.heading({ level: 2 }) }" @click="commands.heading({ level: 2 })">&#983660;</button>
+                                <button class="menubar-button" :class="{ 'is-active': isActive.heading({ level: 3 }) }" @click="commands.heading({ level: 3 })">&#983661;</button>
+                                <button class="menubar-button" :class="{ 'is-active': isActive.heading({ level: 4 }) }" @click="commands.heading({ level: 4 })">&#983662;</button>
+                                <button class="menubar-button" :class="{ 'is-active': isActive.heading({ level: 5 }) }" @click="commands.heading({ level: 5 })">&#983663;</button>
+                                <button class="menubar-button" :class="{ 'is-active': isActive.heading({ level: 6 }) }" @click="commands.heading({ level: 6 })">&#983664;</button>
+                            </div>
+                            <!-- <div class="group">
+                                <button class="menubar-button" :class="{ 'is-active': isActive.bullet_list() }" @click="commands.bullet_list">&#983673;</button>
+                                <button class="menubar-button" :class="{ 'is-active': isActive.ordered_list() }" @click="commands.ordered_list">&#983675;</button>
+                            </div> -->
+                            <!-- <div class="group">
+                                <button class="menubar-button" :class="{ 'is-active': isActive.blockquote() }" @click="commands.blockquote">&#983678;</button>
+                                <button class="menubar-button" :class="{ 'is-active': isActive.code() }" @click="commands.code">&#983412;</button>
+                                <button class="menubar-button" :class="{ 'is-active': isActive.code_block() }" @click="commands.code_block">&#983402;</button>
+                            </div> -->
+                            <button class="menubar-button" @click="commands.undo">&#984397;</button>
+                            <button class="menubar-button" @click="commands.redo">&#984143;</button>
                         </div>
-                        <div class="group">
-                            <button class="menubar-button" :class="{ 'is-active': isActive.heading({ level: 2 }) }" @click="commands.heading({ level: 2 })">&#983660;</button>
-                            <button class="menubar-button" :class="{ 'is-active': isActive.heading({ level: 3 }) }" @click="commands.heading({ level: 3 })">&#983661;</button>
-                            <button class="menubar-button" :class="{ 'is-active': isActive.heading({ level: 4 }) }" @click="commands.heading({ level: 4 })">&#983662;</button>
-                            <button class="menubar-button" :class="{ 'is-active': isActive.heading({ level: 5 }) }" @click="commands.heading({ level: 5 })">&#983663;</button>
-                            <button class="menubar-button" :class="{ 'is-active': isActive.heading({ level: 6 }) }" @click="commands.heading({ level: 6 })">&#983664;</button>
-                        </div>
-                        <!-- <div class="group">
-                            <button class="menubar-button" :class="{ 'is-active': isActive.bullet_list() }" @click="commands.bullet_list">&#983673;</button>
-                            <button class="menubar-button" :class="{ 'is-active': isActive.ordered_list() }" @click="commands.ordered_list">&#983675;</button>
-                        </div> -->
-                        <!-- <div class="group">
-                            <button class="menubar-button" :class="{ 'is-active': isActive.blockquote() }" @click="commands.blockquote">&#983678;</button>
-                            <button class="menubar-button" :class="{ 'is-active': isActive.code() }" @click="commands.code">&#983412;</button>
-                            <button class="menubar-button" :class="{ 'is-active': isActive.code_block() }" @click="commands.code_block">&#983402;</button>
-                        </div> -->
-                        <button class="menubar-button" @click="commands.undo">&#984397;</button>
-                        <button class="menubar-button" @click="commands.redo">&#984143;</button>
-                    </div>
-                </editor-menu-bar>
-                <editor-content class="editor-content" :editor="editor" />
+                    </editor-menu-bar>
+                    <editor-content class="editor-content" :editor="editor" />
+                </div>
             </div>
         </div>
 
@@ -192,6 +192,7 @@
                 },
 
                 articleEdit: {
+                    isOpen: false,
                     id: null,
                     url: '',
                     title: '',
@@ -312,6 +313,7 @@
 
             openArticleEditForm(article) {
                 this.articleEdit.autoSave = false
+                this.articleEdit.isOpen = true
                 this.articleEdit.id = article.id
                 this.articleEdit.url = article.url
                 this.articleEdit.title = article.title
@@ -523,7 +525,7 @@
                     position: relative
                     display: grid
                     grid-template-rows: 1fr 1fr
-                    grid-template-columns: 4px 1fr 40px
+                    grid-template-columns: 4px 1fr 120px
                     grid-template-areas: "indicator title buttons" "indicator text buttons"
                     gap: 0 10px
 
@@ -540,14 +542,9 @@
 
                     .buttons
                         grid-area: buttons
-
-                        .more-button
-                            opacity: 0
-
-                    &:hover
-                        .buttons
-                            .more-button
-                                opacity: 1
+                        display: flex
+                        gap: 10px
+                        align-items: center
 
                     .title
                         grid-area: title
@@ -570,6 +567,36 @@
         .category-list
             margin-top: 15px
 
+            .category
+                display: flex
+                align-items: center
+
+                .category-text
+                    flex: 1
+                    display: flex
+                    flex-direction: column
+                    padding: 5px 0
+
+                    p
+                        margin: 0
+                        line-height: 20px
+
+        .article-editor-popup
+            position: fixed
+            top: 0
+            left: 0
+            width: 100%
+            height: 100%
+            z-index: 100
+
+            .article-editor-background
+                position: absolute
+                top: 0
+                left: 0
+                width: 100%
+                height: 100%
+                background: #00000060
+
         .article-editor
             background: var(--bg)
             filter: var(--elevation-2)
@@ -579,7 +606,14 @@
             display: flex
             flex-direction: column
             gap: 15px
-            margin-top: 15px
+            position: absolute
+            top: 50%
+            left: 50%
+            transform: translate(-50%, -50%)
+            z-index: 1
+            width: 100%
+            max-width: 1100px
+            height: calc(100% - 100px)
 
             .flex-bar
                 display: flex
