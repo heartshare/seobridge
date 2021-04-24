@@ -39,7 +39,7 @@
             </p>
             <h4>Additional tooling</h4>
             <p>
-                As SEO Bridge's development is heavily insprired by the workflows of marketing agencies,<br>
+                As SEO Bridge's development is heavily inspired by the workflows of marketing agencies,<br>
                 we plan on bringing some usefull but less SEO relevant tools to this platform as well.
             </p>
             <p>
