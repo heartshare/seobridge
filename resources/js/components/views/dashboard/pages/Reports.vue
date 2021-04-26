@@ -260,7 +260,7 @@
                             </div>
 
                             <div class="metric-card" v-if="details.metaData.themeColor">
-                                <div class="square" :style="'background:' + details.metaData.themeColor"></div>
+                                <div class="icon">&#984024;</div>
                                 <div class="label">Theme Color</div>
                                 <div class="value">{{details.metaData.themeColor}}</div>
                             </div>
@@ -1052,7 +1052,7 @@
                 border-radius: 5px
                 font-size: var(--text-size)
                 overflow: hidden
-                filter: var(--elevation-2)
+                border: var(--border)
 
                 h1, h2, h3, h4, h5, h6
                     margin: 0
