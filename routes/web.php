@@ -25,6 +25,7 @@ Broadcast::routes();
 
 Route::view('/', 'static.index')->name('home');
 Route::view('/pricing', 'static.pricing')->name('pricing');
+Route::view('/tools', 'static.open-tools')->name('tools');
 Route::get('/resources/category', [App\Http\Controllers\BlogController::class, 'allCategories'])->name('categories');
 Route::get('/resources/category/{category}', [App\Http\Controllers\BlogController::class, 'category'])->name('category');
 Route::get('/resources/author', [App\Http\Controllers\BlogController::class, 'allAuthors'])->name('authors');
@@ -44,6 +45,9 @@ Auth::routes(['verify' => true]);
 // Guest Analysis
 Route::post('/request-guest-site-analysis', [App\Http\Controllers\Dashboard\ReportController::class, 'requestGuestSiteAnalysis']);
 Route::get('/report/{reportGroupId}', [App\Http\Controllers\Dashboard\ReportController::class, 'showGuestReport']);
+
+// Get meta tags as guest
+Route::post('/get-meta-data', [App\Http\Controllers\Dashboard\ReportController::class, 'getMetaData']);
 
 Route::get('/dashboard', function() {
     return redirect('/dashboard/overview');

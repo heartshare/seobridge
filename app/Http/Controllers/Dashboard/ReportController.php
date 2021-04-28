@@ -315,4 +315,24 @@ class ReportController extends Controller
 
         return $reportGroup;
     }
+
+
+
+    public function getMetaData(Request $request)
+    {
+        $request->validate([
+            'urls' => ['required', 'array'],
+        ]);
+
+        $result = [];
+        $urls = array_unique($request->urls);
+        $urls = array_slice($urls, 0, 30);
+
+        foreach ($urls as $url)
+        {
+            $result[$url] = get_meta_tags($url);
+        }
+
+        return $result;
+    }
 }

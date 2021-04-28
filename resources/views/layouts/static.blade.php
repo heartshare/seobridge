@@ -60,6 +60,9 @@
 
                 <ul class="navbar-wrapper center">
                     <li>
+                        <a class="underline @if (Route::currentRouteName() == 'tools') active @endif" href="{{url('/tools')}}">Tools</a>
+                    </li>
+                    <li>
                         <a class="underline @if (Route::currentRouteName() == 'home') active @endif" href="{{url('/')}}">Products</a>
                     </li>
                     <li>
@@ -111,6 +114,12 @@
                     <button id="close-menu-button" onclick="closeMenu()">&#983382;</button>
                 </div>
                 <ul class="group">
+                    <li>
+                        <a class="tools @if (Route::currentRouteName() == 'tools') active @endif" href="{{url('/tools')}}">
+                            <div class="icon">&#984503;</div>
+                            <div class="text">Tools</div>
+                        </a>
+                    </li>
                     <li>
                         <a class="products @if (Route::currentRouteName() == 'home') active @endif" href="{{url('/')}}">
                             <div class="icon">&#985879;</div>
