@@ -4,89 +4,103 @@
 @section('description', 'Analyse your website for free with SEO Bridge and get a personal SEO checklist')
 
 @section('content')
-<header data-cs-00001>
+{{-- <header data-cs-00001>
     <div>
         <h3>Check your site's SEO score for free</h3>
-        {{-- <div class="url-input-wrapper">
+        <div class="url-input-wrapper">
             <form method="POST" action="/request-guest-site-analysis">
                 @csrf
                 <input class="input" name="url" type="text" placeholder="Enter your site's URL">
                 <ui-button class="submit-button" icon="&#983881;">Analyse</ui-button>
             </form>
-        </div> --}}
-    </div>
-</header>
-<article data-cs-00007>
-    <div class="limiter">
-        <h1>SEO tools made to make your life easier!</h1>
-        <p>
-            Search engine optimization is an integral part of todays web development and content creation cycle.
-            It's unavoidable to optimize your website perhaps just a little bit to improve your search ranking.
-            But with the ever increasing technical aspects one has to master it may be difficult to efficiently optimize
-            just one of your pages, not to mention 10 or even 100.
-        </p>
-        <p>
-            <b>Let us introduce SEO Bridge</b> —
-            Why don't you let the computer do the tedious work while you focus on what really matter: creating awesome content!
-            SEO Bridge can mass analyse every page of your website and give you personalized tips on what and how to improve it.
-            Perhaps you work in a team and want to share your reports with your peers; no problem for SEO Bridge.
-            You can easily create your team, invite your colleagues and share your findings with them.
-        </p>
-        {{-- <p>
-            <b>Want to try it?</b> Just give our free demo above a spin!
-        </p> --}}
-    </div>
-
-    <div class="limiter">
-        <div class="flex-50-50">
-            <div class="item">
-                <img src="/images/static/checklist.svg" alt="A checklist of SEO tips">
-            </div>
-            <div class="item">
-                <h2>Get a personalized SEO checklist</h2>
-                <p>
-                    Let's face it, general tips and knowledge about optimizing your page are great but nothing beats
-                    an in-depth list of improvements made specifically just for your site. 
-                </p>
-            </div>
         </div>
     </div>
-
-    <div class="gray-polygon">
+</header> --}}
+<article data-cs-00001>
+    <section class="section-1">
         <div class="limiter">
-            <div class="flex-50-50">
+            <h1>
+                SEO<br>
+                Analysis<br>
+                Assistance
+            </h1>
+            <p>
+                Never miss SEO aspects again<br>
+                even on the biggest sites!
+            </p>
+        </div>
+    </section>
+
+    <section class="section-2">
+        <div class="limiter">
+            <div class="flex">
                 <div class="item">
-                    <h2>Analyse together with your team</h2>
+                    <div class="icon primary">&#983560;</div>
+                    <h2>Track</h2>
                     <p>
-                        We focus on bringing collaboration and communication to your SEO tools.
-                        Get invited by your team or create your very own and start working together
-                        in analyzing, optimizing and finalizing the pages that matter. From simply sharing the latest reports
-                        with your team to assigning flawed reports to members - SEO Bridge got you covered!
+                        Keep track of your website and all the changes happening
+                        to it with periodical scans and full page tracking and
+                        generate shareable reports from your data.
                     </p>
                 </div>
                 <div class="item">
-                    <img src="/images/static/collaboration.svg" alt="A team checing datapoints">
+                    <div class="icon secondary">&#985007;</div>
+                    <h2>Analyse</h2>
+                    <p>
+                        Get individualized report-checklists and see exactly where
+                        your site underperforms and what causes it. Get an
+                        insight on meta data usually hidden in the code.
+                    </p>
+                </div>
+                <div class="item">
+                    <div class="icon gray">&#984215;</div>
+                    <h2>Share</h2>
+                    <p>
+                        Communication is key. Share your reports with your team.
+                        Assign fixes to specific members and keep track on
+                        the progress made to pain points.
+                    </p>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 
-    <div class="limiter">
-        <div class="flex-50-50">
-            <div class="item">
-                <img src="/images/static/bug_tracking.svg" alt="Man tracking bugs">
-            </div>
-    
-            <div class="item">
-                <h2>Scan your site for technical errors</h2>
-                <p>
-                    Quickly iron out even the last technical errors holding you back from reaching #1 in the search results.
-                    It's easy to miss small things like adding "alt"-tags to your images or forgetting to scale stock images
-                    down to an appropriate resolution. Just scan your page with SEO Bridge and see all the things you might have missed.
-                </p>
+    <section class="section-3">
+        <div class="limiter">
+            <div class="flex">
+                <div class="item">
+                    <h2>
+                        In-House<br>
+                        <b>Made Public</b>
+                    </h2>
+                    <p>
+                        SEO Bridge was originally funded by the marketing agency <a href="https://www.werbung-fleischer-dienst.de/" target="_blank">FD Werbung</a>
+                        for which it was developed as an in-house SEO solution.<br>
+                        Now we decided to make it available to the public.
+                    </p>
+                </div>
+                <div class="item"></div>
             </div>
         </div>
-    </div>
+    </section>
+
+    <section class="section-4">
+        <div class="limiter">
+            <div class="flex">
+                <div class="item"></div>
+                <div class="item">
+                    <h2>
+                        Start Small<br>
+                        <b>Scale Big</b>
+                    </h2>
+                    <p>
+                        SEO Bridge is built to be scalable. No matter if you're a freelencer,
+                        startup-founder or agency marketer – we have you covered!
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
 
     {{-- <div class="limiter">
         <h2>Get a feel for how it looks</h2>

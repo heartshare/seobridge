@@ -7,7 +7,7 @@
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="https://use.typekit.net/mpl5hxh.css">
     
@@ -54,19 +54,22 @@
             <div class="limiter">
                 <div class="navbar-wrapper left">
                     <a id="logo" href="{{ url('/') }}">
-                        <img src="/images/app/logo_white.svg" alt="SEO Bridge logo">
+                        <img src="/images/app/logo.svg" alt="SEO Bridge logo">
                     </a>
                 </div>
 
                 <ul class="navbar-wrapper center">
                     <li>
+                        <a class="underline @if (Route::currentRouteName() == 'home') active @endif" href="{{url('/')}}">Home</a>
+                    </li>
+                    <li>
                         <a class="underline @if (Route::currentRouteName() == 'tools') active @endif" href="{{url('/tools')}}">Tools</a>
                     </li>
                     <li>
-                        <a class="underline @if (Route::currentRouteName() == 'home') active @endif" href="{{url('/')}}">Products</a>
+                        <a class="underline @if (Route::currentRouteName() == 'products') active @endif" href="{{url('/products')}}">Products</a>
                     </li>
                     <li>
-                        <a class="underline @if (Route::currentRouteName() == 'resources') active @endif" href="{{url('/resources')}}">Resources</a>
+                        <a class="underline @if (Route::currentRouteName() == 'resources') active @endif" href="{{url('/resources')}}">Blog</a>
                     </li>
                     <li>
                         <a class="underline @if (Route::currentRouteName() == 'pricing') active @endif" href="{{url('/pricing')}}">Pricing</a>
@@ -77,7 +80,10 @@
                     @guest
                         @if (Route::has('login'))
                             <li>
-                                <a class="solid" href="{{ route('login') }}">{{ __('Login') }}</a>
+                                <a class="solid" href="{{ route('login') }}">
+                                    {{ __('Login') }}
+                                    <div class="icon">&#983049;</div>
+                                </a>
                             </li>
                         @endif
                     @else
@@ -173,6 +179,15 @@
 
         <footer>
             <div class="limiter">
+                <div class="project-by">
+                    <div class="text">A project by</div>
+                    <a href="https://freuwort.com" target="_blank" rel="noopener noreferrer">
+                        <img src="/images/branding/freuwort_logo_purple.svg" alt="Freuwort Logo">
+                    </a>
+                </div>
+
+                <div class="spacer"></div>
+                
                 <nav>
                     <ul>
                         <li>

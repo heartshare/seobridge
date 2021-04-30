@@ -27,11 +27,11 @@
     --elevation-4: drop-shadow(0 4px 6px #00000020);
 
     --text-font: 'Roboto', sans-serif;
-    --heading-font: sofia-pro, sans-serif;
+    --heading-font: 'Poppins', sans-serif;
     --text-size: 15px;
     --button-size: 14px;
     --bg: #ffffff;
-    --bg-dark: #f4f4f4;
+    --bg-dark: #f5f8f8;
     --heading-gray: #2F3542;
     --text-gray: #666F79;
     --text-gray-shade: #666F7910;
@@ -39,10 +39,13 @@
     --primary: #4834D4;
     --primary-focused: #644cff;
     --primary-shade: #4834D418;
-    --primary-shine: #4834D440;
+    --primary-shine: #4b36d633;
 
-    --secondary: #34E7E4;
-    --secondary-shade: #34E7E430;
+    --secondary: #29abab;
+    --secondary-shine: #36e8e833;
+
+    --gray: #2F3542;
+    --gray-shine: #2F354233;
 
     --disabled-bg: #eaecec;
     --disabled-color: #878f97;
@@ -124,7 +127,6 @@ blockquote, ul, ol, li
 
 h1
 {
-    color: var(--primary);
     font-size: 45px;
 }
 
