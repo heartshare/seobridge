@@ -49,7 +49,7 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
 <body>
-    <div class="static font-size @yield('page-classes')" id="app">
+    <div class="static @yield('page-classes')" id="app">
         <nav id="desktop-navbar" class="navbar">
             <div class="limiter">
                 <div class="navbar-wrapper left">
@@ -65,9 +65,9 @@
                     <li>
                         <a class="underline @if (Route::currentRouteName() == 'tools') active @endif" href="{{url('/tools')}}">Tools</a>
                     </li>
-                    <li>
+                    {{-- <li>
                         <a class="underline @if (Route::currentRouteName() == 'products') active @endif" href="{{url('/products')}}">Products</a>
-                    </li>
+                    </li> --}}
                     <li>
                         <a class="underline @if (Route::currentRouteName() == 'resources') active @endif" href="{{url('/resources')}}">Blog</a>
                     </li>
@@ -78,26 +78,27 @@
 
                 <ul class="navbar-wrapper right">
                     @guest
-                        @if (Route::has('login'))
-                            <li>
-                                <a class="solid" href="{{ route('login') }}">
-                                    {{ __('Login') }}
-                                    <div class="icon">&#983049;</div>
-                                </a>
-                            </li>
-                        @endif
-                    @else
                         <li>
-                            <a href="{{ route('dashboard') }}">
-                                {{ Auth::user()->username }}
+                            <a class="button login" href="{{ route('login') }}">
+                                <span class="text">{{ __('Login') }}</span>
+                                <div class="icon">&#983049;</div>
                             </a>
                         </li>
+                    @else
+                        <li>
+                            <a class="button account" href="{{ route('dashboard') }}">
+                                <span class="text">{{ Auth::user()->username }}</span>
+                                <div class="icon">&#983049;</div>
+                            </a>
 
-                        <ui-icon-button class="logout-button" title="{{ __('Logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">&#984573;</ui-icon-button>
+                            <ul>
+                                <li>
+                                    <button onclick="event.preventDefault(); document.getElementById('logout-form').submit();">{{ __('Logout') }}</button>
+                                </li>
+                            </ul>
+                        </li>
 
-                        <form id="logout-form" action="{{ route('logout') }}" method="POST">
-                            @csrf
-                        </form>
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST">@csrf</form>
                     @endguest
                 </ul>
             </div>

@@ -38,7 +38,7 @@
                     justify-content: flex-end
 
                 #logo
-                    height: 42px
+                    height: 38px
 
                     img
                         height: 100%
@@ -78,20 +78,76 @@
                     form
                         display: none
 
-                    li a
-                        height: 38px
-                        line-height: 38px
+                    li
+                        display: block !important
+                        position: relative
 
-                        &:hover
-                            color: white
+                        a.button
+                            height: 38px
+                            display: flex
+                            align-items: center
+                            gap: 10px
+                            padding: 0 14px 0 20px
 
-                        &.solid
-                            background: var(--primary)
-                            color: white
+                            .text
+                                font-size: 12px
+                                font-weight: 700
+                                letter-spacing: 2px
+
+                            .icon
+                                font-family: 'Material Icons'
+                                font-size: 22px
+
+                            &.login
+                                background: var(--primary)
+                                color: white
+
+                            &.account
+                                background: var(--bg-dark)
+                                color: var(--heading-gray)
 
                             &:hover
                                 color: white
                                 background: var(--primary)
+
+                        ul
+                            position: absolute
+                            top: 38px
+                            right: 0
+                            background: white
+                            padding: 10px 0
+                            border-radius: 8px
+                            filter: var(--elevation-4)
+                            width: 100%
+                            transform: translateY(-20px)
+                            opacity: 0
+                            pointer-events: none
+                            transition: all 100ms
+
+                            li
+                                button, a
+                                    border: none
+                                    background: transparent
+                                    color: var(--text-gray)
+                                    font-size: 12px
+                                    letter-spacing: 2px
+                                    font-weight: 700
+                                    text-transform: uppercase
+                                    padding: 14px 20px
+                                    width: 100%
+                                    text-align: left
+                                    cursor: pointer
+                                    text-decoration: none
+
+                                    &:hover
+                                        color: var(--heading-gray)
+                                        background: var(--bg-dark)
+
+                        &:hover
+                            ul
+                                opacity: 1
+                                pointer-events: all
+                                transform: translateY(0)
 
 
     #mobile-navbar
@@ -378,14 +434,14 @@
 
                     li
                         a
-                            font-size: var(--text-size)
+                            font-size: 12px
                             font-family: var(--text-family)
                             line-height: 40px
                             height: 40px
                             text-transform: uppercase
                             text-decoration: none
-                            font-weight: 500
-                            letter-spacing: 0.5px
+                            font-weight: 700
+                            letter-spacing: 2px
                             color: var(--text-gray)
 
                             &:hover
@@ -428,6 +484,12 @@ article[data-cs-00001]
                 margin: 30px 0
 
         &.section-2
+            h2
+                margin: 40px 0 10px 0
+
+            p
+                margin: 0
+
             .icon
                 height: 80px
                 width: 80px
@@ -454,7 +516,6 @@ article[data-cs-00001]
             h2
                 font-size: 60px
                 line-height: 80px
-                font-weight: 600
 
 header[data-cs-00005]
     height: 300px

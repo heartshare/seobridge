@@ -49,7 +49,7 @@
 }
 #app.static #desktop-navbar .limiter .navbar-wrapper #logo,
 #app.static #mobile-navbar .limiter .navbar-wrapper #logo {
-  height: 42px;
+  height: 38px;
 }
 #app.static #desktop-navbar .limiter .navbar-wrapper #logo img,
 #app.static #mobile-navbar .limiter .navbar-wrapper #logo img {
@@ -97,24 +97,87 @@
 #app.static #mobile-navbar .limiter .navbar-wrapper.right form {
   display: none;
 }
-#app.static #desktop-navbar .limiter .navbar-wrapper.right li a,
-#app.static #mobile-navbar .limiter .navbar-wrapper.right li a {
+#app.static #desktop-navbar .limiter .navbar-wrapper.right li,
+#app.static #mobile-navbar .limiter .navbar-wrapper.right li {
+  display: block !important;
+  position: relative;
+}
+#app.static #desktop-navbar .limiter .navbar-wrapper.right li a.button,
+#app.static #mobile-navbar .limiter .navbar-wrapper.right li a.button {
   height: 38px;
-  line-height: 38px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 14px 0 20px;
 }
-#app.static #desktop-navbar .limiter .navbar-wrapper.right li a:hover,
-#app.static #mobile-navbar .limiter .navbar-wrapper.right li a:hover {
-  color: white;
+#app.static #desktop-navbar .limiter .navbar-wrapper.right li a.button .text,
+#app.static #mobile-navbar .limiter .navbar-wrapper.right li a.button .text {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
 }
-#app.static #desktop-navbar .limiter .navbar-wrapper.right li a.solid,
-#app.static #mobile-navbar .limiter .navbar-wrapper.right li a.solid {
+#app.static #desktop-navbar .limiter .navbar-wrapper.right li a.button .icon,
+#app.static #mobile-navbar .limiter .navbar-wrapper.right li a.button .icon {
+  font-family: "Material Icons";
+  font-size: 22px;
+}
+#app.static #desktop-navbar .limiter .navbar-wrapper.right li a.button.login,
+#app.static #mobile-navbar .limiter .navbar-wrapper.right li a.button.login {
   background: var(--primary);
   color: white;
 }
-#app.static #desktop-navbar .limiter .navbar-wrapper.right li a.solid:hover,
-#app.static #mobile-navbar .limiter .navbar-wrapper.right li a.solid:hover {
+#app.static #desktop-navbar .limiter .navbar-wrapper.right li a.button.account,
+#app.static #mobile-navbar .limiter .navbar-wrapper.right li a.button.account {
+  background: var(--bg-dark);
+  color: var(--heading-gray);
+}
+#app.static #desktop-navbar .limiter .navbar-wrapper.right li a.button:hover,
+#app.static #mobile-navbar .limiter .navbar-wrapper.right li a.button:hover {
   color: white;
   background: var(--primary);
+}
+#app.static #desktop-navbar .limiter .navbar-wrapper.right li ul,
+#app.static #mobile-navbar .limiter .navbar-wrapper.right li ul {
+  position: absolute;
+  top: 38px;
+  right: 0;
+  background: white;
+  padding: 10px 0;
+  border-radius: 8px;
+  filter: var(--elevation-4);
+  width: 100%;
+  transform: translateY(-20px);
+  opacity: 0;
+  pointer-events: none;
+  transition: all 100ms;
+}
+#app.static #desktop-navbar .limiter .navbar-wrapper.right li ul li button, #app.static #desktop-navbar .limiter .navbar-wrapper.right li ul li a,
+#app.static #mobile-navbar .limiter .navbar-wrapper.right li ul li button,
+#app.static #mobile-navbar .limiter .navbar-wrapper.right li ul li a {
+  border: none;
+  background: transparent;
+  color: var(--text-gray);
+  font-size: 12px;
+  letter-spacing: 2px;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 14px 20px;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  text-decoration: none;
+}
+#app.static #desktop-navbar .limiter .navbar-wrapper.right li ul li button:hover, #app.static #desktop-navbar .limiter .navbar-wrapper.right li ul li a:hover,
+#app.static #mobile-navbar .limiter .navbar-wrapper.right li ul li button:hover,
+#app.static #mobile-navbar .limiter .navbar-wrapper.right li ul li a:hover {
+  color: var(--heading-gray);
+  background: var(--bg-dark);
+}
+#app.static #desktop-navbar .limiter .navbar-wrapper.right li:hover ul,
+#app.static #mobile-navbar .limiter .navbar-wrapper.right li:hover ul {
+  opacity: 1;
+  pointer-events: all;
+  transform: translateY(0);
 }
 #app.static #mobile-navbar {
   display: none;
@@ -401,14 +464,14 @@
   gap: 40px;
 }
 #app.static footer .limiter nav ul li a {
-  font-size: var(--text-size);
+  font-size: 12px;
   font-family: var(--text-family);
   line-height: 40px;
   height: 40px;
   text-transform: uppercase;
   text-decoration: none;
-  font-weight: 500;
-  letter-spacing: 0.5px;
+  font-weight: 700;
+  letter-spacing: 2px;
   color: var(--text-gray);
 }
 #app.static footer .limiter nav ul li a:hover {
@@ -449,6 +512,12 @@ article[data-cs-00001] section.section-1 h1 {
 article[data-cs-00001] section.section-1 p {
   margin: 30px 0;
 }
+article[data-cs-00001] section.section-2 h2 {
+  margin: 40px 0 10px 0;
+}
+article[data-cs-00001] section.section-2 p {
+  margin: 0;
+}
 article[data-cs-00001] section.section-2 .icon {
   height: 80px;
   width: 80px;
@@ -473,7 +542,6 @@ article[data-cs-00001] section.section-2 .icon.gray {
 article[data-cs-00001] section.section-3 h2, article[data-cs-00001] section.section-4 h2 {
   font-size: 60px;
   line-height: 80px;
-  font-weight: 600;
 }
 
 header[data-cs-00005] {
@@ -1041,10 +1109,12 @@ h1 {
 }
 
 h2 {
+  font-weight: 600;
   font-size: 35px;
 }
 
 h3 {
+  font-weight: 600;
   font-size: 30px;
 }
 
