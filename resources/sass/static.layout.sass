@@ -1,4 +1,6 @@
 #app.static
+    padding-top: 70px
+
     #desktop-navbar,
     #mobile-navbar
         position: fixed
@@ -6,7 +8,7 @@
         left: 0
         height: 70px
         color: var(--text-gray)
-        background: #fffffff4
+        background: #ffffffe0
         backdrop-filter: blur(10px)
         font-size: var(--text-size)
         width: 100%
@@ -98,17 +100,29 @@
                                 font-family: 'Material Icons'
                                 font-size: 22px
 
+                            .image
+                                height: 30px
+                                width: 30px
+                                border-radius: 100%
+                                object-fit: cover
+
                             &.login
                                 background: var(--primary)
                                 color: white
 
+                                &:hover
+                                    color: white
+                                    background: var(--primary)
+
                             &.account
+                                padding: 0 5px 0 15px
                                 background: var(--bg-dark)
                                 color: var(--heading-gray)
+                                border-radius: 8px 20px 20px 8px
 
-                            &:hover
-                                color: white
-                                background: var(--primary)
+                                .text
+                                    letter-spacing: 1px
+                                    text-transform: initial
 
                         ul
                             position: absolute
@@ -130,7 +144,7 @@
                                     background: transparent
                                     color: var(--text-gray)
                                     font-size: 12px
-                                    letter-spacing: 2px
+                                    letter-spacing: 1px
                                     font-weight: 700
                                     text-transform: uppercase
                                     padding: 14px 20px
@@ -152,10 +166,11 @@
 
     #mobile-navbar
         display: none
+        height: 60px
 
         .limiter
             #logo
-                height: 40px !important
+                // height: 40px !important
 
             #toggle-menu-button
                 height: 50px
@@ -165,23 +180,24 @@
                 display: grid
                 place-content: center
                 border-radius: 5px
-                color: white
+                // color: white
                 background: transparent
                 border: none
                 padding: 0
         
         #mobile-menu
             position: fixed
-            top: 15px
-            left: 15px
-            width: calc(100% - 30px)
+            top: 0
+            right: 0
+            width: calc(100% - 60px)
+            max-width: 400px
+            height: 100vh
             z-index: 1000
             background: white
-            border-radius: 10px
             filter: var(--elevation-4)
             pointer-events: none
             clip-path: circle(0 at 50% 0%)
-            transform: translateY(-40px)
+            transform: translateX(100%)
             transition: all 300ms
             opacity: 0
 
@@ -326,36 +342,12 @@
                             align-self: center
                             justify-self: center
 
-    header
-        display: block
-
-        img
-            width: 100%
-            max-height: 500px
-            object-fit: cover
     main
-        display: block
-
-        .flex-50-50
-            display: flex
-            gap: 50px
-            align-items: center
-            margin: 50px 0
-
-            .item
-                flex: 1
-                font-size: var(--text-size)
-
-                img
-                    max-width: 100%
-                    widthh: 100%
-
         .centered-dialog
             width: 100%
             display: block
-            height: calc(100vh - 60px)
-            background: var(--primary)
-            background-image: url('/images/static/assets/terrain_white.svg')
+            height: calc(100vh - 70px)
+            background-image: url('/images/static/assets/terrain.svg')
             background-size: cover
 
             .dialog
@@ -386,7 +378,7 @@
                     border-radius: 0 0 10px 10px
 
     footer
-        height: 60px
+        height: 70px
         background: var(--bg-dark)
         display: block
 
@@ -446,12 +438,6 @@
 
                             &:hover
                                 color: var(--heading-gray)
-
-    &.no-header
-        padding-top: 60px
-        
-        .navbar
-            background: var(--primary)
 
 
 // SCOPED
@@ -516,19 +502,6 @@ article[data-cs-00001]
             h2
                 font-size: 60px
                 line-height: 80px
-
-header[data-cs-00005]
-    height: 300px
-    display: block
-    background: var(--primary)
-    color: white
-    display: grid !important
-    place-content: center
-    background-image: url('/images/static/assets/terrain_white.svg')
-    background-size: cover
-
-    h1, h2, h3, h4
-        color: inherit
 
 header[data-cs-00008]
     height: 370px
@@ -893,6 +866,8 @@ article[data-cs-01101]
 
 @media (max-width: 900px)
     #app.static
+        padding-top: 60px
+
         #desktop-navbar
             display: none
 

@@ -88,7 +88,7 @@
                         <li>
                             <a class="button account" href="{{ route('dashboard') }}">
                                 <span class="text">{{ Auth::user()->username }}</span>
-                                <div class="icon">&#983049;</div>
+                                <img src="/images/defaults/default_profile_image.svg" alt="{{ Auth::user()->username }}" class="image">
                             </a>
 
                             <ul>
@@ -108,7 +108,7 @@
             <div class="limiter">
                 <div class="navbar-wrapper left">
                     <a id="logo" href="{{ url('/') }}">
-                        <img src="/images/app/logo_white.svg" alt="SEO Bridge logo">
+                        <img src="/images/app/logo.svg" alt="SEO Bridge logo">
                     </a>
                 </div>
 

@@ -4,10 +4,8 @@
 @section('description', 'Helpfull tips, tricks and general knowledge about search engine optimizing. Learn about the ins and outs of SEO.')
 
 @section('content')
-<header data-cs-00005>
-    <h1>SEO resources and knowledge</h1>
-</header>
 
+<h1>SEO resources and knowledge</h1>
 @foreach ($articles as $article)
     <article @if ($loop->index < 1) data-cs-01001 @else data-cs-01002 @endif>
         <div class="limiter">

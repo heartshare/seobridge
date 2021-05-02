@@ -81,11 +81,6 @@
     outline: none;
 }
 
-// div:not(.font-size):not(.limiter)
-// {
-//     font-size: 0;
-// }
-
 i, b
 {
     display: inline;
@@ -120,7 +115,7 @@ h1, h2, h3, h4, h5, h6
     font-family: var(--heading-font);
 }
 
-blockquote, ul, ol, li
+blockquote, ul, ol, li, header, main
 {
     display: block;
 }
@@ -219,7 +214,7 @@ body
     max-width: 1300px;
     text-align: left;
     display: block;
-    padding: 0 15px;
+    padding: 0 25px;
 }
 
 .sheet

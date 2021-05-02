@@ -6,6 +6,9 @@
   font-weight: normal;
   font-style: normal;
 }
+#app.static {
+  padding-top: 70px;
+}
 #app.static #desktop-navbar,
 #app.static #mobile-navbar {
   position: fixed;
@@ -13,7 +16,7 @@
   left: 0;
   height: 70px;
   color: var(--text-gray);
-  background: #fffffff4;
+  background: #ffffffe0;
   -webkit-backdrop-filter: blur(10px);
           backdrop-filter: blur(10px);
   font-size: var(--text-size);
@@ -121,20 +124,35 @@
   font-family: "Material Icons";
   font-size: 22px;
 }
+#app.static #desktop-navbar .limiter .navbar-wrapper.right li a.button .image,
+#app.static #mobile-navbar .limiter .navbar-wrapper.right li a.button .image {
+  height: 30px;
+  width: 30px;
+  border-radius: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
 #app.static #desktop-navbar .limiter .navbar-wrapper.right li a.button.login,
 #app.static #mobile-navbar .limiter .navbar-wrapper.right li a.button.login {
   background: var(--primary);
   color: white;
 }
-#app.static #desktop-navbar .limiter .navbar-wrapper.right li a.button.account,
-#app.static #mobile-navbar .limiter .navbar-wrapper.right li a.button.account {
-  background: var(--bg-dark);
-  color: var(--heading-gray);
-}
-#app.static #desktop-navbar .limiter .navbar-wrapper.right li a.button:hover,
-#app.static #mobile-navbar .limiter .navbar-wrapper.right li a.button:hover {
+#app.static #desktop-navbar .limiter .navbar-wrapper.right li a.button.login:hover,
+#app.static #mobile-navbar .limiter .navbar-wrapper.right li a.button.login:hover {
   color: white;
   background: var(--primary);
+}
+#app.static #desktop-navbar .limiter .navbar-wrapper.right li a.button.account,
+#app.static #mobile-navbar .limiter .navbar-wrapper.right li a.button.account {
+  padding: 0 5px 0 15px;
+  background: var(--bg-dark);
+  color: var(--heading-gray);
+  border-radius: 8px 20px 20px 8px;
+}
+#app.static #desktop-navbar .limiter .navbar-wrapper.right li a.button.account .text,
+#app.static #mobile-navbar .limiter .navbar-wrapper.right li a.button.account .text {
+  letter-spacing: 1px;
+  text-transform: initial;
 }
 #app.static #desktop-navbar .limiter .navbar-wrapper.right li ul,
 #app.static #mobile-navbar .limiter .navbar-wrapper.right li ul {
@@ -158,7 +176,7 @@
   background: transparent;
   color: var(--text-gray);
   font-size: 12px;
-  letter-spacing: 2px;
+  letter-spacing: 1px;
   font-weight: 700;
   text-transform: uppercase;
   padding: 14px 20px;
@@ -181,9 +199,7 @@
 }
 #app.static #mobile-navbar {
   display: none;
-}
-#app.static #mobile-navbar .limiter #logo {
-  height: 40px !important;
+  height: 60px;
 }
 #app.static #mobile-navbar .limiter #toggle-menu-button {
   height: 50px;
@@ -193,24 +209,24 @@
   display: grid;
   place-content: center;
   border-radius: 5px;
-  color: white;
   background: transparent;
   border: none;
   padding: 0;
 }
 #app.static #mobile-navbar #mobile-menu {
   position: fixed;
-  top: 15px;
-  left: 15px;
-  width: calc(100% - 30px);
+  top: 0;
+  right: 0;
+  width: calc(100% - 60px);
+  max-width: 400px;
+  height: 100vh;
   z-index: 1000;
   background: white;
-  border-radius: 10px;
   filter: var(--elevation-4);
   pointer-events: none;
   -webkit-clip-path: circle(0 at 50% 0%);
           clip-path: circle(0 at 50% 0%);
-  transform: translateY(-40px);
+  transform: translateX(100%);
   transition: all 300ms;
   opacity: 0;
 }
@@ -356,38 +372,11 @@
   align-self: center;
   justify-self: center;
 }
-#app.static header {
-  display: block;
-}
-#app.static header img {
-  width: 100%;
-  max-height: 500px;
-  -o-object-fit: cover;
-     object-fit: cover;
-}
-#app.static main {
-  display: block;
-}
-#app.static main .flex-50-50 {
-  display: flex;
-  gap: 50px;
-  align-items: center;
-  margin: 50px 0;
-}
-#app.static main .flex-50-50 .item {
-  flex: 1;
-  font-size: var(--text-size);
-}
-#app.static main .flex-50-50 .item img {
-  max-width: 100%;
-  widthh: 100%;
-}
 #app.static main .centered-dialog {
   width: 100%;
   display: block;
-  height: calc(100vh - 60px);
-  background: var(--primary);
-  background-image: url("/images/static/assets/terrain_white.svg");
+  height: calc(100vh - 70px);
+  background-image: url("/images/static/assets/terrain.svg");
   background-size: cover;
 }
 #app.static main .centered-dialog .dialog {
@@ -418,7 +407,7 @@
   border-radius: 0 0 10px 10px;
 }
 #app.static footer {
-  height: 60px;
+  height: 70px;
   background: var(--bg-dark);
   display: block;
 }
@@ -476,12 +465,6 @@
 }
 #app.static footer .limiter nav ul li a:hover {
   color: var(--heading-gray);
-}
-#app.static.no-header {
-  padding-top: 60px;
-}
-#app.static.no-header .navbar {
-  background: var(--primary);
 }
 
 article[data-cs-00001] {
@@ -542,20 +525,6 @@ article[data-cs-00001] section.section-2 .icon.gray {
 article[data-cs-00001] section.section-3 h2, article[data-cs-00001] section.section-4 h2 {
   font-size: 60px;
   line-height: 80px;
-}
-
-header[data-cs-00005] {
-  height: 300px;
-  display: block;
-  background: var(--primary);
-  color: white;
-  display: grid !important;
-  place-content: center;
-  background-image: url("/images/static/assets/terrain_white.svg");
-  background-size: cover;
-}
-header[data-cs-00005] h1, header[data-cs-00005] h2, header[data-cs-00005] h3, header[data-cs-00005] h4 {
-  color: inherit;
 }
 
 header[data-cs-00008] {
@@ -955,6 +924,9 @@ article[data-cs-01101] .limiter .article-limiter .article-info .category-link {
 }
 
 @media (max-width: 900px) {
+  #app.static {
+    padding-top: 60px;
+  }
   #app.static #desktop-navbar {
     display: none;
   }
@@ -1100,7 +1072,7 @@ h1, h2, h3, h4, h5, h6 {
   font-family: var(--heading-font);
 }
 
-blockquote, ul, ol, li {
+blockquote, ul, ol, li, header, main {
   display: block;
 }
 
@@ -1186,7 +1158,7 @@ body {
   max-width: 1300px;
   text-align: left;
   display: block;
-  padding: 0 15px;
+  padding: 0 25px;
 }
 
 .sheet {
