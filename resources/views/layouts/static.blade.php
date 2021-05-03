@@ -112,41 +112,15 @@
                     </a>
                 </div>
 
-                <button id="toggle-menu-button" onclick="openMenu()">&#983900;</button>
+                <button id="toggle-menu-button" onclick="toggleMenu()">
+                    <svg class="svg-wrapper" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path class="hamburger-path" d="M5 9C5 9 17.5 9 19 9C20.5 9 22.5 7.5 21.5 6C20.5 4.5 18 6 17 7C16 8 7 17 7 17" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path class="hamburger-path" d="M5 15.0054C5 15.0054 17.5 15.0054 19 15.0054C20.5 15.0054 22.5 16.5054 21.5 18.0054C20.5 19.5054 18 18.0054 17 17.0054C16 16.0054 7 7.00542 7 7.00542" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
             </div>
 
             <div id="mobile-menu">
-                <div class="menu-head">
-                    <h5><a href="{{ url('/') }}">SEO Bridge</a></h5>
-                    <button id="close-menu-button" onclick="closeMenu()">&#983382;</button>
-                </div>
-                <ul class="group">
-                    <li>
-                        <a class="tools @if (Route::currentRouteName() == 'tools') active @endif" href="{{url('/tools')}}">
-                            <div class="icon">&#984503;</div>
-                            <div class="text">Tools</div>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="products @if (Route::currentRouteName() == 'home') active @endif" href="{{url('/')}}">
-                            <div class="icon">&#985879;</div>
-                            <div class="text">Products</div>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="resources @if (Route::currentRouteName() == 'resources') active @endif" href="{{url('/resources')}}">
-                            <div class="icon">&#986387;</div>
-                            <div class="text">Resources</div>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="pricing @if (Route::currentRouteName() == 'pricing') active @endif" href="{{url('/pricing')}}">
-                            <div class="icon">&#984313;</div>
-                            <div class="text">Pricing</div>
-                        </a>
-                    </li>
-                </ul>
-
                 @guest
                     @if (Route::has('login'))
                         <ul class="bottom-wrapper center">
@@ -171,6 +145,33 @@
                         </form>
                     </ul>
                 @endguest
+
+                <ul>
+                    <li>
+                        <a class="home @if (Route::currentRouteName() == 'home') active @endif" href="{{url('/')}}">
+                            <div class="icon">&#983772;</div>
+                            <div class="text">Home</div>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="tools @if (Route::currentRouteName() == 'tools') active @endif" href="{{url('/tools')}}">
+                            <div class="icon">&#985302;</div>
+                            <div class="text">Tools</div>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="resources @if (Route::currentRouteName() == 'resources') active @endif" href="{{url('/resources')}}">
+                            <div class="icon">&#984808;</div>
+                            <div class="text">Blog</div>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="pricing @if (Route::currentRouteName() == 'pricing') active @endif" href="{{url('/pricing')}}">
+                            <div class="icon">&#984315;</div>
+                            <div class="text">Pricing</div>
+                        </a>
+                    </li>
+                </ul>
             </div>
         </nav>
 
@@ -227,14 +228,16 @@
             setScrollClass(window.pageYOffset)
         })
 
-        function openMenu()
+        function toggleMenu()
         {
-            document.getElementById('mobile-menu').classList.add('open')
-        }
-
-        function closeMenu()
-        {
-            document.getElementById('mobile-menu').classList.remove('open')
+            if (document.getElementById('mobile-navbar').classList.contains('open'))
+            {
+                document.getElementById('mobile-navbar').classList.remove('open')
+            }
+            else
+            {
+                document.getElementById('mobile-navbar').classList.add('open')
+            }
         }
     </script>
 </body>

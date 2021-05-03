@@ -180,10 +180,34 @@
                 display: grid
                 place-content: center
                 border-radius: 5px
-                // color: white
+                color: var(--text-gray)
                 background: transparent
                 border: none
                 padding: 0
+                position: relative
+                z-index: 10000
+
+                .svg-wrapper
+                    height: 30px
+                    width: 30px
+                    color: inherit
+                    
+                    .hamburger-path
+                        stroke-dasharray: 14 100
+                        transition: all 300ms
+                        stroke: currentcolor
+
+        &.open
+            #mobile-menu
+                pointer-events: all
+                transform: translateY(0px)
+                box-shadow: 0 0 0 10000px #00000080
+
+            #toggle-menu-button
+                color: var(--heading-gray)
+                .svg-wrapper
+                    .hamburger-path
+                        stroke-dashoffset: -23.8
         
         #mobile-menu
             position: fixed
@@ -194,64 +218,16 @@
             height: 100vh
             z-index: 1000
             background: white
-            filter: var(--elevation-4)
             pointer-events: none
-            clip-path: circle(0 at 50% 0%)
             transform: translateX(100%)
-            transition: all 300ms
-            opacity: 0
-
-            &.open
-                pointer-events: all
-                opacity: 1
-                clip-path: circle(150% at 50% 0%)
-                transform: translateY(0px)
-
-            .menu-head
-                display: flex
-                padding: 10px 10px 20px
-                align-items: center
-
-                h5
-                    margin: 0
-                    flex: 1
-                    text-align: left
-                    color: var(--primary)
-                    font-weight: 700
-                    padding-left: 5px
-                    
-                    a
-                        text-decoration: none !important
-
-                #close-menu-button
-                    height: 40px
-                    width: 40px
-                    font-family: 'Material Icons'
-                    font-size: 20px
-                    display: grid
-                    place-content: center
-                    border-radius: 5px
-                    color: var(--text-gray)
-                    background: transparent
-                    border: none
-                    padding: 0
+            transition: all 250ms
 
             ul
                 padding: 0
                 display: flex
                 flex-direction: column
 
-                &.group
-                    background: #f4f4f4
-                    border-radius: 7px
-                    margin: 0 10px 10px
-
                 li
-                    border-bottom: 1px solid #ddd
-
-                    &:last-child
-                        border: none
-
                     a
                         display: flex
                         align-items: center
@@ -260,6 +236,16 @@
                         font-weight: 600
                         text-decoration: none !important
 
+                        &.active
+                            background: var(--primary-shade)
+
+                            .text
+                                color: var(--primary)
+
+                            .icon
+                                opacity: 1
+                                color: var(--primary)
+
                         .text
                             font-size: 13px
                             flex: 1
@@ -267,25 +253,24 @@
                             text-align: left
 
                         .icon
-                            height: 46px
-                            width: 50px
+                            height: 50px
+                            width: 70px
                             font-family: 'Material Icons'
                             font-size: 23px
                             display: grid
                             place-content: center
                             font-weight: 300
-                            color: var(--primary)
+                            color: var(--heading-gray)
+                            opacity: 0.6
 
                 &.bottom-wrapper
-                    background: #f4f4f4
-                    border-radius: 0 0 10px 10px
-                    width: 100%
-                    margin-top: 20px
+                    background: var(--bg-dark)
+                    display: block
+                    padding-top: 60px
+                    margin-bottom: 10px
 
                     &.center
-                        display: grid
-                        height: 100px
-                        place-content: center
+                        height: 130px
 
                     li
                         border: none !important
@@ -294,29 +279,30 @@
                         a
                             background: var(--primary)
                             color: white
-                            letter-spacing: 1px
+                            font-size: 12px
+                            letter-spacing: 2px
                             text-transform: uppercase
-                            font-weight: 600
+                            font-weight: 700
                             border-radius: 80px
-                            filter: var(--elevation-4)
-                            height: 36px
-                            width: 100%
-                            padding: 0 20px
+                            height: 40px
+                            display: grid
+                            max-width: 200px
+                            place-content: center
+                            margin: 10px auto 0
 
                     .profile-li
                         display: grid
-                        grid-template-columns: 50px auto 50px
-                        grid-template-rows: 25px 25px
+                        grid-template-columns: 70px auto 100px
+                        grid-template-rows: 30px 30px
                         grid-template-areas: "image name logout" "image link logout"
-                        margin: 10px
-                        gap: 0 10px
+                        padding-bottom: 10px
 
                         img
                             grid-area: image
                             border-radius: 100%
                             object-fit: cover
-                            height: 44px
-                            width: 44px
+                            height: 40px
+                            width: 40px
                             align-self: center
                             justify-self: center
 
@@ -341,6 +327,7 @@
                             grid-area: logout
                             align-self: center
                             justify-self: center
+                            color: var(--text-gray)
 
     main
         .centered-dialog
