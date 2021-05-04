@@ -862,16 +862,49 @@ article[data-cs-01101]
             display: block
 
         footer
+            height: auto
+            padding: 10px 0
+
             .limiter
+                flex-direction: column
                 justify-content: center
 
-        main
-            .flex-50-50
-                flex-direction: column
-                gap: 0
+                nav
+                    margin-top: 10px
 
-                .item
-                    flex: 1
+        article[data-cs-00001]
+            section
+                padding: 70px 0
+                max-width: 560px
+                margin: 0 auto
+
+                .flex
+                    flex-direction: column
+
+                &.section-1
+                    h1
+                        font-size: 60px
+                        line-height: 100px
+
+                &.section-2
+                    h2
+                        margin: 30px 0 10px 0
+
+                    .flex
+                        gap: 70px
+
+                    .icon
+                        height: 70px
+                        width: 70px
+                        font-size: 35px
+
+                &.section-3,
+                &.section-4
+                    .flex
+                        gap: 0
+                    h2
+                        font-size: 45px
+                        line-height: 70px
 
         div[data-cs-02001]
             padding: 10px 0 60px
@@ -915,3 +948,18 @@ article[data-cs-01101]
 
             .price-plan
                 box-shadow: 0 6px 10px #00003020
+
+@media (max-width: 500px)
+    #app.static
+        article[data-cs-00001]
+            section
+                &.section-1
+                    h1
+                        font-size: 50px
+                        line-height: 80px
+
+                &.section-3,
+                &.section-4
+                    h2
+                        font-size: 38px
+                        line-height: 55px

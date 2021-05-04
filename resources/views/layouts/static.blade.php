@@ -112,7 +112,7 @@
                     </a>
                 </div>
 
-                <button id="toggle-menu-button" onclick="toggleMenu()">
+                <button id="toggle-menu-button" onmousedown="toggleMenu()">
                     <svg class="svg-wrapper" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path class="hamburger-path" d="M5 9C5 9 17.5 9 19 9C20.5 9 22.5 7.5 21.5 6C20.5 4.5 18 6 17 7C16 8 7 17 7 17" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                         <path class="hamburger-path" d="M5 15.0054C5 15.0054 17.5 15.0054 19 15.0054C20.5 15.0054 22.5 16.5054 21.5 18.0054C20.5 19.5054 18 18.0054 17 17.0054C16 16.0054 7 7.00542 7 7.00542" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
