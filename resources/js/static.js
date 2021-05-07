@@ -17,5 +17,6 @@ const app = new Vue({
     // TODO: put component out of static.js
     components: {
         GoProForm: require('./components/views/go-pro/components/GoProForm.vue').default,
+        ToolMetadata: require('./components/views/tools/Metadata.vue').default,
     }
 })

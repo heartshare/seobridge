@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
+use PhpParser\Node\Stmt\TryCatch;
 
 class ReportController extends Controller
 {
@@ -320,6 +321,34 @@ class ReportController extends Controller
 
     public function getMetaData(Request $request)
     {
+        function getMetaTags($str)
+        {
+            $pattern = '
+            ~<\s*meta\s
+
+            # using lookahead to capture type to $1
+                (?=[^>]*?
+                \b(?:name|property|http-equiv)\s*=\s*
+                (?|"\s*([^"]*?)\s*"|\'\s*([^\']*?)\s*\'|
+                ([^"\'>]*?)(?=\s*/?\s*>|\s\w+\s*=))
+            )
+
+            # capture content to $2
+            [^>]*?\bcontent\s*=\s*
+                (?|"\s*([^"]*?)\s*"|\'\s*([^\']*?)\s*\'|
+                ([^"\'>]*?)(?=\s*/?\s*>|\s\w+\s*=))
+            [^>]*>
+
+            ~ix';
+            
+            if (preg_match_all($pattern, $str, $out))
+            {
+                return array_combine($out[1], $out[2]);
+            }
+
+            return [];
+        }
+
         $request->validate([
             'urls' => ['required', 'array'],
         ]);
@@ -330,7 +359,11 @@ class ReportController extends Controller
 
         foreach ($urls as $url)
         {
-            $result[$url] = get_meta_tags($url);
+            try
+            {
+                $result[$url] = getMetaTags(file_get_contents($url));
+            }
+            catch (\Throwable $th) {}
         }
 
         return $result;

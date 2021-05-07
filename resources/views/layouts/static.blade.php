@@ -93,6 +93,9 @@
 
                             <ul>
                                 <li>
+                                    <a href="/dashboard">Dashboard</a>
+                                </li>
+                                <li>
                                     <button onclick="event.preventDefault(); document.getElementById('logout-form').submit();">{{ __('Logout') }}</button>
                                 </li>
                             </ul>

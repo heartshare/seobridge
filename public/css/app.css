@@ -58,13 +58,13 @@
 #app.static #mobile-navbar .limiter .navbar-wrapper #logo img {
   height: 100%;
 }
-#app.static #desktop-navbar .limiter .navbar-wrapper li,
-#app.static #mobile-navbar .limiter .navbar-wrapper li {
+#app.static #desktop-navbar .limiter .navbar-wrapper > li,
+#app.static #mobile-navbar .limiter .navbar-wrapper > li {
   height: 100%;
   display: contents;
 }
-#app.static #desktop-navbar .limiter .navbar-wrapper li a,
-#app.static #mobile-navbar .limiter .navbar-wrapper li a {
+#app.static #desktop-navbar .limiter .navbar-wrapper > li > a,
+#app.static #mobile-navbar .limiter .navbar-wrapper > li > a {
   font-size: var(--button-size);
   text-decoration: none;
   height: 40px;
@@ -80,12 +80,12 @@
   text-overflow: ellipsis;
   overflow: hidden;
 }
-#app.static #desktop-navbar .limiter .navbar-wrapper li a:hover,
-#app.static #mobile-navbar .limiter .navbar-wrapper li a:hover {
+#app.static #desktop-navbar .limiter .navbar-wrapper > li > a:hover,
+#app.static #mobile-navbar .limiter .navbar-wrapper > li > a:hover {
   color: var(--primary);
 }
-#app.static #desktop-navbar .limiter .navbar-wrapper li a.active,
-#app.static #mobile-navbar .limiter .navbar-wrapper li a.active {
+#app.static #desktop-navbar .limiter .navbar-wrapper > li > a.active,
+#app.static #mobile-navbar .limiter .navbar-wrapper > li > a.active {
   color: var(--primary);
 }
 #app.static #desktop-navbar .limiter .navbar-wrapper.right,

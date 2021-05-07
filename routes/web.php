@@ -25,13 +25,20 @@ Broadcast::routes();
 
 Route::view('/', 'static.index')->name('home');
 Route::view('/pricing', 'static.pricing')->name('pricing');
-Route::view('/tools', 'static.open-tools')->name('tools');
-Route::get('/resources/category', [App\Http\Controllers\BlogController::class, 'allCategories'])->name('categories');
-Route::get('/resources/category/{category}', [App\Http\Controllers\BlogController::class, 'category'])->name('category');
-Route::get('/resources/author', [App\Http\Controllers\BlogController::class, 'allAuthors'])->name('authors');
-Route::get('/resources/author/{author}', [App\Http\Controllers\BlogController::class, 'author'])->name('author');
-Route::get('/resources', [App\Http\Controllers\BlogController::class, 'allArticles'])->name('resources');
-Route::get('/resources/{article}', [App\Http\Controllers\BlogController::class, 'article'])->name('article');
+
+Route::prefix('tools')->group(function() {
+    Route::view('/', 'static.tools.overview')->name('tools');
+    Route::view('/metadata', 'static.tools.metadata-tool')->name('tools');
+});
+
+Route::prefix('resources')->group(function() {
+    Route::get('/', [App\Http\Controllers\BlogController::class, 'allArticles'])->name('resources');
+    Route::get('/category', [App\Http\Controllers\BlogController::class, 'allCategories'])->name('categories');
+    Route::get('/category/{category}', [App\Http\Controllers\BlogController::class, 'category'])->name('category');
+    Route::get('/author', [App\Http\Controllers\BlogController::class, 'allAuthors'])->name('authors');
+    Route::get('/author/{author}', [App\Http\Controllers\BlogController::class, 'author'])->name('author');
+    Route::get('/{article}', [App\Http\Controllers\BlogController::class, 'article'])->name('article');
+});
 
 Route::get('/go-pro/{plan}', [App\Http\Controllers\SubscriptionController::class, 'goPro'])->name('go-pro');
 
@@ -48,6 +55,8 @@ Route::get('/report/{reportGroupId}', [App\Http\Controllers\Dashboard\ReportCont
 
 // Get meta tags as guest
 Route::post('/get-meta-data', [App\Http\Controllers\Dashboard\ReportController::class, 'getMetaData']);
+
+
 
 Route::get('/dashboard', function() {
     return redirect('/dashboard/overview');
