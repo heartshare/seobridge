@@ -323,30 +323,56 @@ class ReportController extends Controller
     {
         function getMetaTags($str)
         {
-            $pattern = '
-            ~<\s*meta\s
+            $data = array();
 
-            # using lookahead to capture type to $1
-                (?=[^>]*?
-                \b(?:name|property|http-equiv)\s*=\s*
-                (?|"\s*([^"]*?)\s*"|\'\s*([^\']*?)\s*\'|
-                ([^"\'>]*?)(?=\s*/?\s*>|\s\w+\s*=))
-            )
+            $doc = new \DOMDocument();
+            @$doc->loadHTML($str);
 
-            # capture content to $2
-            [^>]*?\bcontent\s*=\s*
-                (?|"\s*([^"]*?)\s*"|\'\s*([^\']*?)\s*\'|
-                ([^"\'>]*?)(?=\s*/?\s*>|\s\w+\s*=))
-            [^>]*>
+            $title = $doc->getElementsByTagName('title')->item(0)->nodeValue;
 
-            ~ix';
-            
-            if (preg_match_all($pattern, $str, $out))
+            $data['title'] = $title;
+
+            foreach ($doc->getElementsByTagName('meta') as $meta)
             {
-                return array_combine($out[1], $out[2]);
+                $name = $meta->getAttribute('name');
+                $property = $meta->getAttribute('property');
+                $httpequiv = $meta->getAttribute('http-equiv');
+
+                $content = $meta->getAttribute('content');
+
+
+                $key = '';
+                if ($name) $key = $name;
+                else if ($property) $key = $property;
+                else if ($httpequiv) $key = $httpequiv;
+
+                $data[$key] = $content;
             }
 
-            return [];
+            // $pattern = '
+            // ~<\s*meta\s
+
+            // # using lookahead to capture type to $1
+            //     (?=[^>]*?
+            //     \b(?:name|property|http-equiv)\s*=\s*
+            //     (?|"\s*([^"]*?)\s*"|\'\s*([^\']*?)\s*\'|
+            //     ([^"\'>]*?)(?=\s*/?\s*>|\s\w+\s*=))
+            // )
+
+            // # capture content to $2
+            // [^>]*?\bcontent\s*=\s*
+            //     (?|"\s*([^"]*?)\s*"|\'\s*([^\']*?)\s*\'|
+            //     ([^"\'>]*?)(?=\s*/?\s*>|\s\w+\s*=))
+            // [^>]*>
+
+            // ~ix';
+            
+            // if (preg_match_all($pattern, $str, $out))
+            // {
+            //     return array_combine($out[1], $out[2]);
+            // }
+
+            return $data;
         }
 
         $request->validate([

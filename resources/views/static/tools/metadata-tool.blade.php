@@ -10,13 +10,6 @@
             <h1>
                 Metadata tool
             </h1>
-            <p>
-                Get your website's metadata
-            </p>
-        </div>
-    </section>
-    <section>
-        <div class="limiter">
             <tool-metadata></tool-metadata>
         </div>
     </section>
