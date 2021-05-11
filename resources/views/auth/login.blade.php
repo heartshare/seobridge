@@ -1,52 +1,58 @@
 @extends('layouts.static')
 
 @section('title', 'Login - SEO Bridge')
+@section('page-classes', 'fullscreen-layout')
 
 @section('content')
-<div class="centered-dialog font-size">
-    <div class="dialog font-size">
+<article class="login-dialog">
+    <div class="dialog-wrapper">
+        <h1>{{ __('Login') }}</h1>
 
-        <form class="block" method="POST" action="{{ route('login') }}">
+        @if ($errors->any())
+            @foreach ($errors->all() as $error)
+                {{ $error }}<br>
+            @endforeach
+        @endif
 
-            <div class="headline font-size">
-                <h1>{{ __('Login') }}</h1>
+        <div class="flex-wrapper">
+            <div class="item">
+                <button class="platform-button google">
+                    <img class="image" src="/images/app/google_logo_color.svg">
+                    <div class="text">Login With Google</div>
+                </button>
+                <button class="platform-button github">
+                    <div class="icon">&#983716;</div>
+                    <div class="text">Login With Github</div>
+                </button>
+                <button class="platform-button facebook">
+                    <div class="icon">&#983564;</div>
+                    <div class="text">Login With Facebook</div>
+                </button>
             </div>
-        
-            <div class="padding font-size">
-                @if ($errors->any())
-                    <div class="error-container">
-                        <div class="title">
-                            @foreach ($errors->all() as $error)
-                                {{ $error }}<br>
-                            @endforeach
-                        </div>
-                    </div>
-                @endif
-            
-                @csrf
-            
-                <p>
-                    <ui-email-input name="email" class="@error('email') invalid @enderror" value="{{ old('email') }}" label="{{__('E-Mail Address')}}"></ui-email-input>
-                </p>
-                <p>
-                    <ui-password-input name="password" class="@error('password') invalid @enderror" label="{{ __('Password') }}"></ui-password-input>
-                </p>
-            
-                <p>
-                    <ui-checkbox name="remember" no-border :value="{{ old('remember') ? 'true' : 'false' }}">
-                        {{ __('Remember me') }}
-                    </ui-checkbox>
-                </p>
-            </div>
-        
-            <div class="button-box clearfix">
-                @if (Route::has('password.request'))
-                    <ui-button text href="{{ route('password.request') }}">{{ __('Forgot Your Password?') }}</ui-button>
-                @endif
+            <div class="divider"></div>
+            <div class="item">
+                <form class="email-login" method="POST" action="{{ route('login') }}">
+                    @csrf
                 
-                <ui-button style="float: right">{{ __('Login') }}</ui-button>
+                    <ui-email-input name="email" class="@error('email') invalid @enderror" value="{{ old('email') }}" label="{{__('E-Mail Address')}}"></ui-email-input>
+                    <ui-password-input name="password" class="@error('password') invalid @enderror" label="{{ __('Password') }}"></ui-password-input>
+
+                    <div class="row">
+                        <ui-checkbox style="padding: 0" name="remember" no-border :value="{{ old('remember') ? 'true' : 'false' }}">
+                            {{ __('Remember me') }}
+                        </ui-checkbox>
+                        <div class="spacer"></div>
+                        <a href="{{ route('password.request') }}">{{ __('Forgot Password') }}</a>
+                    </div>
+
+                    <div class="row margin-top">
+                        <span>No account yet – <a href="/register">register one</a></span>
+                        <div class="spacer"></div>
+                        <ui-button>{{ __('Login') }}</ui-button>
+                    </div>
+                </form>
             </div>
-        </form>
+        </div>
     </div>
-</div>
+</article>
 @endsection
