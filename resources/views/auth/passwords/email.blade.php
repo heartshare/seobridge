@@ -1,47 +1,39 @@
 @extends('layouts.static')
 
+@section('title', 'Forgot password - SEO Bridge')
+@section('page-classes', 'fullscreen-layout')
+
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Reset Password') }}</div>
+<article class="dialog">
+    <div class="dialog-wrapper">
+        <h1>{{ __('Reset password') }}</h1>
 
-                <div class="card-body">
-                    @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
-                        </div>
-                    @endif
+        @if ($errors->any())
+            @foreach ($errors->all() as $error)
+                {{ $error }}<br>
+            @endforeach
+        @endif
 
-                    <form method="POST" action="{{ route('password.email') }}">
-                        @csrf
+        @if (session('status'))
+            <div class="alert alert-success" role="alert">
+                {{ session('status') }}
+            </div>
+        @endif
 
-                        <div class="form-group row">
-                            <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('E-Mail Address') }}</label>
+        <div class="flex-wrapper">
+            <div class="item">
+                <form class="form-wrapper" method="POST" action="{{ route('password.email') }}">
+                    @csrf
 
-                            <div class="col-md-6">
-                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
+                    <ui-email-input name="email" class="@error('email') invalid @enderror" value="{{ old('email') }}" label="{{__('Reset Password E-Mail Address')}}"></ui-email-input>
 
-                                @error('email')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="form-group row mb-0">
-                            <div class="col-md-6 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
-                                    {{ __('Send Password Reset Link') }}
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
+                    <div class="row margin-top">
+                        <div class="spacer"></div>
+                        <ui-button>{{ __('Send reset link') }}</ui-button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
-</div>
+</article>
 @endsection

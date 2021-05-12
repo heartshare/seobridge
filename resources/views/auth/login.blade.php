@@ -4,7 +4,7 @@
 @section('page-classes', 'fullscreen-layout')
 
 @section('content')
-<article class="login-dialog">
+<article class="dialog">
     <div class="dialog-wrapper">
         <h1>{{ __('Login') }}</h1>
 
@@ -18,20 +18,20 @@
             <div class="item">
                 <button class="platform-button google">
                     <img class="image" src="/images/app/google_logo_color.svg">
-                    <div class="text">Login With Google</div>
+                    <div class="text">Login with Google</div>
                 </button>
                 <button class="platform-button github">
                     <div class="icon">&#983716;</div>
-                    <div class="text">Login With Github</div>
+                    <div class="text">Login with Github</div>
                 </button>
                 <button class="platform-button facebook">
                     <div class="icon">&#983564;</div>
-                    <div class="text">Login With Facebook</div>
+                    <div class="text">Login with Facebook</div>
                 </button>
             </div>
             <div class="divider"></div>
             <div class="item">
-                <form class="email-login" method="POST" action="{{ route('login') }}">
+                <form class="form-wrapper" method="POST" action="{{ route('login') }}">
                     @csrf
                 
                     <ui-email-input name="email" class="@error('email') invalid @enderror" value="{{ old('email') }}" label="{{__('E-Mail Address')}}"></ui-email-input>
@@ -46,7 +46,7 @@
                     </div>
 
                     <div class="row margin-top">
-                        <span>No account yet – <a href="/register">register one</a></span>
+                        <a href="/register">Register a new account</a>
                         <div class="spacer"></div>
                         <ui-button>{{ __('Login') }}</ui-button>
                     </div>

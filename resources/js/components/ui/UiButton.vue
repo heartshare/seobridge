@@ -84,16 +84,16 @@
 <style lang="sass" scoped>
     .ccc-ui-container
         height: 40px
-        line-height: 30px
-        font-size: 14px
+        line-height: 31px
+        font-size: 12px
         padding: 5px 15px
         padding-right: 6px
         text-align: center
-        letter-spacing: 1.5px
+        letter-spacing: 2px
         font-family: var(--text-font)
         font-weight: 500
         text-transform: uppercase
-        border-radius: 5px
+        border-radius: 7px
         border: none
         cursor: pointer
         user-select: none
@@ -130,11 +130,14 @@
 
             .icon
                 float: left
+                margin-right: 5px
+                margin-left: 0
 
         &.small
             height: 30px
             padding-top: 0
             padding-bottom: 0
+            border-radius: 5px
 
         &.error
             background: var(--error)
@@ -190,6 +193,8 @@
             height: 30px
             width: 30px
             line-height: 30px
+            margin-right: 0
+            margin-left: 5px
             text-align: center
             color: inherit
             font-size: 18px
@@ -205,7 +210,7 @@
             position: absolute
             top: 0
             left: 0
-            border-radius: 5px
+            border-radius: inherit
             border: 1px solid var(--primary)
             pointer-events: none
 
