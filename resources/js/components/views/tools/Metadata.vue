@@ -13,29 +13,17 @@
             <div class="text">No Results... yet</div>
         </div>
 
-        <div class="result-container" v-for="(urlData, url) in fetchedData" :key="url">
-            <div class="title-bar">
-                <span v-if="urlData['title']">{{urlData['title']}}</span>
-                <i v-else>{{url}}</i>
-            </div>
-
-            <div class="description-bar">
-                <span v-if="urlData['description']">{{urlData['description']}}</span>
-                <i v-else style="color: var(--error)">NO PAGE DESCRIPTION</i>
-            </div>
-
-            <!-- <ui-icon-button class="expand-button">&#983360;</ui-icon-button> -->
-
-            <div class="detail-wrapper"></div>
-        </div>
+        <metadata-result v-for="(urlData, url) in fetchedData" :key="url" :data="urlData" :href="url"></metadata-result>
     </div>
 </template>
 
 <script>
+    import MetadataResult from './components/MetadataResult'
+
     export default {
         data() {
             return {
-                urlInput: '',
+                urlInput: 'https://freuwort.com\nhttps://fireship.io',
                 fetchedData: {},
                 isLoading: false,
             }
@@ -59,6 +47,10 @@
                 })
             }
         },
+
+        components: {
+            MetadataResult,
+        }
     }
 </script>
 
@@ -111,40 +103,4 @@
                 line-height: 80px
                 opacity: 0.8
                 user-select: none
-
-        .result-container
-            border: 1px solid #ddd
-            background: var(--bg)
-            border-radius: 8px
-            display: grid
-            grid-template-rows: 30px 30px auto
-            grid-auto-columns: 1fr 40px
-            grid-template-areas: "titlebar button" "description button" "detail detail"
-            padding: 7px 10px
-            gap: 0 10px
-            margin-bottom: 20px
-
-            .title-bar
-                grid-area: titlebar
-                display: block
-                white-space: nowrap
-                font-size: 16px
-                line-height: var(--line-height)
-                font-weight: 700
-                color: var(--heading-gray)
-
-            .description-bar
-                grid-area: description
-                font-size: 16px
-                line-height: var(--line-height)
-                display: block
-                white-space: nowrap
-                overflow: hidden
-                text-overflow: ellipsis
-
-            .expand-button
-                grid-area: button
-                align-self: center
-                justify-self: center
-
 </style>
