@@ -423,7 +423,7 @@
             </template>
 
             <template v-slot:inputs>
-                <!-- <ui-select-input label="Mode" v-model="reportCreate.mode" :options="[{'full':'Full Scan'}, {'single':'Single Page'}]"></ui-select-input> -->
+                <ui-select-input label="Mode" v-model="reportCreate.mode" :options="[{'full':'Full Scan'}, {'single':'Single Page'}]"></ui-select-input>
                 <!-- <ui-select-input label="Viewport" v-model="reportCreate.viewport" :options="[{'1080p':'1920 x 1080'}, {'720p':'1280 x 720'}]"></ui-select-input> -->
                 <ui-text-input label="URL" v-model="reportCreate.url"></ui-text-input>
             </template>
@@ -695,8 +695,7 @@
             requestReport(url = this.reportCreate.url) {
                 axios.post('/auth/reports/request-site-analysis', {
                     url,
-                    // mode: this.reportCreate.mode || 'single',
-                    mode: 'single',
+                    mode: this.reportCreate.mode || 'single',
                     device: {
                         viewport: this.reportCreate.viewport || '1080p'
                     },

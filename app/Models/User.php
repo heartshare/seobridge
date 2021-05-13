@@ -23,6 +23,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'email',
         'password',
         'metadata',
+        'totp_mfa_seed',
+        'is_mfa_enabled',
         'active_team_id',
         'email_verified_at',
     ];
@@ -30,12 +32,14 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $hidden = [
         'password',
         'remember_token',
+        'totp_mfa_seed',
     ];
 
     protected $casts = [
         'email_verified_at' => 'datetime',
         'deleted_at' => 'datetime',
         'metadata' => 'array',
+        'is_mfa_enabled' => 'boolean',
     ];
 
     protected $attributes = [
@@ -66,6 +70,11 @@ class User extends Authenticatable implements MustVerifyEmail
     public function report_groups()
     {
         return $this->hasMany(UserReportGroup::class, 'user_id', 'id');
+    }
+
+    public function mfa_methods()
+    {
+        return $this->hasMany(UserMFAMethod::class, 'user_id', 'id');
     }
     
     public function teams()

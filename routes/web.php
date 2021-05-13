@@ -85,6 +85,10 @@ Route::middleware('auth')->prefix('auth')->group(function() {
         Route::post('/change-password', [App\Http\Controllers\Dashboard\UserController::class, 'changePassword']);
         Route::post('/change-name', [App\Http\Controllers\Dashboard\UserController::class, 'changeName']);
         Route::post('/close-account', [App\Http\Controllers\Dashboard\UserController::class, 'closeAccount']);
+        // Multi Factor Authentication
+        Route::post('/set-mfa-status', [App\Http\Controllers\Dashboard\UserController::class, 'setMFAStatus']);
+        Route::post('/setup-totp-mfa', [App\Http\Controllers\Dashboard\UserController::class, 'setupTOTPMFA']);
+        Route::post('/verify-totp-mfa', [App\Http\Controllers\Dashboard\UserController::class, 'verifyTOTPMFA']);
     });
 
     Route::prefix('author')->group(function() {

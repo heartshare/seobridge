@@ -35,7 +35,7 @@
         <div class="limiter">
             <div class="flex">
                 <div class="item">
-                    <div class="icon primary">&#983560;</div>
+                    <div class="icon primary">visibility</div>
                     <h2>Track</h2>
                     <p>
                         Keep track of your website and all the changes happening
@@ -44,7 +44,7 @@
                     </p>
                 </div>
                 <div class="item">
-                    <div class="icon secondary">&#985007;</div>
+                    <div class="icon secondary">data_usage</div>
                     <h2>Analyse</h2>
                     <p>
                         Get individualized report-checklists and see exactly where
@@ -53,7 +53,7 @@
                     </p>
                 </div>
                 <div class="item">
-                    <div class="icon gray">&#984215;</div>
+                    <div class="icon gray">share</div>
                     <h2>Share</h2>
                     <p>
                         Communication is key. Share your reports with your team.

@@ -23,6 +23,7 @@ class CreateUsersTable extends Migration
             $table->rememberToken();
             $table->string('active_team_id')->nullable();
             $table->text('metadata');
+            $table->boolean('is_mfa_enabled')->default(false);
             $table->timestamp('email_verified_at')->nullable();
             $table->timestamp('deleted_at')->nullable();
             $table->timestamps();

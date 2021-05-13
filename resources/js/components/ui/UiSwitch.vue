@@ -43,7 +43,7 @@
     .container
         height: 22px
         width: 40px
-        background: var(--secondary)
+        background: var(--text-gray)
         border-radius: 30px
         position: relative
         margin: 9px 10px
@@ -52,7 +52,7 @@
         vertical-align: top
 
         &.active
-            background: var(--primary)
+            background: var(--success)
 
             .knob
                 transform: translateX(18px)
@@ -61,10 +61,10 @@
             height: 16px
             width: 16px
             border-radius: 10px
-            background: white
+            background: var(--bg)
             position: absolute
             top: 3px
             left: 3px
             will-change: transform
-            transition: all 100ms
+            transition: all 100ms ease-out
 </style>

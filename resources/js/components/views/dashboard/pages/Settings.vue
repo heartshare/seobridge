@@ -1,15 +1,33 @@
 <template>
     <div class="page-container limiter">
-        <h1>Settings</h1>
 
-        <div class="sheet padding">
-            <p style="margin-top: 0px"><b>Account settings</b></p>
-            <ui-button icon="&#984421;" :loading="passwordChange.loading" @click="openPasswordChangeDialog()">Change Password</ui-button>
-        </div><br>
+        <div class="sheet">
+            <ui-tabs-header :tabs="{'general': 'General', 'profile': 'Profile', 'subscriptions': 'Subscriptions', 'security': 'Security'}" v-model="tab"></ui-tabs-header>
 
-        <div class="sheet padding">
-            <p style="margin-top: 0px"><b>Close Account</b></p>
-            <ui-button error :loading="accountClose.loading" @click="openAccountCloseDialog()">Close your account</ui-button>
+            <div class="tab-box" v-show="tab === 'general'">
+                <ui-button error :loading="accountClose.loading" @click="openAccountCloseDialog()">Close your account</ui-button>
+            </div>
+
+            <div class="tab-box" v-show="tab === 'profile'">
+                <form @submit.stop.prevent>
+                    <div class="name-wrapper">
+                        <ui-text-input label="Firstname" ac="firstname" no-border v-model="nameChange.firstname"></ui-text-input>
+                        <ui-text-input label="Lastname" ac="lastname" no-border v-model="nameChange.lastname"></ui-text-input>
+                        <ui-button class="submit-button" @click="changeName()" :disabled="(nameChange.firstname || '') + (nameChange.lastname || '') === nameChange.legacy" :loading="nameChange.loading">Save</ui-button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="tab-box" v-show="tab === 'security'">
+                <ui-button icon="&#984421;" :loading="passwordChange.loading" @click="openPasswordChangeDialog()">Change Password</ui-button><br><br>
+                <!-- <ui-switch></ui-switch><br> -->
+                <ui-button icon="&#985501;">Enable 2FA</ui-button><br><br>
+
+                <ui-button @click="setupTOTPMFA()">Setup Google Authenticator</ui-button>
+            </div>
+
+            <div class="tab-box" v-show="tab === 'subscriptions'">
+            </div>
         </div>
 
         <!-- <fieldset>
@@ -92,6 +110,15 @@
     export default {
         data() {
             return {
+                tab: 'general',
+
+                nameChange: {
+                    firstname: '',
+                    lastname: '',
+                    legacy: null,
+                    loading: false,
+                },
+
                 passwordChange: {
                     current: '',
                     new: '',
@@ -119,6 +146,17 @@
             user() {
                 return this.$store.getters.user
             },
+        },
+
+        watch: {
+            user: {
+                handler() {
+                    this.nameChange.firstname = this.user.firstname || ''
+                    this.nameChange.lastname = this.user.lastname || ''
+                    this.nameChange.legacy = this.nameChange.firstname + this.nameChange.lastname
+                },
+                immediate: true,
+            }
         },
 
         methods: {
@@ -185,6 +223,43 @@
 
 
 
+            changeName() {
+                this.nameChange.loading = true
+
+                axios.post('/auth/user/change-name', {
+                    firstname: this.nameChange.firstname,
+                    lastname: this.nameChange.lastname,
+                })
+                .then(response => {
+                    this.$store.commit('userInfo', {
+                        firstname: response.data.firstname,
+                        lastname: response.data.lastname,
+                    })
+
+                    this.nameChange.legacy = (response.data.firstname || '') + (response.data.lastname || '')
+
+                    setTimeout(() => { this.nameChange.loading = false }, 500)
+                })
+                .catch(error => {
+                    console.log(error.response)
+                    this.nameChange.loading = false
+                })
+            },
+
+
+
+            setupTOTPMFA() {
+                axios.post('/auth/user/setup-totp-mfa')
+                .then(response => {
+                    console.log(response)
+                })
+                .catch(error => {
+                    console.log(error.response)
+                })
+            },
+
+
+
             getSetupIntent() {
                 this.setupIntent.loading = true
 
@@ -239,6 +314,35 @@
     .page-container
         width: 100%
         display: inline-block !important
+        padding-top: 10px !important
+
+        .tab-box
+            padding: 15px
+            display: block
+            width: 100%
+
+        .name-wrapper
+            background: var(--bg)
+            border-radius: 5px
+            position: relative
+            display: flex
+            width: 100%
+            max-width: 600px
+            
+            .submit-button
+                margin: 5px
+
+            &::after
+                content: ''
+                height: 100%
+                width: 100%
+                position: absolute
+                top: 0
+                left: 0
+                border-radius: 5px
+                border: var(--input-border)
+                pointer-events: none
+                box-sizing: border-box
 
         #card-element
             border: var(--border)
