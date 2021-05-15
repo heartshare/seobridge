@@ -20,9 +20,9 @@
                         <ui-button small class="submit-button" @click="changeName()" :disabled="(nameChange.firstname || '') + (nameChange.lastname || '') === nameChange.legacy" :loading="nameChange.loading">Save</ui-button>
                     </div>
 
-                    <div class="row-wrapper">
-                        <ui-text-input label="Firstname" ac="firstname" v-model="nameChange.firstname"></ui-text-input>
-                        <ui-text-input label="Lastname" ac="lastname" v-model="nameChange.lastname"></ui-text-input>
+                    <div class="row-wrapper border">
+                        <ui-text-input label="Firstname" no-border ac="firstname" v-model="nameChange.firstname"></ui-text-input>
+                        <ui-text-input label="Lastname" no-border ac="lastname" v-model="nameChange.lastname"></ui-text-input>
                     </div>
                 </form>
             </div>
@@ -37,14 +37,23 @@
                 <div class="row-wrapper border">
                     <b>Multi Factor Authentication</b>
                     <div class="spacer"></div>
-                    <ui-switch style="margin: 5px 0" :value="user.is_mfa_enabled"></ui-switch>
+                    <ui-switch style="margin: 5px 0" :value="user.is_mfa_enabled" @input="setMFAStatus($event)"></ui-switch>
                 </div>
 
                 <div class="row-wrapper">
                     <span>App Authentication</span>
                     <div class="spacer"></div>
                     <ui-button small text border @click="setupTOTPMFA()">Setup</ui-button>
-                    <ui-icon-button>&#983360;</ui-icon-button>
+                    <ui-icon-button @click="TOTPMFASetup.expand = !TOTPMFASetup.expand">
+                        {{TOTPMFASetup.expand ? '&#983363;' : '&#983360;'}}
+                    </ui-icon-button>
+                </div>
+
+                <div class="row-wrapper" v-show="TOTPMFASetup.expand">
+                    <qr-code v-if="TOTPMFASetup.url" :value="TOTPMFASetup.url" :options="{width: 140, margin: 0}"></qr-code>
+                    <ui-text-input style="width: 200px" label="Passnumber" v-model="TOTPMFASetup.TOTPInput"></ui-text-input>
+                    <ui-button @click="verifyTOTPMFA()">Verify</ui-button>
+                    <div class="spacer"></div>
                 </div>
 
                 <div class="row-wrapper">
@@ -60,13 +69,6 @@
                     <ui-button small text border disabled>Setup</ui-button>
                     <ui-icon-button>&#983360;</ui-icon-button>
                 </div>
-
-
-                <qr-code :value="TOTPMFASetup.url" :options="{width: 200}"></qr-code>
-
-                <ui-text-input label="Passnumber" v-model="TOTPMFASetup.TOTPInput"></ui-text-input>
-
-                <ui-button @click="verifyTOTPMFA()">Verify</ui-button>
             </div>
 
             <div class="tab-box" v-show="tab === 'subscriptions'">
@@ -178,6 +180,7 @@
                 TOTPMFASetup: {
                     url: null,
                     TOTPInput: '',
+                    expand: false,
                 },
 
                 setupIntent: {
@@ -293,6 +296,20 @@
                 .catch(error => {
                     console.log(error.response)
                     this.nameChange.loading = false
+                })
+            },
+
+
+
+            setMFAStatus(status) {
+                axios.post('/auth/user/set-mfa-status', {
+                    status,
+                })
+                .then(response => {
+                    console.log(response)
+                })
+                .catch(error => {
+                    console.log(error.response)
                 })
             },
 

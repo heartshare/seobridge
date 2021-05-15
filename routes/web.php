@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
+use Laravel\Socialite\Facades\Socialite;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,6 +26,7 @@ Broadcast::routes();
 
 Route::view('/', 'static.index')->name('home');
 Route::view('/pricing', 'static.pricing')->name('pricing');
+Route::view('/branding', 'static.branding')->name('branding');
 
 Route::prefix('tools')->group(function() {
     Route::view('/', 'static.tools.overview')->name('tools');
@@ -135,5 +137,22 @@ Route::middleware('auth')->prefix('auth')->group(function() {
         Route::get('/billing-portal', [App\Http\Controllers\Dashboard\SubscriptionController::class, 'redirectToBillingPortal']);
         Route::post('/get-setup-intent', [App\Http\Controllers\Dashboard\SubscriptionController::class, 'getSetupIntent']);
         Route::post('/create-test-subscription', [App\Http\Controllers\Dashboard\SubscriptionController::class, 'testSub']);
+    });
+});
+
+Route::prefix('oauth')->group(function() {
+    Route::prefix('google')->group(function() {
+        Route::get('/redirect', [App\Http\Controllers\Auth\OauthController::class, 'googleRedirect']);
+        Route::get('/callback', [App\Http\Controllers\Auth\OauthController::class, 'googleCallback']);
+    });
+
+    Route::prefix('facebook')->group(function() {
+        Route::get('/redirect', [App\Http\Controllers\Auth\OauthController::class, 'facebookRedirect']);
+        Route::get('/callback', [App\Http\Controllers\Auth\OauthController::class, 'facebookCallback']);
+    });
+
+    Route::prefix('github')->group(function() {
+        Route::get('/redirect', [App\Http\Controllers\Auth\OauthController::class, 'githubRedirect']);
+        Route::get('/callback', [App\Http\Controllers\Auth\OauthController::class, 'githubCallback']);
     });
 });

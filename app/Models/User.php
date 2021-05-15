@@ -24,6 +24,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'password',
         'metadata',
         'totp_mfa_seed',
+        'is_oauth_user',
         'is_mfa_enabled',
         'active_team_id',
         'email_verified_at',
@@ -40,6 +41,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'deleted_at' => 'datetime',
         'metadata' => 'array',
         'is_mfa_enabled' => 'boolean',
+        'is_oauth_user' => 'boolean',
     ];
 
     protected $attributes = [
@@ -65,6 +67,11 @@ class User extends Authenticatable implements MustVerifyEmail
     public function profile_image()
     {
         return $this->hasOne(UserImage::class, 'user_id', 'id');
+    }
+
+    public function oauth()
+    {
+        return $this->hasOne(UserOauth::class, 'user_id', 'id');
     }
 
     public function report_groups()

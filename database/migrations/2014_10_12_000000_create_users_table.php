@@ -19,10 +19,11 @@ class CreateUsersTable extends Migration
             $table->string('lastname')->nullable();
             $table->string('username')->unique();
             $table->string('email')->unique();
-            $table->string('password');
+            $table->string('password')->nullable();
             $table->rememberToken();
             $table->string('active_team_id')->nullable();
             $table->text('metadata');
+            $table->boolean('is_oauth_user')->default(false);
             $table->boolean('is_mfa_enabled')->default(false);
             $table->timestamp('email_verified_at')->nullable();
             $table->timestamp('deleted_at')->nullable();

@@ -515,6 +515,9 @@ article.dialog .dialog-wrapper .flex-wrapper .item .platform-button {
   margin-bottom: 20px;
   padding: 0;
   cursor: pointer;
+  color: var(--heading-gray);
+  background: #eee;
+  text-decoration: none !important;
 }
 article.dialog .dialog-wrapper .flex-wrapper .item .platform-button.github {
   background: #24292e;

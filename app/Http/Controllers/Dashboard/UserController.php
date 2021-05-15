@@ -14,7 +14,7 @@ class UserController extends Controller
 {
     public function getUser(Request $request)
     {
-        return User::where('id', Auth::id())->with('profile_image')->first();
+        return User::where('id', Auth::id())->with(['profile_image', 'mfa_methods'])->first();
     }
 
 
