@@ -5,25 +5,68 @@
             <ui-tabs-header :tabs="{'general': 'General', 'profile': 'Profile', 'subscriptions': 'Subscriptions', 'security': 'Security'}" v-model="tab"></ui-tabs-header>
 
             <div class="tab-box" v-show="tab === 'general'">
-                <ui-button error :loading="accountClose.loading" @click="openAccountCloseDialog()">Close your account</ui-button>
+                <div class="row-wrapper">
+                    <b>Close your account</b>
+                    <div class="spacer"></div>
+                    <ui-button small error :loading="accountClose.loading" @click="openAccountCloseDialog()">Close</ui-button>
+                </div>
             </div>
 
             <div class="tab-box" v-show="tab === 'profile'">
                 <form @submit.stop.prevent>
-                    <div class="name-wrapper">
-                        <ui-text-input label="Firstname" ac="firstname" no-border v-model="nameChange.firstname"></ui-text-input>
-                        <ui-text-input label="Lastname" ac="lastname" no-border v-model="nameChange.lastname"></ui-text-input>
-                        <ui-button class="submit-button" @click="changeName()" :disabled="(nameChange.firstname || '') + (nameChange.lastname || '') === nameChange.legacy" :loading="nameChange.loading">Save</ui-button>
+                    <div class="row-wrapper border">
+                        <b>Change Your Name</b>
+                        <div class="spacer"></div>
+                        <ui-button small class="submit-button" @click="changeName()" :disabled="(nameChange.firstname || '') + (nameChange.lastname || '') === nameChange.legacy" :loading="nameChange.loading">Save</ui-button>
+                    </div>
+
+                    <div class="row-wrapper">
+                        <ui-text-input label="Firstname" ac="firstname" v-model="nameChange.firstname"></ui-text-input>
+                        <ui-text-input label="Lastname" ac="lastname" v-model="nameChange.lastname"></ui-text-input>
                     </div>
                 </form>
             </div>
 
             <div class="tab-box" v-show="tab === 'security'">
-                <ui-button icon="&#984421;" :loading="passwordChange.loading" @click="openPasswordChangeDialog()">Change Password</ui-button><br><br>
-                <!-- <ui-switch></ui-switch><br> -->
-                <ui-button icon="&#985501;">Enable 2FA</ui-button><br><br>
+                <div class="row-wrapper border">
+                    <b>Change Password</b>
+                    <div class="spacer"></div>
+                    <ui-button small :loading="passwordChange.loading" @click="openPasswordChangeDialog()">Edit</ui-button>
+                </div>
+                
+                <div class="row-wrapper border">
+                    <b>Multi Factor Authentication</b>
+                    <div class="spacer"></div>
+                    <ui-switch style="margin: 5px 0" :value="user.is_mfa_enabled"></ui-switch>
+                </div>
 
-                <ui-button @click="setupTOTPMFA()">Setup Google Authenticator</ui-button>
+                <div class="row-wrapper">
+                    <span>App Authentication</span>
+                    <div class="spacer"></div>
+                    <ui-button small text border @click="setupTOTPMFA()">Setup</ui-button>
+                    <ui-icon-button>&#983360;</ui-icon-button>
+                </div>
+
+                <div class="row-wrapper">
+                    <span>SMS Authentication (coming soon)</span>
+                    <div class="spacer"></div>
+                    <ui-button small text border disabled>Setup</ui-button>
+                    <ui-icon-button>&#983360;</ui-icon-button>
+                </div>
+
+                <div class="row-wrapper">
+                    <span>Security Key (coming soon)</span>
+                    <div class="spacer"></div>
+                    <ui-button small text border disabled>Setup</ui-button>
+                    <ui-icon-button>&#983360;</ui-icon-button>
+                </div>
+
+
+                <qr-code :value="TOTPMFASetup.url" :options="{width: 200}"></qr-code>
+
+                <ui-text-input label="Passnumber" v-model="TOTPMFASetup.TOTPInput"></ui-text-input>
+
+                <ui-button @click="verifyTOTPMFA()">Verify</ui-button>
             </div>
 
             <div class="tab-box" v-show="tab === 'subscriptions'">
@@ -106,6 +149,8 @@
     //         },
     //     },
     // })
+
+    import VueQrcode from '@chenfengyuan/vue-qrcode';
     
     export default {
         data() {
@@ -128,6 +173,11 @@
                 accountClose: {
                     password: '',
                     loading: false,
+                },
+
+                TOTPMFASetup: {
+                    url: null,
+                    TOTPInput: '',
                 },
 
                 setupIntent: {
@@ -252,6 +302,19 @@
                 axios.post('/auth/user/setup-totp-mfa')
                 .then(response => {
                     console.log(response)
+                    this.TOTPMFASetup.url = response.data
+                })
+                .catch(error => {
+                    console.log(error.response)
+                })
+            },
+
+            verifyTOTPMFA() {
+                axios.post('/auth/user/verify-totp-mfa', {
+                    secret: this.TOTPMFASetup.TOTPInput,
+                })
+                .then(response => {
+                    console.log(response)
                 })
                 .catch(error => {
                     console.log(error.response)
@@ -306,6 +369,10 @@
                     console.log(error.response)
                 })
             },
+        },
+
+        components: {
+            'qr-code': VueQrcode
         }
     }
 </script>
@@ -320,6 +387,18 @@
             padding: 15px
             display: block
             width: 100%
+
+            .row-wrapper
+                display: flex
+                align-items: center
+                padding: 10px 0
+                gap: 10px
+                
+                &.border
+                    border-bottom: var(--border)
+
+                .spacer
+                    flex: 1
 
         .name-wrapper
             background: var(--bg)

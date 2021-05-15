@@ -44,11 +44,11 @@
             <div class="spacer"></div>
 
             <div class="group">
-                <!-- <a href="/dashboard/notifications" class="button" :class="{'active': $store.getters.page === 'notifications'}" @click.prevent="$store.dispatch('setPage', 'notifications')">
+                <a href="/dashboard/notifications" class="button" :class="{'active': $store.getters.page === 'notifications'}" @click.prevent="$store.dispatch('setPage', 'notifications')">
                     <div class="icon">notifications</div>
                     <div class="text">Notifications</div>
                     <div class="notifications">200</div>
-                </a> -->
+                </a>
                 
                 <a href="/dashboard/settings" class="button" :class="{'active': $store.getters.page === 'settings'}" @click.prevent="$store.dispatch('setPage', 'settings')">
                     <div class="icon">settings</div>

@@ -30,4 +30,6 @@ class UserMFAMethod extends Model
     protected $attributes = [
         'metadata' => '{}',
     ];
+
+    protected $table = 'user_mfa_methods';
 }

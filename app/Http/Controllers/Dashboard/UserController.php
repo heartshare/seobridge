@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\UserMFAMethod;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use PragmaRX\Google2FA\Google2FA;
 
 class UserController extends Controller
 {
@@ -89,22 +90,23 @@ class UserController extends Controller
 
     public function setupTOTPMFA(Request $request)
     {
-        $google2fa = app('pragmarx.google2fa');
+        $google2fa = new Google2FA();
 
-        $secret = $google2fa->generateSecretKey();
+        $secret = $google2fa->generateSecretKey(64);
 
-        UserMFAMethod::create([
+        $method = UserMFAMethod::firstOrCreate([
             'user_id' => Auth::id(),
-            'token' => $secret,
             'type' => 'TOTP',
-            'name' => 'Google Authenticator'
+        ],[
+            'token' => $secret,
+            'name' => 'App Authenticator'
         ]);
 
-        // return $google2fa->getQRCodeUrl(
-        //     'SEO Bridge',
-        //     'admin@seobridge.net',
-        //     $secret
-        // );
+        return $google2fa->getQRCodeUrl(
+            'SEO Bridge',
+            Auth::user()->email,
+            $method->token
+        );
     }
 
     public function verifyTOTPMFA(Request $request)
@@ -112,12 +114,12 @@ class UserController extends Controller
         $request->validate([
             'secret' => ['required', 'string'],
         ]);
-
+        
         $method = UserMFAMethod::where('user_id', Auth::id())->firstWhere('type', 'TOTP');
+        
+        $google2fa = new Google2FA();
 
-        $google2fa = app('pragmarx.google2fa');
-
-        if ($google2fa->verifyKey($method->token, $request->secret))
+        if (!$google2fa->verifyKey($method->token, $request->secret))
         {
             return response('SECRET_INVALID', 422);
         }
