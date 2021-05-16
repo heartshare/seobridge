@@ -1,388 +1,419 @@
 <template>
     <div class="page-container">
-        <div class="header-wrapper">
+        <div class="page-header">
             <div class="limiter">
-                <div class="filter-bar" v-if="details === null && activeTeam && activeTeam.sites.length > 0">
-                    <ui-select-input class="sort-input" v-model="reportSearch.sort" :options="[{'DESC':'Newest first'}, {'ASC':'Oldest first'}]"></ui-select-input>
-
-                    <div class="spacer"></div>
-
-                    <div class="search-bar-wrapper">
-                        <ui-text-input class="input" placeholder="Search" v-model="reportSearch.url"></ui-text-input>
-                        <transition name="scale">
-                            <ui-icon-button v-show="reportSearch.url.trim()" class="button" @click="reportSearch.url = ''">&#983382;</ui-icon-button>
-                        </transition>
+                <div class="page-header-wrapper">
+                    <div class="row">
+                        <h1>Reports</h1>
+                        <div class="spacer"></div>
+                        <ui-icon-button class="icon-button" v-if="activeTeam && activeTeam.sites.length > 0" @click="openReportCreateDialog()">&#984085;</ui-icon-button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="limiter" v-if="activeTeam && activeTeam.sites.length > 0">
-            <div class="reports-timeline" v-if="details === null">
-                <transition-group name="slide" class="block">
-                    <div class="job-wrapper" :class="{'has-indicator': !reportGroup.is_own}" v-for="reportGroup in paginatedReportGroups.data" :key="'report_group_'+reportGroup.id">
-                        
-                        <div class="indicator shared" v-show="reportGroup.has_been_shared && !reportGroup.has_been_assigned">
-                            <div class="text">Shared</div>
-                        </div>
-                        <div class="indicator assigned" v-show="reportGroup.has_been_assigned">
-                            <div class="text">Assigned</div>
-                        </div>
+        <div class="limiter overlap">
+            <div class="sheet">
+                <div class="block" v-if="activeTeam && activeTeam.sites.length > 0">
+                    <div class="filter-bar" v-if="details === null && activeTeam && activeTeam.sites.length > 0">
+                        <ui-select-input class="sort-input" v-model="reportSearch.sort" :options="[{'DESC':'Newest first'}, {'ASC':'Oldest first'}]"></ui-select-input>
 
-                        <div class="job-header">
-                            <div class="title">{{reportGroup.host}}</div>
-                            <div class="timestamp" v-tooltip="formateDate(reportGroup.created_at)">{{reportGroup.created_at | diffForHumans}}</div>
-                            
-                            <ui-popover-menu>
-                                <template v-slot:trigger>
-                                    <ui-icon-button class="more-button">&#983513;</ui-icon-button>
-                                </template>
+                        <div class="spacer"></div>
 
-                                <ui-menu-item icon="&#984214;" v-if="reportGroup.is_own" @click="openReportShareDialog('group', reportGroup, false)">Share report</ui-menu-item>
-                                <ui-menu-item icon="&#983048;" v-if="reportGroup.is_own" @click="openReportShareDialog('group', reportGroup, true)">Assign report</ui-menu-item>
-                                <ui-menu-item icon="&#983881;" @click="reportSearch.url = reportGroup.host">Search for domain</ui-menu-item>
-                                <ui-menu-divider></ui-menu-divider>
-                                <ui-menu-item icon="&#984089;" @click="requestReport(reportGroup.url)">New report from URL</ui-menu-item>
-                                <ui-menu-divider v-if="reportGroup.is_own"></ui-menu-divider>
-                                <ui-menu-item icon="&#985721;" v-if="reportGroup.is_own" @click="openReportDeleteDialog(reportGroup)">Delete report</ui-menu-item>
-                            </ui-popover-menu>
+                        <div class="search-bar-wrapper">
+                            <ui-text-input class="input" placeholder="Search" v-model="reportSearch.url"></ui-text-input>
+                            <transition name="scale">
+                                <ui-icon-button v-show="reportSearch.url.trim()" class="button" @click="reportSearch.url = ''">&#983382;</ui-icon-button>
+                            </transition>
                         </div>
+                    </div>
 
-                        <div class="job-pages">
-                            <div class="status" v-if="reportGroup.task && reportGroup.task.status !== 'completed'">
-                                <div class="label">Status:</div>
+                    <div class="reports-timeline" v-if="details === null">
+                        <transition-group name="slide" class="block">
+                            <div class="job-wrapper" :class="{'has-indicator': !reportGroup.is_own}" v-for="reportGroup in paginatedReportGroups.data" :key="'report_group_'+reportGroup.id">
                                 
-                                <div class="status-text warning" v-if="reportGroup.task.status === 'crawling'">Crawling for links</div>
-                                <div class="status-text warning" v-else-if="reportGroup.task.status === 'crawling_completed'">Links crawled</div>
-                                <div class="status-text warning" v-else-if="reportGroup.task.status === 'fetching'">Analysing pages</div>
-                                <div class="status-text success" v-else-if="reportGroup.task.status === 'completed'">Scan complete</div>
+                                <div class="indicator shared" v-show="reportGroup.has_been_shared && !reportGroup.has_been_assigned">
+                                    <div class="text">Shared</div>
+                                </div>
+                                <div class="indicator assigned" v-show="reportGroup.has_been_assigned">
+                                    <div class="text">Assigned</div>
+                                </div>
 
-                                <ui-spinner class="status-spinner"></ui-spinner>
+                                <div class="job-header">
+                                    <div class="title">{{reportGroup.host}}</div>
+                                    <div class="timestamp" v-tooltip="formateDate(reportGroup.created_at)">{{reportGroup.created_at | diffForHumans}}</div>
+                                    
+                                    <ui-popover-menu>
+                                        <template v-slot:trigger>
+                                            <ui-icon-button class="more-button">&#983513;</ui-icon-button>
+                                        </template>
 
-                                <div class="spacer"></div>
+                                        <ui-menu-item icon="&#984214;" v-if="reportGroup.is_own" @click="openReportShareDialog('group', reportGroup, false)">Share report</ui-menu-item>
+                                        <ui-menu-item icon="&#983048;" v-if="reportGroup.is_own" @click="openReportShareDialog('group', reportGroup, true)">Assign report</ui-menu-item>
+                                        <ui-menu-item icon="&#983881;" @click="reportSearch.url = reportGroup.host">Search for domain</ui-menu-item>
+                                        <ui-menu-divider></ui-menu-divider>
+                                        <ui-menu-item icon="&#984089;" @click="requestReport(reportGroup.url)">New report from URL</ui-menu-item>
+                                        <ui-menu-divider v-if="reportGroup.is_own"></ui-menu-divider>
+                                        <ui-menu-item icon="&#985721;" v-if="reportGroup.is_own" @click="openReportDeleteDialog(reportGroup)">Delete report</ui-menu-item>
+                                    </ui-popover-menu>
+                                </div>
 
-                                <ui-button small text>Cancel</ui-button>
-                            </div>
+                                <div class="job-pages">
+                                    <div class="status" v-if="reportGroup.task && reportGroup.task.status !== 'completed'">
+                                        <div class="label">Status:</div>
+                                        
+                                        <div class="status-text warning" v-if="reportGroup.task.status === 'crawling'">Crawling for links</div>
+                                        <div class="status-text warning" v-else-if="reportGroup.task.status === 'crawling_completed'">Links crawled</div>
+                                        <div class="status-text warning" v-else-if="reportGroup.task.status === 'fetching'">Analysing pages</div>
+                                        <div class="status-text success" v-else-if="reportGroup.task.status === 'completed'">Scan complete</div>
 
-                            <page-row v-for="report in reportGroup.reports" :key="'report_'+report.id" :report="report" @details="openDetails($event)"></page-row>
-                            <div class="blend" v-if="reportGroup.reports.length > 4">
-                                <ui-button text>Show more</ui-button>
-                            </div>
-                        </div>
-                    </div>
-                </transition-group>
-            </div>
+                                        <ui-spinner class="status-spinner"></ui-spinner>
 
-            <div class="details" v-else>
-                <div class="nav-row">
-                    <ui-button icon="&#983117;" icon-left border text @click="details = null">Back</ui-button>
-                </div>
+                                        <div class="spacer"></div>
 
-                <div class="detail-row">
-                    <div class="card span-4">
-                        <h4 class="info"><div class="icon">&#984376;</div>Page Score</h4>
-                        <apexchart style="display: inherit;" type="radialBar" height="250" :options="chartOptions" :series="[details.score.totalPageScore] || [0]"></apexchart>
-                    </div>
+                                        <ui-button small text>Cancel</ui-button>
+                                    </div>
 
-                    <div class="card span-4">
-                        <h4 class="info"><div class="icon">&#983341;</div>Checklist</h4>
-
-                        <div class="metric-card-wrapper">
-                            <div class="metric-card" v-show="details.score.hasFavicon">
-                                <div class="icon" style="color: var(--success)">&#983340;</div>
-                                <div class="value">Favicon</div>
-                                <ui-tooltip-button class="info">
-                                    <b>The Favicon</b><br>
-                                    The favicon is the small icon next to the page title in the tab above the page. It isn't displayed on the page itself. 
-                                </ui-tooltip-button>
+                                    <page-row v-for="report in reportGroup.reports" :key="'report_'+report.id" :report="report" @details="openDetails($event)"></page-row>
+                                    <div class="blend" v-if="reportGroup.reports.length > 4">
+                                        <ui-button text>Show more</ui-button>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="metric-card" v-show="details.score.hasTitle">
-                                <div class="icon" style="color: var(--success)">&#983340;</div>
-                                <div class="value">Page Title</div>
-                                <ui-tooltip-button class="info">
-                                    <b>The Page Title</b><br>
-                                    The title-tag is a meta-tag in the page's head section. It is displayed in search results and in the tab above the page. Former of which
-                                    makes it very relevant for your page's SEO ranking. 
-                                </ui-tooltip-button>
-                            </div>
-                            <div class="metric-card" v-show="details.score.hasDescription">
-                                <div class="icon" style="color: var(--success)">&#983340;</div>
-                                <div class="value">Page Description</div>
-                                <ui-tooltip-button class="info">
-                                    <b>The Page Description</b><br>
-                                    The page description is a meta-tag in the page's head section. Search engines display it below your page title and may use it to 
-                                    rank your page and extract relevant information of what your page is about.
-                                </ui-tooltip-button>
-                            </div>
-                            <div class="metric-card" v-show="details.score.hasViewport">
-                                <div class="icon" style="color: var(--success)">&#983340;</div>
-                                <div class="value">Mobile Support</div>
-                                <ui-tooltip-button class="info">
-                                    <b>Mobile Support (WIP)</b><br>
-                                    A modern web-page is being visited by desktop and mobile users alike. It is therefore strongly recommended to offer a mobile friendly
-                                    version of your page.<br><br>
-                                    This detection is still work in progress.
-                                </ui-tooltip-button>
-                            </div>
-                            <div class="metric-card" v-show="details.score.errorPage.hasCustom404Page">
-                                <div class="icon" style="color: var(--success)">&#983340;</div>
-                                <div class="value">Custom 404 Page</div>
-                                <ui-tooltip-button class="info">
-                                    <b>Custom 404 Pages (WIP)</b><br>
-                                    When the user visits a non-existing page by default he is shown a standard error page. This my lead the user to believe the whole website
-                                    is offline. To mitigate this issue it is recommened to build a custom error page to bring the user back to a functional page.<br><br>
-                                    This detection is still work in progress.
-                                </ui-tooltip-button>
-                            </div>
-                        </div>
-                        <div class="metric-card-wrapper">
-                            <div class="metric-card" v-show="!details.score.hasFavicon">
-                                <div class="icon" style="color: var(--error)">&#983382;</div>
-                                <div class="value">No Favicon</div>
-                                <ui-tooltip-button class="info">
-                                    <b>The Favicon</b><br>
-                                    The favicon is the small icon next to the page title in the tab above the page. It isn't displayed on the page itself. 
-                                </ui-tooltip-button>
-                            </div>
-                            <div class="metric-card" v-show="!details.score.hasTitle">
-                                <div class="icon" style="color: var(--error)">&#983382;</div>
-                                <div class="value">No Page Title</div>
-                                <ui-tooltip-button class="info">
-                                    <b>The Page Title</b><br>
-                                    The title-tag is a meta-tag in the page's head section. It is displayed in search results and in the tab above the page. Former of which
-                                    makes it very relevant for your page's SEO ranking. 
-                                </ui-tooltip-button>
-                            </div>
-                            <div class="metric-card" v-show="!details.score.hasDescription">
-                                <div class="icon" style="color: var(--error)">&#983382;</div>
-                                <div class="value">No Page Description</div>
-                                <ui-tooltip-button class="info">
-                                    <b>The Page Description</b><br>
-                                    The page description is a meta-tag in the page's head section. Search engines display it below your page title and may use it to 
-                                    rank your page and extract relevant information of what your page is about.
-                                </ui-tooltip-button>
-                            </div>
-                            <div class="metric-card" v-show="!details.score.hasViewport">
-                                <div class="icon" style="color: var(--error)">&#983382;</div>
-                                <div class="value">No Mobile Support</div>
-                                <ui-tooltip-button class="info">
-                                    <b>Mobile Support (WIP)</b><br>
-                                    A modern web-page is being visited by desktop and mobile users alike. It is therefore strongly recommended to offer a mobile friendly
-                                    version of your page.<br><br>
-                                    This detection is still work in progress.
-                                </ui-tooltip-button>
-                            </div>
-                            <div class="metric-card" v-show="!details.score.errorPage.hasCustom404Page">
-                                <div class="icon" style="color: var(--error)">&#983382;</div>
-                                <div class="value">No Custom 404 Page</div>
-                                <ui-tooltip-button class="info">
-                                    <b>Custom 404 Pages (WIP)</b><br>
-                                    When the user visits a non-existing page by default he is shown a standard error page. This my lead the user to believe the whole website
-                                    is offline. To mitigate this issue it is recommened to build a custom error page to bring the user back to a functional page.<br><br>
-                                    This detection is still work in progress.
-                                </ui-tooltip-button>
-                            </div>
-                        </div>
+                        </transition-group>
                     </div>
 
-                    <div class="card span-4">
-                        <h4 class="info"><div class="icon">&#984261;</div>Metrics</h4>
-
-                        <div class="metric-card-wrapper">
-                            <div class="metric-card half">
-                                <div class="icon">&#983837;</div>
-                                <div class="label">HTML Nodes</div>
-                                <div class="value">{{details.metrics.Nodes}}</div>
-                            </div>
-
-                            <div class="metric-card half">
-                                <div class="icon">&#983706;</div>
-                                <div class="label">Rendertime</div>
-                                <div class="value">{{details.metrics.TaskDuration.toFixed(4)}}s</div>
-                            </div>
-
-                            <div class="metric-card half">
-                                <div class="icon">&#984430;</div>
-                                <div class="label">Layout Rendertime</div>
-                                <div class="value">{{details.metrics.LayoutDuration.toFixed(4)}}s</div>
-                            </div>
-
-                            <div class="metric-card half">
-                                <div class="icon">&#983838;</div>
-                                <div class="label">Script Rendertime</div>
-                                <div class="value">{{details.metrics.ScriptDuration.toFixed(4)}}s</div>
-                            </div>
-
-                            <div class="metric-card half">
-                                <div class="icon">&#983559;</div>
-                                <div class="label">Outbound-Links</div>
-                                <div class="value">{{details.outboundLinks.length}}</div>
-                                <ui-tooltip-button class="info">
-                                    <b>Outbound Links</b><br>
-                                    Outbound links are hyperlinks going to external websites. Search engines use them to better understand what your page is about.
-                                    Your page should only link to websites related to your content.
-                                </ui-tooltip-button>
-                            </div>
-
-                            <div class="metric-card half">
-                                <div class="icon">&#983865;</div>
-                                <div class="label">Internal-Links</div>
-                                <div class="value">{{details.internalLinks.length}}</div>
-                            </div>
+                    <div class="details" v-else>
+                        <div class="nav-row">
+                            <ui-button icon="&#983361;" icon-left border text @click="details = null">Back</ui-button>
                         </div>
-                    </div>
-                </div>
 
-                <div class="detail-row">
-                    <div class="card span-12 page-info-card">
-                        <h4>
-                            <object class="favicon" v-if="details.metaData.favicon" :data="details.metaData.favicon" type="image/png">
-                                <img src="/images/defaults/default_icon.svg" alt="Default Icon Fallback" width="100%" height="100%">
-                            </object>
-                            <img class="favicon" v-else src="/images/defaults/default_icon.svg" alt="Default Icon Fallback" width="100%" height="100%">
-                            {{details.metaData.title}}
-                        </h4>
-
-                        <div class="metric-card-wrapper">
-                            <div class="metric-card" v-if="details.metaData.description">
-                                <div class="icon">&#985975;</div>
-                                <div class="label">Description</div>
-                                <div class="value">{{details.metaData.description}}</div>
+                        <div class="detail-row">
+                            <div class="card span-4">
+                                <h4 class="info"><div class="icon">&#984376;</div>Page Score</h4>
+                                <apexchart style="display: inherit;" type="radialBar" height="250" :options="chartOptions" :series="[details.score.totalPageScore] || [0]"></apexchart>
                             </div>
 
-                            <div class="metric-card" v-if="details.metaData.generator">
-                                <div class="icon">&#988535;</div>
-                                <div class="label">CMS / Generator</div>
-                                <div class="value">
-                                    <span v-show="details.metaData.cms">{{details.metaData.cms}} —</span>
-                                    {{details.metaData.generator}}
+                            <div class="card span-4">
+                                <h4 class="info"><div class="icon">&#983341;</div>Checklist</h4>
+
+                                <div class="metric-card-wrapper">
+                                    <div class="metric-card" v-show="details.score.hasFavicon">
+                                        <div class="icon" style="color: var(--success)">&#983340;</div>
+                                        <div class="value">Favicon</div>
+                                        <ui-tooltip-button class="info">
+                                            <b>The Favicon</b><br>
+                                            The favicon is the small icon next to the page title in the tab above the page. It isn't displayed on the page itself. 
+                                        </ui-tooltip-button>
+                                    </div>
+                                    <div class="metric-card" v-show="details.score.hasTitle">
+                                        <div class="icon" style="color: var(--success)">&#983340;</div>
+                                        <div class="value">Page Title</div>
+                                        <ui-tooltip-button class="info">
+                                            <b>The Page Title</b><br>
+                                            The title-tag is a meta-tag in the page's head section. It is displayed in search results and in the tab above the page. Former of which
+                                            makes it very relevant for your page's SEO ranking. 
+                                        </ui-tooltip-button>
+                                    </div>
+                                    <div class="metric-card" v-show="details.score.hasDescription">
+                                        <div class="icon" style="color: var(--success)">&#983340;</div>
+                                        <div class="value">Page Description</div>
+                                        <ui-tooltip-button class="info">
+                                            <b>The Page Description</b><br>
+                                            The page description is a meta-tag in the page's head section. Search engines display it below your page title and may use it to 
+                                            rank your page and extract relevant information of what your page is about.
+                                        </ui-tooltip-button>
+                                    </div>
+                                    <div class="metric-card" v-show="details.score.hasViewport">
+                                        <div class="icon" style="color: var(--success)">&#983340;</div>
+                                        <div class="value">Mobile Support</div>
+                                        <ui-tooltip-button class="info">
+                                            <b>Mobile Support (WIP)</b><br>
+                                            A modern web-page is being visited by desktop and mobile users alike. It is therefore strongly recommended to offer a mobile friendly
+                                            version of your page.<br><br>
+                                            This detection is still work in progress.
+                                        </ui-tooltip-button>
+                                    </div>
+                                    <div class="metric-card" v-show="details.score.errorPage.hasCustom404Page">
+                                        <div class="icon" style="color: var(--success)">&#983340;</div>
+                                        <div class="value">Custom 404 Page</div>
+                                        <ui-tooltip-button class="info">
+                                            <b>Custom 404 Pages (WIP)</b><br>
+                                            When the user visits a non-existing page by default he is shown a standard error page. This my lead the user to believe the whole website
+                                            is offline. To mitigate this issue it is recommened to build a custom error page to bring the user back to a functional page.<br><br>
+                                            This detection is still work in progress.
+                                        </ui-tooltip-button>
+                                    </div>
+                                </div>
+                                <div class="metric-card-wrapper">
+                                    <div class="metric-card" v-show="!details.score.hasFavicon">
+                                        <div class="icon" style="color: var(--error)">&#983382;</div>
+                                        <div class="value">No Favicon</div>
+                                        <ui-tooltip-button class="info">
+                                            <b>The Favicon</b><br>
+                                            The favicon is the small icon next to the page title in the tab above the page. It isn't displayed on the page itself. 
+                                        </ui-tooltip-button>
+                                    </div>
+                                    <div class="metric-card" v-show="!details.score.hasTitle">
+                                        <div class="icon" style="color: var(--error)">&#983382;</div>
+                                        <div class="value">No Page Title</div>
+                                        <ui-tooltip-button class="info">
+                                            <b>The Page Title</b><br>
+                                            The title-tag is a meta-tag in the page's head section. It is displayed in search results and in the tab above the page. Former of which
+                                            makes it very relevant for your page's SEO ranking. 
+                                        </ui-tooltip-button>
+                                    </div>
+                                    <div class="metric-card" v-show="!details.score.hasDescription">
+                                        <div class="icon" style="color: var(--error)">&#983382;</div>
+                                        <div class="value">No Page Description</div>
+                                        <ui-tooltip-button class="info">
+                                            <b>The Page Description</b><br>
+                                            The page description is a meta-tag in the page's head section. Search engines display it below your page title and may use it to 
+                                            rank your page and extract relevant information of what your page is about.
+                                        </ui-tooltip-button>
+                                    </div>
+                                    <div class="metric-card" v-show="!details.score.hasViewport">
+                                        <div class="icon" style="color: var(--error)">&#983382;</div>
+                                        <div class="value">No Mobile Support</div>
+                                        <ui-tooltip-button class="info">
+                                            <b>Mobile Support (WIP)</b><br>
+                                            A modern web-page is being visited by desktop and mobile users alike. It is therefore strongly recommended to offer a mobile friendly
+                                            version of your page.<br><br>
+                                            This detection is still work in progress.
+                                        </ui-tooltip-button>
+                                    </div>
+                                    <div class="metric-card" v-show="!details.score.errorPage.hasCustom404Page">
+                                        <div class="icon" style="color: var(--error)">&#983382;</div>
+                                        <div class="value">No Custom 404 Page</div>
+                                        <ui-tooltip-button class="info">
+                                            <b>Custom 404 Pages (WIP)</b><br>
+                                            When the user visits a non-existing page by default he is shown a standard error page. This my lead the user to believe the whole website
+                                            is offline. To mitigate this issue it is recommened to build a custom error page to bring the user back to a functional page.<br><br>
+                                            This detection is still work in progress.
+                                        </ui-tooltip-button>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div class="metric-card" v-if="details.metaData.themeColor">
-                                <div class="icon">&#984024;</div>
-                                <div class="label">Theme Color</div>
-                                <div class="value">{{details.metaData.themeColor}}</div>
-                            </div>
+                            <div class="card span-4">
+                                <h4 class="info"><div class="icon">&#984261;</div>Metrics</h4>
 
-                            <div class="metric-card" v-if="details.metaData.keywords.length > 0">
-                                <div class="icon">&#983819;</div>
-                                <div class="label">Keywords</div>
-                                <div class="value">{{details.metaData.keywords.join(', ') }}</div>
+                                <div class="metric-card-wrapper">
+                                    <div class="metric-card half">
+                                        <div class="icon">&#983837;</div>
+                                        <div class="label">HTML Nodes</div>
+                                        <div class="value">{{details.metrics.Nodes}}</div>
+                                    </div>
+
+                                    <div class="metric-card half">
+                                        <div class="icon">&#983706;</div>
+                                        <div class="label">Rendertime</div>
+                                        <div class="value">{{details.metrics.TaskDuration.toFixed(4)}}s</div>
+                                    </div>
+
+                                    <div class="metric-card half">
+                                        <div class="icon">&#984430;</div>
+                                        <div class="label">Layout Rendertime</div>
+                                        <div class="value">{{details.metrics.LayoutDuration.toFixed(4)}}s</div>
+                                    </div>
+
+                                    <div class="metric-card half">
+                                        <div class="icon">&#983838;</div>
+                                        <div class="label">Script Rendertime</div>
+                                        <div class="value">{{details.metrics.ScriptDuration.toFixed(4)}}s</div>
+                                    </div>
+
+                                    <div class="metric-card half">
+                                        <div class="icon">&#983559;</div>
+                                        <div class="label">Outbound-Links</div>
+                                        <div class="value">{{details.outboundLinks.length}}</div>
+                                        <ui-tooltip-button class="info">
+                                            <b>Outbound Links</b><br>
+                                            Outbound links are hyperlinks going to external websites. Search engines use them to better understand what your page is about.
+                                            Your page should only link to websites related to your content.
+                                        </ui-tooltip-button>
+                                    </div>
+
+                                    <div class="metric-card half">
+                                        <div class="icon">&#983865;</div>
+                                        <div class="label">Internal-Links</div>
+                                        <div class="value">{{details.internalLinks.length}}</div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
 
-                <div class="detail-row" v-if="details.score.errorData.errors.length > 0">
-                    <div class="card span-12">
-                        <h4 class="error"><div class="icon">&#983385;</div>Errors</h4>
+                        <div class="detail-row">
+                            <div class="card span-12 page-info-card">
+                                <h4>
+                                    <object class="favicon" v-if="details.metaData.favicon" :data="details.metaData.favicon" type="image/png">
+                                        <img src="/images/defaults/default_icon.svg" alt="Default Icon Fallback" width="100%" height="100%">
+                                    </object>
+                                    <img class="favicon" v-else src="/images/defaults/default_icon.svg" alt="Default Icon Fallback" width="100%" height="100%">
+                                    {{details.metaData.title}}
+                                </h4>
 
-                        <div class="metric-card-wrapper">
-                            <div class="metric-card" v-for="(error, i) in details.score.errorData.errors" :key="i">
-                                <div class="icon" style="color: var(--error)">&#983789;</div>
-                                <div class="label">Error</div>
-                                <div class="value">{{error.desc}}</div>
+                                <div class="metric-card-wrapper">
+                                    <div class="metric-card" v-if="details.metaData.description">
+                                        <div class="icon">&#985975;</div>
+                                        <div class="label">Description</div>
+                                        <div class="value">{{details.metaData.description}}</div>
+                                    </div>
+
+                                    <div class="metric-card" v-if="details.metaData.generator">
+                                        <div class="icon">&#988535;</div>
+                                        <div class="label">CMS / Generator</div>
+                                        <div class="value">
+                                            <span v-show="details.metaData.cms">{{details.metaData.cms}} —</span>
+                                            {{details.metaData.generator}}
+                                        </div>
+                                    </div>
+
+                                    <div class="metric-card" v-if="details.metaData.themeColor">
+                                        <div class="icon">&#984024;</div>
+                                        <div class="label">Theme Color</div>
+                                        <div class="value">{{details.metaData.themeColor}}</div>
+                                    </div>
+
+                                    <div class="metric-card" v-if="details.metaData.keywords.length > 0">
+                                        <div class="icon">&#983819;</div>
+                                        <div class="label">Keywords</div>
+                                        <div class="value">{{details.metaData.keywords.join(', ') }}</div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
 
-                <div class="detail-row" v-if="details.score.warningData.warnings.length > 0">
-                    <div class="card span-12">
-                        <h4 class="warning"><div class="icon">&#983078;</div>Warnings</h4>
+                        <div class="detail-row" v-if="details.score.errorData.errors.length > 0">
+                            <div class="card span-12">
+                                <h4 class="error"><div class="icon">&#983385;</div>Errors</h4>
 
-                        <div class="metric-card-wrapper">
-                            <div class="metric-card" v-for="(warning, i) in details.score.warningData.warnings" :key="i">
-                                <div class="icon" style="color: var(--warning)">&#983659;</div>
-                                <div class="label">Warning</div>
-                                <div class="value">{{warning.desc}}</div>
+                                <div class="metric-card-wrapper">
+                                    <div class="metric-card" v-for="(error, i) in details.score.errorData.errors" :key="i">
+                                        <div class="icon" style="color: var(--error)">&#983789;</div>
+                                        <div class="label">Error</div>
+                                        <div class="value">{{error.desc}}</div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
 
-                <div class="detail-row" v-if="details.metaData.twitterCard.hasTwitterCard || details.metaData.openGraph.hasOpenGraph">
-                    <div class="card span-6" v-if="details.metaData.twitterCard.hasTwitterCard">
-                        <h4><div class="icon">&#984388;</div>Twitter Appearence</h4>
-                        <div class="twitter-summary-card">
-                            <img class="image" :src="details.metaData.twitterCard['twitter:image']">
-                            <div class="content">
-                                <div class="title">{{details.metaData.twitterCard['twitter:title']}}</div>
-                                <div class="description">{{details.metaData.openGraph['og:description']}}</div>
-                                <div class="url">
-                                    <div class="icon">&#983865;</div>
-                                    <div class="text">{{details.url.host}}</div>
+                        <div class="detail-row" v-if="details.score.warningData.warnings.length > 0">
+                            <div class="card span-12">
+                                <h4 class="warning"><div class="icon">&#983078;</div>Warnings</h4>
+
+                                <div class="metric-card-wrapper">
+                                    <div class="metric-card" v-for="(warning, i) in details.score.warningData.warnings" :key="i">
+                                        <div class="icon" style="color: var(--warning)">&#983659;</div>
+                                        <div class="label">Warning</div>
+                                        <div class="value">{{warning.desc}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="detail-row" v-if="details.metaData.twitterCard.hasTwitterCard || details.metaData.openGraph.hasOpenGraph">
+                            <div class="card span-6" v-if="details.metaData.twitterCard.hasTwitterCard">
+                                <h4><div class="icon">&#984388;</div>Twitter Appearence</h4>
+                                <div class="twitter-summary-card">
+                                    <img class="image" :src="details.metaData.twitterCard['twitter:image']">
+                                    <div class="content">
+                                        <div class="title">{{details.metaData.twitterCard['twitter:title']}}</div>
+                                        <div class="description">{{details.metaData.openGraph['og:description']}}</div>
+                                        <div class="url">
+                                            <div class="icon">&#983865;</div>
+                                            <div class="text">{{details.url.host}}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card span-6" v-if="details.metaData.openGraph.hasOpenGraph">
+                                <h4><div class="icon">&#987137;</div>Open Graph Appearence</h4>
+
+                                <div class="open-graph-article-card">
+                                    <img :src="details.metaData.openGraph['og:image']" class="image">
+                                    <div class="content">
+                                        <div class="url" v-if="details.metaData.openGraph['og:url']">{{details.metaData.openGraph['og:url'].host}}</div>
+                                        <div class="title">{{details.metaData.openGraph['og:title']}}</div>
+                                        <div class="description">{{details.metaData.openGraph['og:description']}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="detail-row">
+                            <div class="card span-12">
+                                <h4><div class="icon">&#984313;</div>Meta Tags</h4>
+
+                                <div class="metric-card-wrapper">
+                                    <div class="metric-card" v-for="(meta, i) in details.meta" :key="i">
+                                        <div class="icon" style="color: var(--text-gray)">&#984313;</div>
+                                        <div class="label">{{meta.name || meta.property || 'Charset'}}</div>
+                                        <div class="value">{{meta.content || meta.charset || meta.httpEquiv}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="detail-row">
+                            <div class="card span-12">
+                                <h4><div class="icon">&#983865;</div>Links</h4>
+
+                                <div class="metric-card-wrapper">
+                                    <div class="metric-card" v-for="(link, i) in details.links" :key="i">
+                                        <div class="icon" v-if="link.href && link.href.startsWith('mailto:')" style="color: var(--text-gray)">&#983536;</div>
+                                        <div class="icon" v-else-if="link.href && link.href.startsWith('tel:')" style="color: var(--text-gray)">&#984050;</div>
+                                        <div class="icon" v-else style="color: var(--text-gray)">&#983865;</div>
+                                        <div class="label" v-if="link.text && link.text.trim()">{{link.text}}</div>
+                                        <div class="label" v-else><i>No link text</i></div>
+                                        <div class="value">{{link.href}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="detail-row">
+                            <div class="card span-12">
+                                <h4><div class="icon">&#983785;</div>Images</h4>
+
+                                <div class="image-card" v-for="(image, i) in details.images" :key="i">
+                                    <img class="image" :src="image.href" v-tooltip.bottom-start="image.src">
+                                    <div class="content">
+                                        <b class="title" v-if="image.alt">{{image.alt}}</b>
+                                        <i class="title" v-else>No "alt"-attribute</i>
+                                        <div class="description">
+                                            Natural-Size: <b>{{image.width}} x {{image.height}}</b><br>
+                                            Visible-Size: <b>{{image.visibleWidth}} x {{image.visibleHeight}}</b><br>
+                                            <span class="no-text-overflow">Src: <b>{{image.src}}</b></span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="card span-6" v-if="details.metaData.openGraph.hasOpenGraph">
-                        <h4><div class="icon">&#987137;</div>Open Graph Appearence</h4>
-
-                        <div class="open-graph-article-card">
-                            <img :src="details.metaData.openGraph['og:image']" class="image">
-                            <div class="content">
-                                <div class="url" v-if="details.metaData.openGraph['og:url']">{{details.metaData.openGraph['og:url'].host}}</div>
-                                <div class="title">{{details.metaData.openGraph['og:title']}}</div>
-                                <div class="description">{{details.metaData.openGraph['og:description']}}</div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
 
-                <div class="detail-row">
-                    <div class="card span-12">
-                        <h4><div class="icon">&#984313;</div>Meta Tags</h4>
 
-                        <div class="metric-card-wrapper">
-                            <div class="metric-card" v-for="(meta, i) in details.meta" :key="i">
-                                <div class="icon" style="color: var(--text-gray)">&#984313;</div>
-                                <div class="label">{{meta.name || meta.property || 'Charset'}}</div>
-                                <div class="value">{{meta.content || meta.charset || meta.httpEquiv}}</div>
-                            </div>
-                        </div>
-                    </div>
+
+                <div class="placeholder grid-centered" v-if="teams.length === 0">
+                    <p>To analyse a website you<br>need to create a team first</p>
+                    <ui-button @click="$store.dispatch('setPage', 'teams')">Create a team</ui-button>
                 </div>
 
-                <div class="detail-row">
-                    <div class="card span-12">
-                        <h4><div class="icon">&#983865;</div>Links</h4>
-
-                        <div class="metric-card-wrapper">
-                            <div class="metric-card" v-for="(link, i) in details.links" :key="i">
-                                <div class="icon" v-if="link.href && link.href.startsWith('mailto:')" style="color: var(--text-gray)">&#983536;</div>
-                                <div class="icon" v-else-if="link.href && link.href.startsWith('tel:')" style="color: var(--text-gray)">&#984050;</div>
-                                <div class="icon" v-else style="color: var(--text-gray)">&#983865;</div>
-                                <div class="label" v-if="link.text && link.text.trim()">{{link.text}}</div>
-                                <div class="label" v-else><i>No link text</i></div>
-                                <div class="value">{{link.href}}</div>
-                            </div>
-                        </div>
-                    </div>
+                <div class="placeholder grid-centered" v-if="!activeTeam && teams.length > 0">
+                    <p>To analyse a website you<br>need to join a team first</p>
+                    <ui-button @click="$store.dispatch('setPage', 'teams')">Join now</ui-button>
                 </div>
 
-                <div class="detail-row">
-                    <div class="card span-12">
-                        <h4><div class="icon">&#983785;</div>Images</h4>
-
-                        <div class="image-card" v-for="(image, i) in details.images" :key="i">
-                            <img class="image" :src="image.href" v-tooltip.bottom-start="image.src">
-                            <div class="content">
-                                <b class="title" v-if="image.alt">{{image.alt}}</b>
-                                <i class="title" v-else>No "alt"-attribute</i>
-                                <div class="description">
-                                    Natural-Size: <b>{{image.width}} x {{image.height}}</b><br>
-                                    Visible-Size: <b>{{image.visibleWidth}} x {{image.visibleHeight}}</b><br>
-                                    <span class="no-text-overflow">Src: <b>{{image.src}}</b></span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <div class="placeholder grid-centered" v-if="activeTeam && activeTeam.sites.length === 0">
+                    <p>To analyse a website your team has to <br> have at least one Namespace added</p>
+                    <ui-button v-if="activeTeam.is_owner" @click="$store.dispatch('setPage', 'teams')">Add Site Namespace now</ui-button>
                 </div>
             </div>
         </div>
+
 
         <div class="footer-wrapper" v-show="paginatedReportGroups.prev_page_url || paginatedReportGroups.next_page_url">
             <div class="limiter">
@@ -394,25 +425,6 @@
                 <div class="page-number">{{paginatedReportGroups.current_page}}</div>
                 <ui-icon-button class="pagination-button" @click="nextPage()" :disabled="paginatedReportGroups.next_page_url === null">&#983362;</ui-icon-button>
             </div>
-        </div>
-
-        <button class="fab" v-if="details === null && activeTeam && activeTeam.sites.length > 0" @click="openReportCreateDialog()">&#984085;</button>
-
-
-
-        <div class="placeholder grid-centered" v-if="teams.length === 0">
-            <p>To analyse a website you<br>need to create a team first</p>
-            <ui-button @click="$store.dispatch('setPage', 'teams')">Create a team</ui-button>
-        </div>
-
-        <div class="placeholder grid-centered" v-if="!activeTeam && teams.length > 0">
-            <p>To analyse a website you<br>need to join a team first</p>
-            <ui-button @click="$store.dispatch('setPage', 'teams')">Join now</ui-button>
-        </div>
-
-        <div class="placeholder grid-centered" v-if="activeTeam && activeTeam.sites.length === 0">
-            <p>To analyse a website your team has to <br> have at least one Namespace added</p>
-            <ui-button v-if="activeTeam.is_owner" @click="$store.dispatch('setPage', 'teams')">Add Site Namespace now</ui-button>
         </div>
 
 
@@ -799,53 +811,44 @@
         height: 100%
 
         .placeholder
-            height: 100%
+            height: 200px
             width: 100%
 
-        .header-wrapper
-            width: calc(100% - var(--menu-width))
-            position: fixed
-            top: 0
-            left: var(--menu-width)
-            z-index: 1
+        .filter-bar
+            width: 100%
+            display: flex !important
+            padding: 15px
+            align-items: center
+            border-bottom: var(--border)
 
-            .filter-bar
-                filter: var(--elevation-3)
-                background: var(--bg)
-                width: 100%
-                display: flex !important
-                padding: 15px
-                align-items: center
-                border-radius: 0 0 7px 7px
+            .spacer
+                flex: 1
 
-                .spacer
-                    flex: 1
-                    height: 40px
+            .sort-input
+                width: 150px
+                --height: 40px
 
-                .sort-input
-                    width: 150px
+            .search-bar-wrapper
+                display: block
+                position: relative
+                flex: 1
+                max-width: 300px
+
+                .input
+                    padding-right: 40px
                     --height: 40px
 
-                .search-bar-wrapper
-                    display: block
-                    position: relative
-                    flex: 1
-                    max-width: 300px
+                .button
+                    position: absolute
+                    top: 0
+                    right: 0
+                    z-index: 1
+                    transition: all 100ms
 
-                    .input
-                        padding-right: 40px
-                        --height: 40px
+                    &.scale-enter,
+                    &.scale-leave-to
+                        transform: scale(0)
 
-                    .button
-                        position: absolute
-                        top: 0
-                        right: 0
-                        z-index: 1
-                        transition: all 100ms
-
-                        &.scale-enter,
-                        &.scale-leave-to
-                            transform: scale(0)
 
         .footer-wrapper
             width: calc(100%)
@@ -901,18 +904,18 @@
 
         .reports-timeline
             display: block
-            padding-top: 85px
 
             .job-wrapper
                 width: 100%
                 display: inline-flex
                 flex-direction: column
-                background: white
-                border-radius: 7px
-                filter: var(--elevation-2)
-                margin: 15px 0
                 transition: all 300ms
                 position: relative
+                padding-top: 10px
+                border-bottom: var(--border)
+
+                &:last-of-type
+                    border-bottom: none
 
                 &.has-indicator
                     padding-left: 18px
@@ -1034,24 +1037,27 @@
             width: 100%
             display: flex
             flex-direction: column
-            gap: 15px
+            gap: 0
 
             .nav-row
-                height: 40px
-                margin-top: 15px
+                display: flex
+                align-items: center
+                padding: 15px
+                border-bottom: var(--border)
+
+                .spacer
+                    flex: 1
 
             .detail-row
                 display: grid
                 grid-template-columns: repeat(12, 1fr)
                 grid-template-rows: 1fr
                 gap: 15px
+                border-bottom: var(--border)
 
             .card
-                background: var(--bg)
-                border-radius: 5px
                 font-size: var(--text-size)
                 overflow: hidden
-                border: var(--border)
 
                 h1, h2, h3, h4, h5, h6
                     margin: 0

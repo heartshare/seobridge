@@ -22,7 +22,7 @@
 
                 <a href="/dashboard/reports" class="button" :class="{'active': $store.getters.page === 'reports'}" @click.prevent="$store.dispatch('setPage', 'reports')">
                     <div class="icon">insights</div>
-                    <div class="text">SEO Reports</div>
+                    <div class="text">Reports</div>
                 </a>
 
                 <!-- <a href="/dashboard/keywords" class="button" :class="{'active': $store.getters.page === 'keywords'}" @click.prevent="$store.dispatch('setPage', 'keywords')">
@@ -69,7 +69,6 @@
                 <teams-page class="page" key="teams-page" v-if="$store.getters.page === 'teams'"></teams-page>
                 <notifications-page class="page" key="notifications-page" v-if="$store.getters.page === 'notifications'"></notifications-page>
                 <settings-page class="page" key="settings-page" v-if="$store.getters.page === 'settings'"></settings-page>
-                <profile-page class="page" key="profile-page" v-if="$store.getters.page === 'profile'"></profile-page>
                 <author-page class="page" key="author-page" v-if="$store.getters.page === 'author' && authorProfile"></author-page>
             </transition>
         </main>
@@ -102,7 +101,6 @@
             TeamsPage: require('./pages/Teams.vue').default,
             NotificationsPage: require('./pages/Notifications.vue').default,
             SettingsPage: require('./pages/Settings.vue').default,
-            ProfilePage: require('./pages/Profile.vue').default,
             AuthorPage: require('./pages/Author.vue').default,
         },
     }
@@ -117,6 +115,45 @@
                 max-width: 1240px !important
                 padding-left: 15px !important
                 padding-right: 15px !important
+
+            .page-container
+
+                .page-header
+                    display: block
+                    width: 100%
+                    color: var(--bg)
+                    background: var(--primary)
+                    padding-bottom: 70px
+
+                    .page-header-wrapper
+                        width: 100%
+                        display: block
+                        color: inherit
+                        padding: 70px 0
+
+                    h1, h2, h3, h4, h5, h6
+                        margin: 0
+                        color: inherit
+                        font-weight: 600
+
+                    .icon-button
+                        height: 50px
+                        width: 50px
+                        color: var(--heading-gray)
+                        background: #34e7e4
+                        filter: var(--elevation-4)
+                        font-size: 24px
+
+                    .row
+                        display: flex
+                        gap: 10px
+                        align-items: center
+
+                        .spacer
+                            flex: 1
+
+                .overlap
+                    margin-top: -70px
 </style>
 
 <style lang="sass" scoped>
@@ -140,7 +177,8 @@
             color: var(--text-gray)
             font-size: var(--text-size)
             background: var(--bg)
-            border-right: 1px solid #e1e1e1
+            // border-right: 1px solid #e1e1e1
+            filter: var(--elevation-4)
             display: flex
             flex-direction: column
             gap: 10px

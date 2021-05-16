@@ -63,6 +63,7 @@
         width: 100%
         border-bottom: var(--border)
         position: relative
+        height: 70px
 
         .indicator
             position: absolute
@@ -78,11 +79,11 @@
         .tab-wrapper
             width: 100%
             display: flex
-            height: 46px
+            height: inherit
             gap: 10px
 
             .tab
-                height: 46px
+                height: inherit
                 padding: 0 15px
                 display: grid
                 letter-spacing: 0.5px

@@ -9,7 +9,7 @@
 
         <div class="description" :title="report.data.metaData.description">{{report.data.score.hasDescription ? report.data.metaData.description : 'MISSING'}}</div>
         
-        <ui-button class="details-button" @click="$emit('details', report.data)">Details</ui-button>
+        <ui-button class="details-button" icon="&#983362;" @click="$emit('details', report.data)">Details</ui-button>
     </div>
 </template>
 
@@ -45,15 +45,12 @@
 <style lang="sass" scoped>
     .page-row
         width: 100%
-        background: var(--bg)
-        border-radius: 5px
-        border: 1px solid #00000020
         font-size: 0
         position: relative
         vertical-align: top
         display: flex
         align-items: center
-        padding: 10px
+        padding: 5px 5px 5px 0
         gap: 10px
 
         .favicon

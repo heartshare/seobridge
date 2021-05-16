@@ -1251,7 +1251,7 @@ body {
 .sheet {
   display: block;
   background: var(--bg);
-  filter: var(--elevation-2);
+  filter: var(--elevation-4);
   width: 100%;
   border-radius: 7px;
 }

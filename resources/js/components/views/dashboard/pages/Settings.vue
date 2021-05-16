@@ -1,79 +1,92 @@
 <template>
-    <div class="page-container limiter">
-
-        <div class="sheet">
-            <ui-tabs-header :tabs="{'general': 'General', 'profile': 'Profile', 'subscriptions': 'Subscriptions', 'security': 'Security'}" v-model="tab"></ui-tabs-header>
-
-            <div class="tab-box" v-show="tab === 'general'">
-                <div class="row-wrapper">
-                    <b>Close your account</b>
-                    <div class="spacer"></div>
-                    <ui-button small error :loading="accountClose.loading" @click="openAccountCloseDialog()">Close</ui-button>
-                </div>
-            </div>
-
-            <div class="tab-box" v-show="tab === 'profile'">
-                <form @submit.stop.prevent>
-                    <div class="row-wrapper border">
-                        <b>Change Your Name</b>
+    <div class="page-container">
+        <div class="page-header">
+            <div class="limiter">
+                <div class="page-header-wrapper">
+                    <div class="row">
+                        <h1>Settings</h1>
                         <div class="spacer"></div>
-                        <ui-button small class="submit-button" @click="changeName()" :disabled="(nameChange.firstname || '') + (nameChange.lastname || '') === nameChange.legacy" :loading="nameChange.loading">Save</ui-button>
                     </div>
-
-                    <div class="row-wrapper border">
-                        <ui-text-input label="Firstname" no-border ac="firstname" v-model="nameChange.firstname"></ui-text-input>
-                        <ui-text-input label="Lastname" no-border ac="lastname" v-model="nameChange.lastname"></ui-text-input>
-                    </div>
-                </form>
-            </div>
-
-            <div class="tab-box" v-show="tab === 'security'">
-                <div class="row-wrapper border">
-                    <b>Change Password</b>
-                    <div class="spacer"></div>
-                    <ui-button small :loading="passwordChange.loading" @click="openPasswordChangeDialog()">Edit</ui-button>
                 </div>
-                
-                <div class="row-wrapper border">
-                    <b>Multi Factor Authentication</b>
-                    <div class="spacer"></div>
-                    <ui-switch style="margin: 5px 0" :value="user.is_mfa_enabled" @input="setMFAStatus($event)"></ui-switch>
-                </div>
-
-                <div class="row-wrapper">
-                    <span>App Authentication</span>
-                    <div class="spacer"></div>
-                    <ui-button small text border @click="setupTOTPMFA()">Setup</ui-button>
-                    <ui-icon-button @click="TOTPMFASetup.expand = !TOTPMFASetup.expand">
-                        {{TOTPMFASetup.expand ? '&#983363;' : '&#983360;'}}
-                    </ui-icon-button>
-                </div>
-
-                <div class="row-wrapper" v-show="TOTPMFASetup.expand">
-                    <qr-code v-if="TOTPMFASetup.url" :value="TOTPMFASetup.url" :options="{width: 140, margin: 0}"></qr-code>
-                    <ui-text-input style="width: 200px" label="Passnumber" v-model="TOTPMFASetup.TOTPInput"></ui-text-input>
-                    <ui-button @click="verifyTOTPMFA()">Verify</ui-button>
-                    <div class="spacer"></div>
-                </div>
-
-                <div class="row-wrapper">
-                    <span>SMS Authentication (coming soon)</span>
-                    <div class="spacer"></div>
-                    <ui-button small text border disabled>Setup</ui-button>
-                    <ui-icon-button>&#983360;</ui-icon-button>
-                </div>
-
-                <div class="row-wrapper">
-                    <span>Security Key (coming soon)</span>
-                    <div class="spacer"></div>
-                    <ui-button small text border disabled>Setup</ui-button>
-                    <ui-icon-button>&#983360;</ui-icon-button>
-                </div>
-            </div>
-
-            <div class="tab-box" v-show="tab === 'subscriptions'">
             </div>
         </div>
+
+        <div class="limiter overlap">
+            <div class="sheet">
+                <ui-tabs-header :tabs="{'general': 'General', 'profile': 'Profile', 'subscriptions': 'Subscriptions', 'security': 'Security'}" v-model="tab"></ui-tabs-header>
+
+                <div class="tab-box" v-show="tab === 'general'">
+                    <div class="row-wrapper">
+                        <b>Close your account</b>
+                        <div class="spacer"></div>
+                        <ui-button small error :loading="accountClose.loading" @click="openAccountCloseDialog()">Close</ui-button>
+                    </div>
+                </div>
+
+                <div class="tab-box" v-show="tab === 'profile'">
+                    <form @submit.stop.prevent>
+                        <div class="row-wrapper border">
+                            <b>Change Your Name</b>
+                            <div class="spacer"></div>
+                            <ui-button small class="submit-button" @click="changeName()" :disabled="(nameChange.firstname || '') + (nameChange.lastname || '') === nameChange.legacy" :loading="nameChange.loading">Save</ui-button>
+                        </div>
+
+                        <div class="row-wrapper border">
+                            <ui-text-input label="Firstname" no-border ac="firstname" v-model="nameChange.firstname"></ui-text-input>
+                            <ui-text-input label="Lastname" no-border ac="lastname" v-model="nameChange.lastname"></ui-text-input>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="tab-box" v-show="tab === 'security'">
+                    <div class="row-wrapper border">
+                        <b>Change Password</b>
+                        <div class="spacer"></div>
+                        <ui-button small :loading="passwordChange.loading" @click="openPasswordChangeDialog()">Edit</ui-button>
+                    </div>
+                    
+                    <div class="row-wrapper border">
+                        <b>Multi Factor Authentication</b>
+                        <div class="spacer"></div>
+                        <ui-switch style="margin: 5px 0" :value="user.is_mfa_enabled" @input="setMFAStatus($event)"></ui-switch>
+                    </div>
+
+                    <div class="row-wrapper">
+                        <span>App Authentication</span>
+                        <div class="spacer"></div>
+                        <ui-button small text border @click="setupTOTPMFA()">Setup</ui-button>
+                        <ui-icon-button @click="TOTPMFASetup.expand = !TOTPMFASetup.expand">
+                            {{TOTPMFASetup.expand ? '&#983363;' : '&#983360;'}}
+                        </ui-icon-button>
+                    </div>
+
+                    <div class="row-wrapper" v-show="TOTPMFASetup.expand">
+                        <qr-code v-if="TOTPMFASetup.url" :value="TOTPMFASetup.url" :options="{width: 140, margin: 0}"></qr-code>
+                        <ui-text-input style="width: 200px" label="Passnumber" v-model="TOTPMFASetup.TOTPInput"></ui-text-input>
+                        <ui-button @click="verifyTOTPMFA()">Verify</ui-button>
+                        <div class="spacer"></div>
+                    </div>
+
+                    <div class="row-wrapper">
+                        <span>SMS Authentication (coming soon)</span>
+                        <div class="spacer"></div>
+                        <ui-button small text border disabled>Setup</ui-button>
+                        <ui-icon-button>&#983360;</ui-icon-button>
+                    </div>
+
+                    <div class="row-wrapper">
+                        <span>Security Key (coming soon)</span>
+                        <div class="spacer"></div>
+                        <ui-button small text border disabled>Setup</ui-button>
+                        <ui-icon-button>&#983360;</ui-icon-button>
+                    </div>
+                </div>
+
+                <div class="tab-box" v-show="tab === 'subscriptions'">
+                </div>
+            </div>
+        </div>
+
 
         <!-- <fieldset>
             <legend>Subscriptions</legend>
@@ -398,7 +411,6 @@
     .page-container
         width: 100%
         display: inline-block !important
-        padding-top: 10px !important
 
         .tab-box
             padding: 15px

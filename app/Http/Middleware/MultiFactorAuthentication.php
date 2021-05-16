@@ -23,7 +23,7 @@ class MultiFactorAuthentication
     {
         $user = Auth::user();
 
-        if ($user->is_mfa_enabled === true && count($user->mfa_methods) >= 1 && session('mfa') !== true)
+        if ($user->is_oauth_user === false && $user->is_mfa_enabled === true && count($user->mfa_methods) >= 1 && session('mfa') !== true)
         {
             session(['returnURL' => $request->url()]);
 

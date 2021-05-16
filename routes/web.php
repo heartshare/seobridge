@@ -58,9 +58,13 @@ Route::get('/report/{reportGroupId}', [App\Http\Controllers\Dashboard\ReportCont
 Route::post('/get-meta-data', [App\Http\Controllers\Dashboard\ReportController::class, 'getMetaData']);
 
 
-Route::view('/mfa', 'auth.mfa')->name('mfa');
-Route::post('/verify-mfa', [App\Http\Controllers\Dashboard\UserController::class, 'TOTPMFA']);
 
+
+
+Route::middleware('guest')->group(function() {
+    Route::view('/mfa', 'auth.mfa')->name('mfa');
+    Route::post('/verify-mfa', [App\Http\Controllers\Dashboard\UserController::class, 'TOTPMFA']);
+});
 
 Route::middleware(['auth', 'mfa'])->group(function() {
     Route::get('/dashboard', function() {
@@ -72,7 +76,7 @@ Route::middleware(['auth', 'mfa'])->group(function() {
 
 
 
-Route::middleware('auth')->prefix('auth')->group(function() {
+Route::middleware(['auth'])->prefix('auth')->group(function() {
 
     Route::post('/go-pro/complete', [App\Http\Controllers\SubscriptionController::class, 'complete']);
 

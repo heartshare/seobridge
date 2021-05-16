@@ -1,122 +1,138 @@
 <template>
-    <div class="page-container limiter">
-        <div class="header" v-if="activeTeam">
-            <div class="background-image"></div>
-
-            <h2 style="text-align: center; color: var(--primary)">{{activeTeam.name}}</h2>
-
-            <div class="block" style="padding-bottom: 5px">
-                <div class="heading">
-                    <b>Site Namespaces</b>
-                    <ui-icon-button v-if="activeTeam.is_owner" @click="openTeamSiteCreateDialog(activeTeam)">&#984085;</ui-icon-button>
-                </div>
-                <div class="namespace-container" v-for="site in activeTeam.sites" :key="site.id">
-                    <div class="icon">&#983527;</div>
-
-                    <b class="namespace">{{site.host}}</b>
-
-                    <!-- <ui-icon-button class="action-button" info>&#984043;</ui-icon-button> -->
-                    <ui-icon-button class="action-button" error @click="openTeamSiteDeleteDialog(activeTeam, site)">&#985721;</ui-icon-button>
-                </div>
-
-                <div class="grid-centered" style="height: 200px; text-align: center" v-if="activeTeam.sites.length === 0 && activeTeam.is_owner">
-                    <p style="margin-top: 0px">Add a Site Namespace to<br>analyse it in your reports tab</p>
-                    <ui-button @click="openTeamSiteCreateDialog(activeTeam)">Add Namespace</ui-button>
-                </div>
-                <div class="grid-centered" style="height: 100px;" v-else-if="activeTeam.sites.length === 0">
-                    <p>Your team doesn't have any Site Namespaces added yet</p>
-                </div>
-            </div>
-        </div>
-        
-        <transition-group name="slide" class="block">
-            <div class="team-wrapper" v-for="team in teams" :key="team.id">
-                <div class="team-header">
-                    <div class="title">
-                        <b>{{team.name}}</b><br>
-                        <span v-if="team.description">{{team.description}}</span>
-                        <i v-else>No Description</i>
-                    </div>
-
-                    <div class="tag">{{team.category}}</div>
-
-                    <ui-popover-menu>
-                        <template v-slot:trigger>
-                            <ui-icon-button class="more-button">&#983513;</ui-icon-button>
-                        </template>
-
-                        <ui-menu-item icon="&#984270;" :disabled="user.active_team_id === team.id" @click="setActiveTeamId(team)">Select As Main Team</ui-menu-item>
-                        <ui-menu-item v-if="team.is_owner" icon="&#984043;" @click="openTeamEditor(team)">Edit Team</ui-menu-item>
-                        <ui-menu-item v-if="team.is_owner" icon="&#983060;" @click="openTeamInviteDialog(team)">Add Member</ui-menu-item>
-                        <ui-menu-item v-if="team.is_owner" icon="&#987309;" @click="openTeamSiteCreateDialog(team)">Add Namespace</ui-menu-item>
-                        <ui-menu-divider v-if="team.is_owner"></ui-menu-divider>
-                        <ui-menu-item v-if="team.is_owner" icon="&#985721;" @click="openTeamDeleteDialog(team)">Delete Team</ui-menu-item>
-                        <ui-menu-item v-else icon="&#983558;" @click="openTeamLeaveDialog(team)">Leave Team</ui-menu-item>
-                    </ui-popover-menu>
-
-                    <ui-icon-button class="expand-button" :class="{'expanded': team.id === openedTeamSheet}" @click="openedTeamSheet = team.id">&#983360;</ui-icon-button>
-
-                    <ui-button style="margin: 0 10px 0 5px" small v-if="!activeTeam" @click="setActiveTeamId(team)">Join</ui-button>
-                </div>
-
-                <div class="team-content" v-show="team.id === openedTeamSheet">
-                    <div class="member-row" v-for="member in team.members" :key="member.id">
-                        <img src="/images/defaults/default_profile_image.svg" class="profile-image">
-
-                        <div class="name" v-if="member.user.firstname || member.user.lastname">
-                            {{member.user.firstname}}
-                            {{member.user.lastname}}
-                            <span v-if="member.user_id === user.id">(you)</span>
-                        </div>
-                        <div class="name" v-else>
-                            {{member.user.username}}
-                            <span v-if="member.user_id === user.id">(you)</span>
-                        </div>
-
-                        <div class="role" v-for="(role, i) in member.roles" :key="i" :class="[{'owner': role == 'owner'}]">{{role}}</div>    
-
-                        <ui-popover-menu class="more-button" v-if="team.is_owner">
-                            <template v-slot:trigger>
-                                <ui-icon-button>&#983513;</ui-icon-button>
-                            </template>
-
-                            <ui-menu-item icon="&#984043;" disabled>Edit Member (WIP)</ui-menu-item>
-                            <ui-menu-item icon="&#983213;" @click="openMemberDeleteDialog(team, member)">Remove Member</ui-menu-item>
-                        </ui-popover-menu>
-                    </div>
-
-                    <div class="centerer" v-if="team.is_owner">
-                        <ui-button icon="&#983060;" text @click="openTeamInviteDialog(team)">Add Member</ui-button>
+    <div class="page-container">
+        <div class="page-header">
+            <div class="limiter">
+                <div class="page-header-wrapper">
+                    <div class="row">
+                        <h1>My Team</h1>
+                        <div class="spacer"></div>
+                        <ui-icon-button class="icon-button" @click="openTeamEditor()">&#984085;</ui-icon-button>
                     </div>
                 </div>
             </div>
-        </transition-group>
-
-
-
-        <div class="sheet padding" v-for="invite in invites" :key="invite.id">
-            <p style="margin-top: 0px">You've got invited to join <b>{{invite.team.name}}</b></p>
-            <ui-button text border icon="&#983213;" icon-left @click="openInviteIgnoreDialog(invite.id, invite.team)">Decline</ui-button>
-            <ui-button icon="&#983340;" @click="handleInvite(invite.id, 'accepted')">Accept</ui-button>
         </div>
+        <div class="limiter overlap">
+            <div class="sheet">
+                <ui-tabs-header :tabs="{'overview': 'Overview', 'teams': 'Team List', 'invites': 'Invites'}" v-model="tab"></ui-tabs-header>
+
+                <div class="block" v-show="tab === 'overview'" v-if="activeTeam">
+                    <h2 style="color: var(--primary)">{{activeTeam.name}}</h2>
+
+                    <div class="block" style="padding-bottom: 5px">
+                        <div class="heading">
+                            <b>Site Namespaces</b>
+                            <ui-icon-button v-if="activeTeam.is_owner" @click="openTeamSiteCreateDialog(activeTeam)">&#984085;</ui-icon-button>
+                        </div>
+                        <div class="namespace-container" v-for="site in activeTeam.sites" :key="site.id">
+                            <div class="icon">&#983527;</div>
+
+                            <b class="namespace">{{site.host}}</b>
+
+                            <!-- <ui-icon-button class="action-button" info>&#984043;</ui-icon-button> -->
+                            <ui-icon-button class="action-button" error @click="openTeamSiteDeleteDialog(activeTeam, site)">&#985721;</ui-icon-button>
+                        </div>
+
+                        <div class="grid-centered" style="height: 200px; text-align: center" v-if="activeTeam.sites.length === 0 && activeTeam.is_owner">
+                            <p style="margin-top: 0px">Add a Site Namespace to<br>analyse it in your reports tab</p>
+                            <ui-button @click="openTeamSiteCreateDialog(activeTeam)">Add Namespace</ui-button>
+                        </div>
+                        <div class="grid-centered" style="height: 100px;" v-else-if="activeTeam.sites.length === 0">
+                            <p>Your team doesn't have any Site Namespaces added yet</p>
+                        </div>
+                    </div>
+                </div>
+
+                <transition-group name="slide" class="block" v-show="tab === 'teams'">
+                    <div class="team-wrapper" v-for="team in teams" :key="team.id">
+                        <div class="team-header">
+                            <div class="title">
+                                <b>{{team.name}}</b><br>
+                                <span v-if="team.description">{{team.description}}</span>
+                                <i v-else>No Description</i>
+                            </div>
+
+                            <div class="tag">{{team.category}}</div>
+
+                            <ui-popover-menu>
+                                <template v-slot:trigger>
+                                    <ui-icon-button class="more-button">&#983513;</ui-icon-button>
+                                </template>
+
+                                <ui-menu-item icon="&#984270;" :disabled="user.active_team_id === team.id" @click="setActiveTeamId(team)">Select As Main Team</ui-menu-item>
+                                <ui-menu-item v-if="team.is_owner" icon="&#984043;" @click="openTeamEditor(team)">Edit Team</ui-menu-item>
+                                <ui-menu-item v-if="team.is_owner" icon="&#983060;" @click="openTeamInviteDialog(team)">Add Member</ui-menu-item>
+                                <ui-menu-item v-if="team.is_owner" icon="&#987309;" @click="openTeamSiteCreateDialog(team)">Add Namespace</ui-menu-item>
+                                <ui-menu-divider v-if="team.is_owner"></ui-menu-divider>
+                                <ui-menu-item v-if="team.is_owner" icon="&#985721;" @click="openTeamDeleteDialog(team)">Delete Team</ui-menu-item>
+                                <ui-menu-item v-else icon="&#983558;" @click="openTeamLeaveDialog(team)">Leave Team</ui-menu-item>
+                            </ui-popover-menu>
+
+                            <ui-icon-button class="expand-button" :class="{'expanded': team.id === openedTeamSheet}" @click="openedTeamSheet = team.id">&#983360;</ui-icon-button>
+
+                            <ui-button style="margin: 0 10px 0 5px" small v-if="!activeTeam" @click="setActiveTeamId(team)">Join</ui-button>
+                        </div>
+
+                        <div class="team-content" v-show="team.id === openedTeamSheet">
+                            <div class="member-row" v-for="member in team.members" :key="member.id">
+                                <img src="/images/defaults/default_profile_image.svg" class="profile-image">
+
+                                <div class="name" v-if="member.user.firstname || member.user.lastname">
+                                    {{member.user.firstname}}
+                                    {{member.user.lastname}}
+                                    <span v-if="member.user_id === user.id">(you)</span>
+                                </div>
+                                <div class="name" v-else>
+                                    {{member.user.username}}
+                                    <span v-if="member.user_id === user.id">(you)</span>
+                                </div>
+
+                                <div class="role" v-for="(role, i) in member.roles" :key="i" :class="[{'owner': role == 'owner'}]">{{role}}</div>    
+
+                                <ui-popover-menu class="more-button" v-if="team.is_owner">
+                                    <template v-slot:trigger>
+                                        <ui-icon-button>&#983513;</ui-icon-button>
+                                    </template>
+
+                                    <ui-menu-item icon="&#984043;" disabled>Edit Member (WIP)</ui-menu-item>
+                                    <ui-menu-item icon="&#983213;" @click="openMemberDeleteDialog(team, member)">Remove Member</ui-menu-item>
+                                </ui-popover-menu>
+                            </div>
+
+                            <div class="centerer" v-if="team.is_owner">
+                                <ui-button icon="&#983060;" text @click="openTeamInviteDialog(team)">Add Member</ui-button>
+                            </div>
+                        </div>
+                    </div>
+                </transition-group>
+
+                <div class="invite-wrapper" v-show="tab === 'invites'" v-if="invites.length > 0">
+                    <div class="invite" v-for="invite in invites" :key="invite.id">
+                        <span>You're invited to join <b>{{invite.team.name}}</b></span>
+                        <div class="spacer"></div>
+                        <ui-button text border icon="&#983213;" icon-left @click="openInviteIgnoreDialog(invite.id, invite.team)">Decline</ui-button>
+                        <ui-button icon="&#983340;" @click="handleInvite(invite.id, 'accepted')">Accept</ui-button>
+                    </div>
+                </div>
 
 
 
-        <div class="grid-centered" style="height: 200px; text-align: center" v-if="!activeTeam && teams.length > 0">
-            <p>
-                You don't have an active team!<br>
-                Join one to get started!
-            </p>
+                <div class="placeholder grid-centered" v-show="['overview', 'teams'].includes(tab)" v-if="!activeTeam && teams.length > 0">
+                    <p>
+                        You don't have an active team.<br>
+                        Join one to get started!
+                    </p>
+                </div>
+
+                <div class="placeholder grid-centered" v-show="['overview', 'teams'].includes(tab)" v-if="teams.length === 0">
+                    <p>Create a team to get started.</p>
+                    <ui-button @click="openTeamEditor()">Create a team</ui-button>
+                </div>
+
+                <div class="placeholder grid-centered" v-show="tab === 'invites'" v-if="invites.length === 0">
+                    <p>You don't have any pending invites.</p>
+                </div>
+            </div>
         </div>
-
-        <div class="placeholder grid-centered" v-if="teams.length === 0">
-            <p>Create a team to get started</p>
-            <ui-button @click="openTeamEditor()">Create a team</ui-button>
-        </div>
-
-
-
-        <button class="fab" @click="openTeamEditor()">&#984085;</button>
 
 
 
@@ -271,6 +287,8 @@
                 ],
 
                 openedTeamSheet: '',
+
+                tab: 'overview',
 
                 teamEdit: {
                     id: null,
@@ -655,87 +673,62 @@
         height: 100%
 
         .placeholder
-            height: 100%
+            height: 200px
             width: 100%
 
-        .header
-            width: 100%
-            background: var(--bg)
-            filter: var(--elevation-2)
-            border-radius: 7px
-            margin-top: 15px
+        .invite-wrapper
+            display: block
 
-            .background-image
-                height: 250px
-                width: 100%
-                background: var(--bg-dark)
-                background-image: url('/images/static/assets/terrain.svg')
-                background-size: cover
-                background-position: center
-                background-repeat: no-repeat
-                border-radius: 7px 7px 0 0
-                display: block
-
-            .heading
-                width: 100%
+            .invite
                 display: flex
-                align-items: center
-                text-align: left
-                font-size: var(--text-size)
-                color: var(--heading-gray)
-                padding: 5px 5px 5px 15px
+                padding: 15px
                 border-bottom: var(--border)
-                margin-bottom: 5px
-
-                b
-                    flex: 1
-
-            .namespace-container
-                width: 100%
-                display: flex
+                gap: 15px
                 align-items: center
-                gap: 5px
-                padding: 0px 5px 0px 15px
 
-                .icon
-                    font-size: 20px
-                    color: var(--text-gray)
-                    margin-right: 10px
-                    font-family: 'Material Icons'
-                    user-select: none
-
-                .namespace
+                .spacer
                     flex: 1
-                    font-size: 13px
-                    color: var(--heading-gray)
-                    text-transform: uppercase
-                    font-weight: 600
 
-                .action-button
-                    opacity: 1
+                &:last-of-type
+                    border-bottom: none
 
-        .fab
-            height: 56px
-            width: 56px
-            font-family: 'Material Icons'
-            color: white
-            background: var(--primary)
-            display: grid
-            place-content: center
-            font-size: 24px
-            position: fixed
-            bottom: 30px
-            right: 30px
-            border-radius: 100%
-            border: none
-            filter: var(--elevation-2)
-            cursor: pointer
-            user-select: none
-            transition: all 200ms
-            z-index: 100
+        .heading
+            width: 100%
+            display: flex
+            align-items: center
+            text-align: left
+            font-size: var(--text-size)
+            color: var(--heading-gray)
+            padding: 5px 5px 5px 15px
+            border-bottom: var(--border)
+            margin-bottom: 5px
 
-            &:hover
-                filter: var(--elevation-4)
+            b
+                flex: 1
+
+        .namespace-container
+            width: 100%
+            display: flex
+            align-items: center
+            gap: 5px
+            padding: 0px 5px 0px 15px
+
+            .icon
+                font-size: 20px
+                color: var(--text-gray)
+                margin-right: 10px
+                font-family: 'Material Icons'
+                user-select: none
+
+            .namespace
+                flex: 1
+                font-size: 13px
+                color: var(--heading-gray)
+                text-transform: uppercase
+                font-weight: 600
+
+            .action-button
+                opacity: 1
 
         .team-description-input
             resize: none
@@ -745,10 +738,6 @@
             width: 100%
             display: inline-flex
             flex-direction: column
-            background: white
-            border-radius: 7px
-            filter: var(--elevation-2)
-            margin-top: 15px
             transition: all 300ms
 
             &.slide-enter
