@@ -23,6 +23,7 @@ use Laravel\Socialite\Facades\Socialite;
 // });
 
 Broadcast::routes();
+Auth::routes(['verify' => true]);
 
 Route::view('/', 'static.index')->name('home');
 Route::view('/pricing', 'static.pricing')->name('pricing');
@@ -49,8 +50,6 @@ Route::view('/privacy-policy', 'static.privacy-policy')->name('privacy-policy');
 Route::view('/terms-of-service', 'static.terms-of-service')->name('terms-of-service');
 Route::view('/legal-disclosures', 'static.legal-disclosures')->name('legal-disclosures');
 
-Auth::routes(['verify' => true]);
-
 // Guest Analysis
 Route::post('/request-guest-site-analysis', [App\Http\Controllers\Dashboard\ReportController::class, 'requestGuestSiteAnalysis']);
 Route::get('/report/{reportGroupId}', [App\Http\Controllers\Dashboard\ReportController::class, 'showGuestReport']);
@@ -59,12 +58,17 @@ Route::get('/report/{reportGroupId}', [App\Http\Controllers\Dashboard\ReportCont
 Route::post('/get-meta-data', [App\Http\Controllers\Dashboard\ReportController::class, 'getMetaData']);
 
 
+Route::view('/mfa', 'auth.mfa')->name('mfa');
+Route::post('/verify-mfa', [App\Http\Controllers\Dashboard\UserController::class, 'TOTPMFA']);
 
-Route::get('/dashboard', function() {
-    return redirect('/dashboard/overview');
-})->name('dashboard');
 
-Route::get('/dashboard/{page}', [App\Http\Controllers\Dashboard\DashboardController::class, 'index']);
+Route::middleware(['auth', 'mfa'])->group(function() {
+    Route::get('/dashboard', function() {
+        return redirect('/dashboard/overview');
+    })->name('dashboard');
+    
+    Route::get('/dashboard/{page}', [App\Http\Controllers\Dashboard\DashboardController::class, 'index']);
+});
 
 
 
@@ -143,16 +147,16 @@ Route::middleware('auth')->prefix('auth')->group(function() {
 Route::prefix('oauth')->group(function() {
     Route::prefix('google')->group(function() {
         Route::get('/redirect', [App\Http\Controllers\Auth\OauthController::class, 'googleRedirect']);
-        Route::get('/callback', [App\Http\Controllers\Auth\OauthController::class, 'googleCallback']);
+        Route::get('/callback', [App\Http\Controllers\Auth\OauthController::class, 'callback'])->defaults('provider', 'google')->defaults('type', 'oauth2');
     });
 
     Route::prefix('facebook')->group(function() {
         Route::get('/redirect', [App\Http\Controllers\Auth\OauthController::class, 'facebookRedirect']);
-        Route::get('/callback', [App\Http\Controllers\Auth\OauthController::class, 'facebookCallback']);
+        Route::get('/callback', [App\Http\Controllers\Auth\OauthController::class, 'callback'])->defaults('provider', 'facebook')->defaults('type', 'oauth2');
     });
 
     Route::prefix('github')->group(function() {
         Route::get('/redirect', [App\Http\Controllers\Auth\OauthController::class, 'githubRedirect']);
-        Route::get('/callback', [App\Http\Controllers\Auth\OauthController::class, 'githubCallback']);
+        Route::get('/callback', [App\Http\Controllers\Auth\OauthController::class, 'callback'])->defaults('provider', 'github')->defaults('type', 'oauth2');
     });
 });

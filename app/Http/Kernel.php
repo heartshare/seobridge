@@ -65,5 +65,6 @@ class Kernel extends HttpKernel
         
         // CUSTOM
         'team.auth' => \App\Http\Middleware\TeamAuth::class,
+        'mfa' => \App\Http\Middleware\MultiFactorAuthentication::class,
     ];
 }

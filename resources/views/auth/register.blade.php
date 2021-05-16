@@ -16,18 +16,18 @@
 
         <div class="flex-wrapper">
             <div class="item">
-                <button class="platform-button google">
+                <a href="/oauth/google/redirect" class="platform-button google">
                     <img class="image" src="/images/app/google_logo_color.svg">
-                    <div class="text">Register with Google</div>
-                </button>
-                <button class="platform-button github">
+                    <div class="text">Login with Google</div>
+                </a>
+                <a href="/oauth/github/redirect" class="platform-button github">
                     <div class="icon">&#983716;</div>
-                    <div class="text">Register with Github</div>
-                </button>
-                <button class="platform-button facebook">
+                    <div class="text">Login with Github</div>
+                </a>
+                <a href="/oauth/facebook/redirect" class="platform-button facebook">
                     <div class="icon">&#983564;</div>
-                    <div class="text">Register with Facebook</div>
-                </button>
+                    <div class="text">Login with Facebook</div>
+                </a>
             </div>
             <div class="divider"></div>
             <div class="item">
