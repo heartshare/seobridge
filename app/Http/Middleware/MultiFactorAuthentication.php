@@ -19,15 +19,19 @@ class MultiFactorAuthentication
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle(Request $request, Closure $next)
+    public function handle(Request $request, Closure $next, $caller = 'view')
     {
-        $user = Auth::user();
-
-        if ($user->is_oauth_user === false && $user->is_mfa_enabled === true && count($user->mfa_methods) >= 1 && session('mfa') !== true)
+        if (session('fully_authenticated') !== true)
         {
-            session(['returnURL' => $request->url()]);
-
-            return redirect('/mfa');
+            if ($caller === 'api')
+            {
+                return response('UNAUTHORIZED', 403);
+            }
+            else
+            {
+                session(['returnURL' => $request->url()]);
+                return redirect('/mfa');
+            }
         }
 
         return $next($request);

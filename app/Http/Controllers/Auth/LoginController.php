@@ -59,35 +59,19 @@ class LoginController extends Controller
         {
             $request->session()->regenerate();
 
-            if ($request->returnUrl) $this->redirectTo = $request->returnUrl;
+            if ($user->is_oauth_user === true || $user->is_mfa_enabled === false || count($user->mfa_methods) === 0)
+            {
+                session(['fully_authenticated' => true]);
+            }
+
+            if ($request->returnUrl)
+            {
+                $this->redirectTo = $request->returnUrl;
+            }
         }
 
         return back()->withErrors([
             'email' => 'The provided credentials do not match our records.',
         ]);
-    }
-
-
-
-    public function TOTPMFA(Request $request)
-    {
-        $request->validate([
-            'secret' => ['required', 'string', 'max:6', 'min:6'],
-        ]);
-
-        $method = UserMFAMethod::where('user_id', Auth::id())->firstWhere('type', 'TOTP');
-        
-        $google2fa = new Google2FA();
-
-        if (!$google2fa->verifyKey($method->token, $request->secret))
-        {
-            return back()->withErrors([
-                'oauth_error' => 'Your code was invalid',
-            ]);
-        }
-
-        session(['mfa' => true]);
-
-        return redirect(session('returnURL') ? session('returnURL') : '/dashboard');
     }
 }

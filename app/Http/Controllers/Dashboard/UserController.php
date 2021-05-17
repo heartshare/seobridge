@@ -162,7 +162,7 @@ class UserController extends Controller
             ]);
         }
 
-        session(['mfa' => true]);
+        session(['fully_authenticated' => true]);
 
         return redirect(session('returnURL') ? session('returnURL') : '/dashboard');
     }

@@ -410,6 +410,7 @@
                     description: this.teamEdit.description,
                 })
                 .then(response => {
+                    console.log(response.data)
                     this.$store.commit('setTeam', response.data)
                     this.teamEdit.loading = false
                     this.resetTeamEditor()

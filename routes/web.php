@@ -76,7 +76,7 @@ Route::middleware(['auth', 'mfa'])->group(function() {
 
 
 
-Route::middleware(['auth'])->prefix('auth')->group(function() {
+Route::middleware(['auth', 'mfa:api'])->prefix('auth')->group(function() {
 
     Route::post('/go-pro/complete', [App\Http\Controllers\SubscriptionController::class, 'complete']);
 
@@ -98,6 +98,8 @@ Route::middleware(['auth'])->prefix('auth')->group(function() {
         // Multi Factor Authentication
         Route::post('/set-mfa-status', [App\Http\Controllers\Dashboard\UserController::class, 'setMFAStatus']);
         Route::post('/setup-totp-mfa', [App\Http\Controllers\Dashboard\UserController::class, 'setupTOTPMFA']);
+        Route::post('/delete-totp-mfa', [App\Http\Controllers\Dashboard\UserController::class, 'deleteTOTPMFA']);
+        Route::post('/get-totp-mfa-url', [App\Http\Controllers\Dashboard\UserController::class, 'getTOTPMFAUrl']);
         Route::post('/verify-totp-mfa', [App\Http\Controllers\Dashboard\UserController::class, 'verifyTOTPMFA']);
     });
 

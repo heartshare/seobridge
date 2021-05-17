@@ -234,6 +234,8 @@ module.exports = {
         setTeam(state, data) {
             let index = state.teams.findIndex(e => e.id === data.id)
 
+            data = {sites: [], ...data}
+
             if (index >= 0)
             {
                 Vue.set(state.teams, index, data)
