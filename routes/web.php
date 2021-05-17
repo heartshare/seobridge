@@ -31,7 +31,7 @@ Route::view('/branding', 'static.branding')->name('branding');
 
 Route::prefix('tools')->group(function() {
     Route::view('/', 'static.tools.overview')->name('tools');
-    Route::view('/metadata', 'static.tools.metadata-tool')->name('tools');
+    Route::view('/metadata', 'static.tools.metadata-tool')->name('metadata-tools');
 });
 
 Route::prefix('resources')->group(function() {
