@@ -85,7 +85,9 @@
 
                     <div class="details" v-else>
                         <div class="nav-row">
-                            <ui-button icon="&#983361;" icon-left border text @click="details = null">Back</ui-button>
+                            <ui-button icon="&#983361;" icon-left @click="details = null">Overview</ui-button>
+                            <div class="spacer"></div>
+                            <ui-button icon="&#984620;" text @click="details = null">View Code</ui-button>
                         </div>
 
                         <div class="detail-row">

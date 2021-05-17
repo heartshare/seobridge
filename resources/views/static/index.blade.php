@@ -25,7 +25,7 @@
                 Assistance
             </h1>
             <p>
-                Never miss SEO aspects again<br>
+                Never miss any SEO aspect again<br>
                 even on the biggest sites!
             </p>
         </div>

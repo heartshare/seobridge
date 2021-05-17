@@ -1,43 +1,61 @@
 <template>
-    <div class="page-container limiter">
-        <div class="header">
-            <div class="sheet author-profile-wrapper">
-                <div class="background-image"></div>
-                <img :src="authorProfile.image" class="profile-image">
-
-                <div class="text-wrapper">
-                    <h4 class="name">{{authorProfile.display_name}}</h4>
-                    <p class="biography">{{authorProfile.biography}}</p>
-                </div>
-            </div>
-
-            <div class="sheet author-article-list">
-                <div class="article" v-for="article in authorArticles" :key="article.id">
-                    <div class="indicator" :class="{'published': article.published_at}"></div>
-
-                    <p class="title"><b>{{article.title}}</b></p>
-                    <p class="intro-text">{{article.intro_text || 'No intro text!'}}</p>
-
-                    <div class="buttons">
-                        <ui-button small @click="openArticleEditForm(article)">Edit</ui-button>
-                        <ui-icon-button error @click="openArticleDeleteDialog(article)">&#985721;</ui-icon-button>
+    <div class="page-container">
+        <div class="page-header">
+            <div class="limiter">
+                <div class="page-header-wrapper">
+                    <div class="row">
+                        <h1>Author CMS</h1>
+                        <div class="spacer"></div>
+                        <ui-icon-button class="icon-button" @click="openArticleCreateDialog()">&#984085;</ui-icon-button>
                     </div>
                 </div>
             </div>
         </div>
+        <div class="limiter overlap">
+            <div class="sheet">
+                <ui-tabs-header :tabs="{'profile': 'Profile', 'categories': 'Categories', 'articles': 'Articles'}" v-model="tab"></ui-tabs-header>
 
-        <div class="category-list sheet padding">
-            <div class="block category" v-for="category in articleCategories" :key="category.id">
-                <div class="category-text">
-                    <p><b>{{category.name}}</b></p>
-                    <p>{{category.description}}</p>
+                <div class="block author-profile-wrapper" v-show="tab === 'profile'">
+                    <img :src="authorProfile.image" class="profile-image">
+
+                    <div class="text-wrapper">
+                        <h4 class="name">{{authorProfile.display_name}}</h4>
+                        <p class="biography">{{authorProfile.biography}}</p>
+                    </div>
                 </div>
-                <ui-icon-button>&#985721;</ui-icon-button>
-            </div>
-            <div class="grid-centered">
-                <ui-button icon="&#984866;" text @click="openArticleCategoryCreateDialog()">Create category</ui-button>
+
+                <div class="block" v-show="tab === 'categories'">
+                    <div class="category-list">
+                        <div class="category" v-for="category in articleCategories" :key="category.id">
+                            <div class="category-text">
+                                <p><b>{{category.name}}</b></p>
+                                <p>{{category.description}}</p>
+                            </div>
+                            <ui-icon-button>&#985721;</ui-icon-button>
+                        </div>
+                        <div class="placeholder grid-centered">
+                            <ui-button icon="&#984866;" text @click="openArticleCategoryCreateDialog()">Create category</ui-button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="block" v-show="tab === 'articles'">
+                    <div class="article" v-for="article in authorArticles" :key="article.id">
+                        <div class="indicator" :class="{'published': article.published_at}"></div>
+
+                        <p class="title"><b>{{article.title}}</b></p>
+                        <p class="intro-text">{{article.intro_text || 'No intro text!'}}</p>
+
+                        <div class="buttons">
+                            <ui-icon-button error @click="openArticleDeleteDialog(article)">&#985721;</ui-icon-button>
+                            <ui-button small @click="openArticleEditForm(article)">Edit</ui-button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
+        
+        
 
         <div class="article-editor-popup" v-show="articleEdit.isOpen">
             <div class="article-editor-background" @click="articleEdit.isOpen = false"></div>
@@ -94,8 +112,6 @@
                 </div>
             </div>
         </div>
-
-        <button class="fab" @click="openArticleCreateDialog()">&#984085;</button>
 
 
 
@@ -186,6 +202,8 @@
     export default {
         data() {
             return {
+                tab: 'profile',
+                
                 articleCreate: {
                     title: '',
                     loading: false,
@@ -466,120 +484,98 @@
     .page-container
         width: 100%
 
-        .header
+        .author-profile-wrapper
+            width: 400px
+            margin: 0 auto
+            padding: 50px 0
+            text-align: center
+            display: block
+
+            .profile-image
+                height: 140px
+                width: 140px
+                object-fit: cover
+                border-radius: 100%
+                margin: 0 auto
+                display: block
+                background: var(--bg)
+
+            .text-wrapper
+                margin-top: 30px
+
+                .name
+                    display: block
+                    margin: 0
+
+                .biography
+                    text-align: left
+                    display: block
+                    margin: 5px 0
+                    font-size: var(--text-size)
+
+        .article
             width: 100%
-            margin-top: 15px
-            font-size: 0
+            padding: 8px 5px 8px 0
+            position: relative
             display: grid
-            grid-template-rows: auto
-            grid-template-columns: 350px 1fr
-            gap: 15px
+            grid-template-rows: 1fr 1fr
+            grid-template-columns: 4px 1fr 120px
+            grid-template-areas: "indicator title buttons" "indicator text buttons"
+            gap: 0 10px
 
-            .author-profile-wrapper
-                width: 350px
-                display: inline-block
-        
-                .background-image
-                    height: 120px
-                    width: 100%
-                    background: var(--primary)
-                    background-image: url('/images/static/assets/terrain_white.svg')
-                    background-size: 800px
-                    background-position: center
-                    background-repeat: no-repeat
-                    border-radius: 7px 7px 0 0
-                    display: block
-
-                .profile-image
-                    height: 140px
-                    width: 140px
-                    object-fit: cover
-                    border-radius: 100%
-                    margin: -70px auto 10px
-                    display: block
-                    padding: 5px
-                    background: var(--bg)
-
-                .text-wrapper
-                    padding: 0 15px
-
-                    .name
-                        text-align: center
-                        display: block
-                        margin: 0
-
-                    .biography
-                        text-align: left
-                        width: 100%
-                        margin: 10px auto
-                        font-size: var(--text-size)
-
-            .author-article-list
+            .indicator
+                grid-area: indicator
                 width: 100%
-                display: inline-block
-                vertical-align: top
+                height: 24px
+                align-self: center
+                border-radius: 0 5px 5px 0
+                background: var(--text-gray)
 
-                .article
-                    width: 100%
-                    padding: 8px 5px 8px 0
-                    position: relative
-                    display: grid
-                    grid-template-rows: 1fr 1fr
-                    grid-template-columns: 4px 1fr 120px
-                    grid-template-areas: "indicator title buttons" "indicator text buttons"
-                    gap: 0 10px
+                &.published
+                    background: var(--primary)
 
-                    .indicator
-                        grid-area: indicator
-                        width: 100%
-                        height: 24px
-                        align-self: center
-                        border-radius: 0 5px 5px 0
-                        background: var(--text-gray)
+            .buttons
+                grid-area: buttons
+                display: flex
+                gap: 10px
+                align-items: center
 
-                        &.published
-                            background: var(--primary)
+            .title
+                grid-area: title
+                color: var(--heading-gray)
+                margin: 0
+                line-height: 20px
+                font-size: var(--text-size)
 
-                    .buttons
-                        grid-area: buttons
-                        display: flex
-                        gap: 10px
-                        align-items: center
-
-                    .title
-                        grid-area: title
-                        color: var(--heading-gray)
-                        margin: 0
-                        line-height: 20px
-                        font-size: var(--text-size)
-
-                    .intro-text
-                        grid-area: text
-                        max-width: 100%
-                        margin: 0
-                        font-size: 13px
-                        line-height: 20px
-                        white-space: nowrap
-                        overflow: hidden
-                        text-overflow: ellipsis
+            .intro-text
+                grid-area: text
+                max-width: 100%
+                margin: 0
+                font-size: 13px
+                line-height: 20px
+                white-space: nowrap
+                overflow: hidden
+                text-overflow: ellipsis
 
 
         .category-list
-            margin-top: 15px
+            width: 100%
+
+            .placeholder
+                height: 100px
 
             .category
                 display: flex
                 align-items: center
+                padding: 5px 15px
 
                 .category-text
                     flex: 1
                     display: flex
                     flex-direction: column
-                    padding: 5px 0
 
                     p
                         margin: 0
-                        line-height: 20px
 
         .article-editor-popup
             position: fixed

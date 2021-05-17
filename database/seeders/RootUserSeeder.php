@@ -17,7 +17,7 @@ class RootUserSeeder extends Seeder
     {
         DB::table('users')->insert([
             'id' => 'user_root',
-            'email' => 'maurice.freuwoert@gmail.com',
+            'email' => 'admin@seobridge.net',
             'username' => 'SEO_BRIDGE_ROOT',
             'firstname' => 'Maurice',
             'lastname' => 'Freuwört',

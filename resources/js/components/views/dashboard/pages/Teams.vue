@@ -16,27 +16,31 @@
                 <ui-tabs-header :tabs="{'overview': 'Overview', 'teams': 'Team List', 'invites': 'Invites'}" v-model="tab"></ui-tabs-header>
 
                 <div class="block" v-show="tab === 'overview'" v-if="activeTeam">
-                    <h2 style="color: var(--primary)">{{activeTeam.name}}</h2>
+                    <div class="active-team-wrapper">
+                        <h2>{{activeTeam.name}}</h2>
+                        <span v-if="activeTeam.description">{{activeTeam.description}}</span>
+                    </div>
 
-                    <div class="block" style="padding-bottom: 5px">
-                        <div class="heading">
-                            <b>Site Namespaces</b>
-                            <ui-icon-button v-if="activeTeam.is_owner" @click="openTeamSiteCreateDialog(activeTeam)">&#984085;</ui-icon-button>
+                    <div class="block">
+                        <div class="namespace-container">
+                            <div class="namespace" :style="`background: ${stc(site.host)}; color: ${contrast(stc(site.host))};`" v-for="site in activeTeam.sites" :key="site.id">
+                                <div class="icon">language</div>
+
+                                <b class="text">{{site.host}}</b>
+
+                                <div class="icon-button-wrapper">
+                                    <!-- <button class="icon-button">edit</button> -->
+                                    <button class="icon-button" @click="openTeamSiteDeleteDialog(activeTeam, site)">delete</button>
+                                </div>
+                            </div>
+
+                            <div class="namespace add-button" v-if="activeTeam.is_owner" @click="openTeamSiteCreateDialog(activeTeam)">
+                                <div class="icon">add</div>
+                                <div class="text">Add namespace</div>
+                            </div>
                         </div>
-                        <div class="namespace-container" v-for="site in activeTeam.sites" :key="site.id">
-                            <div class="icon">&#983527;</div>
 
-                            <b class="namespace">{{site.host}}</b>
-
-                            <!-- <ui-icon-button class="action-button" info>&#984043;</ui-icon-button> -->
-                            <ui-icon-button class="action-button" error @click="openTeamSiteDeleteDialog(activeTeam, site)">&#985721;</ui-icon-button>
-                        </div>
-
-                        <div class="grid-centered" style="height: 200px; text-align: center" v-if="activeTeam.sites.length === 0 && activeTeam.is_owner">
-                            <p style="margin-top: 0px">Add a Site Namespace to<br>analyse it in your reports tab</p>
-                            <ui-button @click="openTeamSiteCreateDialog(activeTeam)">Add Namespace</ui-button>
-                        </div>
-                        <div class="grid-centered" style="height: 100px;" v-else-if="activeTeam.sites.length === 0">
+                        <div class="placeholder grid-centered" v-if="activeTeam.sites.length === 0 && !activeTeam.is_owner">
                             <p>Your team doesn't have any Site Namespaces added yet</p>
                         </div>
                     </div>
@@ -277,6 +281,8 @@
 </template>
 
 <script>
+    import invert from 'invert-color'
+
     export default {
         data() {
             return {
@@ -663,6 +669,39 @@
                     console.log(error.response)
                 })
             },
+
+            hash(str)
+            {
+                var hash = 0, i, chr
+
+                if (str.length === 0) return hash
+
+                for (i = 0; i < str.length; i++)
+                {
+                    chr   = str.charCodeAt(i)
+                    hash  = ((hash << 5) - hash) + chr
+                    hash |= 0 // Convert to 32bit integer
+                }
+
+                return Math.abs(hash)
+            },
+
+            stc(str)
+            {
+                let hash = this.hash(str)
+
+                let colors = [
+                    '#a55eea','#8854d0','#fc5c65','#eb3b5a','#fd9644','#fa8231','#fed330','#f7b731',
+                    '#26de81','#20bf6b','#2bcbba','#0fb9b1','#45aaf2','#0a3d62','#4b7bec','#3867d6',
+                    '#a5b1c2','#778ca3','#4b6584',
+                ]
+
+                return colors[hash % colors.length]
+            },
+
+            contrast(color) {
+                return invert(color, true)
+            }
         },
     }
 </script>
@@ -675,6 +714,7 @@
         .placeholder
             height: 200px
             width: 100%
+            text-align: center
 
         .invite-wrapper
             display: block
@@ -692,43 +732,96 @@
                 &:last-of-type
                     border-bottom: none
 
-        .heading
-            width: 100%
-            display: flex
-            align-items: center
-            text-align: left
-            font-size: var(--text-size)
-            color: var(--heading-gray)
-            padding: 5px 5px 5px 15px
+        .active-team-wrapper
+            padding: 30px 15px
+            display: block
+            text-align: center
             border-bottom: var(--border)
-            margin-bottom: 5px
 
-            b
-                flex: 1
+            h2
+                margin: 0
 
         .namespace-container
             width: 100%
-            display: flex
-            align-items: center
-            gap: 5px
-            padding: 0px 5px 0px 15px
-
-            .icon
-                font-size: 20px
-                color: var(--text-gray)
-                margin-right: 10px
-                font-family: 'Material Icons'
-                user-select: none
+            padding: 7.5px
+            font-size: 0
 
             .namespace
-                flex: 1
-                font-size: 13px
+                width: calc(25% - 15px)
+                height: 170px
+                margin: 7.5px
+                display: inline-grid
+                place-content: center
+                position: relative
+                border-radius: 7px
                 color: var(--heading-gray)
-                text-transform: uppercase
-                font-weight: 600
+                user-select: none
+                background: var(--bg)
+                text-align: center
+                vertical-align: top
+                filter: var(--elevation-1)
+                overflow: hidden
+                transition: padding 100ms
 
-            .action-button
-                opacity: 1
+                &.add-button
+                    padding-bottom: 0 !important
+                    cursor: pointer
+                    transition: all 100ms
+
+                    &:hover
+                        filter: var(--elevation-4)
+
+                .icon
+                    font-size: 35px
+                    color: inherit
+                    font-family: 'Material Icons Round'
+                    user-select: none
+                    margin-bottom: 20px
+                    opacity: 0.8
+
+                .text
+                    flex: 1
+                    font-size: 13px
+                    letter-spacing: 1px
+                    color: inherit
+                    text-transform: uppercase
+                    font-weight: 600
+
+                .icon-button-wrapper
+                    position: absolute
+                    bottom: 0
+                    left: 0
+                    transform: translateY(40px)
+                    background: var(--bg)
+                    width: 100%
+                    height: 40px
+                    display: flex
+                    align-items: center
+                    transition: transform 100ms
+
+                    .icon-button
+                        flex: 1
+                        background: none
+                        display: grid
+                        place-content: center
+                        cursor: pointer
+                        user-select: none
+                        height: 100%
+                        font-size: 20px
+                        border: none
+                        font-family: 'Material Icons Round'
+                        color: var(--text-gray)
+                        transition: all 100ms
+
+                        &:hover
+                            color: var(--primary)
+                            background: var(--primary-shade)
+
+                &:hover
+                    padding-bottom: 40px
+
+                    .icon-button-wrapper
+                        transform: translateY(0)
 
         .team-description-input
             resize: none

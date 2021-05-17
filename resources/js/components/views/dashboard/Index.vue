@@ -30,10 +30,10 @@
                     <div class="text">Keywords</div>
                 </a> -->
 
-                <!-- <a href="/dashboard/social-media" class="button" :class="{'active': $store.getters.page === 'social-media'}" @click.prevent="$store.dispatch('setPage', 'social-media')">
+                <a href="/dashboard/social-media" class="button" :class="{'active': $store.getters.page === 'social-media'}" @click.prevent="$store.dispatch('setPage', 'social-media')">
                     <div class="icon">whatshot</div>
                     <div class="text">Social Media</div>
-                </a> -->
+                </a>
 
                 <a href="/dashboard/author" class="button" :class="{'active': $store.getters.page === 'author'}" v-if="authorProfile" @click.prevent="$store.dispatch('setPage', 'author')">
                     <div class="icon">video_settings</div>
@@ -44,11 +44,11 @@
             <div class="spacer"></div>
 
             <div class="group">
-                <a href="/dashboard/notifications" class="button" :class="{'active': $store.getters.page === 'notifications'}" @click.prevent="$store.dispatch('setPage', 'notifications')">
+                <!-- <a href="/dashboard/notifications" class="button" :class="{'active': $store.getters.page === 'notifications'}" @click.prevent="$store.dispatch('setPage', 'notifications')">
                     <div class="icon">notifications</div>
                     <div class="text">Notifications</div>
                     <div class="notifications">200</div>
-                </a>
+                </a> -->
                 
                 <a href="/dashboard/settings" class="button" :class="{'active': $store.getters.page === 'settings'}" @click.prevent="$store.dispatch('setPage', 'settings')">
                     <div class="icon">settings</div>
@@ -65,11 +65,12 @@
         <main>
             <transition class="transition-group" :name="'opacity-slide-'+$store.getters.pageTransitionDirection" mode="out-in">
                 <overview-page class="page" key="overview-page" v-if="$store.getters.page === 'overview'"></overview-page>
-                <reports-page class="page" key="reports-page" v-if="$store.getters.page === 'reports'"></reports-page>
                 <teams-page class="page" key="teams-page" v-if="$store.getters.page === 'teams'"></teams-page>
+                <reports-page class="page" key="reports-page" v-if="$store.getters.page === 'reports'"></reports-page>
+                <social-media-page class="page" key="social-media-page" v-if="$store.getters.page === 'social-media'"></social-media-page>
+                <author-page class="page" key="author-page" v-if="$store.getters.page === 'author' && authorProfile"></author-page>
                 <notifications-page class="page" key="notifications-page" v-if="$store.getters.page === 'notifications'"></notifications-page>
                 <settings-page class="page" key="settings-page" v-if="$store.getters.page === 'settings'"></settings-page>
-                <author-page class="page" key="author-page" v-if="$store.getters.page === 'author' && authorProfile"></author-page>
             </transition>
         </main>
     </div>
@@ -97,11 +98,12 @@
 
         components: {
             OverviewPage: require('./pages/Overview.vue').default,
-            ReportsPage: require('./pages/Reports.vue').default,
             TeamsPage: require('./pages/Teams.vue').default,
+            ReportsPage: require('./pages/Reports.vue').default,
+            SocialMediaPage: require('./pages/SocialMedia.vue').default,
+            AuthorPage: require('./pages/Author.vue').default,
             NotificationsPage: require('./pages/Notifications.vue').default,
             SettingsPage: require('./pages/Settings.vue').default,
-            AuthorPage: require('./pages/Author.vue').default,
         },
     }
 </script>
@@ -345,10 +347,10 @@
                 &.opacity-slide-down-enter,
                 &.opacity-slide-up-leave-to
                     opacity: 0
-                    transform: translateY(-20px)
+                    transform: translateY(-70px)
 
                 &.opacity-slide-down-leave-to,
                 &.opacity-slide-up-enter
                     opacity: 0
-                    transform: translateY(20px)
+                    transform: translateY(70px)
 </style>
