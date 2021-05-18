@@ -52,33 +52,42 @@
                     </div>
 
                     <div class="row-wrapper">
-                        <span>App Authentication</span>
+                        <span>App Authentication <b v-show="userMFAMethods.TOTP && userMFAMethods.TOTP.is_verified">(aktive)</b></span>
                         <div class="spacer"></div>
-                        <ui-button small text border @click="setupTOTPMFA()">Setup</ui-button>
-                        <ui-icon-button @click="TOTPMFASetup.expand = !TOTPMFASetup.expand">
+                        <ui-button v-if="userMFAMethods.TOTP === null" small text border :loading="TOTPMFASetup.generationLoading" @click="generateTOTPMFA()">Setup</ui-button>
+                        
+                        <ui-button text small v-if="userMFAMethods.TOTP !== null" v-show="!TOTPMFASetup.expand" @click="TOTPMFASetup.expand = true">Expand</ui-button>
+                        <ui-button text small v-if="userMFAMethods.TOTP !== null" v-show="TOTPMFASetup.expand" @click="TOTPMFASetup.expand = false">Minimize</ui-button>
+                        <!-- <ui-icon-button v-if="userMFAMethods.TOTP !== null" @click="TOTPMFASetup.expand = !TOTPMFASetup.expand">
                             {{TOTPMFASetup.expand ? '&#983363;' : '&#983360;'}}
-                        </ui-icon-button>
+                        </ui-icon-button> -->
                     </div>
 
-                    <div class="row-wrapper" v-show="TOTPMFASetup.expand">
+                    <div class="row-wrapper" v-if="userMFAMethods.TOTP !== null" v-show="TOTPMFASetup.expand">
                         <qr-code v-if="TOTPMFASetup.url" :value="TOTPMFASetup.url" :options="{width: 140, margin: 0}"></qr-code>
-                        <ui-text-input style="width: 200px" label="Passnumber" v-model="TOTPMFASetup.TOTPInput"></ui-text-input>
+                        <ui-button v-if="!TOTPMFASetup.url" @click="getTOTPMFA()">Show Code</ui-button>
+                        <div class="spacer"></div>
+                        <ui-button small text border icon="&#984144;" @click="generateTOTPMFA()">New Code</ui-button>
+                        <ui-button small error icon="&#985721;" @click="deleteTOTPMFA()">Delete</ui-button>
+                    </div>
+                    <div class="row-wrapper" v-if="userMFAMethods.TOTP && userMFAMethods.TOTP.is_verified === false" v-show="TOTPMFASetup.expand">
+                        <ui-text-input style="width: 160px" label="Passnumber" v-model="TOTPMFASetup.TOTPInput"></ui-text-input>
                         <ui-button @click="verifyTOTPMFA()">Verify</ui-button>
                         <div class="spacer"></div>
                     </div>
 
                     <div class="row-wrapper">
-                        <span>SMS Authentication (coming soon)</span>
+                        <span>SMS Authentication (coming later)</span>
                         <div class="spacer"></div>
                         <ui-button small text border disabled>Setup</ui-button>
-                        <ui-icon-button>&#983360;</ui-icon-button>
+                        <!-- <ui-icon-button>&#983360;</ui-icon-button> -->
                     </div>
 
                     <div class="row-wrapper">
-                        <span>Security Key (coming soon)</span>
+                        <span>Security Key (coming later)</span>
                         <div class="spacer"></div>
                         <ui-button small text border disabled>Setup</ui-button>
-                        <ui-icon-button>&#983360;</ui-icon-button>
+                        <!-- <ui-icon-button>&#983360;</ui-icon-button> -->
                     </div>
                 </div>
 
@@ -194,6 +203,7 @@
                     url: null,
                     TOTPInput: '',
                     expand: false,
+                    generationLoading: false,
                 },
 
                 setupIntent: {
@@ -211,6 +221,26 @@
         computed: {
             user() {
                 return this.$store.getters.user
+            },
+
+            userMFAMethods() {
+                let methods = {
+                    TOTP: null,
+                    SMS: null,
+                    WEBAUTHN: null,
+                }
+
+                if (!this.user || typeof this.user.mfa_methods !== 'object')
+                {
+                    return methods
+                }
+
+                for (const method of this.user.mfa_methods)
+                {
+                    methods[method.type] = method
+                }
+
+                return methods
             },
         },
 
@@ -328,11 +358,37 @@
 
 
 
-            setupTOTPMFA() {
-                axios.post('/auth/user/setup-totp-mfa')
+            generateTOTPMFA() {
+                this.TOTPMFASetup.generationLoading = true
+
+                axios.post('/auth/user/generate-totp-mfa')
                 .then(response => {
-                    console.log(response)
+                    this.$store.dispatch('fetchUser')
                     this.TOTPMFASetup.url = response.data
+                    this.TOTPMFASetup.expand = true
+                    this.TOTPMFASetup.generationLoading = false
+                })
+                .catch(error => {
+                    console.log(error.response)
+                    this.TOTPMFASetup.generationLoading = false
+                })
+            },
+
+            getTOTPMFA() {
+                axios.post('/auth/user/get-totp-mfa-url')
+                .then(response => {
+                    this.TOTPMFASetup.url = response.data
+                })
+                .catch(error => {
+                    console.log(error.response)
+                })
+            },
+
+            deleteTOTPMFA() {
+                axios.post('/auth/user/delete-totp-mfa')
+                .then(response => {
+                    this.$store.dispatch('fetchUser')
+                    this.TOTPMFASetup.expand = false
                 })
                 .catch(error => {
                     console.log(error.response)
@@ -345,9 +401,12 @@
                 })
                 .then(response => {
                     console.log(response)
+                    this.TOTPMFASetup.TOTPInput = ''
+                    this.$store.dispatch('fetchUser')
                 })
                 .catch(error => {
                     console.log(error.response)
+                    this.TOTPMFASetup.TOTPInput = ''
                 })
             },
 

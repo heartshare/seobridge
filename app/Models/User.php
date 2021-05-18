@@ -83,6 +83,11 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(UserMFAMethod::class, 'user_id', 'id');
     }
+
+    public function verified_mfa_methods()
+    {
+        return $this->hasMany(UserMFAMethod::class, 'user_id', 'id')->where('is_verified', true);
+    }
     
     public function teams()
     {

@@ -21,8 +21,10 @@ class RedirectIfAuthenticated
     {
         $guards = empty($guards) ? [null] : $guards;
 
-        foreach ($guards as $guard) {
-            if (Auth::guard($guard)->check()) {
+        foreach ($guards as $guard)
+        {
+            if (Auth::guard($guard)->check() && session('fully_authenticated') === true)
+            {
                 return redirect(RouteServiceProvider::HOME);
             }
         }

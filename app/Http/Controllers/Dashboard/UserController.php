@@ -88,18 +88,19 @@ class UserController extends Controller
 
 
 
-    public function setupTOTPMFA(Request $request)
+    public function generateTOTPMFA(Request $request)
     {
         $google2fa = new Google2FA();
 
         $secret = $google2fa->generateSecretKey(64);
 
-        $method = UserMFAMethod::firstOrCreate([
+        $method = UserMFAMethod::updateOrCreate([
             'user_id' => Auth::id(),
             'type' => 'TOTP',
         ],[
             'token' => $secret,
-            'name' => 'App Authenticator'
+            'name' => 'App Authenticator',
+            'is_verified' => false,
         ]);
 
         return $google2fa->getQRCodeUrl(
@@ -107,6 +108,26 @@ class UserController extends Controller
             Auth::user()->email,
             $method->token
         );
+    }
+
+    public function getTOTPMFAUrl(Request $request)
+    {
+        $method = UserMFAMethod::where('user_id', Auth::id())->firstWhere('type', 'TOTP');
+
+        $google2fa = new Google2FA();
+
+        return $google2fa->getQRCodeUrl(
+            'SEO Bridge',
+            Auth::user()->email,
+            $method->token
+        );
+    }
+
+    public function deleteTOTPMFA(Request $request)
+    {
+        UserMFAMethod::where('user_id', Auth::id())->firstWhere('type', 'TOTP')->delete();
+
+        return response('OK');
     }
 
     public function verifyTOTPMFA(Request $request)
@@ -141,29 +162,5 @@ class UserController extends Controller
         $user->save();
 
         return response('OK');
-    }
-
-
-
-    public function TOTPMFA(Request $request)
-    {
-        $request->validate([
-            'secret' => ['required', 'string', 'max:6', 'min:6'],
-        ]);
-
-        $method = UserMFAMethod::where('user_id', Auth::id())->firstWhere('type', 'TOTP');
-        
-        $google2fa = new Google2FA();
-
-        if (!$google2fa->verifyKey($method->token, $request->secret))
-        {
-            return back()->withErrors([
-                'oauth_error' => 'Your code was invalid',
-            ]);
-        }
-
-        session(['fully_authenticated' => true]);
-
-        return redirect(session('returnURL') ? session('returnURL') : '/dashboard');
     }
 }

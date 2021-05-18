@@ -4,12 +4,10 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use App\Models\UserMFAMethod;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
-use PragmaRX\Google2FA\Google2FA;
 
 class LoginController extends Controller
 {
@@ -27,13 +25,6 @@ class LoginController extends Controller
     use AuthenticatesUsers;
 
     /**
-     * Where to redirect users after login.
-     *
-     * @var string
-     */
-    protected $redirectTo = RouteServiceProvider::HOME;
-
-    /**
      * Create a new controller instance.
      *
      * @return void
@@ -46,7 +37,10 @@ class LoginController extends Controller
     public function login(Request $request)
     {
         $credentials = $request->only('email', 'password');
+
         $user = User::firstWhere('email', $request->email);
+
+
 
         if ($user && $user->is_oauth_user)
         {
@@ -55,23 +49,15 @@ class LoginController extends Controller
             ]);
         }
 
-        if (Auth::attempt($credentials, ($request->remember || false)))
+        if (!Auth::attempt($credentials, ($request->remember || false)))
         {
-            $request->session()->regenerate();
-
-            if ($user->is_oauth_user === true || $user->is_mfa_enabled === false || count($user->mfa_methods) === 0)
-            {
-                session(['fully_authenticated' => true]);
-            }
-
-            if ($request->returnUrl)
-            {
-                $this->redirectTo = $request->returnUrl;
-            }
+            return back()->withErrors([
+                'email' => 'The provided credentials do not match our records.',
+            ]);
         }
+        
+        $request->session()->regenerate();
 
-        return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
-        ]);
+        return redirect($request->returnUrl ? $request->returnUrl : RouteServiceProvider::HOME);
     }
 }

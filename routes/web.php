@@ -63,7 +63,7 @@ Route::post('/get-meta-data', [App\Http\Controllers\Dashboard\ReportController::
 
 Route::middleware('guest')->group(function() {
     Route::view('/mfa', 'auth.mfa')->name('mfa');
-    Route::post('/verify-mfa', [App\Http\Controllers\Dashboard\UserController::class, 'TOTPMFA']);
+    Route::post('/verify-mfa', [App\Http\Controllers\Auth\MFAController::class, 'TOTPMFA']);
 });
 
 Route::middleware(['auth', 'mfa'])->group(function() {
@@ -76,7 +76,7 @@ Route::middleware(['auth', 'mfa'])->group(function() {
 
 
 
-Route::middleware(['auth', 'mfa:api'])->prefix('auth')->group(function() {
+Route::middleware(['auth', 'mfa:ajax'])->prefix('auth')->group(function() {
 
     Route::post('/go-pro/complete', [App\Http\Controllers\SubscriptionController::class, 'complete']);
 
@@ -97,7 +97,7 @@ Route::middleware(['auth', 'mfa:api'])->prefix('auth')->group(function() {
         Route::post('/close-account', [App\Http\Controllers\Dashboard\UserController::class, 'closeAccount']);
         // Multi Factor Authentication
         Route::post('/set-mfa-status', [App\Http\Controllers\Dashboard\UserController::class, 'setMFAStatus']);
-        Route::post('/setup-totp-mfa', [App\Http\Controllers\Dashboard\UserController::class, 'setupTOTPMFA']);
+        Route::post('/generate-totp-mfa', [App\Http\Controllers\Dashboard\UserController::class, 'generateTOTPMFA']);
         Route::post('/delete-totp-mfa', [App\Http\Controllers\Dashboard\UserController::class, 'deleteTOTPMFA']);
         Route::post('/get-totp-mfa-url', [App\Http\Controllers\Dashboard\UserController::class, 'getTOTPMFAUrl']);
         Route::post('/verify-totp-mfa', [App\Http\Controllers\Dashboard\UserController::class, 'verifyTOTPMFA']);

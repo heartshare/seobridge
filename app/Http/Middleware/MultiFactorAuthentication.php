@@ -21,9 +21,15 @@ class MultiFactorAuthentication
      */
     public function handle(Request $request, Closure $next, $caller = 'view')
     {
+        // Set fully authenticated if MFA doesn't apply for user
+        if (Auth::user()->is_mfa_enabled === false || count(Auth::user()->verified_mfa_methods) === 0)
+        {
+            session(['fully_authenticated' => true]);
+        }
+
         if (session('fully_authenticated') !== true)
         {
-            if ($caller === 'api')
+            if ($caller === 'ajax')
             {
                 return response('UNAUTHORIZED', 403);
             }
