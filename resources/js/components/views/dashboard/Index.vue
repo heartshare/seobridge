@@ -17,7 +17,7 @@
 
                 <a href="/dashboard/teams" class="button" :class="{'active': $store.getters.page === 'teams'}" @click.prevent="$store.dispatch('setPage', 'teams')">
                     <div class="icon">supervisor_account</div>
-                    <div class="text">My Team</div>
+                    <div class="text">My Teams</div>
                 </a>
 
                 <a href="/dashboard/reports" class="button" :class="{'active': $store.getters.page === 'reports'}" @click.prevent="$store.dispatch('setPage', 'reports')">
@@ -115,8 +115,8 @@
         main
             .limiter
                 max-width: 1240px !important
-                padding-left: 15px !important
-                padding-right: 15px !important
+                padding-left: 30px !important
+                padding-right: 30px !important
 
             .page-container
 

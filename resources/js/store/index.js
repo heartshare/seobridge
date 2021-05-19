@@ -257,6 +257,40 @@ module.exports = {
 
 
 
+        setTeamSite(state, data) {
+            let teamIndex = state.teams.findIndex(e => e.id === data.teamId)
+
+            if (teamIndex < 0) return
+
+            let index = state.teams[teamIndex].sites.findIndex(e => e.id === data.id)
+
+            data = {sites: [], ...data}
+
+            if (index >= 0)
+            {
+                Vue.set(state.teams[teamIndex].sites, index, data.site)
+            }
+            else
+            {
+                state.teams[teamIndex].sites.push(data.site)
+            }
+        },
+
+        deleteTeamSite(state, data) {
+            let teamIndex = state.teams.findIndex(e => e.id === data.teamId)
+
+            if (teamIndex < 0) return
+
+            let index = state.teams[teamIndex].sites.findIndex(e => e.id === data.id)
+
+            if (index >= 0)
+            {
+                state.teams[teamIndex].sites.splice(index, 1)
+            }
+        },
+
+
+
         invites(state, data) {
             state.invites = data
         },

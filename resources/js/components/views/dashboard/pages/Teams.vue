@@ -4,7 +4,7 @@
             <div class="limiter">
                 <div class="page-header-wrapper">
                     <div class="row">
-                        <h1>My Team</h1>
+                        <h1>My Teams</h1>
                         <div class="spacer"></div>
                         <ui-icon-button class="icon-button" @click="openTeamEditor()">&#984085;</ui-icon-button>
                     </div>
@@ -23,21 +23,23 @@
 
                     <div class="block">
                         <div class="namespace-container">
-                            <div class="namespace" :style="`background: ${stc(site.host)}; color: ${contrast(stc(site.host))};`" v-for="site in activeTeam.sites" :key="site.id">
-                                <div class="icon">language</div>
+                            <transition-group name="scale" class="block">
+                                <div class="namespace" :class="{'read-only': !activeTeam.is_owner}" :style="`background: ${stc(site.host)}; color: ${contrast(stc(site.host))};`" v-for="site in activeTeam.sites" :key="site.id">
+                                    <div class="icon">language</div>
 
-                                <b class="text">{{site.host}}</b>
+                                    <b class="text">{{site.host}}</b>
 
-                                <div class="icon-button-wrapper">
-                                    <!-- <button class="icon-button">edit</button> -->
-                                    <button class="icon-button" @click="openTeamSiteDeleteDialog(activeTeam, site)">delete</button>
+                                    <div class="icon-button-wrapper" v-if="activeTeam.is_owner">
+                                        <!-- <button class="icon-button">edit</button> -->
+                                        <button class="icon-button" @click="openTeamSiteDeleteDialog(activeTeam, site)">delete</button>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="namespace add-button" v-if="activeTeam.is_owner" @click="openTeamSiteCreateDialog(activeTeam)">
-                                <div class="icon">add</div>
-                                <div class="text">Add namespace</div>
-                            </div>
+                                <div class="namespace add-button" key="add-namespace" v-if="activeTeam.is_owner" @click="openTeamSiteCreateDialog(activeTeam)">
+                                    <div class="icon">add</div>
+                                    <div class="text">Add namespace</div>
+                                </div>
+                            </transition-group>
                         </div>
 
                         <div class="placeholder grid-centered" v-if="activeTeam.sites.length === 0 && !activeTeam.is_owner">
@@ -47,7 +49,19 @@
                 </div>
 
                 <transition-group name="slide" class="block" v-show="tab === 'teams'">
-                    <div class="team-wrapper" v-for="team in teams" :key="team.id">
+                    <team-row
+                        v-for="team in teams"
+                        :key="team.id"
+                        :team="team"
+                        @setActiveTeam="setActiveTeamId($event)"
+                        @edit="openTeamEditor($event)"
+                        @delete="openTeamDeleteDialog($event)"
+                        @leave="openTeamLeaveDialog($event)"
+                        @addMember="openTeamInviteDialog($event)"
+                        @deleteMember="openMemberDeleteDialog($event.team, $event.member)"
+                        @addNamespace="openTeamSiteCreateDialog($event)"
+                    ></team-row>
+                    <!-- <div class="team-wrapper" >
                         <div class="team-header">
                             <div class="title">
                                 <b>{{team.name}}</b><br>
@@ -106,7 +120,7 @@
                                 <ui-button icon="&#983060;" text @click="openTeamInviteDialog(team)">Add Member</ui-button>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                 </transition-group>
 
                 <div class="invite-wrapper" v-show="tab === 'invites'" v-if="invites.length > 0">
@@ -444,7 +458,7 @@
                     host: this.teamSiteCreate.host,
                 })
                 .then(response => {
-                    // this.$store.commit('deleteTeam', response.data)
+                    this.$store.commit('setTeamSite', {teamId: this.teamSiteCreate.id, id: response.data.id, site: response.data})
                     this.teamSiteCreate.loading = false
                     this.resetTeamSiteCreate()
                 })
@@ -480,6 +494,7 @@
                     siteId: this.teamSiteDelete.siteId,
                 })
                 .then(response => {
+                    this.$store.commit('deleteTeamSite', {teamId: this.teamSiteDelete.id, id: response.data})
                     this.teamSiteDelete.loading = false
                     this.resetTeamSiteDelete()
                 })
@@ -704,6 +719,10 @@
                 return invert(color, true)
             }
         },
+
+        components: {
+            TeamRow: require('./../components/TeamRow').default,
+        }
     }
 </script>
 
@@ -762,15 +781,27 @@
                 vertical-align: top
                 filter: var(--elevation-1)
                 overflow: hidden
-                transition: padding 100ms
+                transition: all 300ms, padding 100ms
+                padding: 15px
+
+                &.scale-enter,
+                &.scale-leave-to
+                    transform: scale(0)
+                    opacity: 0
+
+                &.scale-leave-active
+                    position: absolute
 
                 &.add-button
-                    padding-bottom: 0 !important
+                    padding: 15px !important
                     cursor: pointer
-                    transition: all 100ms
+                    transition: all 300ms, filter 100ms
 
                     &:hover
                         filter: var(--elevation-4)
+
+                &.read-only
+                    padding: 15px !important
 
                 .icon
                     font-size: 35px
@@ -827,122 +858,4 @@
         .team-description-input
             resize: none
             height: 150px
-
-        .team-wrapper
-            width: 100%
-            display: inline-flex
-            flex-direction: column
-            transition: all 300ms
-
-            &.slide-enter
-                transform: translateY(-100px)
-                opacity: 0
-
-            &.slide-leave-to
-                transform: scale(0)
-                opacity: 0
-
-            &.slide-leave-active
-                position: absolute
-
-            .team-header
-                display: flex
-                align-items: center
-                padding: 5px 5px 5px 15px
-                gap: 5px
-                border-radius: 7px 7px 0 0
-
-                .tag
-                    font-size: 10px
-                    color: var(--primary)
-                    background: var(--primary-shade)
-                    padding: 1px 8px
-                    line-height: 18px
-                    border-radius: 30px
-                    letter-spacing: 1px
-                    font-weight: 600
-                    text-transform: uppercase
-                    user-select: none
-                    vertical-align: top
-
-                .title
-                    flex: 1
-                    font-size: 16px
-                    line-height: 20px
-                    padding: 7px 0
-                    
-                    b
-                        text-transform: uppercase
-                        font-weight: 600
-                        color: var(--heading-gray)
-                        display: inline-block
-
-                .more-button
-                    margin: 0
-                
-                .expand-button
-                    transition: transform 200ms
-
-                    &.expanded
-                        transform: rotate(180deg)
-
-            .team-content
-                display: flex
-                gap: 15px
-                padding: 5px 15px 15px
-                position: relative
-                flex-wrap: wrap
-
-                .centerer
-                    width: 100%
-                    display: grid
-                    place-content: center
-                    height: 50px
-
-                .member-row
-                    border-radius: 5px
-                    border: var(--border)
-                    width: 100%
-                    display: flex
-                    height: 50px
-                    padding: 5px
-                    gap: 5px
-
-                    .more-button
-                        display: block !important
-                        align-self: center
-
-                    .profile-image
-                        height: 40px
-                        width: 40px
-                        object-fit: cover
-                        border-radius: 100%
-                        background: var(--bg)
-                        align-self: center
-
-                    .name
-                        flex: 1
-                        font-size: var(--text-size)
-                        color: var(--heading-gray)
-                        font-weight: 600
-                        align-self: center
-                        padding: 0 5px
-
-                    .role
-                        height: 20px
-                        line-height: 20px
-                        font-size: 12px
-                        color: var(--success)
-                        background: var(--success-shade)
-                        padding: 0 10px
-                        border-radius: 30px
-                        letter-spacing: 1px
-                        font-weight: 600
-                        text-transform: uppercase
-                        user-select: none
-                        align-self: center
-
-                        &.owner
-                            background: var(--success)
-                            color: white
 </style>

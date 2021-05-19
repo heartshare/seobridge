@@ -141,9 +141,23 @@ class TeamController extends Controller
             'host' => ['required', 'string', 'max:255'],
         ]);
 
-        $teamSite = TeamSite::create([
+        $host = parse_url($request->host, PHP_URL_HOST);
+
+        if (!$host)
+        {
+            $host = $request->host;
+        }
+
+        $host = strtolower($host);
+        
+        if (!preg_match("/^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$/", $host))
+        {
+            return response('INVALID_HOSTNAME', 422);
+        }
+
+        $teamSite = TeamSite::firstOrCreate([
             'team_id' => $request->team_object->id,
-            'host' => strtolower($request->host),
+            'host' => $host,
         ]);
 
         return $teamSite;

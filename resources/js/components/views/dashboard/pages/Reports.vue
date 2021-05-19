@@ -81,6 +81,10 @@
                                 </div>
                             </div>
                         </transition-group>
+                        <div class="placeholder grid-centered" v-if="paginatedReportGroups.data && paginatedReportGroups.data.length === 0">
+                            <p>You don't have any reports yet!</p>
+                            <ui-button @click="openReportCreateDialog()">Create a Report</ui-button>
+                        </div>
                     </div>
 
                     <div class="details" v-else>
@@ -437,7 +441,7 @@
             </template>
 
             <template v-slot:inputs>
-                <ui-select-input label="Mode" v-model="reportCreate.mode" :options="[{'full':'Full Scan'}, {'single':'Single Page'}]"></ui-select-input>
+                <ui-select-input label="Mode" v-model="reportCreate.mode" :options="[{'single':'Single Page Scan (fast)'}, {'full':'Full Website Scan (slow)'}]"></ui-select-input>
                 <!-- <ui-select-input label="Viewport" v-model="reportCreate.viewport" :options="[{'1080p':'1920 x 1080'}, {'720p':'1280 x 720'}]"></ui-select-input> -->
                 <ui-text-input label="URL" v-model="reportCreate.url"></ui-text-input>
             </template>
@@ -801,7 +805,7 @@
         },
 
         components: {
-            PageCard: require('../components/PageCard.vue').default,
+            // PageCard: require('../components/PageCard.vue').default,
             PageRow: require('../components/PageRow.vue').default,
         },
     }
