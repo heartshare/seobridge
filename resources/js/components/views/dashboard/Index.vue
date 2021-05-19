@@ -30,10 +30,10 @@
                     <div class="text">Keywords</div>
                 </a> -->
 
-                <a href="/dashboard/social-media" class="button" :class="{'active': $store.getters.page === 'social-media'}" @click.prevent="$store.dispatch('setPage', 'social-media')">
+                <!-- <a href="/dashboard/social-media" class="button" :class="{'active': $store.getters.page === 'social-media'}" @click.prevent="$store.dispatch('setPage', 'social-media')">
                     <div class="icon">whatshot</div>
                     <div class="text">Social Media</div>
-                </a>
+                </a> -->
 
                 <a href="/dashboard/author" class="button" :class="{'active': $store.getters.page === 'author'}" v-if="authorProfile" @click.prevent="$store.dispatch('setPage', 'author')">
                     <div class="icon">video_settings</div>

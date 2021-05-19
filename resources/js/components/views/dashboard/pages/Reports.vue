@@ -76,11 +76,12 @@
 
                                     <page-row v-for="report in reportGroup.reports" :key="'report_'+report.id" :report="report" @details="openDetails($event)"></page-row>
                                     <div class="blend" v-if="reportGroup.reports.length > 4">
-                                        <ui-button text>Show more</ui-button>
+                                        <ui-button text>Show All Reports</ui-button>
                                     </div>
                                 </div>
                             </div>
                         </transition-group>
+
                         <div class="placeholder grid-centered" v-if="paginatedReportGroups.data && paginatedReportGroups.data.length === 0">
                             <p>You don't have any reports yet!</p>
                             <ui-button @click="openReportCreateDialog()">Create a Report</ui-button>
@@ -398,7 +399,6 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
 
 
@@ -509,6 +509,8 @@
     export default {
         data() {
             return {
+                report: null,
+                reportGroup: null,
                 details: null,
                 series: [67],
                 chartOptions: {
