@@ -9,7 +9,7 @@
 
         <div class="description" :title="report.data.metaData.description">{{report.data.score.hasDescription ? report.data.metaData.description : 'MISSING'}}</div>
         
-        <ui-button class="details-button" icon="&#983362;" @click="$emit('details', report.data)">Details</ui-button>
+        <ui-button class="details-button" icon="&#983362;" @click="$emit('details', report.id)">Details</ui-button>
     </div>
 </template>
 
