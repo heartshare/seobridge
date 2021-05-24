@@ -1,7 +1,7 @@
 <template>
     <div class="job-wrapper">
             <div class="job-header">
-                <object class="favicon" v-if="reportGroup.reports[0].data.metaData.favicon" :data="reportGroup.reports[0].data.metaData.favicon" type="image/png">
+                <object class="favicon" v-if="reportGroup.reports[0] && reportGroup.reports[0].data.metaData.favicon" :data="reportGroup.reports[0].data.metaData.favicon" type="image/png">
                 <img src="/images/defaults/default_icon.svg" alt="Default Icon Fallback" width="100%" height="100%">
             </object>
             <img class="favicon" v-else src="/images/defaults/default_icon.svg" alt="Default Icon Fallback" width="100%" height="100%">
