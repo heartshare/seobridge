@@ -30,6 +30,9 @@ Vue.component('apexchart', VueApexCharts)
 window.VTooltip = require('v-tooltip')
 Vue.use(VTooltip)
 
+import VueCodeHighlight from 'vue-code-highlight'
+Vue.use(VueCodeHighlight)
+
 
 
 const store = new Vuex.Store(require('./store/index'))
@@ -80,7 +83,7 @@ const app = new Vue({
             userReportTaskEventChannel.listen('.page.add', (e) => {
                 this.$store.commit('addReportToPaginatedReportGroup', {
                     id: e.jobId,
-                    report: e.data,
+                    report: [e.data],
                 })
             })
         },

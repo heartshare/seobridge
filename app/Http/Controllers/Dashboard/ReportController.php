@@ -50,6 +50,7 @@ class ReportController extends Controller
         $reports = UserReportGroup::whereIn('id', $reportGroupIds)
         ->where('host', 'LIKE', "%{$request->searchKey}%")
         ->with('task')
+        ->withCount('reports')
         ->orderBy('created_at', $request->order)
         ->simplePaginate($request->size);
 
@@ -79,6 +80,19 @@ class ReportController extends Controller
         });
 
         return $reports;
+    }
+
+
+
+    public function getAllReportsFromGroup(Request $request)
+    {
+        $request->validate([
+            'reportGroupId' => ['exists:user_report_groups,id'],
+        ]);
+
+        // TODO: check if report_group_id is accassible for user
+
+        return UserReport::where('report_group_id', $request->reportGroupId)->get();
     }
 
 

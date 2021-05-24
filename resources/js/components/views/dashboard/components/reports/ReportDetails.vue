@@ -1,6 +1,11 @@
 <template>
     <div class="details">
         <div class="detail-row">
+            <div class="card span-12" style="padding: 15px">
+                <ui-button text border icon="&#984620;" @click="$emit('showCode')">Show Code</ui-button>
+            </div>
+        </div>
+        <div class="detail-row">
             <div class="card span-4">
                 <h4 class="info"><div class="icon">&#984376;</div>Page Score</h4>
                 <apexchart style="display: inherit;" type="radialBar" height="250" :options="chartOptions" :series="[details.score.totalPageScore] || [0]"></apexchart>

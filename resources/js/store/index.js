@@ -380,7 +380,16 @@ module.exports = {
 
             if (index >= 0)
             {
-                state.paginatedReportGroups.data[index].reports.unshift(data.report)
+                state.paginatedReportGroups.data[index].reports.unshift(...data.report)
+            }
+        },
+
+        setReportToPaginatedReportGroup(state, data) {
+            let index = state.paginatedReportGroups.data.findIndex(e => e.id === data.id)
+
+            if (index >= 0)
+            {
+                state.paginatedReportGroups.data[index].reports = data.reports
             }
         },
 

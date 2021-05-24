@@ -16,14 +16,37 @@
             <div class="sheet">
                 <div class="block" v-if="activeTeam && activeTeam.sites.length > 0">
                     <div class="filter-bar">
-                        <ui-button text @click="openOverview()">Overview</ui-button>
-                        <ui-button v-if="reportGroupId" text @click="openGroup(reportGroupId)">Report Group</ui-button>
-                        <ui-button v-if="reportId" text @click="openDetails(reportGroupId, reportId)">Report</ui-button>
-                        <ui-button v-if="viewCode" text icon="&#984620;">Code</ui-button>
-                        <ui-select-input class="sort-input" v-model="reportSearch.sort" :options="[{'DESC':'Newest first'}, {'ASC':'Oldest first'}]"></ui-select-input>
+                        <div class="breadcrumb-container">
+                            <div class="breadcrumb-button" @click="openOverview()">
+                                Overview
+                                <svg class="breadcrumb-divider" viewbox="0 0 20 70">
+                                    <path d="M1 0 L19 35 L1 70" stroke="inherit" stroke-width="1" fill="none" stroke-linecap="round"></path>
+                                </svg>
+                            </div>
+                            <div class="breadcrumb-button" v-if="reportGroupId" @click="openGroup(reportGroupId)">
+                                Report Group
+                                <svg class="breadcrumb-divider" viewbox="0 0 20 70">
+                                    <path d="M1 0 L19 35 L1 70" stroke="inherit" stroke-width="1" fill="none" stroke-linecap="round"></path>
+                                </svg>
+                            </div>
+                            <div class="breadcrumb-button" v-if="reportId" @click="openDetails(reportGroupId, reportId)">
+                                Report
+                                <svg class="breadcrumb-divider" viewbox="0 0 20 70">
+                                    <path d="M1 0 L19 35 L1 70" stroke="inherit" stroke-width="1" fill="none" stroke-linecap="round"></path>
+                                </svg>
+                            </div>
+                            <div class="breadcrumb-button" v-if="viewCode" @click="openDetails(reportGroupId, reportId)">
+                                Code
+                                <svg class="breadcrumb-divider" viewbox="0 0 20 70">
+                                    <path d="M1 0 L19 35 L1 70" stroke="inherit" stroke-width="1" fill="none" stroke-linecap="round"></path>
+                                </svg>
+                            </div>
+                        </div>
 
                         <div class="spacer"></div>
 
+                        <ui-select-input class="sort-input" v-model="reportSearch.sort" :options="[{'DESC':'Newest first'}, {'ASC':'Oldest first'}]"></ui-select-input>
+                        
                         <div class="search-bar-wrapper">
                             <ui-text-input class="input" placeholder="Search" v-model="reportSearch.url"></ui-text-input>
                             <transition name="scale">
@@ -38,7 +61,8 @@
                                 v-for="reportGroup in paginatedReportGroups.data"
                                 :key="'report_group_'+reportGroup.id"
                                 :report-group="reportGroup"
-                                :limit="4"
+                                :limit="5"
+                                :is-preview="true"
                                 @share="openReportShareDialog('group', $event, false)"
                                 @assign="openReportShareDialog('group', $event, true)"
                                 @searchForDomain="reportSearch.url = $event"
@@ -68,7 +92,9 @@
                         @openDetails="openDetails($event.group, $event.report)"
                     ></report-group>
 
-                    <report-details v-if="activeReport" :details="activeReport.data"></report-details>
+                    <report-details v-if="activeReport && !viewCode" :details="activeReport.data" @showCode="openCode()"></report-details>
+
+                    <report-code v-if="activeReport && viewCode" :code="activeReport.data.html" @showCode="openCode()"></report-code>
                 </div>
 
 
@@ -328,16 +354,34 @@
             openOverview() {
                 this.reportGroupId = null
                 this.reportId = null
+                this.viewCode = false
             },
             
             openGroup(reportGroupId) {
                 this.reportGroupId = reportGroupId
                 this.reportId = null
+                this.viewCode = false
+
+                axios.post('/auth/reports/get-all-reports-from-group', {reportGroupId})
+                .then(response => {
+                    this.$store.commit('setReportToPaginatedReportGroup', {
+                        id: reportGroupId,
+                        reports: response.data
+                    })
+                })
+                .catch(error => {
+                    console.log(error.response)
+                })
             },
 
             openDetails(reportGroupId, reportId) {
                 this.reportGroupId = reportGroupId
                 this.reportId = reportId
+                this.viewCode = false
+            },
+
+            openCode() {
+                this.viewCode = true
             },
 
 
@@ -450,6 +494,7 @@
         components: {
             ReportGroup: require('../components/reports/ReportGroup.vue').default,
             ReportDetails: require('../components/reports/ReportDetails.vue').default,
+            ReportCode: require('../components/reports/ReportCode.vue').default,
         },
     }
 </script>
@@ -462,6 +507,47 @@
         .placeholder
             height: 200px
             width: 100%
+
+        .breadcrumb-container
+            margin: -15px 0 -15px -15px
+            height: 70px
+            display: flex
+            overflow: hidden
+            border-radius: 8px 8px 0 0
+
+        .breadcrumb-button
+            position: relative
+            display: grid
+            place-content: center
+            cursor: pointer
+            user-select: none
+            height: 70px
+            background: var(--bg)
+            border: none
+            padding: 0 25px 0 35px
+            margin-left: -18px
+            font-size: 12px
+            text-transform: uppercase
+            letter-spacing: 2px
+            font-weight: bold
+            clip-path: polygon(0% 0%, calc(100% - 18px) 0%, 100% 50%, calc(100% - 18px) 100%, 0% 100%, 18px 50%)
+            
+            &:hover
+                background: var(--bg-dark)
+
+            &:first-child
+                margin-left: 0
+                padding: 0 25px 0 20px
+                clip-path: polygon(0% 0%, calc(100% - 18px) 0%, 100% 50%, calc(100% - 18px) 100%, 0% 100%)
+
+            .breadcrumb-divider
+                stroke: var(--border-color)
+                height: 100%
+                width: 20px
+                position: absolute
+                top: 0
+                right: 0
+                pointer-events: none
 
         .filter-bar
             width: 100%

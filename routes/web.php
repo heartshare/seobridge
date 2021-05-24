@@ -82,6 +82,7 @@ Route::middleware(['auth', 'mfa:ajax'])->prefix('auth')->group(function() {
 
     Route::prefix('reports')->group(function() {
         Route::post('/get-paginated-report-groups', [App\Http\Controllers\Dashboard\ReportController::class, 'getPaginatedReportGroups']);
+        Route::post('/get-all-reports-from-group', [App\Http\Controllers\Dashboard\ReportController::class, 'getAllReportsFromGroup']);
         Route::post('/delete-report', [App\Http\Controllers\Dashboard\ReportController::class, 'deleteReport']);
         Route::post('/share-report', [App\Http\Controllers\Dashboard\ReportController::class, 'shareReport']);
         

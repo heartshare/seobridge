@@ -11,6 +11,8 @@
 
 @import 'static.layout.sass';
 
+@import './onedark.css';
+
 
 
 // Boilerplate
@@ -35,6 +37,7 @@
     --heading-gray: #2F3542;
     --text-gray: #666F79;
     --text-gray-shade: #666F7910;
+    --text-gray-shine: #666F7930;
 
     --primary: #4834D4;
     --primary-focused: #644cff;
@@ -54,10 +57,13 @@
     --mild-success: #29abab;
     --success: #2ecc71;
     --success-shade: #2ecc7115;
+    --success-shine: #2ecc7140;
     --warning: #ffc400;
     --warning-shade: #ffc40020;
+    --warning-shine: #ffc40040;
     --error: #ff4757;
     --error-shade: #ff475710;
+    --error-shine: #ff475740;
 }
 
 .clearfix {

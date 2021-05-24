@@ -1,14 +1,32 @@
 <template>
-    <div class="job-wrapper" :class="{'has-indicator': !reportGroup.is_own}">                   
-        <div class="indicator shared" v-show="reportGroup.has_been_shared && !reportGroup.has_been_assigned">
-            <div class="text">Shared</div>
-        </div>
-        <div class="indicator assigned" v-show="reportGroup.has_been_assigned">
-            <div class="text">Assigned</div>
-        </div>
+    <div class="job-wrapper">
+            <div class="job-header">
+                <object class="favicon" v-if="reportGroup.reports[0].data.metaData.favicon" :data="reportGroup.reports[0].data.metaData.favicon" type="image/png">
+                <img src="/images/defaults/default_icon.svg" alt="Default Icon Fallback" width="100%" height="100%">
+            </object>
+            <img class="favicon" v-else src="/images/defaults/default_icon.svg" alt="Default Icon Fallback" width="100%" height="100%">
 
-        <div class="job-header">
             <div class="title">{{reportGroup.host}}</div>
+
+            <div class="indicator">
+                <div class="indicator-part status" v-if="reportGroup.has_been_shared && !reportGroup.has_been_assigned">Shared</div>
+                <div class="indicator-part status" v-else-if="reportGroup.has_been_assigned">Assigned</div>
+                <!-- <div class="indicator-part error">
+                    <div class="icon">cancel</div>
+                    10
+                </div>
+                <div class="indicator-part warning">
+                    <div class="icon">warning</div>
+                    15
+                </div>
+                <div class="indicator-part info">
+                    <div class="icon">info</div>
+                    67
+                </div> -->
+            </div>
+            
+            <div class="spacer"></div>
+
             <div class="timestamp" v-tooltip="formateDate(reportGroup.created_at)">{{reportGroup.created_at | diffForHumans}}</div>
             
             <ui-popover-menu>
@@ -24,6 +42,8 @@
                 <ui-menu-divider v-if="reportGroup.is_own"></ui-menu-divider>
                 <ui-menu-item icon="&#985721;" v-if="reportGroup.is_own" @click="$emit('delete', reportGroup)">Delete report</ui-menu-item>
             </ui-popover-menu>
+
+            <ui-button class="show-all-button" v-if="isPreview" text border @click="$emit('openGroup', reportGroup.id)">Show all ({{reportGroup.reports_count}})</ui-button>
         </div>
 
         <div class="job-pages">
@@ -42,11 +62,9 @@
                 <ui-button small text>Cancel</ui-button>
             </div>
 
-            <report-row v-for="report in reportGroup.reports" :key="'report_'+report.id" :report="report" @details="$emit('openDetails', {group: reportGroup.id, report: $event})"></report-row>
+            <report-row v-for="report in reportGroup.reports.slice(0, limit)" :key="'report_'+report.id" :report="report" @details="$emit('openDetails', {group: reportGroup.id, report: $event})"></report-row>
             
-            <div class="blend" v-if="reportGroup.reports.length > limit">
-                <ui-button text @click="$emit('openGroup', reportGroup.id)">Show All Reports</ui-button>
-            </div>
+            <div class="blend" v-if="reportGroup.reports_count > limit"></div>
         </div>
     </div>
 </template>
@@ -59,6 +77,7 @@
         props: {
             reportGroup: Object,
             limit: Number,
+            isPreview: Boolean,
         },
 
         filters: {
@@ -96,14 +115,10 @@
         flex-direction: column
         transition: all 300ms
         position: relative
-        padding-top: 10px
         border-bottom: var(--border)
 
         &:last-of-type
             border-bottom: none
-
-        &.has-indicator
-            padding-left: 18px
 
         &.slide-enter
             transform: translateY(-100px)
@@ -116,58 +131,102 @@
         &.slide-leave-active
             position: absolute
 
-        .indicator
-            position: absolute
-            top: 0
-            left: 0
-            width: 18px
-            height: 100%
-            background: var(--text-gray-shade)
-            display: grid
-            place-content: center
-            color: var(--text-gray)
-
-            &.assigned
-                color: white
-                background: var(--warning)
-
-            .text
-                color: inherit
-                text-transform: uppercase
-                font-size: 13px
-                font-weight: 600
-                letter-spacing: 1px
-                transform: rotate(-90deg)
-                padding-top: 1.5px
-
         .job-header
+            background: var(--bg-dark)
             display: flex
             align-items: center
-            padding: 5px 0
-            border-radius: 7px 7px 0 0
+            padding: 15px
+            gap: 15px
+
+            .favicon
+                height: 40px
+                width: 40px
+                border-radius: 40px
+                padding: 5px
+                object-fit: contain
+
+            .spacer
+                flex: 2
 
             .title
-                flex: 1
+                width: 300px
                 font-size: 16px
                 line-height: 20px
                 font-weight: 600
                 text-transform: uppercase
                 color: var(--heading-gray)
-                padding: 0 15px
+                white-space: nowrap
+                overflow: hidden
+                text-overflow: ellipsis
+
+            .indicator
+                display: flex
+                height: 30px
+                align-items: center
+
+                .indicator-part
+                    background: var(--text-gray)
+                    display: flex
+                    align-items: center
+                    padding: 0 10px
+                    gap: 7px
+                    height: 100%
+                    color: var(--bg)
+                    text-transform: uppercase
+                    font-size: 11px
+                    font-weight: 600
+                    letter-spacing: 1px
+                    user-select: none
+
+                    &:first-of-type
+                        border-top-left-radius: 50px
+                        border-bottom-left-radius: 50px
+                        padding-left: 15px
+
+                    &:last-of-type
+                        border-top-right-radius: 50px
+                        border-bottom-right-radius: 50px
+                        padding-right: 15px
+
+                    &.error
+                        color: var(--error)
+                        background: var(--error-shine)
+
+                    &.warning
+                        color: var(--warning)
+                        background: var(--warning-shade)
+
+                    &.info
+                        color: var(--primary)
+                        background: var(--primary-shine)
+
+                    &.status
+                        width: 90px
+                        justify-content: center
+
+                    .icon
+                        font-family: 'Material Icons Round'
+                        font-size: 18px
+                        text-transform: none
+                        font-weight: normal
+                        letter-spacing: normal
+                        font-style: normal
+                        -webkit-font-feature-settings: 'liga'
+                        -webkit-font-smoothing: antialiased
 
             .timestamp
                 line-height: 20px
                 font-size: var(--text-size)
                 color: var(--text-gray)
 
-            .more-button
-                margin: 0 5px
+            .show-all-button
+                width: 160px
 
         .job-pages
             display: flex
             flex-direction: column
             gap: 15px
-            padding: 0 15px 15px
+            padding: 15px 0
             position: relative
 
             .status
