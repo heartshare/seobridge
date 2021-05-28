@@ -183,6 +183,43 @@
 
         <footer>
             <div class="limiter">
+                <div class="spacer"></div>
+                <nav>
+                    <ul>
+                        <strong>Support</strong>
+                        <li>
+                            <a href="{{url('/contact')}}">Contact</a>
+                        </li>
+                    </ul>
+
+                    <ul>
+                        <strong>Resources</strong>
+                        <li>
+                            <a href="{{url('/blog')}}">Blog</a>
+                        </li>
+                        <li>
+                            <a href="{{url('/branding')}}">Branding</a>
+                        </li>
+                    </ul>
+
+                    <ul>
+                        <strong>Policies</strong>
+                        <li>
+                            <a href="{{url('/privacy-policy')}}">Privacy</a>
+                        </li>
+                        <li>
+                            <a href="{{url('/terms-of-service')}}">Terms</a>
+                        </li>
+                        <li>
+                            <a href="{{url('/legal-disclosures')}}">Disclosures</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="limiter">
+                <div class="spacer horizontal-line"></div>
+            </div>
+            <div class="limiter">
                 <div class="project-by">
                     <div class="text">A project by</div>
                     <a href="https://freuwort.com" target="_blank" rel="noopener noreferrer">
@@ -191,20 +228,11 @@
                 </div>
 
                 <div class="spacer"></div>
-                
-                <nav>
-                    <ul>
-                        <li>
-                            <a href="{{url('/privacy-policy')}}">Privacy Policy</a>
-                        </li>
-                        {{-- <li>
-                            <a href="{{url('/terms-of-service')}}">Terms of Service</a>
-                        </li> --}}
-                        <li>
-                            <a href="{{url('/legal-disclosures')}}">Legal Disclosures</a>
-                        </li>
-                    </ul>
-                </nav>
+
+                <div class="button-bar">
+                    <a href="https://www.instagram.com/maurice.freuwoert" target="_blank" class="social-link">&#984687;</a>
+                    <a href="https://www.instagram.com/maurice.freuwoert" target="_blank" class="social-link">&#983806;</a>
+                </div>
             </div>
         </footer>
     </div>

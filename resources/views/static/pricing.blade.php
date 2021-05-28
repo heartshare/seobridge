@@ -10,7 +10,7 @@
         <div class="limiter">
             <h1 style="text-align: center">Pricing that's fair, simple and scalable!</h1>
             <p style="text-align: center">
-                No matter if you're a freelencer, startup-founder or agency marketer <b>— we have the SEO tools you need!</b>
+                No matter if you're a freelancer, startup-founder or agency marketer <b>— we have the SEO tools you need!</b>
             </p>
         </div>
     </div>

@@ -333,7 +333,6 @@
                             color: var(--text-gray)
 
     footer
-        height: 70px
         background: var(--bg-dark)
         display: block
 
@@ -343,6 +342,7 @@
             align-items: center
 
             .project-by
+                margin: 10px 0
                 height: 60px
                 display: flex
                 align-items: center
@@ -362,6 +362,7 @@
                         margin: 10px 5px
                         opacity: 0.4
                         filter: saturate(0%)
+                        transition: all 100ms
 
                 a:hover
                     img
@@ -371,28 +372,54 @@
             .spacer
                 flex: 1
 
+                &.horizontal-line
+                    border-bottom: 2px solid #ccc
+
+            .button-bar
+                display: flex
+                gap: 20px
+                align-items: center
+
+                .social-link
+                    height: 40px
+                    width: 40px
+                    display: grid
+                    place-content: center
+                    font-size: 22px
+                    font-family: 'Material Icons'
+                    color: var(--text-gray)
+                    cursor: pointer
+                    user-select: none
+                    text-decoration: none
+
+                    &:hover
+                        color: var(--primary)
+
             nav
                 align-self: center
+                display: flex
+                align-items: top
+                gap: 20px
+                flex: 1
+                padding: 40px 0
 
                 ul
                     padding: 0
+                    flex: 1
                     display: flex
-                    gap: 40px
+                    flex-direction: column
+                    gap: 10px
 
                     li
                         a
-                            font-size: 12px
+                            // font-size: 12px
                             font-family: var(--text-family)
-                            line-height: 40px
-                            height: 40px
-                            text-transform: uppercase
+                            line-height: 150%
                             text-decoration: none
-                            font-weight: 700
-                            letter-spacing: 2px
                             color: var(--text-gray)
 
                             &:hover
-                                color: var(--heading-gray)
+                                color: var(--primary)
 
 
 // SCOPED
