@@ -11,15 +11,15 @@
         left: 0
         height: 70px
         color: var(--text-gray)
-        background: #ffffffe0
-        backdrop-filter: blur(10px)
+        background: #ffffffc2
+        backdrop-filter: blur(8px)
         font-size: var(--text-size)
         width: 100%
         z-index: 1000
-        transition: all 200ms
+        transition: box-shadow 800ms
 
         &.scrolled
-            // box-shadow: 0 5px 10px #00000020
+            box-shadow: 0 5px 20px #00000010
 
         .limiter
             display: flex
@@ -55,11 +55,10 @@
                     > a
                         font-size: var(--button-size)
                         text-decoration: none
-                        height: 40px
-                        line-height: 40px
+                        height: 70px
+                        line-height: 70px
                         font-weight: 500
                         letter-spacing: 1px
-                        border-radius: 7px
                         color: var(--text-gray)
                         padding: 0 20px
                         position: relative
@@ -70,6 +69,7 @@
 
                         &:hover
                             color: var(--primary)
+                            background: #ffffff90
 
                         &.active
                             color: var(--primary)
@@ -93,6 +93,7 @@
                             align-items: center
                             gap: 10px
                             padding: 0 14px 0 20px
+                            border-radius: 7px
 
                             .text
                                 font-size: 12px
