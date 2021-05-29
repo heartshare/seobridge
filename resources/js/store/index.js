@@ -142,7 +142,7 @@ module.exports = {
         fetchAllArticleCategories(store) {
             axios.post('/auth/author/get-all-categories')
             .then(response => {
-                console.log(response.data)
+                // console.log(response.data)
                 store.commit('articleCategories', response.data.data)
             })
             .catch(error => {

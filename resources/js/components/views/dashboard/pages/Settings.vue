@@ -91,30 +91,39 @@
                     </div>
                 </div>
 
-                <div class="tab-box" v-show="tab === 'subscriptions'">
+                <div class="block" v-show="tab === 'subscriptions'">
+                    <div class="tab-box" style="padding: 0">
+                        <div class="row-wrapper border" style="padding: 15px">
+                            <b>Your billing portal powered by Stripe</b>
+                            <div class="spacer"></div>
+                            <ui-button href="/auth/subscriptions/billing-portal" icon="&#984012;" small text>Billing Portal</ui-button>
+                        </div>
+                        <div class="row-wrapper border" style="padding: 15px">
+                            <b>Your billing methods</b>
+                            <div class="spacer"></div>
+                            <ui-button small text border :loading="setupIntent.loading" @click="getSetupIntent()">Add Credit Card</ui-button>
+                        </div>
+                    </div>
+
+                    <div class="tab-box" v-show="setupIntent.intent">
+                        <ui-text-input label="Card holder name" v-model="setupIntent.cardHolderName"></ui-text-input>
+
+                        <div id="card-element"></div>
+
+                        <ui-button @click="addCreditCard()">Add Card now</ui-button>
+                    </div>
+
+                    <payment-method-row
+                        v-for="method in paymentMethod.methods"
+                        :key="method.id"
+                        :method="method"
+                        :is-default="method.id === paymentMethod.default"
+                        @setDefault="setDefaultPaymentMethod($event)"
+                        @delete="deletePaymentMethod($event)"
+                    ></payment-method-row>
                 </div>
             </div>
         </div>
-
-
-        <!-- <fieldset>
-            <legend>Subscriptions</legend>
-            <ui-button icon="&#984694;" text border :loading="setupIntent.loading" @click="getSetupIntent()">Add Credit Card</ui-button>
-            <ui-button href="/auth/subscriptions/billing-portal" icon="&#984012;" text>Billing Portal</ui-button>
-
-            <p>
-                <span>
-                    <ui-text-input label="Card holder name" v-model="setupIntent.cardHolderName"></ui-text-input>
-
-                    <div id="card-element"></div>
-                    
-                    <ui-button @click="addCreditCard()">Add Credit Card</ui-button>
-                </span>
-            </p>
-            <p>
-                <ui-button @click="createSubscription()">Test Subscription</ui-button>
-            </p>
-        </fieldset><br> -->
 
         <ui-option-dialog ref="passwordChangeDialog" @close="resetPasswordChange()">
             <template v-slot:heading>
@@ -158,21 +167,21 @@
 </template>
 
 <script>
-    // const stripe = Stripe('pk_test_51IPwiCDa1TGHitv5NwiZUsCe9Yy28YRgBjzXUVoFSs5eqQnRgUeXoUNO6hEl3CXWWq63E954U8Cw3nt0vSo3Yx8C0089OD4j7Z')
+    const stripe = Stripe('pk_test_51IPwiCDa1TGHitv5NwiZUsCe9Yy28YRgBjzXUVoFSs5eqQnRgUeXoUNO6hEl3CXWWq63E954U8Cw3nt0vSo3Yx8C0089OD4j7Z')
 
-    // const elements = stripe.elements()
-    // const cardElement = elements.create('card', {
-    //     style: {
-    //         base: {
-    //             fontFamily: 'Roboto, Open Sans, Segoe UI, sans-serif',
-    //             fontSize: '15px',
-    //             color: '#2F3542',
-    //             '::placeholder': {
-    //                 color: '#666F79',
-    //             },
-    //         },
-    //     },
-    // })
+    const elements = stripe.elements()
+    const cardElement = elements.create('card', {
+        style: {
+            base: {
+                fontFamily: 'Roboto, Open Sans, Segoe UI, sans-serif',
+                fontSize: '15px',
+                color: '#2F3542',
+                '::placeholder': {
+                    color: '#666F79',
+                },
+            },
+        },
+    })
 
     import VueQrcode from '@chenfengyuan/vue-qrcode';
     
@@ -211,11 +220,25 @@
                     cardHolderName: '',
                     loading: false,
                 },
+
+                paymentMethod: {
+                    methods: [],
+                    default: null
+                }
             }
         },
 
         mounted() {
-            // cardElement.mount('#card-element')
+            cardElement.mount('#card-element')
+
+            axios.post('/auth/subscriptions/get-all-payment-methods', {})
+            .then(response => {
+                this.paymentMethod.methods = response.data.methods
+                this.paymentMethod.default = response.data.default
+            })
+            .catch(error => {
+                console.log(error.response)
+            })
         },
 
         computed: {
@@ -439,11 +462,49 @@
                 if (error)
                 {
                     console.log(error.message)
+                    return
                 }
-                else
-                {
+
+                this.setupIntent.intent = null
+                this.setupIntent.cardHolderName = ''
+
+                axios.post('/auth/subscriptions/add-payment-method-to-user', {
+                    paymentMethod: setupIntent.payment_method,
+                })
+                .then(response => {
                     console.log('CARD ADDED!')
-                }
+                })
+                .catch(error => {
+                    console.log(error.response)
+                })
+            },
+
+
+
+            setDefaultPaymentMethod(method) {
+                axios.post('/auth/subscriptions/set-default-payment-method', {
+                    paymentMethod: method.id
+                })
+                .then(response => {
+                    this.paymentMethod.default = response.data
+                    console.log('CHANGED DEFAULT METHOD!')
+                })
+                .catch(error => {
+                    console.log(error.response)
+                })
+            },
+
+            deletePaymentMethod(method) {
+                axios.post('/auth/subscriptions/delete-payment-method', {
+                    paymentMethod: method.id
+                })
+                .then(response => {
+                    console.log(response.data)
+                    console.log('DELETED!')
+                })
+                .catch(error => {
+                    console.log(error.response)
+                })
             },
 
 
@@ -461,7 +522,8 @@
         },
 
         components: {
-            'qr-code': VueQrcode
+            'qr-code': VueQrcode,
+            PaymentMethodRow: require('./../components/PaymentMethodRow').default,
         }
     }
 </script>
