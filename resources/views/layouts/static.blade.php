@@ -80,7 +80,6 @@
                         <li>
                             <a class="button login" href="{{ route('login') }}">
                                 <span class="text">{{ __('Login') }}</span>
-                                <div class="icon">&#983049;</div>
                             </a>
                         </li>
                     @else
@@ -230,7 +229,7 @@
                 <div class="spacer"></div>
 
                 <div class="button-bar">
-                    <a href="https://www.instagram.com/maurice.freuwoert" target="_blank" class="social-link">&#984687;</a>
+                    <a href="https://discord.gg/VbbRgcjuWH" target="_blank" class="social-link">&#984687;</a>
                     <a href="https://www.instagram.com/maurice.freuwoert" target="_blank" class="social-link">&#983806;</a>
                 </div>
             </div>

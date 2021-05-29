@@ -1,6 +1,9 @@
 #app.static
     padding-top: 70px
 
+    > main
+        min-height: 70vh
+
     &.fullscreen-layout main
         height: calc(100% - 70px)
 
@@ -89,20 +92,23 @@
 
                         a.button
                             height: 38px
+                            line-height: 38px
                             display: flex
                             align-items: center
                             gap: 10px
-                            padding: 0 14px 0 20px
+                            padding: 0 30px
                             border-radius: 7px
 
                             .text
                                 font-size: 12px
                                 font-weight: 700
                                 letter-spacing: 2px
+                                padding-top: 1px
 
                             .icon
-                                font-family: 'Material Icons'
+                                font-family: 'Material Icons Round'
                                 font-size: 22px
+                                text-transform: none
 
                             .image
                                 height: 30px
@@ -115,8 +121,7 @@
                                 color: white
 
                                 &:hover
-                                    color: white
-                                    background: var(--primary)
+                                    filter: var(--elevation-4)
 
                             &.account
                                 padding: 0 5px 0 15px
@@ -392,9 +397,11 @@
                     cursor: pointer
                     user-select: none
                     text-decoration: none
+                    border-radius: 100%
 
                     &:hover
-                        color: var(--primary)
+                        color: var(--secondary)
+                        background: var(--secondary-shade)
 
             nav
                 align-self: center
@@ -413,7 +420,6 @@
 
                     li
                         a
-                            // font-size: 12px
                             font-family: var(--text-family)
                             line-height: 150%
                             text-decoration: none
@@ -437,6 +443,9 @@ article[data-cs-00001]
         .flex
             display: flex
             gap: 50px
+
+            &.centered
+                align-items: center
 
             .item
                 flex: 1

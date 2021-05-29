@@ -185,6 +185,9 @@
 #app.static {
   padding-top: 70px;
 }
+#app.static > main {
+  min-height: 70vh;
+}
 #app.static.fullscreen-layout main {
   height: calc(100% - 70px);
 }
@@ -291,10 +294,11 @@
 #app.static #desktop-navbar .limiter .navbar-wrapper.right li a.button,
 #app.static #mobile-navbar .limiter .navbar-wrapper.right li a.button {
   height: 38px;
+  line-height: 38px;
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 0 14px 0 20px;
+  padding: 0 30px;
   border-radius: 7px;
 }
 #app.static #desktop-navbar .limiter .navbar-wrapper.right li a.button .text,
@@ -302,11 +306,13 @@
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 2px;
+  padding-top: 1px;
 }
 #app.static #desktop-navbar .limiter .navbar-wrapper.right li a.button .icon,
 #app.static #mobile-navbar .limiter .navbar-wrapper.right li a.button .icon {
-  font-family: "Material Icons";
+  font-family: "Material Icons Round";
   font-size: 22px;
+  text-transform: none;
 }
 #app.static #desktop-navbar .limiter .navbar-wrapper.right li a.button .image,
 #app.static #mobile-navbar .limiter .navbar-wrapper.right li a.button .image {
@@ -323,8 +329,7 @@
 }
 #app.static #desktop-navbar .limiter .navbar-wrapper.right li a.button.login:hover,
 #app.static #mobile-navbar .limiter .navbar-wrapper.right li a.button.login:hover {
-  color: white;
-  background: var(--primary);
+  filter: var(--elevation-4);
 }
 #app.static #desktop-navbar .limiter .navbar-wrapper.right li a.button.account,
 #app.static #mobile-navbar .limiter .navbar-wrapper.right li a.button.account {
@@ -601,9 +606,11 @@
       -ms-user-select: none;
           user-select: none;
   text-decoration: none;
+  border-radius: 100%;
 }
 #app.static footer .limiter .button-bar .social-link:hover {
-  color: var(--primary);
+  color: var(--secondary);
+  background: var(--secondary-shade);
 }
 #app.static footer .limiter nav {
   align-self: center;
@@ -643,6 +650,9 @@ article[data-cs-00001] section {
 article[data-cs-00001] section .flex {
   display: flex;
   gap: 50px;
+}
+article[data-cs-00001] section .flex.centered {
+  align-items: center;
 }
 article[data-cs-00001] section .flex .item {
   flex: 1;
@@ -1307,6 +1317,7 @@ article[data-cs-01101] .limiter .article-limiter .article-info .category-link {
   --primary-shade: #4834D418;
   --primary-shine: #4b36d633;
   --secondary: #29abab;
+  --secondary-shade: #36e8e819;
   --secondary-shine: #36e8e833;
   --gray: #2F3542;
   --gray-shine: #2F354233;

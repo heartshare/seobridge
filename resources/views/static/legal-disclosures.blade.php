@@ -15,7 +15,6 @@
             Germany
         </p>
         <p>
-            Phone: <a href="tel:+49 176 24346830">+49 176 24346830</a><br>
             E-Mail: <a href="mailto:maurice.freuwoert@live.de">maurice.freuwoert@live.de</a>
         </p>
         <p>

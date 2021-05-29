@@ -19,15 +19,22 @@
 <article data-cs-00001>
     <section class="section-1">
         <div class="limiter">
-            <h1>
-                SEO<br>
-                Analysis<br>
-                Assistance
-            </h1>
-            <p>
-                Never miss any SEO aspect again<br>
-                even on the biggest sites!
-            </p>
+            <div class="flex centered">
+                <div class="item">
+                    <h1>
+                        SEO<br>
+                        Analysis<br>
+                        Assistance
+                    </h1>
+                    <p>
+                        Never miss any SEO aspect again<br>
+                        even on the biggest site!
+                    </p>
+                </div>
+                <div class="item">
+                    <img style="max-width: 100%;" src="/images/static/graph.png" alt="SEO Bridge Graph">
+                </div>
+            </div>
         </div>
     </section>
 
