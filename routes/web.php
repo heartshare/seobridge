@@ -147,6 +147,7 @@ Route::middleware(['auth', 'mfa:ajax'])->prefix('auth')->group(function() {
     Route::prefix('subscriptions')->group(function() {
         Route::get('/billing-portal', [App\Http\Controllers\Dashboard\SubscriptionController::class, 'redirectToBillingPortal']);
         Route::post('/get-all-payment-methods', [App\Http\Controllers\Dashboard\SubscriptionController::class, 'getAllPaymentMethods']);
+        Route::post('/get-all-subscriptions', [App\Http\Controllers\Dashboard\SubscriptionController::class, 'getAllSubscriptions']);
         Route::post('/set-default-payment-method', [App\Http\Controllers\Dashboard\SubscriptionController::class, 'setDefaultPaymentMethod']);
         Route::post('/delete-payment-method', [App\Http\Controllers\Dashboard\SubscriptionController::class, 'deletePaymentMethod']);
         Route::post('/add-payment-method-to-user', [App\Http\Controllers\Dashboard\SubscriptionController::class, 'addPaymentMethodToUser']);

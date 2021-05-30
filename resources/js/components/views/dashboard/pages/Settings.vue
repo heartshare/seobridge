@@ -98,19 +98,11 @@
                             <div class="spacer"></div>
                             <ui-button href="/auth/subscriptions/billing-portal" icon="&#984012;" small text>Billing Portal</ui-button>
                         </div>
-                        <div class="row-wrapper border" style="padding: 15px">
+                        <div class="row-wrapper border dark" style="padding: 15px">
                             <b>Your billing methods</b>
                             <div class="spacer"></div>
                             <ui-button small text border :loading="setupIntent.loading" @click="getSetupIntent()">Add Credit Card</ui-button>
                         </div>
-                    </div>
-
-                    <div class="tab-box" v-show="setupIntent.intent">
-                        <ui-text-input label="Card holder name" v-model="setupIntent.cardHolderName"></ui-text-input>
-
-                        <div id="card-element"></div>
-
-                        <ui-button @click="addCreditCard()">Add Card now</ui-button>
                     </div>
 
                     <payment-method-row
@@ -121,6 +113,28 @@
                         @setDefault="setDefaultPaymentMethod($event)"
                         @delete="deletePaymentMethod($event)"
                     ></payment-method-row>
+
+                    <div class="tab-box" v-show="setupIntent.intent">
+                        <ui-text-input label="Card holder name" v-model="setupIntent.cardHolderName"></ui-text-input>
+
+                        <div id="card-element"></div>
+
+                        <ui-button @click="addCreditCard()">Add Card now</ui-button>
+                    </div>
+
+                    <div class="tab-box" style="padding: 0">
+                        <div class="row-wrapper border dark" style="padding: 15px">
+                            <b>Your Subscriptions</b>
+                            <div class="spacer"></div>
+                            <ui-button small text border @click="subscriptionAdd.isOpen = true">Add Item</ui-button>
+                        </div>
+                    </div>
+                    <div class="tab-box" v-show="subscriptionAdd.isOpen">
+                        <div class="row-wrapper border">
+                            <ui-button>Single Domain Plan</ui-button>
+                            <ui-button>Wildcard Domain Plan</ui-button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -224,17 +238,31 @@
                 paymentMethod: {
                     methods: [],
                     default: null
-                }
+                },
+
+                subscriptions: [],
+
+                subscriptionAdd: {
+                    isOpen: false,
+                },
             }
         },
 
         mounted() {
             cardElement.mount('#card-element')
 
-            axios.post('/auth/subscriptions/get-all-payment-methods', {})
+            axios.post('/auth/subscriptions/get-all-payment-methods')
             .then(response => {
                 this.paymentMethod.methods = response.data.methods
                 this.paymentMethod.default = response.data.default
+            })
+            .catch(error => {
+                console.log(error.response)
+            })
+
+            axios.post('/auth/subscriptions/get-all-subscriptions')
+            .then(response => {
+                console.log(response.data)
             })
             .catch(error => {
                 console.log(error.response)
@@ -543,6 +571,9 @@
                 align-items: center
                 padding: 10px 0
                 gap: 10px
+
+                &.dark
+                    background: var(--bg-dark)
                 
                 &.border
                     border-bottom: var(--border)

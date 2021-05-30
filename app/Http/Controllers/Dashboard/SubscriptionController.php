@@ -30,6 +30,13 @@ class SubscriptionController extends Controller
 
 
 
+    public function getAllSubscriptions(Request $request)
+    {
+        return $request->user()->asStripeCustomer()->subscriptions;
+    }
+
+
+
     public function getSetupIntent(Request $request)
     {
         $request->user()->createOrGetStripeCustomer();
