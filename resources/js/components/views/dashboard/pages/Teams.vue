@@ -61,66 +61,6 @@
                         @deleteMember="openMemberDeleteDialog($event.team, $event.member)"
                         @addNamespace="openTeamSiteCreateDialog($event)"
                     ></team-row>
-                    <!-- <div class="team-wrapper" >
-                        <div class="team-header">
-                            <div class="title">
-                                <b>{{team.name}}</b><br>
-                                <span v-if="team.description">{{team.description}}</span>
-                                <i v-else>No Description</i>
-                            </div>
-
-                            <div class="tag">{{team.category}}</div>
-
-                            <ui-popover-menu>
-                                <template v-slot:trigger>
-                                    <ui-icon-button class="more-button">&#983513;</ui-icon-button>
-                                </template>
-
-                                <ui-menu-item icon="&#984270;" :disabled="user.active_team_id === team.id" @click="setActiveTeamId(team)">Select As Main Team</ui-menu-item>
-                                <ui-menu-item v-if="team.is_owner" icon="&#984043;" @click="openTeamEditor(team)">Edit Team</ui-menu-item>
-                                <ui-menu-item v-if="team.is_owner" icon="&#983060;" @click="openTeamInviteDialog(team)">Add Member</ui-menu-item>
-                                <ui-menu-item v-if="team.is_owner" icon="&#987309;" @click="openTeamSiteCreateDialog(team)">Add Namespace</ui-menu-item>
-                                <ui-menu-divider v-if="team.is_owner"></ui-menu-divider>
-                                <ui-menu-item v-if="team.is_owner" icon="&#985721;" @click="openTeamDeleteDialog(team)">Delete Team</ui-menu-item>
-                                <ui-menu-item v-else icon="&#983558;" @click="openTeamLeaveDialog(team)">Leave Team</ui-menu-item>
-                            </ui-popover-menu>
-
-                            <ui-icon-button class="expand-button" :class="{'expanded': team.id === openedTeamSheet}" @click="openedTeamSheet = team.id">&#983360;</ui-icon-button>
-
-                            <ui-button style="margin: 0 10px 0 5px" small v-if="!activeTeam" @click="setActiveTeamId(team)">Join</ui-button>
-                        </div>
-
-                        <div class="team-content" v-show="team.id === openedTeamSheet">
-                            <div class="member-row" v-for="member in team.members" :key="member.id">
-                                <img src="/images/defaults/default_profile_image.svg" class="profile-image">
-
-                                <div class="name" v-if="member.user.firstname || member.user.lastname">
-                                    {{member.user.firstname}}
-                                    {{member.user.lastname}}
-                                    <span v-if="member.user_id === user.id">(you)</span>
-                                </div>
-                                <div class="name" v-else>
-                                    {{member.user.username}}
-                                    <span v-if="member.user_id === user.id">(you)</span>
-                                </div>
-
-                                <div class="role" v-for="(role, i) in member.roles" :key="i" :class="[{'owner': role == 'owner'}]">{{role}}</div>    
-
-                                <ui-popover-menu class="more-button" v-if="team.is_owner">
-                                    <template v-slot:trigger>
-                                        <ui-icon-button>&#983513;</ui-icon-button>
-                                    </template>
-
-                                    <ui-menu-item icon="&#984043;" disabled>Edit Member (WIP)</ui-menu-item>
-                                    <ui-menu-item icon="&#983213;" @click="openMemberDeleteDialog(team, member)">Remove Member</ui-menu-item>
-                                </ui-popover-menu>
-                            </div>
-
-                            <div class="centerer" v-if="team.is_owner">
-                                <ui-button icon="&#983060;" text @click="openTeamInviteDialog(team)">Add Member</ui-button>
-                            </div>
-                        </div>
-                    </div> -->
                 </transition-group>
 
                 <div class="invite-wrapper" v-show="tab === 'invites'" v-if="invites.length > 0">
@@ -163,6 +103,11 @@
                 <ui-text-input label="Team name" v-model="teamEdit.name"></ui-text-input>
                 <ui-select-input label="Team category" v-model="teamEdit.category" :options="teamCategories"></ui-select-input>
                 <ui-textarea label="Team description" class="team-description-input" :max="1000" show-max v-model="teamEdit.description"></ui-textarea>
+                <ui-select-input label="Payment Method" v-model="teamEdit.paymentMethod" :options="paymentMethods"></ui-select-input>
+                <ui-button @click="teamEdit.plan = 'free'">Free</ui-button>
+                <ui-button @click="teamEdit.plan = 'single'">Single</ui-button>
+                <ui-button @click="teamEdit.plan = 'scalable'">Scalable</ui-button>
+                <ui-button @click="teamEdit.plan = 'unlimited'">Unlimited</ui-button>
             </template>
 
             <template v-slot:button-1>
@@ -306,7 +251,9 @@
                     {'other': 'Other'},
                 ],
 
-                openedTeamSheet: '',
+                paymentMethods: [
+                    {'default': 'Default'},
+                ],
 
                 tab: 'overview',
 
@@ -316,6 +263,8 @@
                     description: '',
                     category: '',
                     loading: false,
+                    paymentMethod: 'default',
+                    plan: null,
                 },
 
                 teamSiteCreate: {

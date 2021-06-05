@@ -18,15 +18,15 @@
     <div class="limiter pricing" data-cs-00004>
         <div class="price-plan">
             <div class="header">
-                <h2>Freelancer</h2>
-                <h4>9.90€</h4>
+                <h2>Starter</h2>
+                <h4>10€</h4>
                 <span>per month</span>
             </div>
 
             <div class="features">
                 <div class="feature-point">
                     <div class="icon">&#984544;</div>
-                    <div class="text">2 Websites</div>
+                    <div class="text">3 Domains</div>
                 </div>
                 <div class="feature-point">
                     <div class="icon">&#984544;</div>
@@ -34,29 +34,28 @@
                 </div>
                 <div class="feature-point">
                     <div class="icon">&#984544;</div>
-                    <div class="text">100 URLs / Website</div>
+                    <div class="text">150 URLs / Domain</div>
                 </div>
-                <div class="divider"></div>
                 <div class="feature-point">
                     <div class="icon">&#983385;</div>
-                    <div class="text"><b>No Additional Websites</b></div>
+                    <div class="text"><b>No Additional Domains</b></div>
                 </div>
             </div>
 
-            <a href="/go-pro/freelancer" class="button">Get SEO Bridge Freelancer</a>
+            <a href="/go-pro/freelancer" class="button">Get SEO Bridge Starter</a>
         </div>
 
         <div class="price-plan featured">
             <div class="header">
-                <h2>Startup</h2>
-                <h4>19.90€</h4>
+                <h2>Growing</h2>
+                <h4>25€</h4>
                 <span>per month</span>
             </div>
 
             <div class="features">
                 <div class="feature-point">
                     <div class="icon">&#984544;</div>
-                    <div class="text">3 Websites</div>
+                    <div class="text">3 Domains</div>
                 </div>
                 <div class="feature-point">
                     <div class="icon">&#984544;</div>
@@ -64,28 +63,28 @@
                 </div>
                 <div class="feature-point">
                     <div class="icon">&#984544;</div>
-                    <div class="text">500 URLs / Website</div>
+                    <div class="text">500 URLs / Domain</div>
                 </div>
                 <div class="feature-point">
                     <div class="icon">&#984544;</div>
-                    <div class="text"><b>5€ / Additional Website</b></div>
+                    <div class="text"><b>3€ / Additional Domain</b></div>
                 </div>
             </div>
 
-            <a href="/go-pro/startup" class="button">Get SEO Bridge Startup</a>
+            <a href="/go-pro/startup" class="button">Get SEO Bridge Growing</a>
         </div>
 
         <div class="price-plan">
             <div class="header">
-                <h2>Agency</h2>
-                <h4>29.90€</h4>
+                <h2>Unlimited</h2>
+                <h4>60€</h4>
                 <span>per month</span>
             </div>
 
             <div class="features">
                 <div class="feature-point">
                     <div class="icon">&#984544;</div>
-                    <div class="text">4 Websites</div>
+                    <div class="text">Unlimited Domains</div>
                 </div>
                 <div class="feature-point">
                     <div class="icon">&#984544;</div>
@@ -93,15 +92,15 @@
                 </div>
                 <div class="feature-point">
                     <div class="icon">&#984544;</div>
-                    <div class="text">1000 URLs / Website</div>
+                    <div class="text">1000 URLs / Domain</div>
                 </div>
                 <div class="feature-point">
                     <div class="icon">&#984544;</div>
-                    <div class="text"><b>7€ / Additional Website</b></div>
+                    <div class="text"><b>Free Additional Domains</b></div>
                 </div>
             </div>
 
-            <a href="/go-pro/agency" class="button">Get SEO Bridge Agency</a>
+            <a href="/go-pro/agency" class="button">Get SEO Bridge Unlimited</a>
         </div>
     </div>
 
