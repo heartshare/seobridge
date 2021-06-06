@@ -371,6 +371,8 @@
                     name: this.teamEdit.name,
                     category: this.teamEdit.category,
                     description: this.teamEdit.description,
+                    plan: this.teamEdit.plan,
+                    paymentMethod: this.teamEdit.paymentMethod,
                 })
                 .then(response => {
                     console.log(response.data)

@@ -52,7 +52,33 @@ class TeamController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'description' => ['present', 'max:1000'],
             'category' => ['required', 'string', 'max:100'],
+            'plan' => ['required', 'string', 'in:free,starter,growing,unlimited'],
+            'paymentMethod' => ['required', 'string', 'max:100'],
         ]);
+
+        $subscription = null;
+
+        // Create subscription if plan is selected
+        if ($request->plan != 'free')
+        {
+            $method = null;
+
+            // TODO: replace with env-variabled
+            $plans = [
+                'starter' => '',
+                'growing' => '',
+                'unlimited' => 'price_1IzNSCDa1TGHitv5atcuVGfi',
+            ];
+
+            $method = $request->paymentMethod === 'default' ? $request->user()->defaultPaymentMethod() : $request->user()->findPaymentMethod($request->paymentMethod);
+
+            if (!$method)
+            {
+                return response('NO_PAYMENT_METHOD', 403);
+            }
+
+            $subscription = $request->user()->newSubscription( $request->plan, $plans[$request->plan] )->quantity(null)->create($method->id);
+        }
 
         $team = Team::create([
             'owner_id' => Auth::id(),
@@ -60,6 +86,7 @@ class TeamController extends Controller
             'description' => $request->description,
             'category' => $request->category,
             'status' => 'inactive',
+            'subscription_id' => $subscription ? $subscription->id : null,
         ]);
         
         // Create owner-member for new team
