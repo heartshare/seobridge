@@ -104,10 +104,25 @@
                 <ui-select-input label="Team category" v-model="teamEdit.category" :options="teamCategories"></ui-select-input>
                 <ui-textarea label="Team description" class="team-description-input" :max="1000" show-max v-model="teamEdit.description"></ui-textarea>
                 <ui-select-input label="Payment Method" v-model="teamEdit.paymentMethod" :options="paymentMethods"></ui-select-input>
-                <ui-button @click="teamEdit.plan = 'free'">Free</ui-button>
-                <ui-button @click="teamEdit.plan = 'single'">Single</ui-button>
-                <ui-button @click="teamEdit.plan = 'scalable'">Scalable</ui-button>
-                <ui-button @click="teamEdit.plan = 'unlimited'">Unlimited</ui-button>
+
+                <div class="plan-wrapper">
+                    <div class="plan" :class="{'active': teamEdit.plan === 'free'}" @click="teamEdit.plan = 'free'">
+                        <div class="icon"></div>
+                        <div class="text">Free</div>
+                    </div>
+                    <div class="plan" :class="{'active': teamEdit.plan === 'starter'}" @click="teamEdit.plan = 'starter'">
+                        <div class="icon"></div>
+                        <div class="text">Starter</div>
+                    </div>
+                    <div class="plan" :class="{'active': teamEdit.plan === 'growing'}" @click="teamEdit.plan = 'growing'">
+                        <div class="icon"></div>
+                        <div class="text">Growing</div>
+                    </div>
+                    <div class="plan" :class="{'active': teamEdit.plan === 'unlimited'}" @click="teamEdit.plan = 'unlimited'">
+                        <div class="icon"></div>
+                        <div class="text">Unlimited</div>
+                    </div>
+                </div>
             </template>
 
             <template v-slot:button-1>
@@ -809,4 +824,26 @@
         .team-description-input
             resize: none
             height: 150px
+
+        .plan-wrapper
+            height: 70px
+            display: flex
+            gap: 10px
+            width: 100%
+
+            .plan
+                border-radius: 7px
+                background: white
+                border: var(--border)
+                height: 100%
+                flex: 1
+                text-align: center
+                cursor: pointer
+                user-select: none
+
+                &.active
+                    border-color: var(--primary)
+
+                .text
+                    font-size: var(--text-size)
 </style>
