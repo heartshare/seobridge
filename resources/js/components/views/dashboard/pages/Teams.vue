@@ -107,19 +107,19 @@
 
                 <div class="plan-wrapper">
                     <div class="plan" :class="{'active': teamEdit.plan === 'free'}" @click="teamEdit.plan = 'free'">
-                        <div class="icon"></div>
+                        <div class="icon">money_off_csred</div>
                         <div class="text">Free</div>
                     </div>
                     <div class="plan" :class="{'active': teamEdit.plan === 'starter'}" @click="teamEdit.plan = 'starter'">
-                        <div class="icon"></div>
+                        <div class="icon">savings</div>
                         <div class="text">Starter</div>
                     </div>
                     <div class="plan" :class="{'active': teamEdit.plan === 'growing'}" @click="teamEdit.plan = 'growing'">
-                        <div class="icon"></div>
+                        <div class="icon">trending_up</div>
                         <div class="text">Growing</div>
                     </div>
                     <div class="plan" :class="{'active': teamEdit.plan === 'unlimited'}" @click="teamEdit.plan = 'unlimited'">
-                        <div class="icon"></div>
+                        <div class="icon">task_alt</div>
                         <div class="text">Unlimited</div>
                     </div>
                 </div>
@@ -826,24 +826,42 @@
             height: 150px
 
         .plan-wrapper
-            height: 70px
+            height: 100px
             display: flex
-            gap: 10px
             width: 100%
+            border-radius: 7px
+            overflow: hidden
 
             .plan
-                border-radius: 7px
-                background: white
-                border: var(--border)
+                background: var(--bg-dark)
                 height: 100%
                 flex: 1
                 text-align: center
                 cursor: pointer
                 user-select: none
+                position: relative
+                overflow: hidden
+                display: grid
+                place-content: center
+                border-left: var(--border)
+                transition: all 100ms
+
+                &:first-of-type
+                    border: none
 
                 &.active
-                    border-color: var(--primary)
+                    background: var(--primary)
+                    color: var(--bg)
 
                 .text
+                    z-index: 1
+                    position: relative
                     font-size: var(--text-size)
+
+                .icon
+                    z-index: 1
+                    position: relative
+                    font-size: 30px
+                    padding: 10px
+                    font-family: 'Material Icons Round'
 </style>

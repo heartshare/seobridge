@@ -59,15 +59,21 @@ class TeamController extends Controller
         $subscription = null;
 
         // Create subscription if plan is selected
-        if ($request->plan != 'free')
+        if ($request->plan === 'free')
+        {
+            if (count(Team::where('owner_id', Auth::id())->where('subscription_id', null)->get()) > config('plans.seo_allowed_free_plans'))
+            {
+                return response('TOO_MANY_FREE_PLANS', 422);
+            }
+        }
+        else
         {
             $method = null;
 
-            // TODO: replace with env-variabled
             $plans = [
-                'starter' => '',
-                'growing' => '',
-                'unlimited' => 'price_1IzNSCDa1TGHitv5atcuVGfi',
+                'starter' => config('plans.seo_low'),
+                'growing' => config('plans.seo_mid'),
+                'unlimited' => config('plans.seo_high'),
             ];
 
             $method = $request->paymentMethod === 'default' ? $request->user()->defaultPaymentMethod() : $request->user()->findPaymentMethod($request->paymentMethod);
@@ -88,6 +94,8 @@ class TeamController extends Controller
             'status' => 'inactive',
             'subscription_id' => $subscription ? $subscription->id : null,
         ]);
+
+        return $subscription;
         
         // Create owner-member for new team
         TeamMember::create([

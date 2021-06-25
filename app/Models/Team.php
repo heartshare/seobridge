@@ -19,7 +19,7 @@ class Team extends Model
         'address',
         'category',
         'status',
-        'payment_method_id',
+        'subscription_id',
         'metadata',
     ];
 
