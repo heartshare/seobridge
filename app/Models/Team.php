@@ -66,4 +66,9 @@ class Team extends Model
     {
         return $this->hasMany(TeamSite::class, 'team_id', 'id');
     }
+
+    public function subscription()
+    {
+        return $this->hasOne(Subscription::class, 'id', 'subscription_id');
+    }
 }

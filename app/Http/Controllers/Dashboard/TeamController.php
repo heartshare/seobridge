@@ -19,7 +19,9 @@ class TeamController extends Controller
     {
         $teamIds = array_unique(array_merge(TeamMember::where('user_id', Auth::id())->pluck('team_id')->toArray(), Team::where('owner_id', Auth::id())->pluck('id')->toArray()));
 
-        $teams = Team::whereIn('id', $teamIds)->with('members.user', 'sites')->get();
+        $teams = Team::whereIn('id', $teamIds)->with(['members.user', 'sites', 'subscription' => function($query) {
+            $query->select('id','name', 'stripe_status');
+        }])->get();
 
         $teams->each(function($team) {
             $team->is_owner = ($team->owner_id === Auth::id());
@@ -52,14 +54,14 @@ class TeamController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'description' => ['present', 'max:1000'],
             'category' => ['required', 'string', 'max:100'],
-            'plan' => ['required', 'string', 'in:free,starter,growing,unlimited'],
+            'plan' => ['required', 'string', 'in:seo_free,seo_low,seo_mid,seo_high'],
             'paymentMethod' => ['required', 'string', 'max:100'],
         ]);
 
         $subscription = null;
 
         // Create subscription if plan is selected
-        if ($request->plan === 'free')
+        if ($request->plan === 'seo_free')
         {
             if (count(Team::where('owner_id', Auth::id())->where('subscription_id', null)->get()) > config('plans.seo_allowed_free_plans'))
             {
@@ -70,11 +72,7 @@ class TeamController extends Controller
         {
             $method = null;
 
-            $plans = [
-                'starter' => config('plans.seo_low'),
-                'growing' => config('plans.seo_mid'),
-                'unlimited' => config('plans.seo_high'),
-            ];
+            $plan = config('plans.seo_plans.'.$request->plan);
 
             $method = $request->paymentMethod === 'default' ? $request->user()->defaultPaymentMethod() : $request->user()->findPaymentMethod($request->paymentMethod);
 
@@ -83,7 +81,7 @@ class TeamController extends Controller
                 return response('NO_PAYMENT_METHOD', 403);
             }
 
-            $subscription = $request->user()->newSubscription( $request->plan, $plans[$request->plan] )->quantity(null)->create($method->id);
+            $subscription = $request->user()->newSubscription( $request->plan, $plan['stripe_id'] )->quantity(null)->create($method->id);
         }
 
         $team = Team::create([
@@ -94,8 +92,6 @@ class TeamController extends Controller
             'status' => 'inactive',
             'subscription_id' => $subscription ? $subscription->id : null,
         ]);
-
-        return $subscription;
         
         // Create owner-member for new team
         TeamMember::create([
@@ -113,7 +109,10 @@ class TeamController extends Controller
             $user->save();
         }
 
-        $team = Team::with('members.user')->find($team->id);
+        $team = Team::with(['members.user', 'subscription' => function($query) {
+            $query->select('id','name', 'stripe_status');
+        }])->find($team->id);
+        
         $team->is_owner = true;
 
         return $team;

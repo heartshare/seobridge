@@ -21,7 +21,7 @@
                         <span v-if="activeTeam.description">{{activeTeam.description}}</span>
                     </div>
 
-                    <div class="block">
+                    <div class="block" v-if="activeTeam.subscription.name !== 'seo_high'">
                         <div class="namespace-container">
                             <transition-group name="scale" class="block">
                                 <div class="namespace" :class="{'read-only': !activeTeam.is_owner}" :style="`background: ${stc(site.host)}; color: ${contrast(stc(site.host))};`" v-for="site in activeTeam.sites" :key="site.id">
@@ -106,19 +106,19 @@
                 <ui-select-input label="Payment Method" v-model="teamEdit.paymentMethod" :options="paymentMethods"></ui-select-input>
 
                 <div class="plan-wrapper">
-                    <div class="plan" :class="{'active': teamEdit.plan === 'free'}" @click="teamEdit.plan = 'free'">
+                    <div class="plan" :class="{'active': teamEdit.plan === 'seo_free'}" @click="teamEdit.plan = 'seo_free'">
                         <div class="icon">money_off_csred</div>
                         <div class="text">Free</div>
                     </div>
-                    <div class="plan" :class="{'active': teamEdit.plan === 'starter'}" @click="teamEdit.plan = 'starter'">
+                    <div class="plan" :class="{'active': teamEdit.plan === 'seo_low'}" @click="teamEdit.plan = 'seo_low'">
                         <div class="icon">savings</div>
                         <div class="text">Starter</div>
                     </div>
-                    <div class="plan" :class="{'active': teamEdit.plan === 'growing'}" @click="teamEdit.plan = 'growing'">
+                    <div class="plan" :class="{'active': teamEdit.plan === 'seo_mid'}" @click="teamEdit.plan = 'seo_mid'">
                         <div class="icon">trending_up</div>
                         <div class="text">Growing</div>
                     </div>
-                    <div class="plan" :class="{'active': teamEdit.plan === 'unlimited'}" @click="teamEdit.plan = 'unlimited'">
+                    <div class="plan" :class="{'active': teamEdit.plan === 'seo_high'}" @click="teamEdit.plan = 'seo_high'">
                         <div class="icon">task_alt</div>
                         <div class="text">Unlimited</div>
                     </div>

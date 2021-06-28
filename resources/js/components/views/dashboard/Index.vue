@@ -9,6 +9,10 @@
                 <img src="/images/app/logo.svg" alt="SEO Bridge logo">
             </a>
 
+            <div class="team-selector-wrapper">
+                <ui-select-input label="Current Team" :options="teamOptions"></ui-select-input>
+            </div>
+
             <div class="group">
                 <a href="/dashboard/overview" class="button" :class="{'active': $store.getters.page === 'overview'}" @click.prevent="$store.dispatch('setPage', 'overview')">
                     <div class="icon">dashboard</div>
@@ -81,6 +85,18 @@
         computed: {
             user() {
                 return this.$store.getters.user
+            },
+
+            teams() {
+                return this.$store.getters.teams
+            },
+
+            teamOptions() {
+                return this.teams.map(e => {
+                    let obj = {}
+                    obj[e.id] = e.name + (e.description ? ' • '+e.description : '')
+                    return obj
+                })
             },
 
             authorProfile() {
@@ -183,7 +199,6 @@
             filter: var(--elevation-4)
             display: flex
             flex-direction: column
-            gap: 10px
 
             #logo
                 height: 85px
@@ -194,6 +209,11 @@
 
                 img
                     height: 100%
+
+            .team-selector-wrapper
+                background: var(--bg-dark)
+                margin-bottom: 10px
+                padding: 15px
 
             .spacer
                 flex: 1
