@@ -1,8 +1,6 @@
 <template>
     <div class="team-row-wrapper">
         <div class="team-header">
-            <ui-icon-button v-tooltip="'Make this your active team'" class="active-team-button" :disabled="user.active_team_id === team.id" :class="{'active': user.active_team_id === team.id}" @click="$emit('setActiveTeam', team)">&#984270;</ui-icon-button>
-
             <div class="name">
                 <b>{{team.name}}</b>
             </div>

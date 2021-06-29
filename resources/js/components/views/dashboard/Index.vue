@@ -10,7 +10,7 @@
             </a>
 
             <div class="team-selector-wrapper">
-                <ui-select-input label="Current Team" :options="teamOptions"></ui-select-input>
+                <ui-select-input label="Current Team" :options="teamOptions" :value="currentTeam" @input="setCurrentTeam($event)"></ui-select-input>
             </div>
 
             <div class="group">
@@ -99,17 +99,25 @@
                 })
             },
 
+            currentTeam() {
+                return this.$store.getters.currentTeam
+            },
+
             authorProfile() {
                 return this.$store.getters.authorProfile
             },
         },
 
         methods: {
+            setCurrentTeam(e) {
+                this.$store.commit('currentTeam', e)
+            },
+
             logout() {
                 this.$store.dispatch('logout', () => {
                     window.location = '/'
                 })
-            }
+            },
         },
 
         components: {

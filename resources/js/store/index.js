@@ -17,6 +17,7 @@ module.exports = {
         authorArticles: [],
         articleCategories: [],
         teams: [],
+        currentTeam: null,
         invites: [],
         reports: [],
         paginatedReportGroups: {},
@@ -42,6 +43,10 @@ module.exports = {
 
         teams(state) {
             return state.teams
+        },
+
+        currentTeam(state) {
+            return state.currentTeam
         },
 
         invites(state) {
@@ -253,6 +258,12 @@ module.exports = {
             {
                 state.teams.splice(index, 1)
             }
+        },
+
+
+
+        currentTeam(state, data) {
+            state.currentTeam = data
         },
 
 

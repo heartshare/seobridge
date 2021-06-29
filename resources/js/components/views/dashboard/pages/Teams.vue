@@ -74,13 +74,6 @@
 
 
 
-                <div class="placeholder grid-centered" v-show="['overview', 'teams'].includes(tab)" v-if="!activeTeam && teams.length > 0">
-                    <p>
-                        You don't have an active team.<br>
-                        Join one to get started!
-                    </p>
-                </div>
-
                 <div class="placeholder grid-centered" v-show="['overview', 'teams'].includes(tab)" v-if="teams.length === 0">
                     <p>Create a team to get started.</p>
                     <ui-button @click="openTeamEditor()">Create a team</ui-button>
@@ -342,7 +335,7 @@
             },
 
             activeTeam() {
-                let activeTeam = this.teams.find(e => e.id === this.user.active_team_id)
+                let activeTeam = this.teams.find(e => e.id === this.$store.getters.currentTeam)
                 return activeTeam || false
             },
 
