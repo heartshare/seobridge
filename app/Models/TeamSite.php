@@ -15,17 +15,15 @@ class TeamSite extends Model
     protected $fillable = [
         'team_id',
         'host',
-        'is_wildcard',
+        'subscription_id',
         'metadata',
     ];
 
     protected $casts = [
-        'is_wildcard' => 'boolean',
         'metadata' => 'array',
     ];
 
     protected $attributes = [
-        'is_wildcard' => false,
         'metadata' => '{}',
     ];
 

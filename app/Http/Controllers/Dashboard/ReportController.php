@@ -107,16 +107,21 @@ class ReportController extends Controller
 
         $host = strtolower(parse_url($request->url, PHP_URL_HOST));
 
-        $siteNamespaces = TeamSite::where('team_id', Auth::user()->active_team_id)->pluck('host')->toArray();
-
-        if (!in_array($host, $siteNamespaces))
+        // Check if selected plan requires namespace check
+        if($request->team_object->plan['check_namespaces'])
         {
-            return response('UNKNOWN_SITE_NAMESPACE', 404);
+            $siteNamespaces = TeamSite::where('team_id', $request->teamId)->pluck('host')->toArray();
+    
+            if (!in_array($host, $siteNamespaces))
+            {
+                return response('UNKNOWN_SITE_NAMESPACE', 404);
+            }
         }
+
 
         $reportGroup = UserReportGroup::create([
             'owner_id' => Auth::id(),
-            'team_id' => Auth::user()->active_team_id,
+            'team_id' => $request->teamId,
             'url' => $request->url,
             'host' => $host,
             'mode' => $request->mode,
@@ -148,6 +153,7 @@ class ReportController extends Controller
         $returnReportGroup->has_been_assigned = false;
         $returnReportGroup->has_been_shared = false;
         $returnReportGroup->is_own = true;
+
         return $returnReportGroup;
     }
 

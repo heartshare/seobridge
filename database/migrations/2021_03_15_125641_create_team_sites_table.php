@@ -17,7 +17,7 @@ class CreateTeamSitesTable extends Migration
             $table->string('id')->primary();
             $table->string('team_id')->nullable();
             $table->string('host')->nullable();
-            $table->boolean('is_wildcard')->default(0);
+            $table->string('subscription_id')->nullable();
             $table->text('metadata');
             $table->timestamps();
 

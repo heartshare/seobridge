@@ -30,7 +30,6 @@
                                     <b class="text">{{site.host}}</b>
 
                                     <div class="icon-button-wrapper" v-if="activeTeam.is_owner">
-                                        <!-- <button class="icon-button">edit</button> -->
                                         <button class="icon-button" @click="openTeamSiteDeleteDialog(activeTeam, site)">delete</button>
                                     </div>
                                 </div>

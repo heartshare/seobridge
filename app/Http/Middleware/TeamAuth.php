@@ -2,8 +2,10 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Subscription;
 use App\Models\Team;
 use App\Models\TeamMember;
+use App\Models\User;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -36,20 +38,37 @@ class TeamAuth
 
 
 
-        // [3] Checks for user permission
-        $permissionLevels = [
-            'owner'  => ['owner'],
-            'admin'  => ['owner', 'admin'],
-            'member' => ['owner', 'admin', 'member'],
-        ];
+        $plan_name = 'seo_free';
 
+        if($team->subscription_id)
+        {
+            $subscription = Subscription::find($team->subscription_id);
+
+            if(!$subscription)
+            {
+                return response('INVALID_SUBSCRIPTION', 403);
+            }
+            
+            if(!User::find(Auth::id())->subscribed($subscription->name))
+            {
+                return response('INVALID_SUBSCRIPTION', 403);
+            }
+
+            $plan_name = $subscription->name;
+        }
+
+        $request->team_object->plan = config('plans.seo_plans.'.$plan_name);
+
+
+
+        // [3] Checks for user permission
         if ($role)
         {
             $member = TeamMember::where('team_id', $team->id)->firstWhere('user_id', Auth::id());
 
             // Checks if team has member entry associated with the user in question
             // Also checks if member entry has any of the roles required for futher access
-            if (!isset($member) || !array_intersect($permissionLevels[$role], $member->roles))
+            if (!isset($member) || !array_intersect(config('teampermissions.level.'.$role), $member->roles))
             {
                 return response('UNAUTHORIZED', 403);
             }
