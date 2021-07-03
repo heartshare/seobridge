@@ -132,6 +132,8 @@
 
             <template v-slot:inputs>
                 <ui-text-input label="Domain" v-model="teamSiteCreate.host"></ui-text-input>
+                <ui-select-input label="Namespace Payment" v-model="teamSiteCreate.plan" :options="[{'included':'Included'},{'paid':'Additional'}]"></ui-select-input>
+                <ui-select-input label="Payment Method" v-model="teamSiteCreate.paymentMethod" :options="paymentMethods"></ui-select-input>
             </template>
 
             <template v-slot:button-1>
@@ -278,6 +280,8 @@
                     id: null,
                     name: '',
                     host: '',
+                    paymentMethod: 'default',
+                    plan: 'included',
                     loading: false,
                 },
 

@@ -1,12 +1,13 @@
 <?php
 
 return [
-    'seo_allowed_free_plans' => 1,
+    'allowed_free_team_plans' => 1,
+    'free_team_plan_name' => 'team_free',
 
-    'seo_plans' => [
-        'seo_free' => [
-            'id' => 'seo_free',
-            'stripe_id' => env('STRIPE_SEO_TEAM_PLAN_LOW'),
+    'team_plans' => [
+        'team_free' => [
+            'id' => 'team_free',
+            'stripe_id' => env('STRIPE_TEAM_PLAN_LOW'),
             'included_namespaces' => 1,
             'additional_namespaces' => false,
             'check_namespaces' => true,
@@ -17,9 +18,9 @@ return [
             'slug' => 'free',
         ],
     
-        'seo_low' => [
-            'id' => 'seo_low',
-            'stripe_id' => env('STRIPE_SEO_TEAM_PLAN_LOW'),
+        'team_low' => [
+            'id' => 'team_low',
+            'stripe_id' => env('STRIPE_TEAM_PLAN_LOW'),
             'included_namespaces' => 3,
             'additional_namespaces' => false,
             'check_namespaces' => true,
@@ -30,9 +31,9 @@ return [
             'slug' => 'starter',
         ],
     
-        'seo_mid' => [
-            'id' => 'seo_mid',
-            'stripe_id' => env('STRIPE_SEO_TEAM_PLAN_MID'),
+        'team_mid' => [
+            'id' => 'team_mid',
+            'stripe_id' => env('STRIPE_TEAM_PLAN_MID'),
             'included_namespaces' => 3,
             'additional_namespaces' => true,
             'check_namespaces' => true,
@@ -43,9 +44,9 @@ return [
             'slug' => 'growing',
         ],
     
-        'seo_high' => [
-            'id' => 'seo_high',
-            'stripe_id' => env('STRIPE_SEO_TEAM_PLAN_HIGH'),
+        'team_high' => [
+            'id' => 'team_high',
+            'stripe_id' => env('STRIPE_TEAM_PLAN_HIGH'),
             'included_namespaces' => 0,
             'additional_namespaces' => true,
             'check_namespaces' => false,
@@ -54,6 +55,16 @@ return [
             'image' => '/images/app/sp_agency.png',
             'name' => 'Unlimited',
             'slug' => 'unlimited',
+        ],
+    ],
+
+    'namespace_plans' => [
+        'namespace_mid' => [
+            'id' => 'namespace_mid',
+            'stripe_id' => env('STRIPE_NAMESPACE_MID'),
+            'display_price' => 300,
+            'name' => 'Namespace',
+            'slug' => 'namespace',
         ],
     ],
 ];

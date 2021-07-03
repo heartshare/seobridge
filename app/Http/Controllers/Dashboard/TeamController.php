@@ -54,16 +54,16 @@ class TeamController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'description' => ['present', 'max:1000'],
             'category' => ['required', 'string', 'max:100'],
-            'plan' => ['required', 'string', 'in:seo_free,seo_low,seo_mid,seo_high'],
+            'plan' => ['required', 'string', 'in:team_free,team_low,team_mid,team_high'],
             'paymentMethod' => ['required', 'string', 'max:100'],
         ]);
 
         $subscription = null;
 
         // Create subscription if plan is selected
-        if ($request->plan === 'seo_free')
+        if ($request->plan === config('plans.free_team_plan_name'))
         {
-            if (count(Team::where('owner_id', Auth::id())->where('subscription_id', null)->get()) > config('plans.seo_allowed_free_plans'))
+            if (count(Team::where('owner_id', Auth::id())->where('subscription_id', null)->get()) > config('plans.allowed_free_team_plans'))
             {
                 return response('TOO_MANY_FREE_PLANS', 422);
             }
@@ -72,7 +72,7 @@ class TeamController extends Controller
         {
             $method = null;
 
-            $plan = config('plans.seo_plans.'.$request->plan);
+            $plan = config('plans.team_plans.'.$request->plan);
 
             $method = $request->paymentMethod === 'default' ? $request->user()->defaultPaymentMethod() : $request->user()->findPaymentMethod($request->paymentMethod);
 
@@ -81,7 +81,7 @@ class TeamController extends Controller
                 return response('NO_PAYMENT_METHOD', 403);
             }
 
-            $subscription = $request->user()->newSubscription( $request->plan, $plan['stripe_id'] )->quantity(null)->create($method->id);
+            $subscription = $request->user()->newSubscription( $plan['id'], $plan['stripe_id'] )->quantity(null)->create($method->id);
         }
 
         $team = Team::create([
@@ -173,7 +173,11 @@ class TeamController extends Controller
     {
         $request->validate([
             'host' => ['required', 'string', 'max:255'],
+            'plan' => ['required', 'string', 'in:included,paid'],
+            'paymentMethod' => ['required', 'string', 'max:100'],
         ]);
+
+
 
         $host = parse_url($request->host, PHP_URL_HOST);
 
@@ -189,9 +193,40 @@ class TeamController extends Controller
             return response('INVALID_HOSTNAME', 422);
         }
 
+
+
+        $subscription = null;
+
+        // Create subscription if plan is selected
+        if ($request->plan === 'included')
+        {
+            if (count(Team::where('owner_id', Auth::id())->where('subscription_id', null)->get()) > config('plans.allowed_free_team_plans'))
+            {
+                return response('TOO_MANY_FREE_PLANS', 422);
+            }
+        }
+        else
+        {
+            $method = null;
+
+            $plan = config('plans.namespace_plans.namespace_mid');
+
+            $method = $request->paymentMethod === 'default' ? $request->user()->defaultPaymentMethod() : $request->user()->findPaymentMethod($request->paymentMethod);
+
+            if (!$method)
+            {
+                return response('NO_PAYMENT_METHOD', 403);
+            }
+
+            $subscription = $request->user()->newSubscription( $plan['id'], $plan['stripe_id'] )->quantity(null)->create($method->id);
+        }
+
+
+
         $teamSite = TeamSite::firstOrCreate([
             'team_id' => $request->team_object->id,
             'host' => $host,
+            'subscription_id' => $subscription ? $subscription->id : null,
         ]);
 
         return $teamSite;
