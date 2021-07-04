@@ -98,21 +98,9 @@
                 <ui-select-input label="Payment Method" v-model="teamEdit.paymentMethod" :options="paymentMethods"></ui-select-input>
 
                 <div class="plan-wrapper">
-                    <div class="plan" :class="{'active': teamEdit.plan === 'seo_free'}" @click="teamEdit.plan = 'seo_free'">
-                        <div class="icon">money_off_csred</div>
-                        <div class="text">Free</div>
-                    </div>
-                    <div class="plan" :class="{'active': teamEdit.plan === 'seo_low'}" @click="teamEdit.plan = 'seo_low'">
-                        <div class="icon">savings</div>
-                        <div class="text">Starter</div>
-                    </div>
-                    <div class="plan" :class="{'active': teamEdit.plan === 'seo_mid'}" @click="teamEdit.plan = 'seo_mid'">
-                        <div class="icon">trending_up</div>
-                        <div class="text">Growing</div>
-                    </div>
-                    <div class="plan" :class="{'active': teamEdit.plan === 'seo_high'}" @click="teamEdit.plan = 'seo_high'">
-                        <div class="icon">task_alt</div>
-                        <div class="text">Unlimited</div>
+                    <div class="plan" v-for="plan in teamPlansConfig" :key="plan.id" :class="{'active': teamEdit.plan === plan.id}" @click="teamEdit.plan = plan.id">
+                        <img :src="plan.image">
+                        <div class="text">{{plan.name}}</div>
                     </div>
                 </div>
             </template>
@@ -132,7 +120,7 @@
 
             <template v-slot:inputs>
                 <ui-text-input label="Domain" v-model="teamSiteCreate.host"></ui-text-input>
-                <ui-select-input label="Namespace Payment" v-model="teamSiteCreate.plan" :options="[{'included':'Included'},{'paid':'Additional'}]"></ui-select-input>
+                <ui-select-input label="Namespace Payment" v-model="teamSiteCreate.plan" :options="namespacePlanOptions"></ui-select-input>
                 <ui-select-input label="Payment Method" v-model="teamSiteCreate.paymentMethod" :options="paymentMethods"></ui-select-input>
             </template>
 
@@ -337,9 +325,37 @@
                 return this.$store.getters.teams
             },
 
+            teamPlansConfig() {
+                return this.$store.getters.teamPlansConfig
+            },
+
             activeTeam() {
                 let activeTeam = this.teams.find(e => e.id === this.$store.getters.currentTeam)
                 return activeTeam || false
+            },
+
+            namespacePlanOptions() {
+                let options = [{'included':'Included'}]
+                let plan = null
+
+                if (!this.activeTeam)
+                {
+                    return options
+                }
+
+                plan = this.teamPlansConfig[this.activeTeam.subscription.name]
+
+                if (!plan)
+                {
+                    return options
+                }
+
+                if (plan.additional_namespaces)
+                {
+                    options.push({'paid':'Additional'})
+                }
+
+                return options
             },
 
             invites() {
@@ -854,10 +870,12 @@
                     position: relative
                     font-size: var(--text-size)
 
-                .icon
+                img
                     z-index: 1
                     position: relative
-                    font-size: 30px
-                    padding: 10px
-                    font-family: 'Material Icons Round'
+                    height: 40px
+                    width: 40px
+                    border-radius: 5px
+                    object-fit: cover
+                    margin: 0 auto 10px
 </style>

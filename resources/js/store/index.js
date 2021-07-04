@@ -12,6 +12,9 @@ module.exports = {
         ],
         pageTransitionDirection: 'down',
         navbar: 'open',
+        config: {
+            teamPlans: {},
+        },
         user: {},
         authorProfile: null,
         authorArticles: [],
@@ -35,6 +38,10 @@ module.exports = {
 
         navbar(state) {
             return state.navbar
+        },
+
+        teamPlansConfig(state) {
+            return state.config.teamPlans
         },
 
         user(state) {
@@ -210,6 +217,12 @@ module.exports = {
 
         navbar(state, data) {
             state.navbar = data
+        },
+
+
+
+        teamPlans(state, data) {
+            state.config.teamPlans = data
         },
 
 

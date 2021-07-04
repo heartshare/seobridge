@@ -25,6 +25,7 @@
 <body>
     <div class="dashboard" id="app">
         <input type="hidden" ref="initialPage" value="{{$page}}">
+        <input type="hidden" ref="teamPlansConfig" value="{{json_encode(config('plans.team_plans'))}}">
         <dashboard-view></dashboard-view>
     </div>
 </body>

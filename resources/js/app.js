@@ -45,6 +45,7 @@ const app = new Vue({
         DashboardView: require('./components/views/dashboard/Index.vue').default,
     },
     mounted() {
+        this.$store.commit('teamPlans', JSON.parse(this.$refs.teamPlansConfig.value))
         this.$store.dispatch('setPage', this.$refs.initialPage.value)
         this.$store.dispatch('initialFetch')
         window.addEventListener('popstate', this.userNavigate)
