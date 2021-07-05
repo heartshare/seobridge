@@ -21,7 +21,7 @@
                         <span v-if="activeTeam.description">{{activeTeam.description}}</span>
                     </div>
 
-                    <div class="block" v-if="activeTeam.subscription.name !== 'seo_high'">
+                    <div class="block" v-if="activeTeam.subscription === null || activeTeam.subscription.name !== 'seo_high'">
                         <div class="namespace-container">
                             <transition-group name="scale" class="block">
                                 <div class="namespace" :class="{'read-only': !activeTeam.is_owner}" :style="`background: ${stc(site.host)}; color: ${contrast(stc(site.host))};`" v-for="site in activeTeam.sites" :key="site.id">
@@ -95,7 +95,6 @@
                 <ui-text-input label="Team name" v-model="teamEdit.name"></ui-text-input>
                 <ui-select-input label="Team category" v-model="teamEdit.category" :options="teamCategories"></ui-select-input>
                 <ui-textarea label="Team description" class="team-description-input" :max="1000" show-max v-model="teamEdit.description"></ui-textarea>
-                <ui-select-input label="Payment Method" v-model="teamEdit.paymentMethod" :options="paymentMethods"></ui-select-input>
 
                 <div class="plan-wrapper">
                     <div class="plan" v-for="plan in teamPlansConfig" :key="plan.id" :class="{'active': teamEdit.plan === plan.id}" @click="teamEdit.plan = plan.id">
@@ -103,6 +102,8 @@
                         <div class="text">{{plan.name}}</div>
                     </div>
                 </div>
+                
+                <ui-select-input label="Payment Method" v-model="teamEdit.paymentMethod" :options="paymentMethods"></ui-select-input>
             </template>
 
             <template v-slot:button-1>
@@ -338,7 +339,7 @@
                 let options = [{'included':'Included'}]
                 let plan = null
 
-                if (!this.activeTeam)
+                if (!this.activeTeam || !this.activeTeam.subscription)
                 {
                     return options
                 }
