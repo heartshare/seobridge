@@ -129,6 +129,7 @@
                             <ui-button small text border @click="subscriptionAdd.isOpen = true">Add Item</ui-button>
                         </div>
                     </div>
+                    
                     <div class="tab-box" v-show="subscriptionAdd.isOpen">
                         <div class="row-wrapper border">
                             <ui-button>Single Domain Plan</ui-button>
