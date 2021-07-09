@@ -38,7 +38,7 @@ class TeamAuth
 
 
 
-        $plan_name = 'seo_free';
+        $plan_name = config('plans.free_team_plan_name');
 
         if($team->subscription_id)
         {
@@ -57,7 +57,7 @@ class TeamAuth
             $plan_name = $subscription->name;
         }
 
-        $request->team_object->plan = config('plans.seo_plans.'.$plan_name);
+        $request->team_object->plan = config('plans.team_plans.'.$plan_name);
 
 
 

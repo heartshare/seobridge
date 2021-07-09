@@ -426,6 +426,8 @@
                 this.teamSiteCreate.id = null
                 this.teamSiteCreate.name = ''
                 this.teamSiteCreate.host = ''
+                this.teamSiteCreate.plan = 'included'
+                this.teamSiteCreate.paymentMethod = 'default'
                 this.$refs.teamSiteCreateDialog.close()
             },
 
@@ -435,6 +437,8 @@
                 axios.post('/auth/team/create-team-site', {
                     teamId: this.teamSiteCreate.id,
                     host: this.teamSiteCreate.host,
+                    plan: this.teamSiteCreate.plan,
+                    paymentMethod: this.teamSiteCreate.paymentMethod,
                 })
                 .then(response => {
                     this.$store.commit('setTeamSite', {teamId: this.teamSiteCreate.id, id: response.data.id, site: response.data})
